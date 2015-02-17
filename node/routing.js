@@ -1,11 +1,11 @@
 var params = require('querystring'),
     url = require('url'),
 
-    controllers = require('./controllers'),
+    controllers = require('./controllers').controllers,
 
     map = {
-        '^$' : controllers.controllers.bland, // root
-        '.+' : controllers.controllers.fancy // anything else
+        '^$' : controllers.bland, // root
+        '.+' : controllers.fancy // anything else
     },
 
     routes = Object.keys(map);
