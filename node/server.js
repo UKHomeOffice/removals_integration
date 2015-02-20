@@ -1,26 +1,14 @@
-var http = require("http"),
+var http = require("http");
+var url = require("url");
 
-    routing = require('./routing'),
-
-    server;
-
-
-function start(port) {
-    port = port || 8888;
-
-    if (server) stop();
-
-    server = http.createServer(routing.route).listen(port);
-    
+function start(router, urls) {
+    function listener(request, response) {
+        var pathname = url.parse(request.url).pathname;
+        console.log("Request for " + pathname + " received.");
+        router(urls, pathname, response);
+    }
+    http.createServer(listener).listen(8888);
     console.log("Server has started.");
-}
-
-function stop() {
-    if (!server) return;
-
-    server.destroy();
-
-    console.log('Server stopped');
 }
 
 exports.start = start;

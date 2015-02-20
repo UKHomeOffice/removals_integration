@@ -1,21 +1,20 @@
-var url = require('url'),
-
-    routing = require('./routing');
-
-var genericController = function(request, response, bodyText) {
-
-    response.writeHead(200, {"Content-Type": "text/plain"});
-    response.write(bodyText);
-    response.end();
-};
-
+var exec = require("child_process").exec;
 var controllers = {
-    bland: function (request, response) {
-        return genericController(request, response, "Bland")
+    start: function(response) {
+        console.log("Request handler 'start' was called.");
+        exec("find /",
+            { timeout: 10000, maxBuffer: 20000 * 1024 }, function (error, stdout, stderr) {
+                response.writeHead(200, {"Content-Type": "text/plain"});
+                response.write(stdout);
+                response.end();
+            }
+        );
     },
-    fancy: function(request, response) {
-        return genericController(request, response, "Fancy")
+    upload: function(response) {
+        console.log("Request handler 'upload' was called.");
+        response.writeHead(200, {"Content-Type": "text/plain"});
+        response.write("Hello Upload");
+        response.end();
     }
 };
-
 exports.controllers = controllers;
