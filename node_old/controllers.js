@@ -1,8 +1,4 @@
-var url = require('url'),
-
-    routing = require('./routing');
-
-var genericController = function(request, response, bodyText) {
+var _genericController = function(request, response, bodyText) {
 
     response.writeHead(200, {"Content-Type": "text/plain"});
     response.write(bodyText);
@@ -11,10 +7,10 @@ var genericController = function(request, response, bodyText) {
 
 var controllers = {
     bland: function (request, response) {
-        return genericController(request, response, "Bland");
+        return _genericController(request, response, "Bland");
     },
     fancy: function(request, response) {
-        return genericController(request, response, "Fancy");
+        return _genericController(request, response, "Fancy");
     }
 };
 
