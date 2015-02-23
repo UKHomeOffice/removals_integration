@@ -10,17 +10,20 @@ var controllers = {
             }
         );
     },
-    upload: function(request, response) {
-        console.log("Request handler 'upload' was called.");
-        response.writeHead(200, {"Content-Type": "text/plain"});
-        response.write("Hello Upload");
-        response.end();
-    },
     handlePost: function(request, response) {
         console.log("INside handlePost");
-        response.writeHead(200, {"Content-Type": "text/plain"});
-        response.write("handlePost");
-        response.end();
+        var postData = "";
+        request.setEncoding("utf8");
+        request.addListener("data", function(postDataChunk) {
+            postData += postDataChunk;
+            console.log("Received POST data chunk '"+ postDataChunk + "'.");
+        });
+        request.addListener("end", function() {
+            response.writeHead(200, {"Content-Type": "text/plain"});
+            response.write(postData);
+            response.end();
+        });
+
     }
 };
 exports.controllers = controllers;
