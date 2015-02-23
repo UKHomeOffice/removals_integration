@@ -1,0 +1,47 @@
+{
+    "individuals" : {
+        "arrivals" : [
+            {
+                "date" : "27-2-2015",
+                "time" : "08:02:37",
+                "cid_id": "123456",
+                "nationality": "Hugenot",
+                "reason_for_move": "",
+                "transferred_from": "Harmondsworth"
+            }
+        ],
+        "departees" : [
+            {
+                "date" : "27-2-2015",
+                "time" : "08:02:37",
+                "cid_id": "654321",
+                "nationality": "Eritrean",
+                "reason_for_move": "release",
+                "transferred_to":  null
+            },
+            {
+                "date" : "27-2-2015",
+                "time" : "08:02:37",
+                "cid_id": "654322",
+                "nationality": "British",
+                "reason_for_move": "removal",
+                "transferred_to": ""
+            }
+        ]
+    },
+
+    "totals" : {
+        "date" : "27-2-2015",
+        "time" : "08:02:37",
+        "centres": {
+            "Harmondsworth" : {
+                "male" : 20,
+                "female" : 8
+            },
+            "Heathrow" : {
+                "male" : 5,
+                "female" : 0
+            }
+        }
+    }
+}
