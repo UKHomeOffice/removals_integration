@@ -1,5 +1,18 @@
 var exec = require("child_process").exec;
 var controllers = {
+    remoteApi: function(request, response) {
+        console.log("API request");
+        response.writeHead(200, {"Content-Type": "text/json"});
+        fs = require('fs');
+        fs.readFile('sample_input.json','utf8',function(err,data){
+            if(err){
+                return console.log(err);
+            }
+            else{
+                response.write(data);
+            }
+        });
+    },
     start: function(request, response) {
         console.log("Request handler 'start' was called.");
         exec("find /",
