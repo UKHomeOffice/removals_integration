@@ -6,6 +6,7 @@
                 "time" : "08:02:37",
                 "cid_id": "123456",
                 "nationality": "Hugenot",
+                "centre" : "Heathrow",
                 "reason_for_move": "",
                 "transferred_from": "Harmondsworth"
             }
@@ -16,6 +17,7 @@
                 "time" : "08:02:37",
                 "cid_id": "654321",
                 "nationality": "Eritrean",
+                "centre" : "Harmondsworth",
                 "reason_for_move": "release",
                 "transferred_to":  null
             },
@@ -24,8 +26,9 @@
                 "time" : "08:02:37",
                 "cid_id": "654322",
                 "nationality": "British",
+                "centre" : "Harmondsworth",
                 "reason_for_move": "removal",
-                "transferred_to": ""
+                "transferred_to": null
             }
         ]
     },
@@ -33,14 +36,16 @@
     "totals" : {
         "date" : "27-2-2015",
         "time" : "08:02:37",
-        "centres": {
+        "bed_counts": {
             "Harmondsworth" : {
                 "male" : 20,
-                "female" : 8
+                "female" : 8,
+                "out_of_commission": 1
             },
             "Heathrow" : {
                 "male" : 5,
-                "female" : 0
+                "female" : 0,
+                "out_of_commission": 0
             }
         }
     }
