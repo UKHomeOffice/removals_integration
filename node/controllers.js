@@ -1,6 +1,5 @@
 var exec = require("child_process").exec;
 var jade = require("jade");
-pageTitle = 'My Jade test';
 var controllers = {
     start: function(request, response) {
         console.log("Request handler 'start' was called.");
@@ -13,7 +12,7 @@ var controllers = {
         );
     },
     handlePost: function(request, response) {
-        console.log("INside handlePost");
+        console.log("Inside handlePost");
         var postData = "";
         request.setEncoding("utf8");
         request.addListener("data", function(postDataChunk) {
@@ -23,10 +22,12 @@ var controllers = {
         request.addListener("end", function() {
             response.writeHead(200, {"Content-Type": "text/html"});
 
-            var render = jade.compileFile('/Volumes/LocalDataHD/cjo20/Documents/chris/dev/DTRemoval/templates/base.jade', {
-                globals: ['pageTitle']
+            var render = jade.compileFile(CONFIG.project_path + 'templates/base.jade', {
+                globals: [], // list of global variable names
+                pretty: true
             });
             var html = render({
+                title: "post response",
                 name: "sausage",
                 body: postData
             });
