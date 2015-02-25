@@ -1,0 +1,10 @@
+{
+    "name": "removals-system",
+    "dependencies":{
+        "jade": "*",
+        "mocha": "*",
+        "should": "*",
+        "mysql": "*",
+        "sequelize": "*"
+    }
+}
