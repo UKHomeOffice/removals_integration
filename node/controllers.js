@@ -10,8 +10,30 @@ var controllers = {
             }
             else{
                 response.write(data);
+                response.end();
             }
         });
+    },
+    consumeRemoteJson: function(request,response) {
+        var http = require('http');
+        var options = {
+            host: 'localhost',
+            path: '/remote-api',
+            port: 8888
+        };
+        var request = http.request(options, function(res){
+            var data = '';
+            res.on('data', function(chunk){
+                data += chunk;
+            });
+            res.on('end',function(){
+                console.log(data);
+            });
+        });
+        request.on('error', function(e){
+            console.log(e.message);
+        });
+        request.end();
     },
     start: function(request, response) {
         console.log("Request handler 'start' was called.");

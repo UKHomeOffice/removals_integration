@@ -3,7 +3,8 @@ var urls = {
     "^$": controllers.start,
     "start": controllers.start,
     "upload": controllers.handlePost,
-    "remote-api":controllers.remoteApi
+    "remote-api": controllers.remoteApi,
+    "consume": controllers.consumeRemoteJson
 };
 
 exports.urls = urls;
