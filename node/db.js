@@ -1,5 +1,5 @@
-var Sequelize = require('sequelize')
-    , sequelize = new Sequelize('dt_removal', 'root', 'root', {
+var Sequelize = require('sequelize');
+var sequelize = new Sequelize(CONFIG.db.name, CONFIG.db.user, CONFIG.db.password, {
         dialect: "mysql",
         port:    3306,
     });
@@ -16,31 +16,3 @@ sequelize
 
 exports.sequelize = sequelize;
 
-/*
-var sys = require('sys');
-
-var Client = require('mysql').Client;
-var client = new Client();
-
-client.user = 'someuser';
-client.password = 'password';
-
-client.connect(function(error, results) {
-    if(error) {
-        console.log('MySQL Connection Error: ' + error.message);
-        return;
-    }
-    console.log('Connected to MySQL');
-});
-
-//Once the connection is made you set the MySQL table you want to use:
-ClientConnectionReady = function(client)
-{
-    client.query('USE NodeSample', function(error, results) {
-        if(error) {
-            console.log('ClientConnectionReady Error: ' + error.message);
-            client.end();
-            return;
-        }
-    });
-};*/
