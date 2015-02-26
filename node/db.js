@@ -14,5 +14,8 @@ sequelize
         }
     });
 
-exports.sequelize = sequelize;
 
+
+exports.db = {
+    sequelize : sequelize,
+};
