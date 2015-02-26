@@ -1,5 +1,5 @@
 var config = {
-    project_path: '/Volumes/LocalDataHD/cjo20/Documents/chris/dev/DTRemoval/', // chris
+    project_path: process.cwd(), // jp
     db: {
         name: 'dt_removal',
         user: 'root',
