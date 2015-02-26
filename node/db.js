@@ -1,3 +1,4 @@
+var CONFIG = require("../node/config.js").CONFIG;
 var Sequelize = require('sequelize');
 var sequelize = new Sequelize(CONFIG.db.name, CONFIG.db.user, CONFIG.db.password, {
         dialect: "mysql",
