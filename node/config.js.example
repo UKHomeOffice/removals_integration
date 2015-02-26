@@ -1,4 +1,4 @@
-CONFIG = {
+var config = {
     project_path: '/Volumes/LocalDataHD/cjo20/Documents/chris/dev/DTRemoval/', // chris
     db: {
         name: 'dt_removal',
@@ -7,6 +7,4 @@ CONFIG = {
     }
 };
 
-exports.CONFIG = CONFIG;
-
-// even though the CONFIG object is global, we return it here for use on the command line
+exports.config = config;

@@ -1,3 +1,3 @@
+CONFIG = require('./config').config; // global!
 var server = require("./server");
-require('./config'); // global!
 server.start();

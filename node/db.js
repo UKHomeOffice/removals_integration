@@ -1,4 +1,3 @@
-var CONFIG = require("../node/config.js").CONFIG;
 var Sequelize = require('sequelize');
 var sequelize = new Sequelize(CONFIG.db.name, CONFIG.db.user, CONFIG.db.password, {
         dialect: "mysql",
@@ -14,7 +13,6 @@ sequelize
             console.log('Connection has been established successfully.')
         }
     });
-
 
 
 exports.db = {

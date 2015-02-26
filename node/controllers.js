@@ -20,8 +20,6 @@ var controllers = {
             console.log("Received POST data chunk '"+ postDataChunk + "'.");
         });
         request.addListener("end", function() {
-            response.writeHead(200, {"Content-Type": "text/html"});
-
             var render = jade.compileFile(CONFIG.project_path + 'templates/base.jade', {
                 globals: [], // list of global variable names
                 pretty: true
@@ -32,6 +30,7 @@ var controllers = {
                 body: postData
             });
 
+            response.writeHead(200, {"Content-Type": "text/html"});
             response.write(html);
             response.end();
         });
