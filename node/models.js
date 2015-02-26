@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize'),
-    db = require('./db'),
+    db = require('./db').db,
     sequelize = db.sequelize;
 
 var Nationality = sequelize.define('Nationality', {

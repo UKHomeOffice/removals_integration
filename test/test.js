@@ -2,13 +2,25 @@ var should = require('should');
 var assert = require("assert");
 var models = require("../node/models.js").models;
 
-describe('User',function(){
+describe('Centre',function(){
     describe('#properties', function(){
         it('should have properties',function(){
-            user = models.User;
-            user.should.have.property('attributes');
-            user.attributes.should.have.property('username');
-            user.attributes.should.have.property('password');
+            c = models.Centre;
+            c.should.have.property('attributes');
+            c.attributes.should.have.property('name');
+            c.attributes.should.have.property('current_beds_male');
+            c.attributes.should.have.property('current_beds_female');
+            c.attributes.should.have.property('current_beds_ooc');
+        })
+    })
+});
+describe('Person',function(){
+    describe('#properties', function(){
+        it('should have properties',function(){
+            p = models.Person;
+            p.should.have.property('attributes');
+            p.attributes.should.have.property('cid_id');
+            p.attributes.should.have.property('gender');
         })
     })
 });
