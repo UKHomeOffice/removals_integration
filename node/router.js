@@ -5,7 +5,6 @@ var urls = require("./urls").urls,
 function doRouting(path, response) {
     var slug, i, controller, r;
 
-    console.log("About to route a request for " + path);
     path = path.slice(1); // kill leading slash
     slug = path.split('/')[0]; // TODO: handle more complex paths
     console.log("About to route a request for %s", slug);

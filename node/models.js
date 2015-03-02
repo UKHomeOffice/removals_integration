@@ -15,7 +15,7 @@ var Centre = sequelize.define('Centre', {
 
 var Person = sequelize.define('Person', {
     cid_id: { type: Sequelize.STRING, unique: true },
-    gender: Sequelize.ENUM('m', 'f')
+    gender: Sequelize.ENUM('m', 'f', 'u', 'n')
 });
 Person.hasOne(Nationality);
 Person.hasOne(Centre, {
