@@ -8,8 +8,8 @@
                 "nationality": "Hugenot",
                 "gender" : "m",
                 "centre" : "Heathrow",
-                "reason_for_move": "",
-                "transferred_from": "Harmondsworth"
+                "transferred_from": "holding area",
+                "transfer_details" : "Lorem ipsum dolor sit amet, consectetur adipiscing."
             }
         ],
         "departees" : [
@@ -20,8 +20,10 @@
                 "nationality": "Eritrean",
                 "gender" : "f",
                 "centre" : "Harmondsworth",
-                "reason_for_move": "release",
-                "transferred_to":  null
+                "transferred_to": null,
+                "reason_for_leaving": "Granted leave to remain",
+                "resolution":  null,
+                "transfer_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris lorem leo, aliquam. "
             },
             {
                 "date" : "27-2-2015",
@@ -30,8 +32,20 @@
                 "nationality": "British",
                 "gender" : "m",
                 "centre" : "Harmondsworth",
-                "reason_for_move": "removal",
-                "transferred_to": null
+                "transferred_to": null,
+                "reason_for_leaving": "Removed",
+                "transfer_details" : ""
+            },
+            {
+                "date" : "27-2-2015",
+                "time" : "08:02:37",
+                "cid_id": "654325",
+                "nationality": "British",
+                "gender" : "f",
+                "centre" : "Harmondsworth",
+                "transferred_to": "Pennie House",
+                "reason_for_leaving": "Transfer to another IRC",
+                "transfer_details" : ""
             }
         ]
     },
