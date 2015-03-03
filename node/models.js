@@ -23,13 +23,13 @@ var Person = sequelize.define('Person', {
     cid_id: { type: Sequelize.STRING, unique: true },
     gender: Sequelize.ENUM('m', 'f', 'u', 'n')
 });
-Person.hasOne(Nationality);
+Person.hasMany(Nationality);
 Person.hasOne(Centre, {
     as: 'current_location'
 });
 
-sequelize
-    .sync({ force: true });
+/*sequelize
+    .sync({ force: true });*/
 
 exports.models = {
     Person: Person,

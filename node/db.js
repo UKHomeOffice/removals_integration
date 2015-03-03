@@ -16,7 +16,6 @@ sequelize
         }
     });
 
-
 exports.db = {
     sequelize : sequelize,
 };
