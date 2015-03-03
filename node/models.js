@@ -10,7 +10,8 @@ var Centre = sequelize.define('Centre', {
     name: { type: Sequelize.STRING, unique: true },
     current_beds_male: Sequelize.INTEGER,
     current_beds_female: Sequelize.INTEGER,
-    current_beds_ooc: Sequelize.INTEGER
+    current_beds_ooc: Sequelize.INTEGER,
+    material: Sequelize.STRING
 });
 
 var Person = sequelize.define('Person', {
