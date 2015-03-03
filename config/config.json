@@ -4,7 +4,12 @@
     "DB_PASSWORD": "root",
     "DB_NAME": "dt_removal_development",
     "DB_HOST": "127.0.0.1",
-    "DB_DIALECT": "mysql"
+    "DB_DIALECT": "mysql",
+    "username": "root",
+    "password": "root",
+    "database": "dt_removal_development",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
   },
   "test": {
     "DB_USER": "root_test",
