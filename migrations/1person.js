@@ -1,4 +1,5 @@
 CONFIG = require(process.cwd()+'/node/config').config; 
+console.log(CONFIG);
 var models = require(process.cwd()+'/node/models').models;
 
 module.exports = {
