@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
     grunt.initConfig({
-        installFixtures: {
+        fixtures: {
             import_test_data: {
                 src: ['fixtures/*.json'],
                 models: function () {
@@ -17,5 +17,5 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('sequelize-fixtures');
 
-    grunt.registerTask('install-fixtures', 'installFixtures');
+    grunt.registerTask('install-fixtures', 'fixtures');
 };
