@@ -1,0 +1,23 @@
+{
+  "development": {
+    "DB_USER": "root_dev",
+    "DB_PASSWORD": "root_dev",
+    "DB_NAME": "dt_removal_development_dev",
+    "DB_HOST": "127.0.0.1",
+    "DB_DIALECT": "mysql"
+  },
+  "test": {
+    "DB_USER": "root_test",
+    "DB_PASSWORD": null,
+    "DB_NAME": "database_test",
+    "DB_HOST": "127.0.0.1",
+    "DB_DIALECT": "mysql"
+  },
+  "production": {
+    "DB_USER": "root_prod",
+    "DB_PASSWORD": null,
+    "DB_NAME": "database_production",
+    "DB_HOST": "127.0.0.1",
+    "DB_DIALECT": "mysql"
+  }
+}
