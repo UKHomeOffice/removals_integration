@@ -8,7 +8,8 @@
                 "nationality": "Hugenot",
                 "gender" : "m",
                 "centre" : "Heathrow",
-                "transferred_from": "holding area",
+                "arrived_from": "Holding Area",
+                "transferred_from": null,
                 "transfer_details" : "Lorem ipsum dolor sit amet, consectetur adipiscing."
             }
         ],
@@ -22,7 +23,6 @@
                 "centre" : "Harmondsworth",
                 "transferred_to": null,
                 "reason_for_leaving": "Granted leave to remain",
-                "resolution":  null,
                 "transfer_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris lorem leo, aliquam. "
             },
             {
