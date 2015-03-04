@@ -28,15 +28,6 @@ function json_wrangler(){
     this.get_outbound = function(){
         return this.data.individuals.departees.map(function(item){
             return models.Person.build(item);
-/*
-            var P = models.Person;
-            for(key in item){
-                P.attributes[key] = item[key];
-            }
-            var P = models.Person;
-            P.build(item);
-            return P;
-*/
         });
     };
 };
