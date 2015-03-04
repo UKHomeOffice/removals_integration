@@ -10,11 +10,16 @@ var chai = require('chai'),
   should = chai.should();
 
 describe('json_wrangler', function(){
-    drop_tables();
-    setup_tables();
-    write_fixtures();
-    it('should consume json',function(){
+    before(function(){
+        //drop_tables();
+        //setup_tables();
+        //write_fixtures();
+    });
+    it('should do be able to load a Person by its cid_id',function(){
         JW = new json_wrangler();
+        var P = JW.find_by_cid_id('12346');
+console.log(P.gender);
+        expect(P.gender).to.equal('f');
     });
 });
 //setup_tables();

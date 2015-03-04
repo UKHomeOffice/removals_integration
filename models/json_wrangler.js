@@ -30,5 +30,8 @@ function json_wrangler(){
             return models.Person.build(item);
         });
     };
+    this.find_by_cid_id = function(cid_id){
+        return models.Person.findOne({where:{"cid_id": cid_id}});
+    }
 };
 module.exports = json_wrangler;
