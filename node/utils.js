@@ -13,12 +13,15 @@ function install_fixtures() {
 }
 
 function install_csv(filepath) {
-    console.log('reading csv file ' + filepath);
+    console.log('reading csv file "' + filepath + '"');
     var parser = parse({delimiter: ','}),
         output = [];
 
     fs.readFile(filepath, function(err, data) {
-        if (err) throw err;
+        if (err) {
+            console.log('oops ' + err);
+            throw err;
+        }
         parser.write(data);
     });
 
@@ -31,9 +34,9 @@ function install_csv(filepath) {
             catch (e) {
                 console.dump('something (' + e + ') went wrong');
             }
+            console.dump('next record: ' + record);
             if (record) {
                 output.push(record);
-                console.dump(record);
             } else {
                 break;
             }
