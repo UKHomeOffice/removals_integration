@@ -1,0 +1,112 @@
+[
+    {
+        "model": "Centre",
+        "data": {
+            "name": "Brook House",
+            "capacity": 448,
+            "reservable": true
+        }
+    },
+    {
+        "model": "Centre",
+        "data": {
+            "name": "Campsfield",
+            "capacity": 276,
+            "reservable": true
+        }
+    },
+    {
+        "model": "Centre",
+        "data": {
+            "name": "Colnbrook",
+            "capacity": 381,
+            "capacity_female": 27,
+            "reservable": true,
+            "fast_track": true
+        }
+    },
+    {
+        "model": "Centre",
+        "data": {
+            "name": "Dover",
+            "capacity": 401,
+            "reservable": true
+        }
+    },
+    {
+        "model": "Centre",
+        "data": {
+            "name": "Dungavel",
+            "capacity": 235,
+            "capacity_female": 14,
+            "reservable": true
+        }
+    },
+    {
+        "model": "Centre",
+        "data": {
+            "name": "Harmondsworth",
+            "capacity": 661,
+            "reservable": true,
+            "fast_track": true
+        }
+    },
+    {
+        "model": "Centre",
+        "data": {
+            "name": "Haslar",
+            "capacity": 197,
+            "reservable": true
+        }
+    },
+    {
+        "model": "Centre",
+        "data": {
+            "name": "Larne House",
+            "capacity": 19,
+            "unisex": true
+        }
+    },
+    {
+        "model": "Centre",
+        "data": {
+            "name": "Morton Hall",
+            "capacity": 392,
+            "reservable": true
+        }
+    },
+    {
+        "model": "Centre",
+        "data": {
+            "name": "Pennie House",
+            "capacity": 32,
+            "unisex": true,
+            "reservable": true
+        }
+    },
+    {
+        "model": "Centre",
+        "data": {
+            "name": "Tinsley House",
+            "capacity": 119,
+            "reservable": true
+        }
+    },
+    {
+        "model": "Centre",
+        "data": {
+            "name": "The Verne",
+            "capacity": 320
+        }
+    },
+    {
+        "model": "Centre",
+        "data": {
+            "name": "Yarls Wood",
+            "capacity": 38,
+            "capacity_female": 304,
+            "reservable": true,
+            "fast_track": true
+        }
+    }
+]

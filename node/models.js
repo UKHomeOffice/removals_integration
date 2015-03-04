@@ -3,7 +3,12 @@ var Sequelize = require('sequelize'),
     sequelize = db.sequelize;
 
 var Nationality = sequelize.define('Nationality', {
-    nationality: Sequelize.STRING
+    name: { type: Sequelize.STRING, unique: true },
+    code: { type: Sequelize.STRING(3), unique: true },
+    valid_from: { type: Sequelize.DATE, allowNull: true },
+    valid_to: { type: Sequelize.DATE, allowNull: true },
+    replaced_by: Sequelize.STRING(3),
+    notes: Sequelize.STRING
 });
 
 var Centre = sequelize.define('Centre', {
@@ -18,7 +23,7 @@ var Person = sequelize.define('Person', {
     cid_id: { type: Sequelize.STRING, unique: true },
     gender: Sequelize.ENUM('m', 'f', 'u', 'n')
 });
-Person.hasOne(Nationality);
+Person.hasMany(Nationality);
 Person.hasOne(Centre, {
     as: 'current_location'
 });

@@ -1,5 +1,7 @@
-var exec = require("child_process").exec;
-var jade = require("jade");
+var CONFIG = require('./config').config,
+    exec = require("child_process").exec,
+    jade = require("jade");
+
 var controllers = {
     start: function(request, response) {
         console.log("Request handler 'start' was called.");

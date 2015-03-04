@@ -1,4 +1,5 @@
-var sequelize_fixtures = require('sequelize-fixtures'),
+var CONFIG = require('./config').config,
+    sequelize_fixtures = require('sequelize-fixtures'),
     models = require('./models').models;
 
 function install_fixtures() {

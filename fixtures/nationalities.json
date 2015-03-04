@@ -1,0 +1,38 @@
+[
+    {
+        "model": "Nationality",
+        "data": {
+            "name": "Afghanistan",
+            "code": "AFG",
+            "valid_from": null,
+            "valid_to" : null,
+            "replaced_by" : null,
+            "also_includes" : "",
+            "notes" : ""
+        }
+    },
+    {
+        "model": "Nationality",
+        "data": {
+            "name": "Anguilla",
+            "code": "AIA",
+            "valid_from": "12/31/83",
+            "valid_to" : null,
+            "replaced_by" : null,
+            "also_includes" : "",
+            "notes" : ""
+        }
+    },
+    {
+        "model": "Nationality",
+        "data": {
+            "name": "Australia",
+            "code": "AUS",
+            "valid_from": null,
+            "valid_to" : null,
+            "replaced_by" : null,
+            "also_includes" : "Christmas Island, Cocos (Keeling) Islands, Norfolk Island",
+            "notes" : ""
+        }
+    }
+]
