@@ -1,3 +1,6 @@
+CONFIG = require(process.cwd()+'/node/config').config; // global!
+var models = require("../node/models.js").models;
+
 var json_wrangler = require("../models/json_wrangler.js");
 var chai = require('chai'),
   assert = chai.assert,
