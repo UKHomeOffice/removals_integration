@@ -1,9 +1,8 @@
 console.log(process.cwd()+'/node/config.js');
 CONFIG = require(process.cwd()+'/node/config').config; // global!
 
-var should = require('should');
-var assert = require("assert");
 var models = require("../node/models.js").models;
+var chai = require('chai'), assert = chai.assert, expect = chai.expect, should = chai.should();
 
 describe('Centre',function(){
     describe('#properties', function(){
