@@ -15,8 +15,12 @@ function install_fixtures() {
 function install_csv(filepath) {
     console.log('reading csv file ' + filepath);
     var parser = parse({delimiter: ','}),
-        input = fs.createReadStream(filepath),
         output = [];
+
+    fs.readFile(filepath, function(err, data) {
+        if (err) throw err;
+        parser.write(data);
+    });
 
     // Use the writable stream api
     parser.on('readable', function(){
@@ -37,7 +41,7 @@ function install_csv(filepath) {
     });
 
     parser.on('error', function(err){
-        console.log(err.message);
+        console.log('parse error ' + err.message);
     });
 
     parser.on('finish', function(){
@@ -50,7 +54,7 @@ function install_csv(filepath) {
     });
 
     // Now that setup is done, write data to the stream
-    parser.write(input);
+    //parser.write(input);
 
     parser.end();
 }
