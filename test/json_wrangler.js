@@ -36,4 +36,13 @@ describe('json_wrangler', function(){
         JW = new json_wrangler().consume(sample_input);
         JW.count_outbound().should.equal(3);
     });
+    it('should produce hydrated data instances of people', function(){
+        JW = new json_wrangler().consume(sample_input);
+        var list_out = JW.get_outbound();
+        list_out[0].cid_id.should.equal('654321');
+        list_out[1].cid_id.should.equal('654322');
+        list_out[2].cid_id.should.equal('654325');
+        var list_in = JW.get_inbound();
+        list_in[0].cid_id.should.equal('123456');
+    });
 });
