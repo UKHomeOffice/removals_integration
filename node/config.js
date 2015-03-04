@@ -14,7 +14,7 @@ for(var v in get_from_env) {
         config[map[key]] = process.env[key];
     } else {
         console.log("No environment variable " + key + ". Using config.json.");
-        var config    = require('../config/config.json')[cur_env];
+        config    = require('../config/config.json')[cur_env];
         break;
     }
 }
@@ -30,5 +30,3 @@ CONFIG = {
 console.log(CONFIG);
 
 exports.config = CONFIG;
-
-// even though the CONFIG object is global, we return it here for use on the command line
