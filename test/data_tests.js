@@ -12,12 +12,14 @@ var chai = require('chai'),
 
 describe('json_wrangler', function(){
     before(function(){
-        require("./test/fix.js");
+        require("../test/fix");
     });
     it('should do be able to load a Person by its cid_id',function(){
         JW = new json_wrangler();
-        //var P = JW.find_by_cid_id('12346');
-//console.log(P.gender);
+        JW.find_by_cid_id('12346',function(p){
+            p.gender.should.equal('f');
+            p.id.should.equal(2);
+        });
         //expect(P.gender).to.equal('f');
     });
 });
