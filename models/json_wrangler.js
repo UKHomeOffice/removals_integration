@@ -37,5 +37,32 @@ function json_wrangler(){
                 return callback(person);
         });
     }
+    this.find_centre_by_name = function(name,callback){
+        models.Centre.findOne({where:{"name": name}})
+            .then(function(centre){
+                return callback(centre);
+        });
+    }
+    this.update_centres = function(){
+        for(centre_name in this.data.totals.bed_counts){
+            var bed_counts = this.data.totals.bed_counts[centre_name];
+            this.find_centre_by_name(centre_name,function(centre){
+                //var new_counts = this.data.totals.bed_counts[centre_name];
+                //centre.update(this.data.totals.bed_counts[centre_name]);
+                console.log(bed_counts);
+                var key_map = {
+                    "male": "current_beds_male",
+                    "female": "current_beds_female",
+                    "out_of_commission": "current_beds_ooc",
+                };
+                for(key in key_map){
+                    var field_name = key_map[key];
+                    centre.set(field_name, bed_counts[key]);
+                }
+                centre.save();
+            });
+        }
+        return true;
+    }
 };
 module.exports = json_wrangler;
