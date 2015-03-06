@@ -1,16 +1,33 @@
 var models = require("../node/models.js").models;
-function json_wrangler(){
+function json_wrangler(validate_against_db){
     this.json = '';
     this.data = null;
+    this.validate_against_db = validate_against_db;
     this.consume = function(json_data){
         try{
             this.json = json_data;
             this.data = JSON.parse(this.json);
-            return this;
         } catch(err) {
             throw("Input is not valid JSON");
         }
+        if(this.validate_against_db){
+            this.invalidate(this.data);
+        }
+        return this;
     };
+    this.invalidate = function(data){
+        this.invalidate_centre_names(data);
+    }
+    this.invalidate_centre_names = function(data){
+        var errors = [];
+        for(centre_name in data.totals.bed_counts){
+            this.find_centre_by_name(centre_name,function(centre){
+                if(!centre){
+                    throw("Non-existent centre name: " + centre_name);
+                }
+            });
+        }
+    }
     this.data_keys = function(){
         return Object.keys(this.data);
     };
