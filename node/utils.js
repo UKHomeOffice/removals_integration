@@ -1,9 +1,12 @@
-var sequelize_fixtures = require('sequelize-fixtures'),
+
+var /*sequelize_fixtures = require('sequelize-fixtures'),*/
     fs = require('fs'),
     parse = require('csv-parse'),
+    Sequelize = require('sequelize'),
 
     CONFIG = require('./config').config,
-    models /*= require('./models').models*/;
+    models = require('./models').models;
+
 
 function install_fixtures() {
     sequelize_fixtures.loadFile(CONFIG.project_path + 'fixtures/*.json', models)
@@ -25,6 +28,20 @@ function install_csv(filepath) {
         parser.write(data);
     });
 
+    console.log('reading csv file ' + filepath);
+    var parser = parse({delimiter: ','}),
+        input = fs.createReadStream(filepath),
+        output = [];
+
+    input
+        .on('open', function(fd) {
+            console.log('stream open ' + fd);
+            //parser.write(input.read());
+            //console.log(output);
+            input.pipe(parser);
+        });
+
+
     // Use the writable stream api
     parser.on('readable', function(){
         while (true) {
@@ -34,6 +51,7 @@ function install_csv(filepath) {
             catch (e) {
                 console.dump('something (' + e + ') went wrong');
             }
+
             console.dump('next record: ' + record);
             if (record) {
                 output.push(record);
@@ -53,16 +71,71 @@ function install_csv(filepath) {
             [ 'someone','x','1022','1022','a funny cat','/home/someone','/bin/bash' ]
         ]);*/
         console.log('done');
-        console.log(output);
+
+        //console.log(output);
     });
 
-    // Now that setup is done, write data to the stream
-    //parser.write(input);
+    //parser.end();
+}
 
-    parser.end();
+function import_csv(filepath, model, list_of_fields) {
+    console.log('reading csv file ' + filepath);
+    var input = fs.readFile(filepath, {
+        encoding: 'utf-8'
+    }, function(err, data) {
+        if (err) throw err;
+
+        var i, j, lines, line, values, value, field, bits,
+            creation_obj, loop_start = 0;
+        lines = data.match(/^.*([\n\r]+|$)/gm);
+
+
+        if (!list_of_fields) { // read fieldnames from first line
+            line = lines[0];
+            list_of_fields = line.split(',');
+            for (j = 0; j < list_of_fields.length; j++) {
+                list_of_fields[j] = list_of_fields[j].trim();
+            }
+            loop_start = 1;
+        }
+
+        for (i = loop_start; i < lines.length; i++) {
+            line = lines[i];
+            values = line.split(',');
+            creation_obj = {};
+
+            for (j=0; j < list_of_fields.length; j++) {
+
+                value = values[j].trim();
+                field = list_of_fields[j].trim();
+
+                if (value) {
+                    if (model._isDateAttribute(field)) {
+                        console.log(field + ': ' + value);
+                        bits = value.split('/');
+                        value = new Date(bits[2], bits[1] - 1, bits[0]);
+                        console.log(field + ': ' + value);
+                    }
+                    creation_obj[field] = value;
+                }
+            }
+            console.log(creation_obj);
+            model
+                .create(creation_obj)
+                .complete(function(err) {
+                    if (!!err) {
+                        console.log('Save failed: ', err)
+                    } else {
+                        console.log('Saved!')
+                    }
+                });
+        }
+    });
 }
 
 exports.utils = {
     install_fixtures: install_fixtures,
-    install_csv: install_csv
+    install_csv: install_csv,
+    import_csv: import_csv
+
 };
