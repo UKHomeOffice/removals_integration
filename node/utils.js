@@ -3,6 +3,8 @@ var /*sequelize_fixtures = require('sequelize-fixtures'),*/
     fs = require('fs'),
     parse = require('csv-parse'),
     Sequelize = require('sequelize'),
+    db = require('./db').db,
+    sequelize = db.sequelize,
 
     CONFIG = require('./config').config,
     models = require('./models').models;
@@ -79,57 +81,66 @@ function install_csv(filepath) {
 }
 
 function import_csv(filepath, model, list_of_fields) {
-    console.log('reading csv file ' + filepath);
-    var input = fs.readFile(filepath, {
-        encoding: 'utf-8'
-    }, function(err, data) {
-        if (err) throw err;
+    console.log('clear table ' + model);
+    sequelize
+        .sync({ force: true })
+        .then(function() {
+            console.log('reading csv file ' + filepath);
+            fs.readFile(filepath, {
+                encoding: 'utf-8'
+            }, function(err, data) {
+                if (err) throw err;
 
-        var i, j, lines, line, values, value, field, bits,
-            creation_obj, loop_start = 0;
-        lines = data.match(/^.*([\n\r]+|$)/gm);
+                var i, j, lines, line, values, value, field, bits,
+                    creation_obj, loop_start = 0;
+                lines = data.match(/^.*([\n\r]+|$)/gm);
 
 
-        if (!list_of_fields) { // read fieldnames from first line
-            line = lines[0];
-            list_of_fields = line.split(',');
-            for (j = 0; j < list_of_fields.length; j++) {
-                list_of_fields[j] = list_of_fields[j].trim();
-            }
-            loop_start = 1;
-        }
-
-        for (i = loop_start; i < lines.length; i++) {
-            line = lines[i];
-            values = line.split(',');
-            creation_obj = {};
-
-            for (j=0; j < list_of_fields.length; j++) {
-
-                value = values[j].trim();
-                field = list_of_fields[j].trim();
-
-                if (value) {
-                    if (model._isDateAttribute(field)) {
-                        console.log(field + ': ' + value);
-                        bits = value.split('/');
-                        value = new Date(bits[2], bits[1] - 1, bits[0]);
-                        console.log(field + ': ' + value);
+                if (!list_of_fields) { // read fieldnames from first line
+                    line = lines[0];
+                    list_of_fields = line.split(',');
+                    for (j = 0; j < list_of_fields.length; j++) {
+                        list_of_fields[j] = list_of_fields[j].trim();
                     }
-                    creation_obj[field] = value;
+                    loop_start = 1;
                 }
-            }
-            console.log(creation_obj);
-            model
-                .create(creation_obj)
-                .complete(function(err) {
-                    if (!!err) {
-                        console.log('Save failed: ', err)
-                    } else {
-                        console.log('Saved!')
+
+                for (i = loop_start; i < lines.length; i++) {
+                    line = lines[i];
+                    values = line.split(',');
+                    creation_obj = {};
+
+                    for (j=0; j < list_of_fields.length; j++) {
+
+                        value = values[j].trim();
+                        field = list_of_fields[j].trim();
+
+                        if (value) {
+                            // sort out date fields
+                            if (model._isDateAttribute(field)) { // WARNING: uses sequelize internal method
+                                console.log(field + ': ' + value);
+                                bits = value.split('/');
+                                value = new Date(bits[2], bits[1] - 1, bits[0]);
+                                console.log(field + ': ' + value);
+                            }
+                            if (value.toLowerCase() == 'true') {
+                                value = 1;
+                            }
+                            creation_obj[field] = value;
+                        }
                     }
-                });
-        }
+                    console.log(creation_obj);
+                    model
+                        .create(creation_obj)
+                        .complete(function(err) {
+                            if (!!err) {
+                                console.log('Save failed: ', err)
+                            } else {
+                                console.log('Saved!')
+                            }
+                        });
+                }
+            });
     });
 }
 

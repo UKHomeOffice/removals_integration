@@ -2,7 +2,7 @@ var Sequelize = require('sequelize'),
     db = require('./db').db,
     sequelize = db.sequelize;
 
-var Nationality = sequelize.define('Nationality', {
+var Nationality = sequelize.define('nationality', {
     name: { type: Sequelize.STRING, unique: true },
     code: { type: Sequelize.STRING(3), unique: true },
     valid_from: { type: Sequelize.DATE, allowNull: true },
@@ -12,15 +12,19 @@ var Nationality = sequelize.define('Nationality', {
     notes: Sequelize.STRING
 });
 
-var Centre = sequelize.define('Centre', {
+var Centre = sequelize.define('centre', {
     name: { type: Sequelize.STRING, unique: true },
+    capacity: Sequelize.INTEGER,
+    capacity_female: Sequelize.INTEGER,
+    reservable: { type: Sequelize.BOOLEAN, default: false },
+    fast_track: { type: Sequelize.BOOLEAN, default: false },
+    unisex: { type: Sequelize.BOOLEAN, default: false },
     current_beds_male: Sequelize.INTEGER,
     current_beds_female: Sequelize.INTEGER,
-    current_beds_ooc: Sequelize.INTEGER,
-    material: Sequelize.STRING
+    current_beds_ooc: Sequelize.INTEGER
 });
 
-var Person = sequelize.define('Person', {
+var Person = sequelize.define('person', {
     cid_id: { type: Sequelize.STRING, unique: true },
     gender: Sequelize.ENUM('m', 'f', 'u', 'n')
 });
