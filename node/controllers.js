@@ -1,8 +1,20 @@
 var CONFIG = require('./config').config,
     exec = require("child_process").exec,
     jade = require("jade");
+var data_reader = require("../models/data_reader.js");
 
 var controllers = {
+    chicken: function(request, response) {
+        console.log("cluck cluck");
+        var DR = new data_reader();
+        DR.get_centres(function(list){
+            var j = jade.compileFile('./templates/dashboard.jade', {});
+            var html = j({"list":list,"name":"chicken"});
+            response.writeHead(200, {"Content-Type": "text/html"});
+            response.write(html);
+            response.end();
+        });
+    },
     start: function(request, response) {
         console.log("Request handler 'start' was called.");
         exec("find /",
