@@ -8,6 +8,7 @@ var Nationality = sequelize.define('Nationality', {
     valid_from: { type: Sequelize.DATE, allowNull: true },
     valid_to: { type: Sequelize.DATE, allowNull: true },
     replaced_by: Sequelize.STRING(3),
+    also_included: Sequelize.STRING,
     notes: Sequelize.STRING
 });
 
