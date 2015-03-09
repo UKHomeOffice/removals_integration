@@ -147,8 +147,5 @@ function import_csv(filepath, model, list_of_fields) {
 }
 
 exports.utils = {
-    install_fixtures: install_fixtures,
-    install_csv: install_csv,
     import_csv: import_csv
-
 };
