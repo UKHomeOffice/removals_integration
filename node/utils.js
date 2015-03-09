@@ -30,11 +30,6 @@ function install_csv(filepath) {
         parser.write(data);
     });
 
-    console.log('reading csv file ' + filepath);
-    var parser = parse({delimiter: ','}),
-        input = fs.createReadStream(filepath),
-        output = [];
-
     input
         .on('open', function(fd) {
             console.log('stream open ' + fd);
@@ -68,20 +63,13 @@ function install_csv(filepath) {
     });
 
     parser.on('finish', function(){
-        /*output.should.eql([
-            [ 'root','x','0','0','root','/root','/bin/bash' ],
-            [ 'someone','x','1022','1022','a funny cat','/home/someone','/bin/bash' ]
-        ]);*/
         console.log('done');
-
-        //console.log(output);
     });
-
-    //parser.end();
 }
 
 function import_csv(filepath, model, list_of_fields) {
     console.log('clear table ' + model);
+    var dump = require('jsDump');
     sequelize
         .sync({ force: true })
         .then(function() {
