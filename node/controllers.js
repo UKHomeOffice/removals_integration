@@ -2,6 +2,7 @@ var CONFIG = require('./config').config,
     exec = require("child_process").exec,
     jade = require("jade");
 var data_reader = require("../models/data_reader.js");
+var json_wrangler = require("../models/json_wrangler.js");
 
 var controllers = {
     chicken: function(request, response) {
@@ -12,6 +13,20 @@ var controllers = {
             var html = j({"list":list,"name":"chicken"});
             response.writeHead(200, {"Content-Type": "text/html"});
             response.write(html);
+            response.end();
+        });
+    },
+    updateCentres: function(request, response) {
+        console.log("handling Centre update");
+        var msg = 'nothing has happened';
+        var postData = "";
+        request.setEncoding("utf8");
+        request.addListener("data", function(postDataChunk) {
+            postData += postDataChunk;
+            console.log("Received POST data chunk '"+ postDataChunk + "'.");
+            JW = new json_wrangler(true).consume(postData).update_centres();
+            response.writeHead(200, {"Content-Type": "text/html"});
+            response.write("got " + postData);
             response.end();
         });
     },
