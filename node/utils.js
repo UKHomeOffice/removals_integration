@@ -7,63 +7,6 @@ var fs = require('fs'),
     CONFIG = require('./config').config,
     models = require('./models').models;
 
-function install_fixtures() {
-    sequelize_fixtures.loadFile(CONFIG.project_path + 'fixtures/*.json', models)
-    .then(function(){
-        //doStuffAfterLoad();
-    });
-}
-
-function install_csv(filepath) {
-    console.log('reading csv file "' + filepath + '"');
-    var parser = parse({delimiter: ','}),
-        output = [];
-
-    fs.readFile(filepath, function(err, data) {
-        if (err) {
-            console.log('oops ' + err);
-            throw err;
-        }
-        parser.write(data);
-    });
-
-    input
-        .on('open', function(fd) {
-            console.log('stream open ' + fd);
-            //parser.write(input.read());
-            //console.log(output);
-            input.pipe(parser);
-        });
-
-
-    // Use the writable stream api
-    parser.on('readable', function(){
-        while (true) {
-            try {
-                var record = parser.read();
-            }
-            catch (e) {
-                console.dump('something (' + e + ') went wrong');
-            }
-
-            console.dump('next record: ' + record);
-            if (record) {
-                output.push(record);
-            } else {
-                break;
-            }
-        }
-    });
-
-    parser.on('error', function(err){
-        console.log('parse error ' + err.message);
-    });
-
-    parser.on('finish', function(){
-        console.log('done');
-    });
-}
-
 // http://www.bennadel.com/blog/1504-ask-ben-parsing-csv-strings-with-javascript-exec-regular-expression-command.htm
 function CSVToArray(strData, delimiter){
 // Check to see if the delimiter is defined. If not,
