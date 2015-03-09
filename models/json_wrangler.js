@@ -7,23 +7,36 @@ function json_wrangler(validate_against_db){
         try{
             this.json = json_data;
             this.data = JSON.parse(this.json);
+            if(this.validate_against_db){
+                try{
+                    this.invalidate(this.data);
+                } catch(err) {
+                    throw(err);
+                }
+            }
         } catch(err) {
+            console.log("caught in this.consume " + err);
             throw("Input is not valid JSON");
-        }
-        if(this.validate_against_db){
-            this.invalidate(this.data);
         }
         return this;
     };
     this.invalidate = function(data){
-        this.invalidate_centre_names(data);
+        try{
+            this.invalidate_centre_names(data);
+        } catch(err) {
+            console.log("caught in this.invalidate " + err);
+            throw(err);
+        }
     }
     this.invalidate_centre_names = function(data){
         var errors = [];
         for(centre_name in data.totals.bed_counts){
             this.find_centre_by_name(centre_name,function(centre){
                 if(!centre){
-                    throw("Non-existent centre name: " + centre_name);
+                    errors.push("No such Centre: " + centre_name);
+                }
+                if(errors.length){
+                    throw(errors[0]);
                 }
             });
         }
@@ -55,18 +68,20 @@ function json_wrangler(validate_against_db){
         });
     }
     this.find_centre_by_name = function(name,callback){
-        models.Centre.findOne({where:{"name": name}})
-            .then(function(centre){
-                return callback(centre);
-        });
+            models.Centre.findOne({where:{"name": name}})
+                .then(function(centre){
+                    try{
+                        return callback(centre)
+                    } catch(err) {
+                    }
+            }).catch(function(err){
+                //console.log(err);
+            });
     }
     this.update_centres = function(){
         for(centre_name in this.data.totals.bed_counts){
             var bed_counts = this.data.totals.bed_counts[centre_name];
             this.find_centre_by_name(centre_name,function(centre){
-                //var new_counts = this.data.totals.bed_counts[centre_name];
-                //centre.update(this.data.totals.bed_counts[centre_name]);
-                console.log(bed_counts);
                 var key_map = {
                     "male": "current_beds_male",
                     "female": "current_beds_female",

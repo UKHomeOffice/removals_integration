@@ -27,15 +27,30 @@ var controllers = {
     },
     updateCentres: function(request, response) {
         console.log("handling Centre update");
-        var msg = 'nothing has happened';
+        var body = '';
         var postData = "";
         request.setEncoding("utf8");
         request.addListener("data", function(postDataChunk) {
             postData += postDataChunk;
+            var code = 200;
             console.log("Received POST data chunk '"+ postDataChunk + "'.");
-            JW = new json_wrangler(true).consume(postData).update_centres();
-            response.writeHead(200, {"Content-Type": "text/html"});
-            response.write("got " + postData);
+            try{
+                JW = new json_wrangler(true).consume(postData);
+//
+//.update_centres()
+            } catch(err) {
+console.log("CAUGHT " + err);
+                if(err == 'Input is not valid JSON'){
+                    code = 400;
+                }
+                if(/Non-existent centre name/.exec(err)){
+                    console.log("caught non-existent centre");
+                    code = 404;
+                }
+                body = err;
+            }
+            response.writeHead(code, {"Content-Type": "text/html"});
+            response.write(body);
             response.end();
         });
     },
