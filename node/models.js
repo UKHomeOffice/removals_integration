@@ -28,8 +28,8 @@ var Person = sequelize.define('person', {
     cid_id: { type: Sequelize.STRING, unique: true },
     gender: Sequelize.ENUM('m', 'f', 'u', 'n')
 });
-Person.hasMany(Nationality);
-Person.hasOne(Centre, {
+Nationality.hasMany(Person);
+Centre.hasOne(Person, {
     as: 'current_location'
 });
 
