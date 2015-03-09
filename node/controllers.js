@@ -5,7 +5,16 @@ var data_reader = require("../models/data_reader.js");
 var json_wrangler = require("../models/json_wrangler.js");
 
 var controllers = {
-    chicken: function(request, response) {
+    diagnostics: function(request, response) {
+        var msg = '';
+        for(i in process.env){
+            msg += i + ": " + process.env[i] + "\n";
+        }
+        response.writeHead(200, {"Content-Type": "text/plain"});
+        response.write(msg);
+        response.end();
+    },
+    dashboard: function(request, response) {
         console.log("cluck cluck");
         var DR = new data_reader();
         DR.get_centres(function(list){

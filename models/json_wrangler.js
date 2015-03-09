@@ -4,7 +4,6 @@ function json_wrangler(validate_against_db){
     this.data = null;
     this.validate_against_db = validate_against_db;
     this.consume = function(json_data){
-console.log(json_data);
         try{
             this.json = json_data;
             this.data = JSON.parse(this.json);
