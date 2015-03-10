@@ -33,9 +33,6 @@ Centre.hasOne(Person, {
     as: 'current_location'
 });
 
-/*sequelize
-    .sync({ force: true });*/
-
 exports.models = {
     Person: Person,
     Nationality: Nationality,

@@ -4,7 +4,8 @@ Sequelize = require("sequelize");
 var sequelize_fixtures = require('sequelize-fixtures');
 var models = require("../node/models.js").models;
 
-var json_wrangler = require("../models/json_wrangler.js");
+var json_wrangler = require("../models/json_wrangler.js"),
+    JW;
 var chai = require('chai'),
   assert = chai.assert,
   expect = chai.expect,

@@ -8,7 +8,7 @@ var fs = require('fs'),
     models = require('./models').models;
 
 // http://www.bennadel.com/blog/1504-ask-ben-parsing-csv-strings-with-javascript-exec-regular-expression-command.htm
-function CSVToArray(strData, delimiter){
+function CSVToArray(strData, delimiter) {
 // Check to see if the delimiter is defined. If not,
 // then default to comma.
     delimiter = (delimiter || ",");
@@ -75,21 +75,79 @@ function CSVToArray(strData, delimiter){
  * @returns Date
  */
 function parseDate(str) {
-    var bits = str.split('/');
-    return new Date(bits[2], bits[1] - 1, bits[0]);
+    if (!str) return null;
+    var bits = str.split('/'),
+        year = bits[2], nYear;
+    if (year.length == 2) {
+        nYear = parseInt(year);
+        if (nYear >= 70) {
+            year = '19' + year;
+        } else {
+            year = '20' + year;
+        }
+    }
+    return new Date(year, bits[1] - 1, bits[0]);
+}
+
+function write_csv_to_db(model, list_of_fields, data) {
+    var i, j, lines, values, value, field, creation_obj,
+        loop_start = 0;
+    lines = CSVToArray(data);
+
+    if (!list_of_fields) { // read fieldnames from first line
+        list_of_fields = lines[0];
+        for (j = 0; j < list_of_fields.length; j++) {
+            list_of_fields[j] = list_of_fields[j].trim();
+        }
+        loop_start = 1;
+    }
+
+    for (i = loop_start; i < lines.length; i++) {
+        values = lines[i];
+        creation_obj = {};
+
+        for (j=0; j < list_of_fields.length; j++) {
+
+            value = values[j].trim();
+            field = list_of_fields[j].trim();
+
+            if (value) {
+                // sort out date fields
+                console.log('current value: ' + value);
+                if (model._isDateAttribute(field)) { // WARNING: uses sequelize internal method
+                    value = parseDate(value);
+                    console.log(field + ': ' + value);
+                } else if (value.toLowerCase() == 'true ') {
+                    value = 1;
+                }
+                creation_obj[field] = value;
+            }
+        }
+        console.log(creation_obj);
+        model
+            .create(creation_obj)
+            .complete(function(err) {
+                if (!!err) {
+                    console.log('Save failed: ', err)
+                } else {
+                    console.log('Saved!')
+                }
+            });
+    }
 }
 
 /**
  * Take a CSV file and import its contents into the database
  * @param filepath string
  * @param model Model
+ * @param wipe_db bool
  * @param list_of_fields Array if left blank field names are pulled from the first row
  */
-function import_csv(filepath, model, list_of_fields) {
-    console.log('clear table ' + model);
-    var dump = require('jsDump');
+function import_csv(filepath, model, wipe_db, list_of_fields) {
+    console.log(wipe_db ? 'wiping db' : 'no db wipe');
+    //var dump = require('jsDump');
     sequelize
-        .sync({ force: true })
+        .sync({ force: wipe_db })
         .then(function() {
             console.log('reading csv file ' + filepath);
             fs.readFile(filepath, {
@@ -97,55 +155,13 @@ function import_csv(filepath, model, list_of_fields) {
             }, function(err, data) {
                 if (err) throw err;
 
-                var i, j, lines, line, values, value, field, bits,
-                    creation_obj, loop_start = 0;
-                lines = CSVToArray(data); //data.match(/^.*([\n\r]+|$)/gm);
-
-
-                if (!list_of_fields) { // read fieldnames from first line
-                    list_of_fields = lines[0];
-                    for (j = 0; j < list_of_fields.length; j++) {
-                        list_of_fields[j] = list_of_fields[j].trim();
-                    }
-                    loop_start = 1;
-                }
-
-                for (i = loop_start; i < lines.length; i++) {
-                    values = lines[i];
-                    creation_obj = {};
-
-                    for (j=0; j < list_of_fields.length; j++) {
-
-                        value = values[j].trim();
-                        field = list_of_fields[j].trim();
-
-                        if (value) {
-                            // sort out date fields
-                            console.log('current value: ' + value);
-                            if (model._isDateAttribute(field)) { // WARNING: uses sequelize internal method
-                                value = parseDate(value);
-                                console.log(field + ': ' + value);
-                            } else if (value.toLowerCase() == 'true ') {
-                                value = 1;
-                            }
-                            creation_obj[field] = value;
-                        }
-                    }
-                    console.log(creation_obj);
-                    model
-                        .create(creation_obj)
-                        .complete(function(err) {
-                            if (!!err) {
-                                console.log('Save failed: ', err)
-                            } else {
-                                console.log('Saved!')
-                            }
-                        });
-                }
+                write_csv_to_db(model, data, list_of_fields);
             });
     });
 }
 
 exports.utils = {
-    import_csv: import_csv
+    import_csv: import_csv,
+    parseDate : parseDate,
+    write_csv_to_db: write_csv_to_db
 };
