@@ -3,40 +3,32 @@ function json_wrangler(validate_against_db){
     this.json = '';
     this.data = null;
     this.validate_against_db = validate_against_db;
-    this.consume = function(json_data){
+    this.errors = [];
+    this.consume = function(json_data,callback){
+        this.json = json_data;
         try{
-            this.json = json_data;
             this.data = JSON.parse(this.json);
-            if(this.validate_against_db){
-                try{
-                    this.invalidate(this.data);
-                } catch(err) {
-                    throw(err);
-                }
-            }
-        } catch(err) {
-            console.log("caught in this.consume " + err);
+        } catch(err){
             throw("Input is not valid JSON");
+        }
+        if(this.validate_against_db){
+            this.invalidate_centre_names(this.data,function(success, error){
+                if(error){
+                    callback(null, error);
+                } 
+                if(success){
+                    callback('OK', null);
+                }
+            });
         }
         return this;
     };
-    this.invalidate = function(data){
-        try{
-            this.invalidate_centre_names(data);
-        } catch(err) {
-            console.log("caught in this.invalidate " + err);
-            throw(err);
-        }
-    }
-    this.invalidate_centre_names = function(data){
+    this.invalidate_centre_names = function(data,callback){
         var errors = [];
         for(centre_name in data.totals.bed_counts){
             this.find_centre_by_name(centre_name,function(centre){
                 if(!centre){
-                    errors.push("No such Centre: " + centre_name);
-                }
-                if(errors.length){
-                    throw(errors[0]);
+                    return callback(null, "no such centre name: " + centre_name);
                 }
             });
         }
@@ -70,10 +62,7 @@ function json_wrangler(validate_against_db){
     this.find_centre_by_name = function(name,callback){
             models.Centre.findOne({where:{"name": name}})
                 .then(function(centre){
-                    try{
-                        return callback(centre)
-                    } catch(err) {
-                    }
+                    return callback(centre)
             }).catch(function(err){
                 //console.log(err);
             });
