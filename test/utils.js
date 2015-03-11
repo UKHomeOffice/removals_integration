@@ -19,6 +19,6 @@ describe('utils functions', function() {
         expect(utils.parseDate('9/1/08').toString()).to.equal(new Date('2008', 0,9).toString());
     });
     it('should parse CSV', function() {
-        utils.write_csv_to_db(models.Nationality, sample_csv);
+        utils.write_csv_to_db(models.Nationality, null, sample_csv);
     });
 });

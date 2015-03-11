@@ -155,7 +155,7 @@ function import_csv(filepath, model, wipe_db, list_of_fields) {
             }, function(err, data) {
                 if (err) throw err;
 
-                write_csv_to_db(model, data, list_of_fields);
+                write_csv_to_db(model, list_of_fields, data);
             });
     });
 }
