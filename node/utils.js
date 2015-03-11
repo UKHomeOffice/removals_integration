@@ -11,8 +11,9 @@ var fs = require('fs'),
 function CSVToArray(strData, delimiter) {
 // Check to see if the delimiter is defined. If not,
 // then default to comma.
-    delimiter = (delimiter || ",");
+    delimiter = delimiter || ",";
 // Create a regular expression to parse the CSV values.
+    var strMatchedValue;
     var objPattern = new RegExp(
         (
 // Delimiters.
@@ -53,13 +54,13 @@ function CSVToArray(strData, delimiter) {
         if (arrMatches[2]){
 // We found a quoted value. When we capture
 // this value, unescape any double quotes.
-            var strMatchedValue = arrMatches[2].replace(
+            strMatchedValue = arrMatches[2].replace(
                 new RegExp( "\"\"", "g" ),
                 "\""
             );
         } else {
 // We found a non-quoted value.
-            var strMatchedValue = arrMatches[3];
+            strMatchedValue = arrMatches[3];
         }
 // Now that we have our value string, let's add
 // it to the data array.
@@ -89,9 +90,9 @@ function parseDate(str) {
     return new Date(year, bits[1] - 1, bits[0]);
 }
 
-function write_csv_to_db(model, list_of_fields, data) {
+function write_csv_to_db(model, list_of_fields, data, callback) {
     var i, j, lines, values, value, field, creation_obj,
-        loop_start = 0;
+        loop_start = 0, return_count = 0, err_list = [];
     lines = CSVToArray(data);
 
     if (!list_of_fields) { // read fieldnames from first line
@@ -113,24 +114,28 @@ function write_csv_to_db(model, list_of_fields, data) {
 
             if (value) {
                 // sort out date fields
-                console.log('current value: ' + value);
                 if (model._isDateAttribute(field)) { // WARNING: uses sequelize internal method
                     value = parseDate(value);
-                    console.log(field + ': ' + value);
+
                 } else if (value.toLowerCase() == 'true ') {
                     value = 1;
                 }
                 creation_obj[field] = value;
             }
         }
-        console.log(creation_obj);
+
         model
             .create(creation_obj)
             .complete(function(err) {
                 if (!!err) {
-                    console.log('Save failed: ', err)
+                    console.log('Failed to save ' + field, err)
+                    err_list.append(err);
                 } else {
-                    console.log('Saved!')
+                    console.log('Saved ' + field);
+                }
+                return_count++;
+                if (return_count == lines.length && callback) {
+                    callback(err_list);
                 }
             });
     }
@@ -143,9 +148,9 @@ function write_csv_to_db(model, list_of_fields, data) {
  * @param wipe_db bool
  * @param list_of_fields Array if left blank field names are pulled from the first row
  */
-function import_csv(filepath, model, wipe_db, list_of_fields) {
+function import_csv(filepath, model, wipe_db, list_of_fields, callback) {
     console.log(wipe_db ? 'wiping db' : 'no db wipe');
-    //var dump = require('jsDump');
+
     sequelize
         .sync({ force: wipe_db })
         .then(function() {
@@ -155,7 +160,8 @@ function import_csv(filepath, model, wipe_db, list_of_fields) {
             }, function(err, data) {
                 if (err) throw err;
 
-                write_csv_to_db(model, list_of_fields, data);
+                write_csv_to_db(model, list_of_fields, data, callback);
+
             });
     });
 }
@@ -163,5 +169,6 @@ function import_csv(filepath, model, wipe_db, list_of_fields) {
 exports.utils = {
     import_csv: import_csv,
     parseDate : parseDate,
-    write_csv_to_db: write_csv_to_db
+    write_csv_to_db: write_csv_to_db,
+    CSVToArray : CSVToArray
 };
