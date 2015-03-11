@@ -51,6 +51,7 @@ var controllers = {
                         response.write('{"status":"ERROR","error":"'+err+'"}');
                         response.end();
                 });
+                JW.update_centres();
             }catch(err){
                 console.log("GOT ERROR " + err);
                 code = 400;
