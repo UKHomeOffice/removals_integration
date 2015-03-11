@@ -12,39 +12,13 @@ function json_wrangler(validate_against_db){
         } catch(err){
             throw("Input is not valid JSON");
         }
+        var deferred = Q.defer();
         if(this.validate_against_db){
             this.invalidate_centre_names(this.data,null)
-                .then(function(centre){console.log("17 "+centre.name);})
-                .then(null,function(err){console.log("18 "+err);});
-/*
-                    var deferred = Q.defer();
-            Q.fcall(this.invalidate_centre_names,this.data,function(data,error){
-                    if(data){
-                        //console.log("18 "+data.name);
-                        console.log("resolving "+data.name);
-                        deferred.resolve(data);
-                    }else{
-                        //throw(error);
-                        console.log("rejecting "+error);
-                        deferred.reject(error);
-                    }
-                    console.log(deferred);
-                    return deferred;
-                })
-                .then(function(x){console.log('OKK ')})
-                .then(null,function(err){console.log("GOT ERROR " + err)});
-            this.invalidate_centre_names(this.data,function(success, error){
-                if(error){
-                    throw(error);
-                    //callback(null, error);
-                } 
-                if(success){
-                    callback('OK', null);
-                }
-            });
-*/
+                .then(function(centre){deferred.resolve(centre);})
+                .then(null,function(err){deferred.reject(err);});
         }
-        return this;
+        return deferred.promise;
     };
     var self = this;
     this.invalidate_centre_names = function(data,callback){
@@ -89,7 +63,7 @@ function json_wrangler(validate_against_db){
                     if(centre){
                         deferred.resolve(centre);
                     } else {
-                        deferred.reject("no centre named "+name);
+                        deferred.reject("No centre named "+name);
                     }
                 })
             return deferred.promise;

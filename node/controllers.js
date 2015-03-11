@@ -36,9 +36,27 @@ var controllers = {
             console.log("Received POST data chunk '"+ postDataChunk + "'.");
             JW = new json_wrangler(true);
             try{
-                JW.consume(postData,function(success, error){});
+                JW.consume(postData,function(success, error){})
+                    .then(function(obj){
+                        console.log("resolved "+obj);
+                        var body = '{"status":"OK"}';
+                        response.writeHead(code, {"Content-Type": "text/json"});
+                        response.write(body);
+                        response.end();
+                    })
+                    .then(null,function(err){
+                        console.log("Rejected "+err);
+                        code = 404;
+                        response.writeHead(code, {"Content-Type": "text/json"});
+                        response.write('{"status":"ERROR","error":"'+err+'"}');
+                        response.end();
+                });
             }catch(err){
                 console.log("GOT ERROR " + err);
+                code = 400;
+                response.writeHead(code, {"Content-Type": "text/json"});
+                response.write('{"status":"ERROR","error":"'+err+'"}');
+                response.end();
             }
 /*
             response.writeHead(code, {"Content-Type": "text/html"});
