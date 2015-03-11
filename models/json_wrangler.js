@@ -1,5 +1,6 @@
 var models = require("../node/models.js").models,
-    Q = require('q');
+    Q = require('q'),
+    Qx = require('qx');
 function json_wrangler(validate_against_db){
     this.json = '';
     this.data = null;
@@ -22,9 +23,9 @@ function json_wrangler(validate_against_db){
     };
     var self = this;
     this.invalidate_centre_names = function(data,callback){
-        var centre_name = Object.keys(data.totals.bed_counts)[0];
+        var centre_names = Object.keys(data.totals.bed_counts);
         var deferred = Q.defer();
-        self.find_centre_by_name(centre_name,null)
+        Qx.every(centre_names,self.find_centre_by_name)
             .then(function(centre){deferred.resolve(centre);})
             .then(null,function(err){deferred.reject(err);});
         return deferred.promise;
