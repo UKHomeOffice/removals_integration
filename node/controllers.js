@@ -38,11 +38,14 @@ var controllers = {
             try{
                 JW.consume(postData,function(success, error){})
                     .then(function(obj){
-                        console.log("resolved "+obj);
                         var body = '{"status":"OK"}';
                         response.writeHead(code, {"Content-Type": "application/json"});
                         response.write(body);
                         response.end();
+                    })
+                    .then(function(){
+                        console.log("ABOUT TO UPDATE");
+                        JW.update_centres();
                     })
                     .then(null,function(err){
                         console.log("Rejected "+err);
@@ -51,7 +54,6 @@ var controllers = {
                         response.write('{"status":"ERROR","error":"'+err+'"}');
                         response.end();
                 });
-                JW.update_centres();
             }catch(err){
                 console.log("GOT ERROR " + err);
                 code = 400;
