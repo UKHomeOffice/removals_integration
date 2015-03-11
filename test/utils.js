@@ -3,6 +3,9 @@ var chai = require('chai'),
     assert = chai.assert,
     expect = chai.expect,
     should = chai.should(),
+    Sequelize = require('sequelize'),
+    db = require('../node/db').db,
+    sequelize = db.sequelize,
     utils = require('../node/utils').utils,
     models = require("../node/models.js").models,
 
@@ -19,6 +22,28 @@ describe('utils functions', function() {
         expect(utils.parseDate('9/1/08').toString()).to.equal(new Date('2008', 0,9).toString());
     });
     it('should parse CSV', function() {
-        utils.write_csv_to_db(models.Nationality, null, sample_csv);
+        console.log('START');
+        sequelize
+            .sync({ force: true })
+            .then(function() {
+                console.log('DB det up');
+                utils.write_csv_to_db(models.Nationality, null, sample_csv, function (errors) {
+                    console.log('ERROR LIST ', errors);
+                    expect(errors.length).to.equal(0);
+                    models.Nationality
+                        .find({ where: { name: 'Anguilla' } })
+                        .then(function (n) {
+                            console.log('***found*** ' + n.name);
+                            expect(n.code).to.equal('AIA');
+                        });
+                    models.Nationality
+                        .find({ where: { code: 'AUS' } })
+                        .then(function (n) {
+                            console.log('***found*** ' + n.name);
+                            expect(n.also_included).to.equal('Christmas Island, Cocos (Keeling) Islands, Norfolk Island');
+                        });
+                });
+            });
     });
+
 });
