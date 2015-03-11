@@ -35,7 +35,8 @@ describe('json_wrangler', function(){
     });
     it('should update bed numbers for a centre',function(){
         var json = '{"totals":{"bed_counts":{"Seacole":{"male":232,"female":323,"out_of_commission":31415}}}}';
-        JW = new json_wrangler(true).consume(json);
+        JW = new json_wrangler(true);
+        JW.consume(json);
         JW.update_centres().should.be.ok;
     });
     it('should have written the data by now',function(){
