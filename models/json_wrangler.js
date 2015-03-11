@@ -1,4 +1,5 @@
-var models = require("../node/models.js").models;
+var models = require("../node/models.js").models,
+    Q = require('q');
 function json_wrangler(validate_against_db){
     this.json = '';
     this.data = null;
@@ -12,26 +13,47 @@ function json_wrangler(validate_against_db){
             throw("Input is not valid JSON");
         }
         if(this.validate_against_db){
+            this.invalidate_centre_names(this.data,null)
+                .then(function(centre){console.log("17 "+centre.name);})
+                .then(null,function(err){console.log("18 "+err);});
+/*
+                    var deferred = Q.defer();
+            Q.fcall(this.invalidate_centre_names,this.data,function(data,error){
+                    if(data){
+                        //console.log("18 "+data.name);
+                        console.log("resolving "+data.name);
+                        deferred.resolve(data);
+                    }else{
+                        //throw(error);
+                        console.log("rejecting "+error);
+                        deferred.reject(error);
+                    }
+                    console.log(deferred);
+                    return deferred;
+                })
+                .then(function(x){console.log('OKK ')})
+                .then(null,function(err){console.log("GOT ERROR " + err)});
             this.invalidate_centre_names(this.data,function(success, error){
                 if(error){
-                    callback(null, error);
+                    throw(error);
+                    //callback(null, error);
                 } 
                 if(success){
                     callback('OK', null);
                 }
             });
+*/
         }
         return this;
     };
+    var self = this;
     this.invalidate_centre_names = function(data,callback){
-        var errors = [];
-        for(centre_name in data.totals.bed_counts){
-            this.find_centre_by_name(centre_name,function(centre){
-                if(!centre){
-                    return callback(null, "no such centre name: " + centre_name);
-                }
-            });
-        }
+        var centre_name = Object.keys(data.totals.bed_counts)[0];
+        var deferred = Q.defer();
+        self.find_centre_by_name(centre_name,null)
+            .then(function(centre){deferred.resolve(centre);})
+            .then(null,function(err){deferred.reject(err);});
+        return deferred.promise;
     }
     this.data_keys = function(){
         return Object.keys(this.data);
@@ -60,12 +82,21 @@ function json_wrangler(validate_against_db){
         });
     }
     this.find_centre_by_name = function(name,callback){
+            var deferred = Q.defer();
             models.Centre.findOne({where:{"name": name}})
                 .then(function(centre){
-                    return callback(centre)
-            }).catch(function(err){
-                //console.log(err);
-            });
+                    //return callback(centre,null);
+                    if(centre){
+                        deferred.resolve(centre);
+                    } else {
+                        deferred.reject("no centre named "+name);
+                    }
+                })
+            return deferred.promise;
+                /*.error(function(err,data){
+                    console.log("DB DERRROR"+err);
+                    return callback(null,err);
+                })*/;
     }
     this.update_centres = function(){
         for(centre_name in this.data.totals.bed_counts){

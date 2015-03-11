@@ -34,34 +34,12 @@ var controllers = {
             postData += postDataChunk;
             var code = 200;
             console.log("Received POST data chunk '"+ postDataChunk + "'.");
+            JW = new json_wrangler(true);
             try{
-                JW = new json_wrangler(true).consume(postData,function(success, error){
-                    console.log(success);
-                    if(success){
-                      code = 200;
-                      body = 'OK';
-console.log(body);
-                    } else {
-                      code = 400;
-                      if(/no such centre name/.exec(error)){
-                        code = 404;
-                      }
-                      body = error;
-                    }
-                    response.writeHead(code, {"Content-Type": "text/html"});
-                    response.write(body);
-                    response.end();
-                  });
-                } catch(err) {
-                if(err == 'Input is not valid JSON'){
-                    code = 400;
-                }
-                body = err;
-                response.writeHead(code, {"Content-Type": "text/html"});
-                response.write(body);
-                response.end();
+                JW.consume(postData,function(success, error){});
+            }catch(err){
+                console.log("GOT ERROR " + err);
             }
-            JW.update_centres();
 /*
             response.writeHead(code, {"Content-Type": "text/html"});
             response.write(body);
