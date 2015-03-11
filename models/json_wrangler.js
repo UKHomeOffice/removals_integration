@@ -70,36 +70,23 @@ function json_wrangler(validate_against_db){
             return deferred.promise;
     };
     this.update_centres = function(){
-        Qx.map(this.data.totals.bed_counts,this.update_centre_by_name)
+        Qx.map(Object.keys(this.data.totals.bed_counts),this.update_centre_by_name)
             .then(function(){console.log("74")})
             .then(null,function(err){console.log(err)});
-/*
-        for(centre_name in this.data.totals.bed_counts){
-            var bed_counts = this.data.totals.bed_counts[centre_name];
-            this.find_centre_by_name(centre_name,null)
-                .then(function(centre){
-                    for(key in key_map){
-                        var field_name = key_map[key];
-                        centre.set(field_name, bed_counts[key]);
-                    }
-                    centre.save();
-                });
-        }
-*/
         return true;
     };
+    var self = this;
     this.update_centre_by_name = function(centre_name){
-console.log("UPDATING "+centre_name);
         var key_map = {
             "male": "current_beds_male",
             "female": "current_beds_female",
             "out_of_commission": "current_beds_ooc",
         };
-        this.find_centre_by_name(centre_name,null)
+        self.find_centre_by_name(centre_name,null)
             .then(function(centre){
                 for(key in key_map){
                     var field_name = key_map[key];
-                    centre.set(field_name, bed_counts[key]);
+                    centre.set(field_name, self.data.totals.bed_counts[centre_name][key]);
                 }
                 centre.save();
             });
