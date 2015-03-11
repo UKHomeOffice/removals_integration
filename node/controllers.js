@@ -19,7 +19,7 @@ var controllers = {
         var DR = new data_reader();
         DR.get_centres(function(list){
             var j = jade.compileFile('./templates/dashboard.jade', {});
-            var html = j({"list":list,"name":"chicken"});
+            var html = j({"list":list,"name":"chicken",pageTitle:"Dashboard"});
             response.writeHead(200, {"Content-Type": "text/html"});
             response.write(html);
             response.end();
@@ -40,14 +40,14 @@ var controllers = {
                     .then(function(obj){
                         console.log("resolved "+obj);
                         var body = '{"status":"OK"}';
-                        response.writeHead(code, {"Content-Type": "text/json"});
+                        response.writeHead(code, {"Content-Type": "application/json"});
                         response.write(body);
                         response.end();
                     })
                     .then(null,function(err){
                         console.log("Rejected "+err);
                         code = 404;
-                        response.writeHead(code, {"Content-Type": "text/json"});
+                        response.writeHead(code, {"Content-Type": "application/json"});
                         response.write('{"status":"ERROR","error":"'+err+'"}');
                         response.end();
                 });
@@ -55,7 +55,7 @@ var controllers = {
             }catch(err){
                 console.log("GOT ERROR " + err);
                 code = 400;
-                response.writeHead(code, {"Content-Type": "text/json"});
+                response.writeHead(code, {"Content-Type": "application/json"});
                 response.write('{"status":"ERROR","error":"'+err+'"}');
                 response.end();
             }
