@@ -14,6 +14,7 @@ var Nationality = sequelize.define('nationality', {
 
 var Centre = sequelize.define('centre', {
     name: { type: Sequelize.STRING, unique: true },
+    operator: Sequelize.STRING(30), // eg mitie
     capacity: Sequelize.INTEGER,
     capacity_female: Sequelize.INTEGER,
     reservable: { type: Sequelize.BOOLEAN, default: false },
