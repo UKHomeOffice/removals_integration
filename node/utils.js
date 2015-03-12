@@ -1,5 +1,4 @@
 var fs = require('fs'),
-    parse = require('csv-parse'),
     Sequelize = require('sequelize'),
     db = require('./db').db,
     sequelize = db.sequelize,
