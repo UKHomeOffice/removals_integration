@@ -16,28 +16,33 @@ fs.readFile("./sample_input.json", 'utf8', function(err,data){sample_input = dat
 describe('json_wrangler', function(){
     it('should consume json',function(){
         JW = new json_wrangler(false);
-        JW.consume(sample_json).json.should.equal(sample_json);
+        JW.consume(sample_json);
+        JW.json.should.equal(sample_json);
     });
     it('should throw an error if json is invalid',function(){
         JW = new json_wrangler(false);
         expect(JW.consume.bind(JW,invalid_json)).to.throw('Input is not valid JSON');
     });
     it('should get the keys from the json input',function(){
-        JW = new json_wrangler(false).consume(sample_json);
+        JW = new json_wrangler(false);
+        JW.consume(sample_json);
         assert.deepEqual(JW.data_keys(),["animal","plant"]);
         JW.consume(sample_input);
         assert.deepEqual(JW.data_keys(),["individuals","totals"]);
     });
     it('should count the inbound individuals',function(){
-        JW = new json_wrangler(false).consume(sample_input);
+        JW = new json_wrangler(false);
+        JW.consume(sample_input);
         JW.count_inbound().should.equal(1);
     });
     it('should count the outbound individuals',function(){
-        JW = new json_wrangler(false).consume(sample_input);
+        JW = new json_wrangler(false);
+        JW.consume(sample_input);
         JW.count_outbound().should.equal(3);
     });
     it('should produce hydrated data instances of people', function(){
-        JW = new json_wrangler(false).consume(sample_input);
+        JW = new json_wrangler(false);
+        JW.consume(sample_input);
         var list_out = JW.get_outbound();
         list_out[0].cid_id.should.equal('654321');
         list_out[1].cid_id.should.equal('654322');
