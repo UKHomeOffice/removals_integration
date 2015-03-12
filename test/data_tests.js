@@ -14,6 +14,10 @@ var chai = require('chai'),
 describe('json_wrangler', function(){
     before(function(){
         //require("../test/fix");
+        var json = '{"totals":{"bed_counts":{"Seacole":{"male":2,"female":3,"out_of_commission":3}}}}';
+        JW = new json_wrangler(true);
+        JW.consume(json);
+        JW.update_centres();
     });
     it('should do be able to load a Person by its cid_id',function(){
         JW = new json_wrangler(true);
@@ -36,7 +40,8 @@ describe('json_wrangler', function(){
     });
     it('should update bed numbers for a centre',function(){
         var json = '{"totals":{"bed_counts":{"Seacole":{"male":232,"female":323,"out_of_commission":31415}}}}';
-        JW = new json_wrangler(true).consume(json);
+        JW = new json_wrangler(true);
+        JW.consume(json);
         JW.update_centres().should.be.ok;
     });
     it('should have written the data by now',function(){
@@ -44,11 +49,9 @@ describe('json_wrangler', function(){
             c.current_beds_ooc.should.equal(31415);
         });
     });
-/*
-    it('should throw an error if the json contains a non-existent Centre name',function(){
-        var json = '{"totals":{"bed_counts":{"Noname-centre":{"male":232,"female":323,"out_of_commission":31415}}}}';
-        JW = new json_wrangler(true);
-        expect(JW.consume.bind(JW,json)).to.throw('Non-existent Centre name: Noname-centre');
+    it('should throw an error of it tries to consume invalid json',function(){
+        var json = '{"totals":{"bed_counts":{"Noname-centre":{"male":232,"female":323,"out_of_commission":31415}}}';
+        JW = new json_wrangler(false);
+        expect(JW.consume.bind(JW,json)).to.throw('Input is not valid JSON');
     });
-*/
 });

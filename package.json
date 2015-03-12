@@ -8,10 +8,13 @@
     "jade": "*",
     "mocha": "*",
     "chai": "*",
+    "hippie": "*",
     "mysql": "*",
     "sequelize": "*",
     "sequelize-cli": "^1.3.1",
     "sequelize-fixtures": "*",
-    "jsDump": "*"
+    "jsDump": "*",
+    "q": "*",
+    "qx": "*"
   }
 }
