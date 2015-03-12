@@ -6,11 +6,12 @@ var chai = require('chai'),
   assert = chai.assert,
   expect = chai.expect,
   should = chai.should();
-var fs = require('fs');
+var fs = require('fs'), JW;
 
-sample_json = '{"animal":"cow","plant":"asparagus"}';
-invalid_json = '{"animal":"cow","plant":"asparagus"';
-var sample_input;
+var sample_json = '{"animal":"cow","plant":"asparagus"}',
+    invalid_json = '{"animal":"cow","plant":"asparagus"',
+    sample_input;
+
 fs.readFile("./sample_input.json", 'utf8', function(err,data){sample_input = data;});
 
 describe('json_wrangler', function(){
