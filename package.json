@@ -15,6 +15,7 @@
     "sequelize-fixtures": "*",
     "jsDump": "*",
     "q": "*",
-    "qx": "*"
+    "qx": "*",
+    "csv-parse": "*"
   }
 }
