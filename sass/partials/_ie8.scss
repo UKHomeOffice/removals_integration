@@ -1,0 +1,42 @@
+// IE specific hacks
+html.ie8 {
+
+  // vertically centre text in inputs
+  fieldset, .page-chunk {
+    > div > input[type="text"] {
+      line-height: $input-height;
+    }
+  }
+
+  .chosen-disabled {
+    &, * {
+      border-color: lightgray;
+      color: lightgray !important;
+    }
+  }
+
+  input[type="file"] {
+    background: white;
+    padding: 3px 0;
+  }
+
+  .spot-control {
+    &, &.with-inner > div {
+      input {
+        padding: $spot-control-padding 4px $spot-control-padding $spot-control-padding;
+      }
+    }
+  }
+
+  input[type=password] {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  fieldset#panels #overview {
+    // work around IE8 bug where the border on { display: table cell } elements
+    // inside fieldsets gets painted behind the cell background
+    background: url($white-stripe) repeat-y right center $panel-bg-colour-alt1;
+    border: none;
+    width: 238px;
+  }
+}

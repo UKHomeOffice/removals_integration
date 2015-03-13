@@ -1,0 +1,96 @@
+body {
+  background: white;
+  color: $black;
+  font-family: 'nta', Arial, sans-serif;
+  font-size: 100%;
+}
+
+h2 {
+  font-size: $larger;
+  font-weight: bold;
+}
+
+h3 {
+  font-size: $large;
+}
+
+.error {
+  color: $error-red;
+
+  &.global {
+    border-color: $error-red;
+  }
+
+  &.individual {
+    border-left: 4px solid $error-red;
+    height: 100%;
+    left: -10px;
+    padding: 0 3px 0 7px;
+    position: absolute;
+    top: -6px;
+    width: 600px;
+
+    ~ * {
+      margin-top: 2em;
+      position: relative;
+      top: -1em;
+      z-index: 3;
+    }
+
+    ~ .chosen-container {
+      z-index: 10;
+    }
+  }
+}
+
+.success {
+  color: $success-green;
+
+  &.global {
+    border-color: $success-green;
+  }
+}
+
+.squash {
+  letter-spacing: -0.5px;
+}
+
+.a11y { // http://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+  clip: rect(1px, 1px, 1px, 1px);
+  display: inline-block;
+  height: 1px !important;
+  overflow: hidden;
+  padding: 0;
+  width: 1px !important;
+}
+
+.remove-a11y {
+  clip: inherit;
+  display: inherit;
+  height: auto !important;
+  overflow: visible;
+  padding: inherit;
+  width: auto !important;
+}
+
+.parenthetical {
+  margin-left: 0.1em;
+  white-space: nowrap;
+
+  > *:before {
+    content: '(';
+  }
+  > *:after {
+    content: ')';
+  }
+}
+
+.keep-together {
+  white-space: nowrap;
+}
+
+// hacks
+.button.find_address {
+  visibility: hidden !important;
+
+}

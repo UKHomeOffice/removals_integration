@@ -1,0 +1,101 @@
+// colours
+$dark-blue: #006699;
+$footer-bg-colour: #cfe6f5;
+$main-bg-colour: #ffffff;
+$darker-blue: #003366;
+$link-blue: #005ea5;
+$mid-grey: #666666;
+$dark-grey: #858788;
+$input-border-grey: #bfc1c3;
+$item-separator-grey: #dee0e2;
+$panel-bg-colour: #f3f8fc;
+$panel-bg-colour-alt1: #cfe6f5;
+$panel-bg-colour-alt2: #006699;
+$panel-bg-colour-grey: #f5f5f5;
+$checkbox-bg-colour: #e1eff8;
+$error-red: #d00;
+$success-green: #00823b;
+$progress-bar-color: #B1DF95;
+$black: #0b0c0c;
+$table-stripe-bg: #eeefef;
+$results-table-border: #bfc1c3;
+$case-table-border-grey: #91a1ab;
+$tooltip-yellow: #ffff99;
+$tooltip-border-mustard: #cccc00;
+$tooltip-border-mustard: #cccc00;
+$button-bg-normal: #005ea5;
+$button-bg-primary: #00823b;
+$button-bg-reject: #f00000;
+$button-bg-subordinate: #666;
+
+$button-darken-amount: 10%; // GDS has this at 5% but it doesn't seem like enough
+
+// measurements
+$col1-width: 684px;
+$col2-width: 536px;
+$page-width: 1240px;
+$min-page-width: 993px;
+$intro-height: 51px;
+$header-height: $intro-height;
+$footer-height: 55px;
+$vertical-rhythm: 20px;
+$horizontal-rhythm: 20px;
+$standard-field-height: 26px;
+$standard-field-margin: 12px;
+$narrow-label: 75px;
+$small-label: 87px;
+$smallish-label: 100px;
+$medium-label: 124px;
+$medium-wide-label: 140px;
+$overview-label: 53px;
+$wide-label: 157px;
+$superwide-label: 170px;
+$deadline-label: 118px;
+$medium-input: 106px;
+$wide-input: 160px;
+$wideish-input: 150px;
+$datefield: 81px;
+$standard-input-width: 176px;
+$standard-select-width: 192px;
+$label-field-separation: 5px;
+$view-page-field-height: 14px;
+$view-page-small-panel-height: 82px;
+$breadcrumb-spacing: 8px;
+$spot-control-padding: 10px;
+$panel-width: 332px - 2*$horizontal-rhythm;
+$panel-width-small: 218px;
+$panel-width-wide: 683px - 2*$horizontal-rhythm;
+$panel-width-huge: $page-width - 2*$horizontal-rhythm - 1px;
+$minute-stamp-width: 138px;
+$input-height: 24px;
+$input-padding-horizontal: 7px;
+$medium-panel-width: $col2-width - (2*$horizontal-rhythm) - 1px;
+$medium-panel-textarea-width: $medium-panel-width - ($smallish-label + $label-field-separation + 2*$input-padding-horizontal + 4);
+$table-cell-horizontal-padding: 10px;
+$results-table-horizontal-padding: 8px;
+$results-table-vertical-padding: 12px;
+$central-panel-edit-height: 192px;
+$central-panel-view-height: 210px;
+$squeezed-page-emergency-padding: 10px;
+$squeezed-button-padding: 7px;
+$huge-panel-input-width: 298px;
+$inset-label-width: 52px;
+$list-line-height: 26px;
+$alert-padding: 10px;
+$button-vertical-padding: 6px;
+$button-separation: 10px;
+$button-group-separation: 30px;
+$admin-dropdown-width: 120px;
+
+// font sizes
+$base-font-assumption: 16;
+$small: #{12/$base-font-assumption}em;
+$button-text-size: #{14/$base-font-assumption}em;
+$normal: #{15/$base-font-assumption}em;
+$large: 1em;
+$larger: #{20/$base-font-assumption}em;
+$larger-still: #{21/$base-font-assumption}em;
+$largest: #{24/$base-font-assumption}em;
+
+// paths
+$font-path: '/bundles/homeofficects/fonts/';

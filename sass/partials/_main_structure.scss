@@ -1,0 +1,96 @@
+html, body {
+  height: 100%;
+  
+  > form {
+    height: 100%;
+  }
+}
+
+#header {
+  &, .controls {
+    background: $black;
+  }
+}
+
+#intro {
+  background: $black; // sometimes it pokes out of #header
+  height: $intro-height - 28px;
+  padding: 14px 0;
+
+  h1 {
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: $largest;
+    font-weight: bold;
+    min-height: 18px;
+    //padding-left: 22px;
+  }
+}
+
+#outer {
+  margin: (-$header-height) auto (-$footer-height);
+  min-height: 100%;
+  padding: 0 $squeezed-page-emergency-padding;
+  width: $page-width;
+
+  &:after {
+    content: '';
+    display: block;
+    height: $footer-height;
+  }
+
+  &:before {
+    content: '';
+    display: block;
+    height: $header-height + $vertical-rhythm; // extra 20px acts like a top margin
+  }
+}
+
+#col1 {
+  float: left;
+  margin-right: $horizontal-rhythm;
+  width: $col1-width;
+}
+
+#col2 {
+  float: left;
+  width: $col2-width;
+}
+
+#breadcrumb {
+  font-size: $normal;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+
+  li {
+    float: left;
+    font-weight: bold;
+    margin: 0 $breadcrumb-spacing $vertical-rhythm 0;
+
+    + li {
+      background: url($chevron-black) center left no-repeat;
+      padding-left: $breadcrumb-spacing + 7; // 7 = width of chevron
+    }
+
+    a {
+      color: $dark-blue;
+      text-decoration: underline;
+    }
+  }
+
+  & + * {
+    clear: left;
+  }
+}
+
+#footer {
+  background: $footer-bg-colour;
+  bottom: 0;
+  clear: both;
+  height: $footer-height;
+  width: 100%;
+
+  .controls {
+    top: 16px;
+  }
+}
