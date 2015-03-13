@@ -145,6 +145,7 @@ function write_csv_to_db(model, list_of_fields, data, callback) {
  * @param model Model
  * @param wipe_db bool
  * @param list_of_fields Array if left blank field names are pulled from the first row
+ * @param callback function
  */
 function import_csv(filepath, model, wipe_db, list_of_fields, callback) {
     console.log(wipe_db ? 'wiping db' : 'no db wipe');
