@@ -65,6 +65,11 @@ function CSVToArray(strData, delimiter) {
 // it to the data array.
         arrData[arrData.length - 1].push(strMatchedValue);
     }
+//last element might be empty
+var last = arrData.pop();
+if(last[0]){
+    arrData.push(last);
+}
 // Return the parsed data.
     return(arrData);
 }
