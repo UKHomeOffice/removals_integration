@@ -10,7 +10,7 @@ function api() {
   return hippie()
     .base('http://localhost:3000')
     .header("User-Agent", "hippie")
-    .post('/update_centres');
+    .post('/update-centres');
 }
 api()
     .get('/diagnostics')
@@ -20,16 +20,15 @@ api()
     });
 
 api()
-    .send(invalid_json)
-    .expectStatus(400)
+    .send(valid_json)
+    .expectStatus(200)
     .end(function(err,res,body) {
         console.log(body);
         if(err) throw err;
     });
-
 api()
-    .send(valid_json)
-    .expectStatus(200)
+    .send(invalid_json)
+    .expectStatus(400)
     .end(function(err,res,body) {
         console.log(body);
         if(err) throw err;

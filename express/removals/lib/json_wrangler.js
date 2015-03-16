@@ -1,6 +1,7 @@
 var models = require(process.cwd()+"/lib/models.js").models,
     Q = require('q'),
     Qx = require('qx');
+
 function json_wrangler(validate_against_db){
     this.json = '';
     this.data = null;
