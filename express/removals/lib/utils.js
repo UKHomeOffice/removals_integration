@@ -1,9 +1,9 @@
 var fs = require('fs'),
     Sequelize = require('sequelize'),
-    db = require('./db').db,
+    db = require('../config/db').db,
     sequelize = db.sequelize,
 
-    CONFIG = require('./config').config,
+    CONFIG = require('../config/config').config,
     models = require('./models').models;
 
 // http://www.bennadel.com/blog/1504-ask-ben-parsing-csv-strings-with-javascript-exec-regular-expression-command.htm
