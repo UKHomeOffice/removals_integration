@@ -44,7 +44,7 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
             return (isset($parameters[$name])) ? $parameters[$name] : null;
         }
     }
- 
+
     /**
      * @Given /^I post the following JSON to "([^"]*)":$/
      */
@@ -82,7 +82,7 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         {
             throw new \Exception('HTTP code does not match '.$httpStatus.
                 ' (actual: '.$this->_response->getStatusCode().')');
-		}
+		    }
 	}
 
     /**
