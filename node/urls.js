@@ -5,7 +5,8 @@ var urls = {
     "dashboard": controllers.dashboard,
     "diagnostics": controllers.diagnostics,
     "upload": controllers.handlePost,
-    "update_centres": controllers.updateCentres
+    "update_centres": controllers.updateCentres,
+    "static/(.+)": controllers.serveStatic
 };
 
 exports.urls = urls;
