@@ -1,5 +1,5 @@
 var sass  = require('node-sass'),
-    fs = require('fs');
+    fs = require('fs'),
     server = require("./server"),
     CONFIG = require("./config").config,
 
@@ -16,24 +16,19 @@ sass.render(
     function(err, result) {
         console.log(err ? 'sass error: ' + err : 'sass rendered! ');
         console.log(result);
-
-        /*var output = fs.open(cssOutputPath, 'w', function() {
-            output.write(result.css);
-            output.close();
-        });*/
-
         var stream = fs.createWriteStream(cssOutputPath, {
             flags: 'w',
             encoding: null,
             fd: null,
             mode: 0666
         });
+        stream.on('finish', function () {
+            console.log('CSS has been output');
+            server.start();
+        });
         stream.write(result.css);
         stream.end();
-
-
     }
 );
 
 
-server.start();
