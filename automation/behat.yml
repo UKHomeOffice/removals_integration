@@ -2,7 +2,8 @@ default:
     context:
         parameters:
             #base_url: https://api.github.com
-            base_url: http://private-384d2-amarapi.apiary-mock.com
+            #base_url: http://private-384d2-amarapi.apiary-mock.com
+            base_url: http://localhost
     paths:
         features: features
         bootstrap: %behat.paths.features%/bootstrap
