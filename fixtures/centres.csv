@@ -1,1 +1,14 @@
-name,capacity,capacity_female,reservable,fast_track,unisex,operatorBrook House,448,,TRUE,,,g4sCampsfield,276,,TRUE,,,mitieColnbrook,381,27,TRUE,TRUE,,mitieDover,401,,TRUE,,,prison serviceDungavel,235,14,TRUE,,,geoHarmondsworth,661,,TRUE,TRUE,,mitieHaslar,197,,TRUE,,,prison serviceLarne House,19,,,,TRUE,tascorMorton Hall,392,,TRUE,,,prison servicePennine House,32,,TRUE,,TRUE,tascorTinsley House,119,,TRUE,,,g4sThe Verne,320,,,,,Yarls Wood,38,304,TRUE,TRUE,,serco
+name,capacity,capacity_female,reservable,fast_track,unisex,operator
+Brook House,448,,TRUE,,,g4s
+Campsfield,276,,TRUE,,,mitie
+Colnbrook,381,27,TRUE,TRUE,,mitie
+Dover,401,,TRUE,,,prison service
+Dungavel,235,14,TRUE,,,geo
+Harmondsworth,661,,TRUE,TRUE,,mitie
+Haslar,197,,TRUE,,,prison service
+Larne House,19,,,,TRUE,tascor
+Morton Hall,392,,TRUE,,,prison service
+Pennine House,32,,TRUE,,TRUE,tascor
+Tinsley House,119,,TRUE,,,g4s
+The Verne,320,,,,,
+Yarls Wood,38,304,TRUE,TRUE,,serco
