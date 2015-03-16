@@ -3,3 +3,5 @@ node/config.js
 .*
 */.*
 automation/vendor
+*~
+express/removals/config/config.js
