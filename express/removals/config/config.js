@@ -20,7 +20,7 @@ for(v in get_from_env) {
         } else {
             console.log("No environment variable " + key + ". Using config.json.");
             console.log("Current env is " + cur_env);
-            config = require(process.cwd()+'/config/config.json')[cur_env];
+            config = require('./config.json')[cur_env];
             break;
         }
     }
