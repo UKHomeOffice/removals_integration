@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize'),
-    db = require(process.cwd()+'/config/db').db,
+    db = require('../config/db').db,
     sequelize = db.sequelize;
 
 var Nationality = sequelize.define('nationality', {

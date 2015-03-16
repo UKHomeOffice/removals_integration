@@ -1,4 +1,4 @@
-var models = require(process.cwd()+"/lib/models.js").models;
+var models = require("./models.js").models;
 function data_reader(){
     this.hello = function(){
         return 'hello ' + (new Date()).toString();

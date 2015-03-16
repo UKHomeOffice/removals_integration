@@ -1,4 +1,4 @@
-var CONFIG = require(process.cwd()+'/config/config').config,
+var CONFIG = require('./config').config,
     Sequelize = require('sequelize');
 console.log(CONFIG);
 

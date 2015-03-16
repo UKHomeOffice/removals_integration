@@ -1,8 +1,8 @@
 var express = require('express'),
 router = express.Router(),
-models = require(process.cwd()+'/lib/models'),
+models = require("../lib/models"),
 jade = require("jade"),
-data_reader = require(process.cwd()+"/lib/data_reader.js");
+data_reader = require("../lib/data_reader.js");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

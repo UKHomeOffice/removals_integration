@@ -1,6 +1,6 @@
 var express = require('express'),
     router = express.Router(),
-    json_wrangler = require(process.cwd()+"/lib/json_wrangler");
+    json_wrangler = require("../lib/json_wrangler");
 
 /* GET home page. */
 router.post('/', function(req, res, next) {

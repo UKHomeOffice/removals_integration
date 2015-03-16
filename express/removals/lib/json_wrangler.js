@@ -1,4 +1,4 @@
-var models = require(process.cwd()+"/lib/models.js").models,
+var models = require("./models.js").models,
     Q = require('q'),
     Qx = require('qx');
 
