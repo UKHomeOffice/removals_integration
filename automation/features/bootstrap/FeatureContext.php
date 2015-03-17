@@ -55,6 +55,25 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     }
 
     /**
+     * Click on the element with the provided CSS Selector
+     *
+     * @When /^I click on the element with css selector "([^"]*)"$/
+     */
+    public function iClickOnTheElementWithCSSSelector($cssSelector)
+    {
+        $session = $this->getSession();
+        $element = $session->getPage()->find(
+            'xpath',
+            $session->getSelectorsHandler()->selectorToXpath('css', $cssSelector) // just changed xpath to css
+        );
+        if (null === $element) 
+        {
+            throw new \InvalidArgumentException(sprintf('Could not evaluate CSS Selector: "%s"', $cssSelector));
+        }
+        #$element->click();
+     }
+
+    /**
      * @When /^I request "([^"]*)"$/
      */
     public function iRequest($uri)
@@ -73,17 +92,17 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
        }
     }
  
-	/**
- 	* @Given /^the status code should be (\d+)$/
- 	*/
-	public function theStatusCodeShouldBe($httpStatus)
-	{
-        if ((string)$this->_response->getStatusCode() !== $httpStatus) 
-        {
-            throw new \Exception('HTTP code does not match '.$httpStatus.
+  	/**
+ 	  * @Given /^the status code should be (\d+)$/
+ 	  */
+	 public function theStatusCodeShouldBe($httpStatus)
+	 {
+      if ((string)$this->_response->getStatusCode() !== $httpStatus) 
+      {
+        throw new \Exception('HTTP code does not match '.$httpStatus.
                 ' (actual: '.$this->_response->getStatusCode().')');
-		    }
-	}
+		  }
+	 }
 
     /**
      * @Given /^the response has a "([^"]*)" property$/
@@ -97,36 +116,42 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
             {
                 throw new Exception("Property '".$propertyName."' is not set!\n");
             }
-        } else {
+        } 
+        else 
+        {
             throw new Exception("Response was not JSON\n" . $this->_response->getBody(true));
         }
     }
 
-     /**
-     * @Then /^the "([^"]*)" property equals "([^"]*)"$/
-     */
+    /**
+    * @Then /^the "([^"]*)" property equals "([^"]*)"$/
+    */
     public function thePropertyEquals($propertyName, $propertyValue)
     {
         $data = json_decode($this->_response->getBody(true));
  
         if (!empty($data)) {
-            if (!isset($data->$propertyName)) {
+            if (!isset($data->$propertyName)) 
+            {
                 throw new Exception("Property '".$propertyName."' is not set!\n");
             }
-            if ($data->$propertyName !== $propertyValue) {
+            if ($data->$propertyName !== $propertyValue) 
+            {
                 throw new \Exception('Property value mismatch! (given: '.$propertyValue.', match: '.$data->$propertyName.')');
             }
-        } else {
+        } 
+        else 
+        {
             throw new Exception("Response was not JSON\n" . $this->_response->getBody(true));
         }
     }
 
-	/**
-   	* Sets HttpKernel instance.
-   	* This method will be automatically called by Symfony2Extension ContextInitializer.
-   	*
-   	* @param KernelInterface $kernel
-   	*/
+	  /**
+    * Sets HttpKernel instance.
+    * This method will be automatically called by Symfony2Extension ContextInitializer.
+    *
+    * @param KernelInterface $kernel
+    */
   	public function setKernel(KernelInterface $kernel) 
   	{
     	$this->kernel = $kernel;
@@ -155,14 +180,14 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
   	*/
   	public function iCheckTheRadioButton($radioLabel)
   	{
-        $radioButton = $this->getSession()->getPage()->findField($radioLabel);
-        if (null === $radioButton) 
-        {
-        	throw new Exception('Cannot find radio button '.$radioLabel);
+      $radioButton = $this->getSession()->getPage()->findField($radioLabel);
+      if (null === $radioButton) 
+      {
+        throw new Exception('Cannot find radio button '.$radioLabel);
   		}
     	$value = $radioButton->getAttribute('value');
     	$this->getSession()->getDriver()->click($radioButton->getXPath());
-	}
+	  }
 
   	/**
   	* @Then /^Radio button with id "([^"]*)" should be checked$/
@@ -172,7 +197,7 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     	$elementByCss = $this->getSession()->getPage()->find('css', 'input[type="radio"]:checked#'.$sId);
     	if (!$elementByCss) 
     	{
-        	throw new Exception('Radio button with id ' . $sId.' is not checked');
+        throw new Exception('Radio button with id ' . $sId.' is not checked');
     	}
   	}
 }

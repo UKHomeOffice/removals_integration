@@ -39,7 +39,8 @@ Scenario: updating data by sending JSON
     """
     Then the status code should be 200
     And I go to "http://localhost/dashboard"
-    Then I should see "Available male: 20" in the "div#title" element
+    #Then I should see "Available male: 20" in the "div id=colnbrook" element
+    Then I click on the element with css selector "div#colnbrook"
 
 
     
