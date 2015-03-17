@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('removals:server');
 var http = require('http');
 var renderSass = require('../lib/render_sass').renderSass;
+var installFixtures = require('../lib/install_fixtures').installFixtures;
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +21,8 @@ app.set('port', port);
  * compile SASS
  */
 renderSass('base.scss', 'style.css');
+
+installFixtures();
 
 /**
  * Create HTTP server.
