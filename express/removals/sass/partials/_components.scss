@@ -115,6 +115,12 @@
     color: $black;
     margin: 0 (-$panel-padding-horizontal) $panel-padding-vertical;
     padding: $topper-padding-vertical $panel-padding-horizontal;
+
+    .total {
+      float: right;
+      margin-left: 0.625em;
+    }
+
   }
 
   h2 {
@@ -292,129 +298,6 @@
       border-right: none;
       padding-right: 0;
     }
-  }
-}
-
-.results-table {
-  clear: both;
-  width: 100%;
-  font-size: $large;
-    
-  #hrn-column {
-    width: 160px;
-  }
-  #date-column {
-    width: 90px;
-  }
-  #unit-column {
-    width: 150px;
-  }
-  #topic-column {
-    width: 185px;
-  }
-  #status-column {
-    width: 95px;
-  }
-  #task-column {
-    width: 95px;
-  }
-  #details-column {
-    width: 210px;
-  }
-
-  .hrn-results-block {
-    display: block;
-    margin: 6px 0 -6px;
-  }
-  
-  .workflow-time {
-    color: $mid-grey;
-    font-size: $normal;
-    margin-top: 3px;
-    white-space: nowrap;
-  }
-  
-  .results-td-block div {
-      display: block;
-      
-      label, .spacer {
-        display: inline-block;
-        width: 110px;
-      }
-  }
-    
-  th, td {
-    border: 1px solid;
-    padding: $results-table-vertical-padding $results-table-horizontal-padding;
-
-    a {
-      margin: (-$results-table-vertical-padding) (-$results-table-horizontal-padding);
-      padding: $results-table-vertical-padding $results-table-horizontal-padding;
-      text-decoration: underline;
-    }
-  }
-
-  th {
-    background: $dark-blue;
-    border-color: white;
-    color: white;
-    text-align: left;
-
-    a, button {
-      color: inherit;
-      display: block;
-    }
-
-    &.sorted {
-      background-color: $darker-blue;
-      padding-top: 0;
-      padding-bottom: 0; 
-
-      button, a {
-        padding-right: 31px;
-        position: relative;
-        
-        border: none;
-        background-color: $darker-blue;
-        color: $main-bg-colour;
-        text-decoration: underline;
-
-        &:after {
-          background: url($white-arrow-sprite-vertical) bottom left no-repeat;
-          content: ' ';
-          height: 9px;
-          display: block;
-          position: absolute;
-          right: 15px;
-          top: 15px;
-          width: 10px;
-        }
-      }
-      button {
-        padding-top: 0;
-        padding-bottom: 0;   
-        &:after {
-          right: 5px;
-          top: 8px;
-        }
-      }
-      &.reverse :after {
-         background-position: top left;
-      }
-    }
-  }
-
-  td {
-    border-color: $results-table-border;
-    color: $black;
-
-    a {
-      color: $link-blue;
-    }
-  }
-
-  tr.even td {
-    background-color: $table-stripe-bg;
   }
 }
 

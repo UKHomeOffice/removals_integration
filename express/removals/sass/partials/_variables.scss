@@ -31,8 +31,6 @@ $button-bg-subordinate: #666;
 $button-darken-amount: 10%; // GDS has this at 5% but it doesn't seem like enough
 
 // measurements
-$col1-width: 684px;
-$col2-width: 536px;
 $page-width: 1240px;
 $min-page-width: 993px;
 $intro-height: 51px;
@@ -66,14 +64,9 @@ $view-page-small-panel-height: 82px;
 $breadcrumb-spacing: 8px;
 $spot-control-padding: 10px;
 $panel-width: 319px - 2*$panel-padding-horizontal;
-$panel-width-small: 218px;
-$panel-width-wide: 683px - 2*$horizontal-rhythm;
-$panel-width-huge: $page-width - 2*$horizontal-rhythm - 1px;
 $minute-stamp-width: 138px;
 $input-height: 24px;
 $input-padding-horizontal: 7px;
-$medium-panel-width: $col2-width - (2*$horizontal-rhythm) - 1px;
-$medium-panel-textarea-width: $medium-panel-width - ($smallish-label + $label-field-separation + 2*$input-padding-horizontal + 4);
 $table-cell-horizontal-padding: 10px;
 $results-table-horizontal-padding: 8px;
 $results-table-vertical-padding: 12px;

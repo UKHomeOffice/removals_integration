@@ -3,16 +3,17 @@ extends ./layout.jade
 block content
     #header
         .constraint
-            div#intro
+            #intro
                 h1 DEPMU Dashboard
     ul
         each centre in list
             li.panel
                 div.topper
-                    span Total
-                    span Male #{centre.capacity}
+                    span.caption Total
                     if centre.capacity_female
-                        span Female #{centre.capacity_female}
+                        span.total.female Female #{centre.capacity_female}
+                    span.total Male #{centre.capacity}
+
 
                 h2 #{centre.name}
                 div Available male: #{centre.current_beds_male}
