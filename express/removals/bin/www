@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('removals:server');
 var http = require('http');
+var renderSass = require('../lib/render_sass').renderSass;
 
 /**
  * Get port from environment and store in Express.
@@ -14,6 +15,11 @@ var http = require('http');
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
+
+/**
+ * compile SASS
+ */
+renderSass('base.scss', 'style.css');
 
 /**
  * Create HTTP server.

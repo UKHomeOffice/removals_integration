@@ -1,8 +1,1009 @@
+/**
+* html5doctor.com Reset Stylesheet v1.6.1 (http://html5doctor.com/html-5-reset-stylesheet/)
+* Richard Clark (http://richclarkdesign.com)
+* http://cssreset.com
+*/
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  font-weight: normal;
+  vertical-align: baseline;
+  background: transparent; }
+
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+  line-height: 1; }
+
+/*article,aside,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section {
+    display:block;
+}*/
+ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after, q:before, q:after {
+  content: '';
+  content: none; }
 
 a {
-  color: #00B7FF;
-}
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+  text-decoration: none;
+  vertical-align: baseline;
+  background: transparent; }
+
+/* change colours to suit your needs */
+ins {
+  background-color: #ff9;
+  color: #000;
+  text-decoration: none; }
+
+/* change colours to suit your needs */
+mark {
+  background-color: #ff9;
+  color: #000;
+  font-style: italic;
+  font-weight: bold; }
+
+del {
+  text-decoration: line-through; }
+
+abbr[title], dfn[title] {
+  border-bottom: 1px dotted;
+  cursor: help; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+/* change border colour to suit your needs */
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #cccccc;
+  margin: 1em 0;
+  padding: 0; }
+
+button, input, select, textarea {
+  font-family: 'nta', Arial, Helvetica, sans-serif;
+  font-size: 0.9375em;
+  margin: 0;
+  vertical-align: middle; }
+
+button {
+  cursor: pointer; }
+
+input[type=text], input[type=password] {
+  padding: 1px 7px 0; }
+
+input[type=radio] {
+  padding: 0;
+  width: 14px; }
+
+textarea {
+  overflow: auto;
+  padding: 7px; }
+
+button::-moz-focus-inner, input[type="reset"]::-moz-focus-inner, input[type="button"]::-moz-focus-inner, input[type="submit"]::-moz-focus-inner, input[type="file"] > input[type="button"]::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+  margin: 0; }
+
+/*! Copyright (c) 2011 by Margaret Calvert & Henrik Kubel. All rights reserved. The font has been customised for exclusive use on gov.uk. This cut is not commercially available. */
+@font-face {
+  font-family: 'nta';
+  src: url('/fonts/NTA-Light-20130221.eot?#iefix') format('embedded-opentype'), url('/fonts/NTA-Light-20130221.woff') format('woff');
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'nta';
+  src: url('/fonts/NTA-Bold-20130221.eot?#iefix') format('embedded-opentype'), url('/fonts/NTA-Bold-20130221.woff') format('woff');
+  font-weight: bold; }
+
+@font-face {
+  font-family: 'ntatabularnumbers';
+  src: url('/fonts/NTATabularNumbers-Light.eot?#iefix') format('embedded-opentype'), url('/fonts/NTATabularNumbers-Light.woff') format('woff');
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'ntatabularnumbers';
+  src: url('/fonts/NTATabularNumbers-Bold.eot?#iefix') format('embedded-opentype'), url('/fonts/NTATabularNumbers-Bold.woff') format('woff');
+  font-weight: bold; }
+
+body {
+  background: white;
+  color: #0b0c0c;
+  font-family: 'nta', Arial, sans-serif;
+  font-size: 100%; }
+
+h2 {
+  font-size: 1.25em;
+  font-weight: bold; }
+
+h3 {
+  font-size: 1em; }
+
+.error {
+  color: #d00; }
+  .error.global {
+    border-color: #d00; }
+  .error.individual {
+    border-left: 4px solid #d00;
+    height: 100%;
+    left: -10px;
+    padding: 0 3px 0 7px;
+    position: absolute;
+    top: -6px;
+    width: 600px; }
+    .error.individual ~ * {
+      margin-top: 2em;
+      position: relative;
+      top: -1em;
+      z-index: 3; }
+    .error.individual ~ .chosen-container {
+      z-index: 10; }
+
+.success {
+  color: #00823b; }
+  .success.global {
+    border-color: #00823b; }
+
+.squash {
+  letter-spacing: -0.5px; }
+
+.a11y, .dropdown li + li {
+  clip: rect(1px, 1px, 1px, 1px);
+  display: inline-block;
+  height: 1px !important;
+  overflow: hidden;
+  padding: 0;
+  width: 1px !important; }
+
+.remove-a11y, .dropdown.open li + li, .dropdown:hover li + li, .dropdown:focus li + li {
+  clip: inherit;
+  display: inherit;
+  height: auto !important;
+  overflow: visible;
+  padding: inherit;
+  width: auto !important; }
+
+.parenthetical {
+  margin-left: 0.1em;
+  white-space: nowrap; }
+  .parenthetical > *:before {
+    content: '('; }
+  .parenthetical > *:after {
+    content: ')'; }
+
+.keep-together {
+  white-space: nowrap; }
+
+.button.find_address, .controls .find_address.action {
+  visibility: hidden !important; }
+
+.constraint {
+  margin: 0 auto;
+  padding: 0 10px;
+  position: relative;
+  max-width: 1240px; }
+
+.button, .controls .action {
+  border: none;
+  display: inline-block;
+  margin-left: 10px;
+  text-decoration: none !important;
+  vertical-align: bottom; }
+  .button > *, .controls .action > * {
+    background: #005ea5;
+    border: none;
+    color: white;
+    display: table-cell;
+    font-size: 0.875em;
+    font-weight: normal;
+    line-height: 1;
+    padding: 6px 10px;
+    text-align: center;
+    text-decoration: none !important;
+    vertical-align: middle;
+    white-space: nowrap;
+    /*
+      This was in the GDS stylesheet but is hideous, doesn't work properly, kills hover states, and its
+       merits are dubious to say the least. Do we really want hit areas bigger than the buttons?
+       If it turns out we do, I will perform some magic with the enclosing .button element to achieve the same result
+
+    // making the click target bigger than the button
+    // (and fill the space made when the button moves)
+    &:before {
+      content: "";
+      height: 110%;
+      width: 100%;
+      display: block;
+      background: transparent;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    &:active:before {
+      top: -10%;
+      height: 120%;
+    }*/ }
+  .button:focus > *, .controls .action:focus > *, .button > *:hover, .controls .action > *:hover, .button > *:focus, .controls .action > *:focus, .button.fake-hover > *, .controls .fake-hover.action > * {
+    background-color: #004172;
+    cursor: pointer; }
+  .button .todayButton, .controls .action .todayButton {
+    padding-left: 1px;
+    padding-right: 1px;
+    width: 55px; }
+  .button.as-link, .controls .as-link.action {
+    font-weight: normal;
+    padding: 6px 10px; }
+    .button.as-link > *, .controls .as-link.action > * {
+      background: transparent !important;
+      border: none;
+      border-bottom: 1px solid #005ea5;
+      color: #005ea5;
+      font-weight: normal;
+      padding: 0; }
+      .button.as-link > *:hover, .controls .as-link.action > *:hover, .button.as-link > *:focus, .controls .as-link.action > *:focus {
+        color: #004172; }
+  .button.default, .controls .default.action {
+    border: none;
+    display: inline-block;
+    margin-left: 10px;
+    text-decoration: none !important;
+    vertical-align: bottom; }
+    .button.default > *, .controls .default.action > * {
+      background: #00823b;
+      border: none;
+      color: white;
+      display: table-cell;
+      font-size: 0.875em;
+      font-weight: normal;
+      line-height: 1;
+      padding: 6px 10px;
+      text-align: center;
+      text-decoration: none !important;
+      vertical-align: middle;
+      white-space: nowrap;
+      /*
+      This was in the GDS stylesheet but is hideous, doesn't work properly, kills hover states, and its
+       merits are dubious to say the least. Do we really want hit areas bigger than the buttons?
+       If it turns out we do, I will perform some magic with the enclosing .button element to achieve the same result
+
+    // making the click target bigger than the button
+    // (and fill the space made when the button moves)
+    &:before {
+      content: "";
+      height: 110%;
+      width: 100%;
+      display: block;
+      background: transparent;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    &:active:before {
+      top: -10%;
+      height: 120%;
+    }*/ }
+    .button.default:focus > *, .controls .default.action:focus > *, .button.default > *:hover, .controls .default.action > *:hover, .button.default > *:focus, .controls .default.action > *:focus, .button.default.fake-hover > *, .controls .default.fake-hover.action > * {
+      background-color: #004f24;
+      cursor: pointer; }
+    .button.default .todayButton, .controls .default.action .todayButton {
+      padding-left: 1px;
+      padding-right: 1px;
+      width: 55px; }
+  .button.return, .controls .return.action {
+    border: none;
+    display: inline-block;
+    margin-left: 10px;
+    text-decoration: none !important;
+    vertical-align: bottom; }
+    .button.return > *, .controls .return.action > * {
+      background: #f00000;
+      border: none;
+      color: white;
+      display: table-cell;
+      font-size: 0.875em;
+      font-weight: normal;
+      line-height: 1;
+      padding: 6px 10px;
+      text-align: center;
+      text-decoration: none !important;
+      vertical-align: middle;
+      white-space: nowrap;
+      /*
+      This was in the GDS stylesheet but is hideous, doesn't work properly, kills hover states, and its
+       merits are dubious to say the least. Do we really want hit areas bigger than the buttons?
+       If it turns out we do, I will perform some magic with the enclosing .button element to achieve the same result
+
+    // making the click target bigger than the button
+    // (and fill the space made when the button moves)
+    &:before {
+      content: "";
+      height: 110%;
+      width: 100%;
+      display: block;
+      background: transparent;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    &:active:before {
+      top: -10%;
+      height: 120%;
+    }*/ }
+    .button.return:focus > *, .controls .return.action:focus > *, .button.return > *:hover, .controls .return.action > *:hover, .button.return > *:focus, .controls .return.action > *:focus, .button.return.fake-hover > *, .controls .return.fake-hover.action > * {
+      background-color: #bd0000;
+      cursor: pointer; }
+    .button.return .todayButton, .controls .return.action .todayButton {
+      padding-left: 1px;
+      padding-right: 1px;
+      width: 55px; }
+  .button.subordinate, .controls .subordinate.action {
+    border: none;
+    display: inline-block;
+    margin-left: 10px;
+    text-decoration: none !important;
+    vertical-align: bottom; }
+    .button.subordinate > *, .controls .subordinate.action > * {
+      background: #666;
+      border: none;
+      color: white;
+      display: table-cell;
+      font-size: 0.875em;
+      font-weight: normal;
+      line-height: 1;
+      padding: 6px 10px;
+      text-align: center;
+      text-decoration: none !important;
+      vertical-align: middle;
+      white-space: nowrap;
+      /*
+      This was in the GDS stylesheet but is hideous, doesn't work properly, kills hover states, and its
+       merits are dubious to say the least. Do we really want hit areas bigger than the buttons?
+       If it turns out we do, I will perform some magic with the enclosing .button element to achieve the same result
+
+    // making the click target bigger than the button
+    // (and fill the space made when the button moves)
+    &:before {
+      content: "";
+      height: 110%;
+      width: 100%;
+      display: block;
+      background: transparent;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    &:active:before {
+      top: -10%;
+      height: 120%;
+    }*/ }
+    .button.subordinate:focus > *, .controls .subordinate.action:focus > *, .button.subordinate > *:hover, .controls .subordinate.action > *:hover, .button.subordinate > *:focus, .controls .subordinate.action > *:focus, .button.subordinate.fake-hover > *, .controls .subordinate.fake-hover.action > * {
+      background-color: #4d4d4d;
+      cursor: pointer; }
+    .button.subordinate .todayButton, .controls .subordinate.action .todayButton {
+      padding-left: 1px;
+      padding-right: 1px;
+      width: 55px; }
+    .button.subordinate > *, .controls .subordinate.action > * {
+      font-size: 0.75em;
+      padding-top: 7px;
+      padding-bottom: 7px; }
+  .button.default + .default, .controls .default.action + .default {
+    margin-left: 10px; }
+  .button.replacement, .controls .replacement.action {
+    margin-left: 0;
+    vertical-align: middle; }
+    .button.replacement + span, .controls .replacement.action + span {
+      display: inline-block;
+      max-width: 330px;
+      margin-left: 5px;
+      vertical-align: middle;
+      white-space: normal; }
+  .button.as-control, .controls .as-control.action {
+    margin-left: 0; }
+
+.panel {
+  background: bottom left no-repeat #f3f8fc;
+  padding: 20px 20px;
+  margin-bottom: 20px;
+  width: 292px; }
+  .panel h2, .panel h3 {
+    padding-bottom: 20px; }
+  .panel.wide {
+    width: 643px; }
+    .panel.wide textarea {
+      min-height: 4.6em;
+      width: 625px; }
+  .panel .file-upload {
+    position: relative;
+    white-space: nowrap; }
+  .panel.smallish {
+    width: 432px; }
+    .panel.smallish fieldset > div label, .panel.smallish fieldset > div .spacer, .panel.smallish .page-chunk > div label, .panel.smallish .page-chunk > div .spacer {
+      width: 124px; }
+    .panel.smallish fieldset > div select, .panel.smallish .page-chunk > div select {
+      width: 298px; }
+    .panel.smallish fieldset > div .default.button, .panel.smallish fieldset > div .controls .default.action, .controls .panel.smallish fieldset > div .default.action, .panel.smallish .page-chunk > div .default.button, .panel.smallish .page-chunk > div .controls .default.action, .controls .panel.smallish .page-chunk > div .default.action {
+      margin: 0; }
+    .panel.smallish fieldset > div.correspondence_type .button, .panel.smallish fieldset > div.correspondence_type .controls .action, .controls .panel.smallish fieldset > div.correspondence_type .action, .panel.smallish .page-chunk > div.correspondence_type .button, .panel.smallish .page-chunk > div.correspondence_type .controls .action, .controls .panel.smallish .page-chunk > div.correspondence_type .action {
+      margin: 12px 0 0 129px; }
+    .panel.smallish fieldset > div .dateSelect, .panel.smallish .page-chunk > div .dateSelect {
+      display: inline-block; }
+      .panel.smallish fieldset > div .dateSelect select, .panel.smallish .page-chunk > div .dateSelect select {
+        width: 99px; }
+  .panel.medium {
+    width: 495px; }
+    .panel.medium > p label, .panel.medium > p .spacer, .panel.medium > div label, .panel.medium > div .spacer {
+      width: 87px; }
+    .panel.medium .textarea label, .panel.medium .textarea > span {
+      padding-top: 20px;
+      vertical-align: top; }
+    .panel.medium .textarea > span {
+      display: inline-block;
+      margin-left: 5px; }
+    .panel.medium textarea {
+      max-width: 372px;
+      min-width: 372px;
+      width: 372px;
+      min-height: 3em; }
+  .panel.huge {
+    width: 1199px; }
+    .panel.huge fieldset {
+      float: left;
+      margin-right: 53px; }
+      .panel.huge fieldset input[type="text"] {
+        padding: 1px 7px;
+        width: 298px; }
+      .panel.huge fieldset select[multiple] {
+        box-sizing: content-box;
+        width: 312px; }
+      .panel.huge fieldset .preDateField label, .panel.huge fieldset .preDateField .spacer {
+        width: 60px; }
+      .panel.huge fieldset .preDateField input[type="text"] {
+        width: 228px; }
+      .panel.huge fieldset .dateField .prelude {
+        font-weight: bold;
+        left: 0;
+        position: absolute;
+        top: 5px;
+        width: 63px; }
+      .panel.huge fieldset .dateField .inset-label {
+        display: inline-block;
+        margin-left: 78px;
+        width: 52px; }
+      .panel.huge fieldset .dateField input[type=text] {
+        width: 81px; }
+      .panel.huge fieldset.last {
+        margin-right: 0; }
+  .panel.alt1, .panel.alt1 h2 {
+    background-color: #cfe6f5; }
+  .panel.alt2, .panel.alt2 h2 {
+    background-color: #006699;
+    color: white; }
+  .panel .button.nerfed, .panel .controls .nerfed.action, .controls .panel .nerfed.action {
+    opacity: 0.5; }
+  .panel .button-holder {
+    text-align: right; }
+  .panel:after {
+    clear: both;
+    content: '.';
+    display: block;
+    height: 0;
+    font-size: 0; }
+
+.calendar-button {
+  background: url('data:image/png;base64,R0lGODlhFwAXAKECAABepff6/f///////yH5BAEKAAMALAAAAAAXABcAAAJSjA2nmsu+2gE02YptyHVy6n3iSJaZgKbqqmLsy7prJdB0fbcUDvCorOvZdrwe7Fj87YZCoozpuz2X1KYRiIxJq1Hn1tq9fsO+ZPaFPadM7PaoAAA7');
+  border: none;
+  display: inline-block;
+  height: 23px;
+  margin-left: 4px;
+  vertical-align: middle;
+  width: 23px; }
+  .calendar-button:focus {
+    background-image: url('data:image/png;base64,R0lGODlhFwAXAKEAAABBcvT4/P///wBBciH5BAEKAAMALAAAAAAXABcAAAJSjA2nmsu+2gE02YptyHVy6n3iSJaZgKbqqmLsy7prJdB0fbcUDvCorOvZdrwe7Fj87YZCoozpuz2X1KYRiIxJq1Hn1tq9fsO+ZPaFPadM7PaoAAA7'); }
+
+.sibling-group {
+  display: table;
+  margin-bottom: 20px; }
+  .sibling-group .page-chunk {
+    display: table-cell;
+    margin: 0 !important; }
+    .sibling-group .page-chunk:first-child {
+      border-right: 20px solid white; }
+
+fieldset > p, fieldset > div, .page-chunk > p, .page-chunk > div {
+  line-height: 1.3;
+  margin-bottom: 15px;
+  min-height: 26px;
+  position: relative; }
+  fieldset > p h2, fieldset > div h2, .page-chunk > p h2, .page-chunk > div h2 {
+    font-size: 1.25em; }
+  fieldset > p > label, fieldset > p > .spacer, fieldset > div > label, fieldset > div > .spacer, .page-chunk > p > label, .page-chunk > p > .spacer, .page-chunk > div > label, .page-chunk > div > .spacer {
+    display: inline-block;
+    margin-right: 12px;
+    width: 75px; }
+  fieldset > p > label, fieldset > p span, fieldset > p .button, fieldset > p .controls .action, .controls fieldset > p .action, fieldset > div > label, fieldset > div span, fieldset > div .button, fieldset > div .controls .action, .controls fieldset > div .action, .page-chunk > p > label, .page-chunk > p span, .page-chunk > p .button, .page-chunk > p .controls .action, .controls .page-chunk > p .action, .page-chunk > div > label, .page-chunk > div span, .page-chunk > div .button, .page-chunk > div .controls .action, .controls .page-chunk > div .action {
+    vertical-align: middle; }
+  fieldset > p a, fieldset > div a, .page-chunk > p a, .page-chunk > div a {
+    color: #0b0c0c;
+    font-weight: bold;
+    text-decoration: underline; }
+  fieldset > p p.note, fieldset > div p.note, .page-chunk > p p.note, .page-chunk > div p.note {
+    font-size: 0.75em; }
+  fieldset > p.text-only-widget > span, fieldset > div.text-only-widget > span, .page-chunk > p.text-only-widget > span, .page-chunk > div.text-only-widget > span {
+    display: inline-block;
+    margin-left: 2px;
+    width: 178px; }
+  fieldset > p.long-label > label, fieldset > div.long-label > label, .page-chunk > p.long-label > label, .page-chunk > div.long-label > label {
+    display: inline; }
+  fieldset > p.full_width_label, fieldset > div.full_width_label, .page-chunk > p.full_width_label, .page-chunk > div.full_width_label {
+    padding-left: 92px;
+    position: relative; }
+    fieldset > p.full_width_label > label, fieldset > div.full_width_label > label, .page-chunk > p.full_width_label > label, .page-chunk > div.full_width_label > label {
+      margin-bottom: 5px;
+      margin-right: 0;
+      vertical-align: middle;
+      width: auto; }
+    fieldset > p.full_width_label input, fieldset > div.full_width_label input, .page-chunk > p.full_width_label input, .page-chunk > div.full_width_label input {
+      margin-right: 8px; }
+    fieldset > p.full_width_label span, fieldset > div.full_width_label span, .page-chunk > p.full_width_label span, .page-chunk > div.full_width_label span {
+      left: 0;
+      position: absolute; }
+    fieldset > p.full_width_label.stop_list_div, fieldset > div.full_width_label.stop_list_div, .page-chunk > p.full_width_label.stop_list_div, .page-chunk > div.full_width_label.stop_list_div {
+      margin-bottom: 0;
+      min-height: 41px;
+      overflow: hidden; }
+      fieldset > p.full_width_label.stop_list_div.collapsed, fieldset > div.full_width_label.stop_list_div.collapsed, .page-chunk > p.full_width_label.stop_list_div.collapsed, .page-chunk > div.full_width_label.stop_list_div.collapsed {
+        min-height: 0; }
+  fieldset > p.last, fieldset > div.last, .page-chunk > p.last, .page-chunk > div.last {
+    margin-bottom: 0 !important; }
+  fieldset > p > input[type=text], fieldset > p > input[type=password], fieldset > p select, fieldset > p textarea, fieldset > div > input[type=text], fieldset > div > input[type=password], fieldset > div select, fieldset > div textarea, .page-chunk > p > input[type=text], .page-chunk > p > input[type=password], .page-chunk > p select, .page-chunk > p textarea, .page-chunk > div > input[type=text], .page-chunk > div > input[type=password], .page-chunk > div select, .page-chunk > div textarea {
+    background: white;
+    border: 1px solid #bfc1c3; }
+  fieldset > p > input[type=text], fieldset > p input[type=password], fieldset > p select, fieldset > div > input[type=text], fieldset > div input[type=password], fieldset > div select, .page-chunk > p > input[type=text], .page-chunk > p input[type=password], .page-chunk > p select, .page-chunk > div > input[type=text], .page-chunk > div input[type=password], .page-chunk > div select {
+    height: 24px; }
+  fieldset > p select, fieldset > div select, .page-chunk > p select, .page-chunk > div select {
+    width: 192px; }
+  fieldset > p > input[type=text], fieldset > p input[type=password], fieldset > div > input[type=text], fieldset > div input[type=password], .page-chunk > p > input[type=text], .page-chunk > p input[type=password], .page-chunk > div > input[type=text], .page-chunk > div input[type=password] {
+    width: 176px; }
+  fieldset > p.dateField input[type=text], fieldset > div.dateField input[type=text], .page-chunk > p.dateField input[type=text], .page-chunk > div.dateField input[type=text] {
+    width: 81px; }
+  fieldset > p.dateField .dateSelect, fieldset > div.dateField .dateSelect, .page-chunk > p.dateField .dateSelect, .page-chunk > div.dateField .dateSelect {
+    display: inline-block; }
+  fieldset > p.button-after-input input[type=text], fieldset > div.button-after-input input[type=text], .page-chunk > p.button-after-input input[type=text], .page-chunk > div.button-after-input input[type=text] {
+    width: 68px; }
+    fieldset > p.button-after-input input[type=text] + .button, fieldset > p.button-after-input .controls input[type=text] + .action, .controls fieldset > p.button-after-input input[type=text] + .action, fieldset > div.button-after-input input[type=text] + .button, fieldset > div.button-after-input .controls input[type=text] + .action, .controls fieldset > div.button-after-input input[type=text] + .action, .page-chunk > p.button-after-input input[type=text] + .button, .page-chunk > p.button-after-input .controls input[type=text] + .action, .controls .page-chunk > p.button-after-input input[type=text] + .action, .page-chunk > div.button-after-input input[type=text] + .button, .page-chunk > div.button-after-input .controls input[type=text] + .action, .controls .page-chunk > div.button-after-input input[type=text] + .action {
+      margin-left: 7px; }
+  fieldset > p .dateSelect select, fieldset > div .dateSelect select, .page-chunk > p .dateSelect select, .page-chunk > div .dateSelect select {
+    width: 60px; }
+  fieldset > p .widget-wrap, fieldset > div .widget-wrap, .page-chunk > p .widget-wrap, .page-chunk > div .widget-wrap {
+    display: inline-block;
+    width: 188px; }
+    fieldset > p .widget-wrap span, fieldset > div .widget-wrap span, .page-chunk > p .widget-wrap span, .page-chunk > div .widget-wrap span {
+      display: inline; }
+  fieldset > p > p, fieldset > div > p, .page-chunk > p > p, .page-chunk > div > p {
+    display: block; }
+fieldset .spot-control, fieldset .spot-control.with-inner > div, .page-chunk .spot-control, .page-chunk .spot-control.with-inner > div {
+  background: #e1eff8;
+  display: inline-table;
+  min-height: 0; }
+  fieldset .spot-control > *, fieldset .spot-control.with-inner > div > *, .page-chunk .spot-control > *, .page-chunk .spot-control.with-inner > div > * {
+    display: table-cell; }
+  fieldset .spot-control input, fieldset .spot-control.with-inner > div input, .page-chunk .spot-control input, .page-chunk .spot-control.with-inner > div input {
+    cursor: pointer;
+    margin: 10px 4px 10px 10px; }
+  fieldset .spot-control label, fieldset .spot-control.with-inner > div label, .page-chunk .spot-control label, .page-chunk .spot-control.with-inner > div label {
+    border-right: #f3f8fc 5px solid;
+    cursor: pointer;
+    margin: 0;
+    padding: 10px 12px 10px 2px;
+    width: auto !important; }
+
+.controls {
+  max-height: 38px;
+  position: absolute;
+  right: 10px;
+  top: 13px; }
+  .controls #user {
+    color: white;
+    display: inline-block;
+    font-size: 0.75em;
+    float: left;
+    margin-left: 30px;
+    padding: 7px 0; }
+    .controls #user strong {
+      font-weight: bold; }
+  .controls form, .controls ul, .controls li {
+    float: left; }
+  .controls .action {
+    float: left; }
+    .controls .action.default {
+      margin-left: 30px;
+      margin-top: -6px;
+      position: relative;
+      top: 3px; }
+      .controls .action.default > * {
+        font-size: 1em;
+        padding: 8px 12px; }
+
+.dropdown {
+  display: inline-block !important;
+  margin-left: 30px;
+  width: 120px; }
+  .dropdown .toggler {
+    background-color: #0b0c0c;
+    color: white;
+    display: block; }
+    .dropdown .toggler .arrow {
+      background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAASCAYAAABit09LAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAKNJREFUeNpi/P//PwMa8IDSO5AFGdEUMgPxGSjbBIj/wmVACpFw8n8ESEaWQ1bEA8RPkBQ+gYqB5ZmQrC0CYmkkvjRUDMVqaSD+/B8TfIbKwRXO/I8bzIQpNADiP3gUguQMQAq3/CcMtjBBw44QYCbJahCeg0fhHGRfEwweWIA/BeI+LG7rg8oRH4XoiSINSWEashzRyYwFzU0giRokNhwABBgAEOefImiZqkcAAAAASUVORK5CYII=') no-repeat bottom right;
+      display: inline-block;
+      height: 9px;
+      margin-left: 18px;
+      padding: 0;
+      width: 10px; }
+    .dropdown .toggler a {
+      background: #005ea5;
+      display: block;
+      padding: 6px 0; }
+  .dropdown li + li {
+    position: relative;
+    top: -1px;
+    z-index: -1; }
+  .dropdown.open li + li, .dropdown:hover li + li, .dropdown:focus li + li {
+    display: block;
+    top: 0;
+    z-index: 1; }
+  .dropdown.open .toggler .arrow, .dropdown:hover .toggler .arrow, .dropdown:focus .toggler .arrow {
+    background-position: top right; }
+  .dropdown:hover, .dropdown:focus {
+    cursor: pointer; }
+  .dropdown li {
+    color: white;
+    display: block;
+    float: none;
+    width: 120px; }
+    .dropdown li > * {
+      padding: 5px; }
+    .dropdown li .subaction {
+      border: none;
+      display: inline-block;
+      margin-left: 10px;
+      text-decoration: none !important;
+      vertical-align: bottom;
+      border: 1px solid #0b0c0c;
+      border-top-width: 0;
+      display: block;
+      float: none;
+      margin: 0;
+      padding: 0;
+      width: 120px; }
+      .dropdown li .subaction > * {
+        background: white;
+        border: none;
+        color: #0b0c0c;
+        display: table-cell;
+        font-size: 0.875em;
+        font-weight: normal;
+        line-height: 1;
+        padding: 6px 10px;
+        text-align: center;
+        text-decoration: none !important;
+        vertical-align: middle;
+        white-space: nowrap;
+        /*
+      This was in the GDS stylesheet but is hideous, doesn't work properly, kills hover states, and its
+       merits are dubious to say the least. Do we really want hit areas bigger than the buttons?
+       If it turns out we do, I will perform some magic with the enclosing .button element to achieve the same result
+
+    // making the click target bigger than the button
+    // (and fill the space made when the button moves)
+    &:before {
+      content: "";
+      height: 110%;
+      width: 100%;
+      display: block;
+      background: transparent;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    &:active:before {
+      top: -10%;
+      height: 120%;
+    }*/ }
+      .dropdown li .subaction:focus > *, .dropdown li .subaction > *:hover, .dropdown li .subaction > *:focus, .dropdown li .subaction.fake-hover > * {
+        background-color: #e6e6e6;
+        cursor: pointer; }
+      .dropdown li .subaction .todayButton {
+        padding-left: 1px;
+        padding-right: 1px;
+        width: 55px; }
+      .dropdown li .subaction > * {
+        padding-left: 0;
+        padding-right: 0;
+        width: 120px; }
+  .dropdown li, .dropdown .toggler {
+    margin-left: 0; }
+
+.global {
+  border: 1px solid #0b0c0c;
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 20px 20px; }
+
+.standalone {
+  margin: 26px 0 14px; }
+  .standalone sub {
+    color: #666666;
+    margin-left: 15px; }
+  .standalone .button-group {
+    float: right; }
+
+.selector li {
+  border-right: 1px solid #bfc1c3;
+  display: inline-block;
+  padding: 2px 20px; }
+  .selector li.selected {
+    font-weight: bold; }
+  .selector li a {
+    color: #005ea5;
+    display: block; }
+  .selector li:last-child {
+    border-right: none;
+    padding-right: 0; }
+
+.results-table {
+  clear: both;
+  width: 100%;
+  font-size: 1em; }
+  .results-table #hrn-column {
+    width: 160px; }
+  .results-table #date-column {
+    width: 90px; }
+  .results-table #unit-column {
+    width: 150px; }
+  .results-table #topic-column {
+    width: 185px; }
+  .results-table #status-column {
+    width: 95px; }
+  .results-table #task-column {
+    width: 95px; }
+  .results-table #details-column {
+    width: 210px; }
+  .results-table .hrn-results-block {
+    display: block;
+    margin: 6px 0 -6px; }
+  .results-table .workflow-time {
+    color: #666666;
+    font-size: 0.9375em;
+    margin-top: 3px;
+    white-space: nowrap; }
+  .results-table .results-td-block div {
+    display: block; }
+    .results-table .results-td-block div label, .results-table .results-td-block div .spacer {
+      display: inline-block;
+      width: 110px; }
+  .results-table th, .results-table td {
+    border: 1px solid;
+    padding: 12px 8px; }
+    .results-table th a, .results-table td a {
+      margin: -12px -8px;
+      padding: 12px 8px;
+      text-decoration: underline; }
+  .results-table th {
+    background: #006699;
+    border-color: white;
+    color: white;
+    text-align: left; }
+    .results-table th a, .results-table th button {
+      color: inherit;
+      display: block; }
+    .results-table th.sorted {
+      background-color: #003366;
+      padding-top: 0;
+      padding-bottom: 0; }
+      .results-table th.sorted button, .results-table th.sorted a {
+        padding-right: 31px;
+        position: relative;
+        border: none;
+        background-color: #003366;
+        color: #ffffff;
+        text-decoration: underline; }
+        .results-table th.sorted button:after, .results-table th.sorted a:after {
+          background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAASCAYAAABit09LAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAKNJREFUeNpi/P//PwMa8IDSO5AFGdEUMgPxGSjbBIj/wmVACpFw8n8ESEaWQ1bEA8RPkBQ+gYqB5ZmQrC0CYmkkvjRUDMVqaSD+/B8TfIbKwRXO/I8bzIQpNADiP3gUguQMQAq3/CcMtjBBw44QYCbJahCeg0fhHGRfEwweWIA/BeI+LG7rg8oRH4XoiSINSWEashzRyYwFzU0giRokNhwABBgAEOefImiZqkcAAAAASUVORK5CYII=') bottom left no-repeat;
+          content: ' ';
+          height: 9px;
+          display: block;
+          position: absolute;
+          right: 15px;
+          top: 15px;
+          width: 10px; }
+      .results-table th.sorted button {
+        padding-top: 0;
+        padding-bottom: 0; }
+        .results-table th.sorted button:after {
+          right: 5px;
+          top: 8px; }
+      .results-table th.sorted.reverse :after {
+        background-position: top left; }
+  .results-table td {
+    border-color: #bfc1c3;
+    color: #0b0c0c; }
+    .results-table td a {
+      color: #005ea5; }
+  .results-table tr.even td {
+    background-color: #eeefef; }
+
+.revealer {
+  color: #005ea5;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1em;
+  font-weight: bold;
+  margin-bottom: 12px;
+  height: 25px;
+  padding-right: 35px;
+  position: relative;
+  text-decoration: underline;
+  vertical-align: middle; }
+  .revealer .plusMinus {
+    background: top right no-repeat url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAZCAYAAACclhZ6AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAbxJREFUeNrsmLFKw1AUhm9MMMRYaKMOLqUt3STioG/h0IcQH6CTY7t18GECLq6dLYUYpItQSgcFJba2GmLaxHPlWkWLTeI9UTEX/pvchvt/OfkhJUcgb2MTtA1aB6kk/ngA3YLOgyC4+nhREAR0zk61Wj02TfNsOBzeTafTIK7ofupD/agvgMirsDkCS2Tftu1GJpPRCKcxGo1sTdOO4PQEQNcsEVTOEkx77Xb7UFVVzfd9wkvUr9VqHVB/xkXnSDBppVJpC6IjvEe5XNbhsMaW6BxazLIoigoGhPpSf7ZE59BiCAZg3gjLyWazs/PBYBDa/1cWE3fPSzGTySSRYuJwouxJk/lzyRSLxcjgbrcb+Skv4uTz+dAcrsks8sHm/I9iLMtKpJh5HF3Xv7yeSDLpqzl9NafJ/EwyzWYzdjJPrus6kiQpCDfvwsFjS3QOLcbu9XoXhUJhlzcE/qlN1nQgSXBmPQDDMBqKonD7Nnccx65UKp96AJgcEaYxyPc8z8/lcsuyLK/Cl5v8vqsSRWB+3+/3Lbhpo9PpnMJvlxRaq9XG9XodlSPM6ZttgFa+8bAeQTch+mbcOc8CDAB5hrsc7oDW5gAAAABJRU5ErkJggg==');
+    border: none;
+    display: inline-block;
+    height: 25px;
+    margin-left: 12px;
+    text-indent: -1000px;
+    vertical-align: middle;
+    width: 25px; }
+    .revealer .plusMinus:focus {
+      background-color: #006699; }
+  .revealer.open .plusMinus {
+    background-position: top left; }
+
+#page-controls {
+  margin-top: 10px;
+  margin-bottom: 50px; }
+  #page-controls .num-results {
+    float: left;
+    width: 220px; }
+  #page-controls .pages {
+    float: right; }
+    #page-controls .pages ul {
+      text-align: right; }
+      #page-controls .pages ul li {
+        display: inline;
+        padding: 4px; }
+        #page-controls .pages ul li a {
+          text-decoration: underline;
+          color: #005ea5; }
+        #page-controls .pages ul li button {
+          background-color: #ffffff;
+          border: none;
+          color: #005ea5;
+          text-decoration: underline;
+          padding: 0;
+          margin-top: -2px; }
+
+td.preview {
+  vertical-align: middle;
+  text-align: center; }
+
+a.preview-image {
+  background: no-repeat url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAAGYktHRAD/AP8A/6C9p5MAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTMtMDUtMjNUMDM6MTQ6NTUtMDU6MDAOj3qYAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDEzLTA1LTEzVDE2OjQwOjM0LTA1OjAwtMzFzgAABMtJREFUSEttVEuIXEUUPVXV73X3fJxMopP4SQzJKJHgwoViXIygEiIJRMWFZCO4UFzkA4K6C2jcuYjiSgVdiQi6CC6E4C+CnxATIYmfhHEMQ4wmM9PtdPf7v3qeW+91p2f09ty59epzzv1VqSzLCmstRDyjcGY+wx/XNPwaoBSgqX0LGZdmILK2HBdYf0OCHVtHkKYllojWGipJkoLiJjwDnL2cY3HZoMbxgIBrMh7Yaiwi63EOzC5HmJ4E7t/aBCHdmuJGLf+GZQBAHfbeqR4aV9+KWnC8edKgk2icmgvh+5yohMvXRXhlaQWIqABX4KY/psqYWXUnp8YUbpkwCDKzgoRbVorzuDroAIdsH9wBV3vE0mDDuMHapsK6EY3F0OCH2QCep1cRMATmzAFK6H1PtSpIPKTcuFoD5l2K3Uksctb0p78UvrnQg0rTdNBFNYJdvGrR6mpXcFcq7UHVSlKZ0DaDQeZAnYgzNElmnZV536uxSTSWesl/CWavlQTa81E3BW5e/hr5pS/ZfhkaE1NIb9+NhcY0anlMwhK0onIiHWmMYeo0lqP/Ifh9wWIhamBT9COyM+8i2LwX43ftRL2uEbSWkP/2Cca7F9C+9wgs20cVmTsrIt1e8Ge0YcQandUEUrC5lgf/z+/QuXAca3YfxlqP80WKNLfMM1PFyCIeNJ8fRHfmLWghYCQuFBGSGALJJetyHyGHRcHTFtHZD9DceRgIAiRRhJi3M8nom80R9gLXPfHM66iffAWZriNnXWxeqowVrMuGOLyCwBoP6+feR3v7IaQsUMCu6MYWnTAnSYFQOsQWrh61xihQX4N6uoCG76HuG1oqu8MjuoC7Fq+wncgdaM2fh3fTNEFSB7ocWPSk/WiJSwIgI0mWJLCbHoI3/wVqvs/IxWPF9JSe93UlAVW8E6BMNKe3fGeESMbifS7WKRea61D0rriWNHRXAF1qxHMBX00g7dZQMcKURASJkgxxpRFZnU0kXTm/C9jeVcRoIGG0SUIVK96xBo5kdYpEauu2oNH+mVeJ77VbprLl2D+lZR7lV9RG4M8eQ33rwxj1gdGmhzHqaMNzEQ0eSYdaiXws3vksps6+isg0mGtJEwtLdXlnVGJTknvpP+hdOYfxjdNQ7Bz3vFQ6GJdulaLYQZzD9y9uwoljH2Lb5XcQmgmC+cgKXZLRpnrU7VMf78HE429DxWlZTAdcvWMydqD8k4tWSOjcNfvSDWgvdnDyCrMYALuefBTBPS+jN7YNOft9TPcwMv8potPvYXLfRxhbu4Gs8cBzEbnN5Vtk0Ja3iGEXdMyBb1AdnGtpfHvOYuPe/Xjg+Tex9NkR6PZF3mZ2l2nC3/IIbp15ip6zmFVqnKcC7hiEjJGwhdoBCSzxz7wwiSnbxnyocPrXArc9dgAPHnoD3YUYpl53vS0eSmcoeVWyaOC105KjJKC4VJGgxQj06dd2oJm0cSms4dQvBW7csx8zBA+WEp7IUcQhbBSioIq1aUgIgargVpqS6bqBOvE0Mbh6fg64e99BbH/uKIpWSi8KeiGe9AvIzWLlUDUWFG5zVkTmHBELIVEsdJmiv89/VRw/+gzu2HUA9z1xEHNXQ75BOTtDmoyAFYEDF1sBDds+wbDI6SDJ8C8TQlcZjEe9nwAAAABJRU5ErkJggg==');
+  display: inline-block;
+  height: 24px;
+  vertical-align: middle;
+  width: 24px; }
+
+.loading {
+  background: black;
+  color: white;
+  left: 48%;
+  position: fixed;
+  top: 48%;
+  padding: 2em;
+  z-index: 100; }
+
+.hidden-by-js {
+  border-width: 0;
+  height: 0;
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  z-index: -1; }
+
+.chosen-drop input {
+  width: 100% !important; }
+
+.img-preview {
+  position: relative;
+  width: 526px;
+  height: 490px;
+  background-color: #EEEEEE;
+  border: 1px solid #858788;
+  padding: 5px; }
+
+.secondary-link a {
+  color: #005ea5;
+  font-weight: normal;
+  margin-left: 15px; }
+
+html, body {
+  height: 100%; }
+  html > form, body > form {
+    height: 100%; }
+
+#header, #header .controls {
+  background: #0b0c0c; }
+
+#intro {
+  background: #0b0c0c;
+  height: 23px;
+  padding: 14px 0; }
+  #intro h1 {
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5em;
+    font-weight: bold;
+    min-height: 18px; }
+
+#outer {
+  margin: -51px auto -55px;
+  min-height: 100%;
+  padding: 0 10px;
+  width: 1240px; }
+  #outer:after {
+    content: '';
+    display: block;
+    height: 55px; }
+  #outer:before {
+    content: '';
+    display: block;
+    height: 71px; }
+
+#col1 {
+  float: left;
+  margin-right: 20px;
+  width: 684px; }
+
+#col2 {
+  float: left;
+  width: 536px; }
+
+#breadcrumb {
+  font-size: 0.9375em;
+  margin-bottom: 30px;
+  text-transform: uppercase; }
+  #breadcrumb li {
+    float: left;
+    font-weight: bold;
+    margin: 0 8px 20px 0; }
+    #breadcrumb li + li {
+      background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAALCAYAAACzkJeoAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADJJREFUeNpiYIAAOQYcACTxHIhtcCmwoZqCYFwKsoD4LxBbEK0Tp504JQj6E2sIAQQYAOqeDMbRe3ELAAAAAElFTkSuQmCC') center left no-repeat;
+      padding-left: 15px; }
+    #breadcrumb li a {
+      color: #006699;
+      text-decoration: underline; }
+  #breadcrumb + * {
+    clear: left; }
+
+#footer {
+  background: #cfe6f5;
+  bottom: 0;
+  clear: both;
+  height: 55px;
+  width: 100%; }
+  #footer .controls {
+    top: 16px; }
