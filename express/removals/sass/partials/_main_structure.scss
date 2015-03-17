@@ -15,12 +15,13 @@ html, body {
 #intro {
   background: $black; // sometimes it pokes out of #header
   height: $intro-height - 28px;
+  margin-bottom: $vertical-rhythm;
   padding: 14px 0;
 
   h1 {
     color: white;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: $largest;
+    font-size: $very-large;
     font-weight: bold;
     min-height: 18px;
     //padding-left: 22px;

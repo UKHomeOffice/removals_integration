@@ -1,4 +1,5 @@
 // colours
+$viewport-bg: white;
 $dark-blue: #006699;
 $footer-bg-colour: #cfe6f5;
 $main-bg-colour: #ffffff;
@@ -8,15 +9,14 @@ $mid-grey: #666666;
 $dark-grey: #858788;
 $input-border-grey: #bfc1c3;
 $item-separator-grey: #dee0e2;
-$panel-bg-colour: #f3f8fc;
-$panel-bg-colour-alt1: #cfe6f5;
-$panel-bg-colour-alt2: #006699;
-$panel-bg-colour-grey: #f5f5f5;
+$panel-bg-colour: #016435;
+$panel-bg-colour-full: #a81c1f;
+$topper-bg-colour: #c8c7c5;
 $checkbox-bg-colour: #e1eff8;
 $error-red: #d00;
 $success-green: #00823b;
 $progress-bar-color: #B1DF95;
-$black: #0b0c0c;
+$black: #030303;
 $table-stripe-bg: #eeefef;
 $results-table-border: #bfc1c3;
 $case-table-border-grey: #91a1ab;
@@ -38,8 +38,11 @@ $min-page-width: 993px;
 $intro-height: 51px;
 $header-height: $intro-height;
 $footer-height: 55px;
-$vertical-rhythm: 20px;
-$horizontal-rhythm: 20px;
+$vertical-rhythm: 48px;
+$horizontal-rhythm: 4px;
+$panel-padding-vertical: 25px;
+$panel-padding-horizontal: 14px;
+$topper-padding-vertical: 9px;
 $standard-field-height: 26px;
 $standard-field-margin: 12px;
 $narrow-label: 75px;
@@ -62,7 +65,7 @@ $view-page-field-height: 14px;
 $view-page-small-panel-height: 82px;
 $breadcrumb-spacing: 8px;
 $spot-control-padding: 10px;
-$panel-width: 332px - 2*$horizontal-rhythm;
+$panel-width: 319px - 2*$panel-padding-horizontal;
 $panel-width-small: 218px;
 $panel-width-wide: 683px - 2*$horizontal-rhythm;
 $panel-width-huge: $page-width - 2*$horizontal-rhythm - 1px;
@@ -91,11 +94,13 @@ $admin-dropdown-width: 120px;
 $base-font-assumption: 16;
 $small: #{12/$base-font-assumption}em;
 $button-text-size: #{14/$base-font-assumption}em;
-$normal: #{15/$base-font-assumption}em;
-$large: 1em;
-$larger: #{20/$base-font-assumption}em;
-$larger-still: #{21/$base-font-assumption}em;
-$largest: #{24/$base-font-assumption}em;
+$normal: #{16/$base-font-assumption}em;
+$large: #{20/$base-font-assumption}em;
+$very-large: #{24/$base-font-assumption}em;
+$super-large: #{32/$base-font-assumption}em;
+
+
+$bold-unsquish: 0.0167em;
 
 // paths
 $font-path: '/fonts/';

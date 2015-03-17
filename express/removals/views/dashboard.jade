@@ -1,12 +1,21 @@
 extends ./layout.jade
 
 block content
-    h1 Dashboard
+    #header
+        .constraint
+            div#intro
+                h1 DEPMU Dashboard
     ul
-        each item in list
-            div(style="background-color:#ccc;margin:1em;float:left;width:auto;padding:1em") 
-                h2 #{item.name}
-                div Available male: #{item.current_beds_male}
-                div Available female: #{item.current_beds_female}
-                div Out of commission: #{item.current_beds_ooc}
+        each centre in list
+            li.panel
+                div.topper
+                    span Total
+                    span Male #{centre.capacity}
+                    if centre.capacity_female
+                        span Female #{centre.capacity_female}
+
+                h2 #{centre.name}
+                div Available male: #{centre.current_beds_male}
+                div Available female: #{centre.current_beds_female}
+                div Out of commission: #{centre.current_beds_ooc}
     
