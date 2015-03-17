@@ -14,6 +14,7 @@ function data_reader(){
                 var outlist = {}, i;
                 for(i = 0; i < list.length; i++){
                     var centre = list[i];
+                    centre.dataValues.slug = centre.name.replace(/([^\w])/g,'');
                     outlist[centre.name] = centre.dataValues;
                 }
                 callback(outlist);
