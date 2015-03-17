@@ -1,11 +1,10 @@
 var express = require('express'),
     router = express.Router(),
-    io = require('socket.io'),
+    //io = require('socket.io'),
     json_wrangler = require("../lib/json_wrangler");
 
 /* GET home page. */
 router.post('/', function(req, res, next) {
-    console.log("handling Centre update");
     req.setEncoding("utf8");
     var postData = "";
     req.addListener("data", function(postDataChunk) {
@@ -19,20 +18,18 @@ router.post('/', function(req, res, next) {
                     res.writeHead(code, {"Content-Type": "application/json"});
                     res.write(body);
                     res.end();
+                    io.emit("centre-update",postData);
                 })
                 .then(function(){
-                    console.log("ABOUT TO UPDATE");
                     JW.update_centres();
                 })
                 .then(null,function(err){
-                    console.log("Rejected "+err);
                     code = 404;
                     res.writeHead(code, {"Content-Type": "application/json"});
                     res.write('{"status":"ERROR","error":"'+err+'"}');
                     res.end();
             });
         }catch(err){
-            console.log("GOT ERROR " + err);
             code = 400;
             res.writeHead(code, {"Content-Type": "application/json"});
             res.write('{"status":"ERROR","error":"'+err+'"}');

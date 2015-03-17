@@ -72,7 +72,6 @@ function json_wrangler(validate_against_db){
     };
     this.update_centres = function(){
         Qx.map(Object.keys(this.data.totals.bed_counts),this.update_centre_by_name)
-            .then(function(){console.log("74")})
             .then(null,function(err){console.log(err)});
         return true;
     };
