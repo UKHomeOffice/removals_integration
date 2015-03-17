@@ -6,7 +6,10 @@ block content
         each item in list
             div(id=item.slug,style="background-color:#ccc;margin:1em;float:left;width:auto;padding:1em") 
                 h2 #{item.name}
-                div Available male: #{item.current_beds_male}
-                div Available female: #{item.current_beds_female}
-                div Out of commission: #{item.current_beds_ooc}
+                div Available male: 
+                    span.male #{item.current_beds_male}
+                div Available female: 
+                    span.female #{item.current_beds_female}
+                div Out of commission: 
+                    span.ooc #{item.current_beds_ooc}
     
