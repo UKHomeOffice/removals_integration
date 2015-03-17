@@ -22,7 +22,7 @@ app.set('port', port);
  */
 renderSass('base.scss', 'style.css');
 
-installFixtures();
+//installFixtures();
 
 /**
  * Create HTTP server.
