@@ -4,7 +4,7 @@ block content
     h1 Dashboard
     ul
         each item in list
-            div(style="background-color:#ccc;margin:1em;float:left;width:auto;padding:1em") 
+            div(id=item.slug,style="background-color:#ccc;margin:1em;float:left;width:auto;padding:1em") 
                 h2 #{item.name}
                 div Available male: #{item.current_beds_male}
                 div Available female: #{item.current_beds_female}
