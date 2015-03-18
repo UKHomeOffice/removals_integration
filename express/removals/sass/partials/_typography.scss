@@ -51,10 +51,6 @@ h3 {
   }
 }
 
-.squash {
-  letter-spacing: -0.5px;
-}
-
 .a11y { // http://snook.ca/archives/html_and_css/hiding-content-for-accessibility
   clip: rect(1px, 1px, 1px, 1px);
   display: inline-block;
@@ -87,10 +83,4 @@ h3 {
 
 .keep-together {
   white-space: nowrap;
-}
-
-// hacks
-.button.find_address {
-  visibility: hidden !important;
-
 }

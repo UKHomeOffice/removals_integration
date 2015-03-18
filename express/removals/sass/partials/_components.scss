@@ -41,7 +41,7 @@
     border: none;
     color: $fgcolour;
     display: table-cell;
-    font-size: $button-text-size;
+    font-size: $smallish;
     font-weight: normal;
     line-height: 1;
     padding: $button-vertical-padding 10px;
@@ -88,6 +88,17 @@
   }
 }
 
+@mixin grey-band {
+  background: $topper-bg-colour;
+  color: $black;
+  margin: 0 (-$panel-padding-horizontal);
+
+  .value {
+    float: right;
+    margin-left: 0.625em;
+  }
+}
+
 // COMPONENTS
 
 .constraint {
@@ -102,7 +113,7 @@
   border-right: $horizontal-rhythm solid $viewport-bg;
   color: white;
   display: table-cell;
-  padding: 0 $panel-padding-horizontal $panel-padding-vertical;
+  padding: 0 $panel-padding-horizontal;
   margin-bottom: $vertical-rhythm;
   width: $panel-width;
 
@@ -111,16 +122,16 @@
   }
 
   .topper {
-    background: $topper-bg-colour;
-    color: $black;
-    margin: 0 (-$panel-padding-horizontal) $panel-padding-vertical;
-    padding: $topper-padding-vertical $panel-padding-horizontal;
+    @include grey-band;
+    margin-bottom: $panel-padding-vertical;
+    padding: 9px $panel-padding-horizontal 11px;
+  }
 
-    .total {
-      float: right;
-      margin-left: 0.625em;
-    }
-
+  .tailer {
+    @include grey-band;
+    font-size: $smallish;
+    margin-top: $panel-padding-vertical;
+    padding: 13px 31px 15px;
   }
 
   h2 {

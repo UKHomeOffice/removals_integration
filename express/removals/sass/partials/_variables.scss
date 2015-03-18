@@ -40,7 +40,6 @@ $vertical-rhythm: 48px;
 $horizontal-rhythm: 4px;
 $panel-padding-vertical: 25px;
 $panel-padding-horizontal: 14px;
-$topper-padding-vertical: 9px;
 $standard-field-height: 26px;
 $standard-field-margin: 12px;
 $narrow-label: 75px;
@@ -86,7 +85,7 @@ $admin-dropdown-width: 120px;
 // font sizes
 $base-font-assumption: 16;
 $small: #{12/$base-font-assumption}em;
-$button-text-size: #{14/$base-font-assumption}em;
+$smallish: #{14/$base-font-assumption}em;
 $normal: #{16/$base-font-assumption}em;
 $large: #{20/$base-font-assumption}em;
 $very-large: #{24/$base-font-assumption}em;

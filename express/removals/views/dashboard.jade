@@ -8,15 +8,19 @@ block content
     ul
         each centre in list
             li.panel
-                div.topper
+                .topper
                     span.caption Total
                     if centre.capacity_female
-                        span.total.female Female #{centre.capacity_female}
-                    span.total Male #{centre.capacity}
+                        span.value.female Female #{centre.capacity_female}
+                    span.value Male #{centre.capacity}
 
 
                 h2 #{centre.name}
                 div Available male: #{centre.current_beds_male}
                 div Available female: #{centre.current_beds_female}
                 div Out of commission: #{centre.current_beds_ooc}
+
+                .tailer
+                    span Last updated
+                    span.value #{centre.last_update}
     
