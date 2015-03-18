@@ -8,12 +8,17 @@ function json_wrangler(validate_against_db){
     this.validate_against_db = validate_against_db;
     this.errors = [];
     this.consume = function(json_data,callback){
-        this.json = json_data;
-        try{
-            this.data = JSON.parse(this.json);
-        } catch(err){
-            throw("Input is not valid JSON");
+        if(typeof(json_data) == 'object'){
+            this.data = json_data;
+        } else {
+            this.json = json_data;
+            try{
+                this.data = JSON.parse(this.json);
+            } catch(err){
+                throw("Input is not valid JSON");
+            }
         }
+console.log(JSON.stringify(this.data));
         var deferred = Q.defer();
         if(this.validate_against_db){
             this.invalidate_centre_names(this.data,null)
