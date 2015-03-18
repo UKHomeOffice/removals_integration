@@ -10,7 +10,8 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Behat\Symfony2Extension\Context\KernelAwareInterface;
 use Behat\MinkExtension\Context\MinkContext;
-use GuzzleHttp\Client;    
+use GuzzleHttp\Client;  
+
  
 #class FeatureContext extends BehatContext
 class FeatureContext extends MinkContext implements KernelAwareInterface 
@@ -53,25 +54,6 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         $request = $this->_client->post($uri, ["body"=> $JSON]);
         $this->_response = $request;
     }
-
-    /**
-     * Click on the element with the provided CSS Selector
-     *
-     * @When /^I click on the element with css selector "([^"]*)"$/
-     */
-    public function iClickOnTheElementWithCSSSelector($cssSelector)
-    {
-        $session = $this->getSession();
-        $element = $session->getPage()->find(
-            'xpath',
-            $session->getSelectorsHandler()->selectorToXpath('css', $cssSelector) // just changed xpath to css
-        );
-        if (null === $element) 
-        {
-            throw new \InvalidArgumentException(sprintf('Could not evaluate CSS Selector: "%s"', $cssSelector));
-        }
-        #$element->click();
-     }
 
     /**
      * @When /^I request "([^"]*)"$/
