@@ -61,6 +61,7 @@
   background: $topper-bg-colour;
   color: $black;
   margin: 0 (-$panel-padding-horizontal);
+  padding: $topper-top-margin $panel-padding-horizontal $topper-bottom-margin;
 
   .value {
     float: right;
@@ -83,10 +84,11 @@
   color: $white;
   display: table-cell;
   padding: 0 $panel-padding-horizontal (
-          $panel-padding-vertical
-          + $tailer-top-margin
-          + $tailer-height
-          + $tailer-bottom-margin);
+      $panel-padding-vertical
+    + $tailer-top-margin
+    + $tailer-height
+    + $tailer-bottom-margin
+  ); // normal padding plus space for .tailer
   position: relative;
   margin-bottom: $vertical-rhythm;
   min-width: $panel-width;
@@ -99,17 +101,30 @@
   .topper {
     @include grey-band;
     margin-bottom: $panel-padding-vertical;
-    padding: 9px $panel-padding-horizontal 11px;
   }
 
   .tailer {
     @include grey-band;
     bottom: 0;
     font-size: $smallish;
-    height: $tailer-height;
-    padding: $tailer-top-margin 31px $tailer-bottom-margin;
     position: absolute;
-    width: 257px;
+    width: $panel-width;
+
+    .inner {
+      height: $tailer-height;
+      padding: ($tailer-top-margin - $topper-top-margin)
+              (31px - $panel-padding-horizontal)
+              ($tailer-bottom-margin - $topper-top-margin);
+
+      &.warning {
+        background: #fcfbf9;
+        color: $error-red;
+
+        span {
+          font-weight: bold;
+        }
+      }
+    }
   }
 
   h2 {

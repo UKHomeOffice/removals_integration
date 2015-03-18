@@ -26,5 +26,13 @@ block content
                             span #{centre.current_beds_female}
 
                 .tailer
-                    span Last updated
-                    span.value #{moment(centre.updatedAt).format('HH:mm')}
+                    - var delta = (new Date() - centre.updatedAt)
+                    - var fourHoursInMilliseconds = 1000 * 60 * 60 * 4
+                    if centre.updatedAt && delta > fourHoursInMilliseconds
+                        .inner.warning
+                            span Last updated
+                            span.value #{moment(centre.updatedAt).fromNow()}
+                    else
+                        .inner
+                            span Last updated
+                            span.value #{moment(centre.updatedAt).fromNow()}
