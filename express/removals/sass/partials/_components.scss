@@ -136,7 +136,7 @@
 
   ul.availability {
     li {
-      padding: 13px 16px 15px;
+      padding: $tailer-top-margin 16px $tailer-bottom-margin;
 
       &.available {
         background-color: #083e24;
@@ -146,6 +146,17 @@
       span {
         float: right;
       }
+    }
+  }
+
+  table.inout {
+    width: 100%;
+
+    td {
+      background: $panel-inout-colour;
+      border: 2px solid $panel-bg-colour;
+      padding: $tailer-top-margin 6px $tailer-bottom-margin;
+      text-align: center;
     }
   }
 }

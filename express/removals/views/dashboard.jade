@@ -26,7 +26,7 @@ block content
                             span #{centre.current_beds_female}
 
                 .tailer
-                    - var delta = (new Date() - centre.updatedAt)
+                    - var delta = new Date() - centre.updatedAt
                     - var fourHoursInMilliseconds = 1000 * 60 * 60 * 4
                     if centre.updatedAt && delta > fourHoursInMilliseconds
                         .inner.warning
@@ -36,3 +36,15 @@ block content
                         .inner
                             span Last updated
                             span.value #{moment(centre.updatedAt).fromNow()}
+
+                table.inout
+                    tr
+                        td Inbound
+                        td Outbound
+                    tr
+                        td xx
+                        td yy
+
+                ul.availability
+                    li Reserved
+                        span zz
