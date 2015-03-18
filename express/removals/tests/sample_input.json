@@ -2,7 +2,7 @@
     "individuals" : {
         "arrivals" : [
             {
-                "date" : "27-2-2015",
+                "date" : "27-02-2015",
                 "time" : "08:02:37",
                 "cid_id": "123456",
                 "nationality": "Hugenot",
@@ -15,7 +15,7 @@
         ],
         "departees" : [
             {
-                "date" : "27-2-2015",
+                "date" : "27-02-2015",
                 "time" : "08:02:37",
                 "cid_id": "654321",
                 "nationality": "Eritrean",
@@ -26,7 +26,7 @@
                 "transfer_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris lorem leo, aliquam. "
             },
             {
-                "date" : "27-2-2015",
+                "date" : "27-02-2015",
                 "time" : "08:02:37",
                 "cid_id": "654322",
                 "nationality": "British",
@@ -37,7 +37,7 @@
                 "transfer_details" : ""
             },
             {
-                "date" : "27-2-2015",
+                "date" : "27-02-2015",
                 "time" : "08:02:37",
                 "cid_id": "654325",
                 "nationality": "British",
@@ -51,7 +51,7 @@
     },
 
     "totals" : {
-        "date" : "27-2-2015",
+        "date" : "27-02-2015",
         "time" : "08:02:37",
         "bed_counts": {
             "Harmondsworth" : {
