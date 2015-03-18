@@ -82,9 +82,15 @@
   border-right: $horizontal-rhythm solid $viewport-bg;
   color: $white;
   display: table-cell;
-  padding: 0 $panel-padding-horizontal;
+  padding: 0 $panel-padding-horizontal (
+          $panel-padding-vertical
+          + $tailer-top-margin
+          + $tailer-height
+          + $tailer-bottom-margin);
+  position: relative;
   margin-bottom: $vertical-rhythm;
-  width: $panel-width;
+  min-width: $panel-width;
+  max-width: $panel-width;
 
   &.full {
     background-color: $panel-bg-colour-full;
@@ -98,9 +104,12 @@
 
   .tailer {
     @include grey-band;
+    bottom: 0;
     font-size: $smallish;
-    margin-top: $panel-padding-vertical;
-    padding: 13px 31px 15px;
+    height: $tailer-height;
+    padding: $tailer-top-margin 31px $tailer-bottom-margin;
+    position: absolute;
+    width: 257px;
   }
 
   h2 {
