@@ -21,10 +21,10 @@ block content
                         span #{centre.current_beds_male}
                     li.unavailable Unavailable
                         span #{centre.current_beds_ooc}
-                    li.available.female Available female
-                        span #{centre.current_beds_female}
+                    if centre.current_beds_female
+                        li.available.female Available female
+                            span #{centre.current_beds_female}
 
                 .tailer
                     span Last updated
-                    span.value #{centre.last_update}
-    
+                    span.value #{moment(centre.updatedAt).format('DD/MM HH:mm')}

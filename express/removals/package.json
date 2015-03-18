@@ -26,6 +26,7 @@
     "sequelize-fixtures": "*",
     "jsDump": "*",
     "q": "*",
-    "qx": "*"
+    "qx": "*",
+    "moment": "*"
   }
 }
