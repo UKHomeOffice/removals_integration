@@ -22,8 +22,7 @@ var Centre = sequelize.define('centre', {
     unisex: { type: Sequelize.BOOLEAN, default: false },
     current_beds_male: Sequelize.INTEGER,
     current_beds_female: Sequelize.INTEGER,
-    current_beds_ooc: Sequelize.INTEGER,
-    last_update:{ type : Sequelize.TIME, allowNull: true }
+    current_beds_ooc: Sequelize.INTEGER
 });
 
 var Person = sequelize.define('person', {
