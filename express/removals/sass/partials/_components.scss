@@ -1,34 +1,3 @@
-@mixin standard-field {
-  line-height: 1.3;
-  margin-bottom: 15px;
-  min-height: $standard-field-height;
-  position: relative;
-
-  h2 {
-    font-size: $large;
-  }
-
-  > label, > .spacer {
-    display: inline-block;
-    margin-right: $standard-field-margin;
-    width: $narrow-label;
-  }
-
-  >label, span, .button {
-    vertical-align: middle;
-  }
-
-  a {
-    color: $black;
-    font-weight: bold;
-    text-decoration: underline;
-  }
-
-  p.note {
-    font-size: $small;
-  }
-}
-
 @mixin button($bgcolour: $button-bg-normal, $fgcolour: white) {
   border: none;
   display: inline-block;
@@ -111,7 +80,7 @@
 .panel {
   background: bottom left no-repeat $panel-bg-colour;
   border-right: $horizontal-rhythm solid $viewport-bg;
-  color: white;
+  color: $white;
   display: table-cell;
   padding: 0 $panel-padding-horizontal;
   margin-bottom: $vertical-rhythm;
@@ -139,6 +108,21 @@
     letter-spacing: $bold-unsquish;
     margin-bottom: 20px;
     text-align: center;
+  }
+
+  ul.availability {
+    li {
+      padding: 13px 16px 15px;
+
+      &.available {
+        background-color: #083e24;
+        text-transform: uppercase;
+      }
+      
+      span {
+        float: right;
+      }
+    }
   }
 }
 

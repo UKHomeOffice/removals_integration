@@ -16,9 +16,13 @@ block content
 
 
                 h2 #{centre.name}
-                div Available male: #{centre.current_beds_male}
-                div Available female: #{centre.current_beds_female}
-                div Out of commission: #{centre.current_beds_ooc}
+                ul.availability
+                    li.available.male Available male
+                        span #{centre.current_beds_male}
+                    li.unavailable Unavailable
+                        span #{centre.current_beds_ooc}
+                    li.available.female Available female
+                        span #{centre.current_beds_female}
 
                 .tailer
                     span Last updated
