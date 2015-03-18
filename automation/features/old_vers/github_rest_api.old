@@ -26,12 +26,12 @@ Scenario Outline: updating data by sending JSON
     """
     Then the status code should be 200
     When I go to "http://localhost/dashboard"
-    Then I should see <value_male> in the "div#harmondsworth div.bed_data span.male" element
-    Then I should see <value_female> in the "div#harmondsworth div.bed_data span.female" element
-    Then I should see <value_ooc> in the "div#harmondsworth div.bed_data span.ooc" element        
+    Then I should see <expected_male> in the "div#harmondsworth div.bed_data span.male" element
+    Then I should see <expected_female> in the "div#harmondsworth div.bed_data span.female" element
+    Then I should see <expected_ooc> in the "div#harmondsworth div.bed_data span.ooc" element        
     Examples:
-    |value_male|value_female |value_ooc |
-    |"0"       |"0"          |"0"       |
-    |"0"       |"0"          |"0"       |
-    |"1"       |"2"          |"3"       |
-    |"4"       |"5"          |"6"       |    
+    | value_male| expected_male     |value_female   |expected_female  | value_ooc | expected_ooc |
+    | 0         | "0"               |0              |"0"              | 0         |  "0"         |
+    | 20        | "20"              |100            |"100"            | 50        |  "50"        |
+    | 200       | "200"             |99             |"99"             | 12        |  "12"        |
+
