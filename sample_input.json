@@ -55,9 +55,12 @@
         "time" : "08:02:37",
         "bed_counts": {
             "Harmondsworth" : {
+                "total_male_beds" : 300,
+                "total_female_beds" : 300,
                 "male" : 20,
                 "female" : 8,
-                "out_of_commission": 1
+                "out_of_commission_male": 1,
+                "out_of_commission_female": 0
             },
             "Colnbrook" : {
                 "male" : 5,
