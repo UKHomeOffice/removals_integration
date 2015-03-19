@@ -15,7 +15,8 @@ html
                 $("#"+slug+" li.unavailable span").html(bed_counts['out_of_commission']);
             }
             socket.on("centre-update",function(data){
-                var bed_counts = JSON.parse(data).totals.bed_counts;
+                //var bed_counts = JSON.parse(data).totals.bed_counts;
+                var bed_counts = data.totals.bed_counts;
                 for(key in bed_counts){
                     dashboard_update_centre(key, bed_counts[key]);
                 }

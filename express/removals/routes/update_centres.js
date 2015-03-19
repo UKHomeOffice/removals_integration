@@ -7,9 +7,6 @@ router.post('/', function(req, res, next) {
     req.setEncoding("utf8");
     //var postData = Object.keys(req.body)[0];
     var postData = req.body;
-console.log(req.body);
-console.log(typeof(postData));
-console.log(postData);
     JW = new json_wrangler(true);
     try{
         JW.consume(postData,function(success, error){})
