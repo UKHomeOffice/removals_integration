@@ -1,0 +1,271 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://jsonschema.net",
+  "type": "object",
+  "properties": {
+    "individuals": {
+      "id": "http://jsonschema.net/individuals",
+      "type": "object",
+      "properties": {
+        "arrivals": {
+          "id": "http://jsonschema.net/individuals/arrivals",
+          "type": "array",
+          "items": {
+            "id": "http://jsonschema.net/individuals/arrivals/0",
+            "type": "object",
+            "properties": {
+              "date": {
+                "id": "http://jsonschema.net/individuals/arrivals/0/date",
+                "type": "string", "pattern": "^[0-9]{2}-[0-9]{2}-[0-9]{4}$"
+              },
+              "time": {
+                "id": "http://jsonschema.net/individuals/arrivals/0/time",
+                "type": "string", "pattern": "^[0-9]{2}:[0-9]{2}:[0-9]{2}$"
+              },
+              "cid_id": {
+                "id": "http://jsonschema.net/individuals/arrivals/0/cid_id",
+                "type": "string", "minLength":1,"maxLength":15
+              },
+              "nationality": {
+                "id": "http://jsonschema.net/individuals/arrivals/0/nationality",
+                "type": "string", "minLength":1,"maxLength":50
+              },
+              "gender": {
+                "id": "http://jsonschema.net/individuals/arrivals/0/gender",
+                "type": "string"
+              },
+              "centre": {
+                "id": "http://jsonschema.net/individuals/arrivals/0/centre",
+                "type": "string"
+              },
+              "arrived_from": {
+                "id": "http://jsonschema.net/individuals/arrivals/0/arrived_from",
+                "type": "string"
+              },
+              "transferred_from": {
+                "id": "http://jsonschema.net/individuals/arrivals/0/transferred_from",
+                "type": "null"
+              },
+              "transfer_details": {
+                "id": "http://jsonschema.net/individuals/arrivals/0/transfer_details",
+                "type": "string"
+              }
+            },
+            "required": [
+              "date",
+              "time",
+              "cid_id",
+              "nationality",
+              "gender",
+              "centre",
+              "arrived_from",
+              "transferred_from",
+              "transfer_details"
+            ]
+          },
+          "required": [
+            "0"
+          ]
+        },
+        "departees": {
+          "id": "http://jsonschema.net/individuals/departees",
+          "type": "array",
+          "items": [
+            {
+              "id": "http://jsonschema.net/individuals/departees/0",
+              "type": "object",
+              "properties": {
+                "date": {
+                  "id": "http://jsonschema.net/individuals/departees/0/date",
+                  "type": "string",
+                  "pattern": "^[0-9]{2}-[0-9]{2}-[0-9]{4}$"
+                },
+                "time": {
+                  "id": "http://jsonschema.net/individuals/departees/0/time",
+                  "type": "string",
+                  "pattern": "^[0-9]{2}:[0-9]{2}:[0-9]{2}$"
+                },
+                "cid_id": {
+                  "id": "http://jsonschema.net/individuals/departees/0/cid_id",
+                  "type": "string"
+                },
+                "nationality": {
+                  "id": "http://jsonschema.net/individuals/departees/0/nationality",
+                  "type": "string"
+                },
+                "gender": {
+                  "id": "http://jsonschema.net/individuals/departees/0/gender",
+                  "type": "string"
+                },
+                "centre": {
+                  "id": "http://jsonschema.net/individuals/departees/0/centre",
+                  "type": "string"
+                },
+                "transferred_to": {
+                  "id": "http://jsonschema.net/individuals/departees/0/transferred_to",
+                  "type": "null"
+                },
+                "reason_for_leaving": {
+                  "id": "http://jsonschema.net/individuals/departees/0/reason_for_leaving",
+                  "type": "string"
+                },
+                "transfer_details": {
+                  "id": "http://jsonschema.net/individuals/departees/0/transfer_details",
+                  "type": "string"
+                }
+              }
+            },
+            {
+              "id": "http://jsonschema.net/individuals/departees/1",
+              "type": "object",
+              "properties": {
+                "date": {
+                  "id": "http://jsonschema.net/individuals/departees/1/date",
+                  "type": "string"
+                },
+                "time": {
+                  "id": "http://jsonschema.net/individuals/departees/1/time",
+                  "type": "string"
+                },
+                "cid_id": {
+                  "id": "http://jsonschema.net/individuals/departees/1/cid_id",
+                  "type": "string"
+                },
+                "nationality": {
+                  "id": "http://jsonschema.net/individuals/departees/1/nationality",
+                  "type": "string"
+                },
+                "gender": {
+                  "id": "http://jsonschema.net/individuals/departees/1/gender",
+                  "type": "string"
+                },
+                "centre": {
+                  "id": "http://jsonschema.net/individuals/departees/1/centre",
+                  "type": "string"
+                },
+                "transferred_to": {
+                  "id": "http://jsonschema.net/individuals/departees/1/transferred_to",
+                  "type": "null"
+                },
+                "reason_for_leaving": {
+                  "id": "http://jsonschema.net/individuals/departees/1/reason_for_leaving",
+                  "type": "string"
+                },
+                "transfer_details": {
+                  "id": "http://jsonschema.net/individuals/departees/1/transfer_details",
+                  "type": "string"
+                }
+              }
+            },
+            {
+              "id": "http://jsonschema.net/individuals/departees/2",
+              "type": "object",
+              "properties": {
+                "date": {
+                  "id": "http://jsonschema.net/individuals/departees/2/date",
+                  "type": "string"
+                },
+                "time": {
+                  "id": "http://jsonschema.net/individuals/departees/2/time",
+                  "type": "string"
+                },
+                "cid_id": {
+                  "id": "http://jsonschema.net/individuals/departees/2/cid_id",
+                  "type": "string"
+                },
+                "nationality": {
+                  "id": "http://jsonschema.net/individuals/departees/2/nationality",
+                  "type": "string"
+                },
+                "gender": {
+                  "id": "http://jsonschema.net/individuals/departees/2/gender",
+                  "type": "string"
+                },
+                "centre": {
+                  "id": "http://jsonschema.net/individuals/departees/2/centre",
+                  "type": "string"
+                },
+                "transferred_to": {
+                  "id": "http://jsonschema.net/individuals/departees/2/transferred_to",
+                  "type": "string"
+                },
+                "reason_for_leaving": {
+                  "id": "http://jsonschema.net/individuals/departees/2/reason_for_leaving",
+                  "type": "string"
+                },
+                "transfer_details": {
+                  "id": "http://jsonschema.net/individuals/departees/2/transfer_details",
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "arrivals",
+        "departees"
+      ]
+    },
+    "totals": {
+      "id": "http://jsonschema.net/totals",
+      "type": "object",
+      "properties": {
+        "date": {
+          "id": "http://jsonschema.net/totals/date",
+          "type": "string"
+        },
+        "time": {
+          "id": "http://jsonschema.net/totals/time",
+          "type": "string"
+        },
+        "bed_counts": {
+          "id": "http://jsonschema.net/totals/bed_counts",
+          "type": "object",
+          "properties": {
+            "Harmondsworth": {
+              "id": "http://jsonschema.net/totals/bed_counts/Harmondsworth",
+              "type": "object",
+              "properties": {
+                "male": {
+                  "id": "http://jsonschema.net/totals/bed_counts/Harmondsworth/male",
+                  "type": "integer"
+                },
+                "female": {
+                  "id": "http://jsonschema.net/totals/bed_counts/Harmondsworth/female",
+                  "type": "integer"
+                },
+                "out_of_commission": {
+                  "id": "http://jsonschema.net/totals/bed_counts/Harmondsworth/out_of_commission",
+                  "type": "integer"
+                }
+              }
+            },
+            "Heathrow": {
+              "id": "http://jsonschema.net/totals/bed_counts/Heathrow",
+              "type": "object",
+              "properties": {
+                "male": {
+                  "id": "http://jsonschema.net/totals/bed_counts/Heathrow/male",
+                  "type": "integer"
+                },
+                "female": {
+                  "id": "http://jsonschema.net/totals/bed_counts/Heathrow/female",
+                  "type": "integer"
+                },
+                "out_of_commission": {
+                  "id": "http://jsonschema.net/totals/bed_counts/Heathrow/out_of_commission",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "individuals",
+    "totals"
+  ]
+}

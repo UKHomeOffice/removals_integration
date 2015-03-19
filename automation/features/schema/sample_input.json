@@ -1,0 +1,69 @@
+{
+    "individuals" : {
+        "arrivals" : [
+            {
+                "date" : "27-02-2015",
+                "time" : "08:02:37",
+                "cid_id": "123456",
+                "nationality": "Hugenot",
+                "gender" : "m",
+                "centre" : "Heathrow",
+                "arrived_from": "Holding Area",
+                "transferred_from": null,
+                "transfer_details" : "Lorem ipsum dolor sit amet, consectetur adipiscing."
+            }
+        ],
+        "departees" : [
+            {
+                "date" : "27-02-2015",
+                "time" : "08:02:37",
+                "cid_id": "654321",
+                "nationality": "Eritrean",
+                "gender" : "f",
+                "centre" : "Harmondsworth",
+                "transferred_to": null,
+                "reason_for_leaving": "Granted leave to remain",
+                "transfer_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris lorem leo, aliquam. "
+            },
+            {
+                "date" : "27-02-2015",
+                "time" : "08:02:37",
+                "cid_id": "654322",
+                "nationality": "British",
+                "gender" : "m",
+                "centre" : "Harmondsworth",
+                "transferred_to": null,
+                "reason_for_leaving": "Removed",
+                "transfer_details" : ""
+            },
+            {
+                "date" : "27-02-2015",
+                "time" : "08:02:37",
+                "cid_id": "654325",
+                "nationality": "British",
+                "gender" : "f",
+                "centre" : "Harmondsworth",
+                "transferred_to": "Pennie House",
+                "reason_for_leaving": "Transfer to another IRC",
+                "transfer_details" : ""
+            }
+        ]
+    },
+
+    "totals" : {
+        "date" : "27-02-2015",
+        "time" : "08:02:37",
+        "bed_counts": {
+            "Harmondsworth" : {
+                "male" : 20,
+                "female" : 8,
+                "out_of_commission": 1
+            },
+            "Heathrow" : {
+                "male" : 5,
+                "female" : 0,
+                "out_of_commission": 0
+            }
+        }
+    }
+}
