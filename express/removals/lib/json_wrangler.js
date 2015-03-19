@@ -18,7 +18,6 @@ function json_wrangler(validate_against_db){
                 throw("Input is not valid JSON");
             }
         }
-console.log(JSON.stringify(this.data));
         var deferred = Q.defer();
         if(this.validate_against_db){
             this.invalidate_centre_names(this.data,null)
