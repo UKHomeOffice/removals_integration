@@ -29,6 +29,8 @@ renderSass('base.scss', 'style.css');
  */
 
 var server = http.createServer(app);
+io = require('socket.io').listen(server);
+require('../sockets')(io);
 
 /**
  * Listen on provided port, on all network interfaces.
