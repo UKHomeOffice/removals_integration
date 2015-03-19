@@ -7,7 +7,7 @@ block content
                 h1 DEPMU Dashboard
     ul
         each centre in list
-            li.panel
+            li(id=centre.slug).panel
                 .topper
                     span.caption Total
                     if centre.capacity_female
@@ -48,3 +48,4 @@ block content
                 ul.availability
                     li Reserved
                         span zz
+

@@ -3,5 +3,23 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    script(type='text/javascript',src='/socket.io/socket.io.js')
+    script(type='text/javascript',src='http://code.jquery.com/jquery-1.11.1.js')
+    script.
+        $(function(){
+            var socket = io();
+            var dashboard_update_centre = function(name,bed_counts){
+                var slug = name.replace(/([^\w])/g,'').toLowerCase();
+                $("#"+slug+" li.available.male span").html(bed_counts.male);
+                $("#"+slug+" li.available.female span").html(bed_counts.female);
+                $("#"+slug+" li.unavailable span").html(bed_counts['out_of_commission']);
+            }
+            socket.on("centre-update",function(data){
+                var bed_counts = JSON.parse(data).totals.bed_counts;
+                for(key in bed_counts){
+                    dashboard_update_centre(key, bed_counts[key]);
+                }
+            });
+        });
   body
     block content
