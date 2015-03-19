@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Behat\Symfony2Extension\Context\KernelAwareInterface;
 use Behat\MinkExtension\Context\MinkContext;
 use GuzzleHttp\Client;  
+use behatch\contexts;
 
  
 #class FeatureContext extends BehatContext
@@ -44,6 +45,16 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
             $parameters = $this->_parameters;
             return (isset($parameters[$name])) ? $parameters[$name] : null;
         }
+    }
+
+    /**
+     * @Given /^I load the JSON file "([^"]*)"$/
+     */
+    public function iLoadTheJsonFile($arg1)
+    {
+        $file = file_get_contents($arg1, FILE_USE_INCLUDE_PATH);
+        echo $file;
+        return $file;
     }
 
     /**

@@ -1,14 +1,14 @@
 {
     "require": {
-        "behat/behat": "*",
-        "behat/symfony2-extension": "*",
+        "behat/behat": "2.4.*@stable",   
         "behat/mink": "*",
         "behat/mink-extension": "*",
+	"behat/symfony2-extension": "*",
         "behat/mink-selenium2-driver": "*",
         "behat/mink-goutte-driver": "*",
         "behat/mink-zombie-driver": "*",
-	"guzzle/guzzle": "*",
+        "guzzle/guzzle": "*",
         "guzzlehttp/guzzle": "*",
-	"behatch/contexts": "*"
+        "behatch/contexts": "*"
     }
 }
