@@ -1,6 +1,5 @@
 var express = require('express'),
     router = express.Router(),
-    //io = require('socket.io'),
     json_wrangler = require("../lib/json_wrangler");
 
 /* GET home page. */
