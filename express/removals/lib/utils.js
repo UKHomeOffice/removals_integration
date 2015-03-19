@@ -128,10 +128,10 @@ function write_csv_to_db(model, list_of_fields, data, callback) {
         }
 
         model
-            .create(creation_obj)
+            .findOrCreate({ where : creation_obj })
             .complete(function(err) {
                 if (!!err) {
-                    console.log('Failed to save ' + field, err)
+                    console.log('Failed to save ' + field, err);
                     err_list.append(err);
                 } else {
                     console.log('Saved ' + field);
