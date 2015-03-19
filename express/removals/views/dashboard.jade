@@ -1,15 +1,51 @@
 extends ./layout.jade
 
 block content
-    h1 Dashboard
+    #header
+        .constraint
+            #intro
+                h1 DEPMU Dashboard
     ul
-        each item in list
-            div(id=item.slug,style="background-color:#ccc;margin:1em;float:left;width:auto;padding:1em") 
-                h2 #{item.name}
-                div.bed_data Available male: 
-                    span.male #{item.current_beds_male}
-                div.bed_data Available female: 
-                    span.female #{item.current_beds_female}
-                div.bed_data Out of commission: 
-                    span.ooc #{item.current_beds_ooc}
-    
+        each centre in list
+            li(id=centre.slug).panel
+                .topper
+                    span.caption Total
+                    if centre.capacity_female
+                        span.value.female Female #{centre.capacity_female}
+                    span.value Male #{centre.capacity}
+
+
+                h2 #{centre.name}
+                ul.availability
+                    li.available.male Available male
+                        span #{centre.current_beds_male}
+                    li.unavailable Unavailable
+                        span #{centre.current_beds_ooc}
+                    if centre.current_beds_female
+                        li.available.female Available female
+                            span #{centre.current_beds_female}
+
+                .tailer
+                    - var delta = new Date() - centre.updatedAt
+                    - var fourHoursInMilliseconds = 1000 * 60 * 60 * 4
+                    if centre.updatedAt && delta > fourHoursInMilliseconds
+                        .inner.warning
+                            span Last updated
+                            span.value #{moment(centre.updatedAt).fromNow()}
+                    else
+                        .inner
+                            span Last updated
+                            span.value #{moment(centre.updatedAt).fromNow()}
+
+                table.inout
+                    tr
+                        td Inbound
+                        td Outbound
+                    tr
+                        td xx
+                        td yy
+
+                ul.availability
+                    li Reserved
+                        span zz
+

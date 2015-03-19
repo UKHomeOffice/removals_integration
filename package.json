@@ -15,6 +15,9 @@
     "sequelize-fixtures": "*",
     "jsDump": "*",
     "q": "*",
-    "qx": "*"
+    "qx": "*",
+    "compass": "*",
+    "sass": "*",
+    "node-sass": "*"
   }
 }

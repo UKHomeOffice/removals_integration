@@ -10,9 +10,9 @@ html
             var socket = io();
             var dashboard_update_centre = function(name,bed_counts){
                 var slug = name.replace(/([^\w])/g,'').toLowerCase();
-                $("#"+slug+" div.bed_data span.male").html(bed_counts.male);
-                $("#"+slug+" div.bed_data span.female").html(bed_counts.female);
-                $("#"+slug+" div.bed_data span.ooc").html(bed_counts['out_of_commission']);
+                $("#"+slug+" li.available.male span").html(bed_counts.male);
+                $("#"+slug+" li.available.female span").html(bed_counts.female);
+                $("#"+slug+" li.unavailable span").html(bed_counts['out_of_commission']);
             }
             socket.on("centre-update",function(data){
                 var bed_counts = JSON.parse(data).totals.bed_counts;
@@ -20,6 +20,6 @@ html
                     dashboard_update_centre(key, bed_counts[key]);
                 }
             });
-        })
+        });
   body
     block content

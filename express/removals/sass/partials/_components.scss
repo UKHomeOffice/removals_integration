@@ -1,0 +1,391 @@
+@mixin button($bgcolour: $button-bg-normal, $fgcolour: white) {
+  border: none;
+  display: inline-block;
+  margin-left: $button-separation;
+  text-decoration: none !important;
+  vertical-align: bottom;
+
+  > * {
+    background: $bgcolour;
+    border: none;
+    color: $fgcolour;
+    display: table-cell;
+    font-size: $smallish;
+    font-weight: normal;
+    line-height: 1;
+    padding: $button-vertical-padding 10px;
+    text-align: center;
+    text-decoration: none !important;
+    vertical-align: middle;
+    white-space: nowrap;
+
+    /*
+      This was in the GDS stylesheet but is hideous, doesn't work properly, kills hover states, and its
+       merits are dubious to say the least. Do we really want hit areas bigger than the buttons?
+       If it turns out we do, I will perform some magic with the enclosing .button element to achieve the same result
+
+    // making the click target bigger than the button
+    // (and fill the space made when the button moves)
+    &:before {
+      content: "";
+      height: 110%;
+      width: 100%;
+      display: block;
+      background: transparent;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    &:active:before {
+      top: -10%;
+      height: 120%;
+    }*/
+  }
+
+  &:focus > *,
+  > *:hover,
+  > *:focus,
+  &.fake-hover > * {
+    background-color: darken($bgcolour, $button-darken-amount);
+    cursor: pointer;
+  }
+
+  .todayButton {
+    padding-left: 1px;
+    padding-right: 1px;
+    width: 55px; // mitigates reflow at larger text sizes
+  }
+}
+
+@mixin grey-band {
+  background: $topper-bg-colour;
+  color: $black;
+  margin: 0 (-$panel-padding-horizontal);
+  padding: $topper-top-margin $panel-padding-horizontal $topper-bottom-margin;
+
+  .value {
+    float: right;
+    margin-left: 0.625em;
+  }
+}
+
+// COMPONENTS
+
+.constraint {
+  margin: 0 auto;
+  padding: 0 $squeezed-page-emergency-padding;
+  position: relative;
+  max-width: $page-width;
+}
+
+.panel {
+  background: bottom left no-repeat $panel-bg-colour;
+  border-right: $horizontal-rhythm solid $viewport-bg;
+  color: $white;
+  display: table-cell;
+  padding: 0 $panel-padding-horizontal (
+      $panel-padding-vertical
+    + $tailer-top-margin
+    + $tailer-height
+    + $tailer-bottom-margin
+  ); // normal padding plus space for .tailer
+  position: relative;
+  margin-bottom: $vertical-rhythm;
+  min-width: $panel-width;
+  max-width: $panel-width;
+
+  &.full {
+    background-color: $panel-bg-colour-full;
+  }
+
+  .topper {
+    @include grey-band;
+    margin-bottom: $panel-padding-vertical;
+  }
+
+  .tailer {
+    @include grey-band;
+    bottom: 0;
+    font-size: $smallish;
+    position: absolute;
+    width: $panel-width;
+
+    .inner {
+      height: $tailer-height;
+      padding: ($tailer-top-margin - $topper-top-margin)
+              (31px - $panel-padding-horizontal)
+              ($tailer-bottom-margin - $topper-top-margin);
+
+      &.warning {
+        background: #fcfbf9;
+        color: $error-red;
+
+        span {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  h2 {
+    font-size: $super-large;
+    letter-spacing: $bold-unsquish;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  ul.availability {
+    li {
+      padding: $tailer-top-margin 16px $tailer-bottom-margin;
+
+      &.available {
+        background-color: #083e24;
+        text-transform: uppercase;
+      }
+      
+      span {
+        float: right;
+      }
+    }
+  }
+
+  table.inout {
+    width: 100%;
+
+    td {
+      background: $panel-inout-colour;
+      border: 2px solid $panel-bg-colour;
+      padding: $tailer-top-margin 6px $tailer-bottom-margin;
+      text-align: center;
+    }
+  }
+}
+
+.calendar-button {
+  background: url($calendar-icon);
+  border: none;
+  display: inline-block;
+  height: 23px;
+  margin-left: 4px;
+  vertical-align: middle;
+  width: 23px;
+
+  &:focus {
+    background-image: url($calendar-icon-dark);
+  }
+}
+
+.controls {
+  max-height: 38px;
+  position: absolute;
+  right: $squeezed-page-emergency-padding;
+  top: 13px;
+
+  #user {
+    color: white;
+    display: inline-block;
+    font-size: $small;
+    float: left;
+    margin-left: $button-group-separation;
+    padding: ($button-vertical-padding + 1px) 0;
+
+    strong {
+      font-weight: bold;
+    }
+  }
+  
+  form, ul, li {
+    float: left;
+  }
+  
+  .action {
+    @extend .button;
+    float: left;
+
+    &.default {
+      margin-left: $button-group-separation;
+      margin-top: -6px;
+      position: relative;
+      top: 3px;
+
+      > * {
+        font-size: $large;
+        padding: 8px 12px;
+      }
+    }
+  }
+}
+
+.dropdown {
+  display: inline-block !important;
+  margin-left: $button-group-separation;
+  width: $admin-dropdown-width;
+
+  .toggler {
+    background-color: $black;
+    color: white;
+    display: block;
+
+    .arrow {
+      background: url($white-arrow-sprite-vertical) no-repeat bottom right;
+      display: inline-block;
+      height: 9px;
+      margin-left: 18px;
+      padding: 0;
+      width: 10px;
+    }
+
+    a {
+      background: $button-bg-normal;
+      display: block;
+      padding: $button-vertical-padding 0;
+    }
+  }
+
+  li + li {
+    @extend .a11y;
+
+    // put behind toggler - rendering tiny sliver in FF
+    position: relative;
+    top: -1px;
+    z-index: -1;
+  }
+
+  &.open, &:hover, &:focus {
+    li + li {
+      @extend .remove-a11y;
+      display: block;
+      top: 0;
+      z-index: 1;
+    }
+
+    .toggler .arrow {
+      background-position: top right;
+    }
+  }
+
+  &:hover, &:focus {
+    cursor: pointer;
+  }
+
+  li {
+    color: white;
+    display: block;
+    float: none;
+    width: $admin-dropdown-width;
+
+    > * {
+      padding: 5px;
+    }
+
+    .subaction {
+      @include button(white, $black);
+
+      border: 1px solid $black;
+      border-top-width: 0;
+      display: block;
+      float: none;
+      margin: 0;
+      padding: 0;
+      width: $admin-dropdown-width;
+
+      > * {
+        padding-left: 0;
+        padding-right: 0;
+        width: $admin-dropdown-width;
+      }
+    }
+  }
+
+  li, .toggler {
+    margin-left: 0;
+  }
+}
+
+.global { // for top of page messages
+  border: 1px solid $black;
+  display: inline-block;
+  margin-bottom: $vertical-rhythm;
+  padding: $vertical-rhythm $horizontal-rhythm;
+}
+
+.selector {
+  li {
+    border-right: 1px solid $input-border-grey;
+    display: inline-block;
+    padding: 2px $horizontal-rhythm;
+
+    &.selected {
+      font-weight: bold;
+    }
+
+    a {
+      color: $link-blue;
+      display: block;
+    }
+
+    &:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
+  }
+}
+
+.revealer {
+  color: $link-blue;
+  cursor: pointer;
+  display: inline-block;
+  font-size: $large;
+  font-weight: bold;
+  margin-bottom: $standard-field-margin;
+  height: 25px;
+  padding-right: 35px;
+  position: relative;
+  text-decoration: underline;
+  vertical-align: middle;
+
+  .plusMinus {
+    background: top right no-repeat url($plus-and-minus);
+    border: none;
+    display: inline-block;
+    height: 25px;
+    margin-left: 12px;
+    text-indent: -1000px;
+    vertical-align: middle;
+    width: 25px;
+
+    &:focus {
+      background-color: $dark-blue;
+    }
+  }
+
+  &.open .plusMinus {
+    background-position: top left;
+  }
+}
+
+.loading {
+  background: black;
+  color: white;
+  left: 48%;
+  position: fixed;
+  top: 48%;
+  padding: 2em;
+  z-index: 100;
+}
+
+.hidden-by-js { // only to be added dynamically
+  border-width: 0;
+  height: 0;
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  z-index: -1;
+}
+
+// plugin fixes
+.chosen-drop {
+  input {
+    width:100% !important;
+  }
+}

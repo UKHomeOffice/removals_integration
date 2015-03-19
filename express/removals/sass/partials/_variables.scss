@@ -1,0 +1,100 @@
+// colours
+$viewport-bg: white;
+$dark-blue: #006699;
+$footer-bg-colour: #cfe6f5;
+$main-bg-colour: #ffffff;
+$link-blue: #005ea5;
+$mid-grey: #666666;
+$dark-grey: #858788;
+$input-border-grey: #bfc1c3;
+$panel-bg-colour: #016435;
+$panel-bg-colour-full: #a81c1f;
+$panel-inout-colour: #317647;
+$topper-bg-colour: #c8c7c5;
+$checkbox-bg-colour: #e1eff8;
+$error-red: #fa0605;
+$success-green: #00823b;
+$progress-bar-color: #B1DF95;
+$black: #030303;
+$white: #fefefe;
+$case-table-border-grey: #91a1ab;
+$tooltip-yellow: #ffff99;
+$tooltip-border-mustard: #cccc00;
+$tooltip-border-mustard: #cccc00;
+$button-bg-normal: #005ea5;
+$button-bg-primary: #00823b;
+$button-bg-reject: #f00000;
+$button-bg-subordinate: #666;
+
+$button-darken-amount: 10%; // GDS has this at 5% but it doesn't seem like enough
+
+// measurements
+$page-width: 1240px;
+$min-page-width: 993px;
+$intro-height: 51px;
+$header-height: $intro-height;
+$footer-height: 55px;
+$vertical-rhythm: 48px;
+$horizontal-rhythm: 4px;
+$panel-padding-vertical: 25px;
+$panel-padding-horizontal: 14px;
+$topper-top-margin: 9px;
+$topper-bottom-margin: 11px;
+$tailer-top-margin: 15px;
+$tailer-bottom-margin: 13px;
+$tailer-height: 14px;
+$standard-field-margin: 12px;
+$narrow-label: 75px;
+$small-label: 87px;
+$smallish-label: 100px;
+$medium-label: 124px;
+$medium-wide-label: 140px;
+$overview-label: 53px;
+$wide-label: 157px;
+$superwide-label: 170px;
+$deadline-label: 118px;
+$medium-input: 106px;
+$wide-input: 160px;
+$wideish-input: 150px;
+$datefield: 81px;
+$standard-input-width: 176px;
+$standard-select-width: 192px;
+$label-field-separation: 5px;
+$view-page-field-height: 14px;
+$view-page-small-panel-height: 82px;
+$breadcrumb-spacing: 8px;
+$spot-control-padding: 10px;
+$panel-width: 319px - 2*$panel-padding-horizontal;
+$minute-stamp-width: 138px;
+$input-height: 24px;
+$input-padding-horizontal: 7px;
+$table-cell-horizontal-padding: 10px;
+$results-table-horizontal-padding: 8px;
+$results-table-vertical-padding: 12px;
+$central-panel-edit-height: 192px;
+$central-panel-view-height: 210px;
+$squeezed-page-emergency-padding: 10px;
+$squeezed-button-padding: 7px;
+$huge-panel-input-width: 298px;
+$inset-label-width: 52px;
+$list-line-height: 26px;
+$alert-padding: 10px;
+$button-vertical-padding: 6px;
+$button-separation: 10px;
+$button-group-separation: 30px;
+$admin-dropdown-width: 120px;
+
+// font sizes
+$base-font-assumption: 16;
+$small: #{12/$base-font-assumption}em;
+$smallish: #{14/$base-font-assumption}em;
+$normal: #{16/$base-font-assumption}em;
+$large: #{20/$base-font-assumption}em;
+$very-large: #{24/$base-font-assumption}em;
+$super-large: #{32/$base-font-assumption}em;
+
+
+$bold-unsquish: 0.0167em;
+
+// paths
+$font-path: '/fonts/';

@@ -60,5 +60,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
+// available to templates
+app.locals.moment = require('moment');
 
 module.exports = app;
