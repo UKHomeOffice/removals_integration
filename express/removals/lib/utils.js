@@ -129,13 +129,12 @@ function write_csv_to_db(model, list_of_fields, data, callback) {
 
         model
             .findOrCreate({ where : creation_obj })
-            .complete(function(err) {
-                if (!!err) {
-                    console.log('Failed to save ' + field, err);
-                    err_list.append(err);
+            .complete(function(instance, created) {
+                /*if (created) {
+                    console.log('Created ', created[0].dataValues.name);
                 } else {
-                    console.log('Saved ' + field);
-                }
+                    console.log('Skipped ', instance);
+                }*/
                 return_count++;
                 if (return_count == lines.length && callback) {
                     callback(err_list);
