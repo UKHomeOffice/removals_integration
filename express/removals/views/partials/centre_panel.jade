@@ -1,0 +1,43 @@
+li(id=centre.slug).panel
+    .topper
+        span.caption Total
+        if centre.capacity_female
+            span.value.female Female #{centre.capacity_female}
+        span.value Male #{centre.capacity}
+
+
+    h2 #{centre.name}
+    ul.availability
+        li.available.male Available male
+            span #{centre.current_beds_male}
+        li.unavailable Unavailable
+            span #{centre.current_beds_ooc}
+        if centre.current_beds_female
+            li.available.female Available female
+                span #{centre.current_beds_female}
+
+    .tailer
+        - var delta = new Date() - centre.updatedAt
+        - var fourHoursInMilliseconds = 1000 * 60 * 60 * 4
+        if centre.updatedAt && delta > fourHoursInMilliseconds
+            .inner.warning
+                span Last updated
+                span.value #{moment(centre.updatedAt).fromNow()}
+        else
+            .inner
+                span Last updated
+                span.value #{moment(centre.updatedAt).fromNow()}
+
+    table.inout
+        tr
+            td Inbound
+            td Outbound
+        tr
+            td xx
+            td yy
+
+    ul.availability
+        li Reserved
+            span zz
+
+
