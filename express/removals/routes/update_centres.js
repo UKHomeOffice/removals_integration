@@ -5,8 +5,15 @@ var express = require('express'),
 /* GET home page. */
 router.post('/', function(req, res, next) {
     req.setEncoding("utf8");
-    //var postData = Object.keys(req.body)[0];
-    var postData = req.body;
+    var first_key = Object.keys(req.body)[0];
+    if('{' == first_key.substr(0,1)) {
+        var postData = first_key;
+    } else {
+        var postData = req.body;
+    }
+    if('string' == typeof(postData)){
+        postData = JSON.parse(postData);
+    }
     JW = new json_wrangler(true);
     try{
         JW.consume(postData,function(success, error){})
