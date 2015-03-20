@@ -10,13 +10,16 @@ li(id=centre.slug).panel
     ul.availability
         li.available Available
             if centre.current_beds_female
-                span Female #{centre.current_beds_female}
-                span Male #{centre.current_beds_male}
+                span.female Female &nbsp;
+                    b.num #{centre.current_beds_female}
+                span.male Male &nbsp;
+                    b.num #{centre.current_beds_male}
             else
-                span #{centre.current_beds_male}
+                span.male &nbsp; #{centre.current_beds_male}
 
         li.unavailable Unavailable
-            span #{centre.current_beds_ooc}
+            span.ooc 
+                b.num #{centre.current_beds_ooc}
 
 
     .tailer
