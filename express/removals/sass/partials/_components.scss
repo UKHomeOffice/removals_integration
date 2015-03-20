@@ -141,6 +141,11 @@
       &.available {
         background-color: #083e24;
         text-transform: uppercase;
+
+        span {
+          margin-left: 20px;
+          text-transform: none;
+        }
       }
       
       span {

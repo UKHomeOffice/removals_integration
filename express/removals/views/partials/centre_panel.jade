@@ -8,13 +8,16 @@ li(id=centre.slug).panel
 
     h2 #{centre.name}
     ul.availability
-        li.available.male Available male
-            span #{centre.current_beds_male}
+        li.available.male Available
+            if centre.current_beds_female
+                span Female #{centre.current_beds_female}
+                span Male #{centre.current_beds_male}
+            else
+                span #{centre.current_beds_male}
+
         li.unavailable Unavailable
             span #{centre.current_beds_ooc}
-        if centre.current_beds_female
-            li.available.female Available female
-                span #{centre.current_beds_female}
+
 
     .tailer
         - var delta = new Date() - centre.updatedAt
