@@ -22,6 +22,11 @@ process.argv.forEach(function (val, index, array) {
   }
 });
 
+/*
+example usage: ./bin/www --build-data=y 
+to switch on the installFixtures() 
+*/
+
 /**
  * Module dependencies.
  */
