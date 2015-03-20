@@ -94,10 +94,6 @@
   min-width: $panel-width;
   max-width: $panel-width;
 
-  &.full {
-    background-color: $panel-bg-colour-full;
-  }
-
   .topper {
     @include grey-band;
     margin-bottom: $panel-padding-vertical;
@@ -139,7 +135,7 @@
       padding: $tailer-top-margin 16px $tailer-bottom-margin;
 
       &.available {
-        background-color: #083e24;
+        background-color: $availability-colour;
         text-transform: uppercase;
 
         span {
@@ -162,6 +158,19 @@
       border: 2px solid $panel-bg-colour;
       padding: $tailer-top-margin 6px $tailer-bottom-margin;
       text-align: center;
+    }
+  }
+
+  &.full {
+    background-color: $panel-bg-colour-full;
+
+    ul.availability .available {
+      background-color: $availability-colour-full;
+    }
+
+    table.inout td {
+      background-color: $panel-inout-colour-full;
+      border-color: $panel-bg-colour-full;
     }
   }
 }
