@@ -8,7 +8,7 @@ li(id=centre.slug).panel
 
     h2 #{centre.name}
     ul.availability
-        li.available.male Available
+        li.available Available
             if centre.current_beds_female
                 span Female #{centre.current_beds_female}
                 span Male #{centre.current_beds_male}
@@ -31,17 +31,17 @@ li(id=centre.slug).panel
                 span Last updated
                 span.value #{moment(centre.updatedAt).fromNow()}
 
-    //
-        table.inout
-            tr
-                td Inbound
-                td Outbound
-            tr
-                td xx
-                td yy
 
-        ul.availability
-            li Reserved
-                span zz
+    table.inout
+        tr
+            td Inbound
+            td Outbound
+        tr
+            td xx
+            td yy
+
+    ul.availability
+        li Reserved
+            span zz
 
 
