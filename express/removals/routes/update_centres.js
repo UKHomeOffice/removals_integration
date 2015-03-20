@@ -2,12 +2,11 @@ var express = require('express'),
     router = express.Router(),
     json_wrangler = require("../lib/json_wrangler");
 
-/* GET home page. */
 router.post('/', function(req, res, next) {
     req.setEncoding("utf8");
     var first_key = Object.keys(req.body)[0];
     if('undefined' == typeof(first_key)){
-        res.status(400).json({"status":"ERROR","error":"empty body"});
+        res.status(400).json({"status":"ERROR","error":"Empty body, or content type was not application/json."});
     } else {
         if('{' == first_key.substr(0,1)) {
             var postData = first_key;

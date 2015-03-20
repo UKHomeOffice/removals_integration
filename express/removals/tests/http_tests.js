@@ -30,7 +30,7 @@ api()
         console.log(body);
         if(err) throw err;
     });
-/*
+
 api()
     .send(invalid_json)
     .expectStatus(400)
@@ -65,4 +65,4 @@ api()
         console.log(body);
         if(err) throw err;
     });
-*/
+
