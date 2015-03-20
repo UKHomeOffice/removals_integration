@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-command_line_flags = {
+var command_line_flags = {
     '--build-data': false
 };
 var truthy = function(x) {
