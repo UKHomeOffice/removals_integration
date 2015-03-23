@@ -5,14 +5,22 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(type='text/javascript',src='/socket.io/socket.io.js')
     script(type='text/javascript',src='http://code.jquery.com/jquery-1.11.1.js')
+    script(type='text/javascript',src='/javascripts/jade_runtime.js')
+    script(type='text/javascript',src='http://momentjs.com/downloads/moment.min.js')
+    script(type='text/javascript',src='/javascripts/templates.js')
     script.
         $(function(){
             var socket = io();
             var dashboard_update_centre = function(name,bed_counts){
                 var slug = name.replace(/([^\w])/g,'').toLowerCase();
-                $("#"+slug+" .availability .available .male .num").html(bed_counts.male);
-                $("#"+slug+" .availiability .available .female .num").html(bed_counts.female);
-                $("#"+slug+" .availability .unavailable .ooc .num").html(bed_counts['out_of_commission']);
+                bed_counts.slug = slug;
+                bed_counts.updatedAt = null;
+                var ele = $("#"+slug);
+
+
+                ele.html(window.template_centre_panel({centre:bed_counts}));
+
+
                 if(0 === bed_counts.male || 0 === bed_counts.female) {
                     $("#"+slug).addClass('full');
                 } else {
@@ -23,7 +31,13 @@ html
                 //var bed_counts = JSON.parse(data).totals.bed_counts;
                 var bed_counts = data.totals.bed_counts;
                 for(key in bed_counts){
-                    dashboard_update_centre(key, bed_counts[key]);
+                    var centre_data = bed_counts[key];
+                    centre_data.name = key;
+                    centre_data.updatedAt = new Date();
+                    centre_data.current_beds_male = centre_data.male;
+                    centre_data.current_beds_female = centre_data.female;
+                    centre_data.current_beds_ooc = centre_data.out_of_commission;
+                    dashboard_update_centre(key, centre_data);
                 }
             });
         });
