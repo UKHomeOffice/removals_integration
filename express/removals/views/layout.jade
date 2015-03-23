@@ -17,15 +17,15 @@ html
                 bed_counts.updatedAt = null;
                 var ele = $("#"+slug);
 
+                ele.hide(500,function(){
+                    ele.html(window.template_centre_panel({centre:bed_counts})).show(500);
 
-                ele.html(window.template_centre_panel({centre:bed_counts}));
-
-
-                if(0 === bed_counts.male || 0 === bed_counts.female) {
-                    $("#"+slug).addClass('full');
-                } else {
-                    $("#"+slug).removeClass('full');
-                }
+                    if(0 === bed_counts.male || 0 === bed_counts.female) {
+                        $("#"+slug).addClass('full');
+                    } else {
+                        $("#"+slug).removeClass('full');
+                    }
+                });
             }
             socket.on("centre-update",function(data){
                 //var bed_counts = JSON.parse(data).totals.bed_counts;
