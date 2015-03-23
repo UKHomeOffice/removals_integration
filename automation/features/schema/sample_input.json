@@ -9,7 +9,7 @@
                 "gender" : "m",
                 "centre" : "Heathrow",
                 "arrived_from": "Holding Area",
-                "transferred_from": null,
+                "transferred_from": "",
                 "transfer_details" : "Lorem ipsum dolor sit amet, consectetur adipiscing."
             }
         ],
@@ -21,7 +21,7 @@
                 "nationality": "Eritrean",
                 "gender" : "f",
                 "centre" : "Harmondsworth",
-                "transferred_to": null,
+                "transferred_to": "",
                 "reason_for_leaving": "Granted leave to remain",
                 "transfer_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris lorem leo, aliquam. "
             },
@@ -32,7 +32,7 @@
                 "nationality": "British",
                 "gender" : "m",
                 "centre" : "Harmondsworth",
-                "transferred_to": null,
+                "transferred_to": "",
                 "reason_for_leaving": "Removed",
                 "transfer_details" : ""
             },
