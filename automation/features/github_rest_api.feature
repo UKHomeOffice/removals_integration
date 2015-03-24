@@ -34,4 +34,4 @@ Scenario Outline: updating data by sending JSON
     |"0"       |"0"          |"0"       |
     |"0"       |"0"          |"0"       |
     |"1"       |"2"          |"3"       |
-    |"4"       |"5"          |"6"       |    
+    |"1"       |"2"          |"3"       |    

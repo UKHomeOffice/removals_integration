@@ -10,5 +10,5 @@ default:
     extensions:
         Behat\MinkExtension\Extension:
             browser_name: chrome
-            goutte:    ~
+            goutte: ~
             selenium2: ~
