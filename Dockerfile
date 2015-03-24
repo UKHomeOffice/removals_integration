@@ -3,7 +3,6 @@ MAINTAINER Jonathan Pagel <pagel@pobox.com>
 
 RUN apt-get update \
     && apt-get install -y --force-yes \
-        apt-transport-https \
         build-essential \
         curl \
         rlwrap \
