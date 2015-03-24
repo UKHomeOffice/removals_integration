@@ -1,4 +1,4 @@
-FROM debian:wheezy
+FROM debian:jessie
 MAINTAINER Jonathan Pagel <pagel@pobox.com>
 
 RUN apt-get update \
