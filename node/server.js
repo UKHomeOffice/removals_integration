@@ -6,12 +6,16 @@ function start() {
 
     function listener(request, response) {
         var path = url.parse(request.url).pathname,
+            controllerMap,
+            argument,
             controller;
         console.log("Request for " + path + " received.");
-        controller = router(path, response);
+        controllerMap = router(path, response);
+        controller= controllerMap.controller;
+        argument = controllerMap.argument;
 
         if (typeof controller === 'function') {
-            controller(request, response);
+            controller(request, response, argument);
         } else {
             console.log("No request handler found for " + path);
             response.writeHead(404, {"Content-Type": "text/plain"});
