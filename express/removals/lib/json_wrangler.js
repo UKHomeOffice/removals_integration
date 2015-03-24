@@ -7,6 +7,7 @@ function json_wrangler(validate_against_db){
     this.data = null;
     this.validate_against_db = validate_against_db;
     this.errors = [];
+    this.updated_centres = [];
     this.consume = function(json_data,callback){
         if(typeof(json_data) == 'object'){
             this.data = json_data;
@@ -75,11 +76,15 @@ function json_wrangler(validate_against_db){
             return deferred.promise;
     };
     this.update_centres = function(){
-        Qx.map(Object.keys(this.data.totals.bed_counts),this.update_centre_by_name)
-            .then(null,function(err){console.log(err)});
-        return true;
+        var deferred = Q.defer();
+        Qx.every(Object.keys(this.data.totals.bed_counts),this.update_centre_by_name)
+            .then(function(){deferred.resolve()},null)
+            .then(null,function(err){
+                deferred.reject(err);
+                console.log(err);
+            });
+        return deferred.promise;
     };
-    var self = this;
     this.update_centre_by_name = function(centre_name){
         var key_map = {
             "male": "current_beds_male",

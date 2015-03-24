@@ -19,6 +19,24 @@ function data_reader(){
                 }
                 callback(outlist);
             });
+    };
+    this.get_centres_by_name_in = function(name_list,callback){
+console.log(name_list);
+        models.Centre
+            .findAll({
+                where : {
+                    name: name_list
+                }
+            })
+            .then(function(list){
+                var outlist = {}, i;
+                for(i = 0; i < list.length; i++){
+                    var centre = list[i];
+                    centre.dataValues.slug = centre.name.replace(/([^\w])/g,'').toLowerCase();
+                    outlist[centre.name] = centre.dataValues;
+                }
+                callback(outlist);
+            });
     }
 }
 module.exports = data_reader;

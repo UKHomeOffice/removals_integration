@@ -1,6 +1,7 @@
 var express = require('express'),
     router = express.Router(),
-    json_wrangler = require("../lib/json_wrangler");
+    json_wrangler = require("../lib/json_wrangler"),
+    data_reader = require("../lib/data_reader.js");
 
 router.post('/', function(req, res, next) {
     req.setEncoding("utf8");
@@ -21,10 +22,16 @@ router.post('/', function(req, res, next) {
             JW.consume(postData,function(success, error){})
                 .then(function(obj){
                     res.status(200).json({"status":"OK"});
-                    io.emit("centre-update",postData);
                 })
                 .then(function(){
-                    JW.update_centres();
+                    JW.update_centres()
+                    .then(function(){
+                        name_list = Object.keys(JW.data.totals.bed_counts);
+                        var DR = new data_reader();
+                        DR.get_centres_by_name_in(name_list,function(outlist){
+                            console.log(outlist);
+                        })});
+                    io.emit("centre-update",postData);
                 })
                 .then(null,function(err){
                     res.status(404).json({"status":"ERROR","error":err});
