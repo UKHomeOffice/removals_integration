@@ -7,7 +7,7 @@ var map= {
     get_from_env = Object.keys(map),
     directory_path_components = process.cwd().split('/'),
     project_path = directory_path_components.slice(0, directory_path_components.length -1).join('/'),
-    cur_env = process.env.NODE_ENV || "development",
+    cur_env = process.env.NODE_ENV || "test",
     config = {},
     v;
 
