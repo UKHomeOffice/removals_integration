@@ -8,38 +8,7 @@ html
     script(type='text/javascript',src='/javascripts/jade_runtime.js')
     script(type='text/javascript',src='http://momentjs.com/downloads/moment.min.js')
     script(type='text/javascript',src='/javascripts/templates.js')
-    script.
-        $(function(){
-            var socket = io();
-            var dashboard_update_centre = function(name,bed_counts){
-                var slug = name.replace(/([^\w])/g,'').toLowerCase();
-                bed_counts.slug = slug;
-                bed_counts.updatedAt = null;
-                var ele = $("#"+slug);
+    script(type='text/javascript',src='/javascripts/updates.js')
 
-                ele.hide(500,function(){
-                    ele.html(window.template_centre_panel({centre:bed_counts})).show(500);
-
-                    if(0 === bed_counts.male || 0 === bed_counts.female) {
-                        $("#"+slug).addClass('full');
-                    } else {
-                        $("#"+slug).removeClass('full');
-                    }
-                });
-            }
-            socket.on("centre-update",function(data){
-                //var bed_counts = JSON.parse(data).totals.bed_counts;
-                var bed_counts = data.totals.bed_counts;
-                for(key in bed_counts){
-                    var centre_data = bed_counts[key];
-                    centre_data.name = key;
-                    centre_data.updatedAt = new Date();
-                    centre_data.current_beds_male = centre_data.male;
-                    centre_data.current_beds_female = centre_data.female;
-                    centre_data.current_beds_ooc = centre_data.out_of_commission;
-                    dashboard_update_centre(key, centre_data);
-                }
-            });
-        });
   body
     block content
