@@ -62,7 +62,7 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
      */
     public function iPostTheFollowingJsonToTheApi($uri, PyStringNode $JSON)
     {
-        $request = $this->_client->post($uri, ["body"=> $JSON]);
+        $request = $this->_client->post($uri, ["body"=> $JSON,"headers"=>['Content-Type'=>'application/json']]);
         $this->_response = $request;
     }
 
