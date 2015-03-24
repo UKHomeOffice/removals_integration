@@ -1,6 +1,9 @@
 var CONFIG = require('./config').config,
     exec = require("child_process").exec,
-    jade = require("jade");
+    jade = require("jade"),
+    fs = require('fs'),
+    path = require('path');
+
 var data_reader = require("../models/data_reader.js");
 var json_wrangler = require("../models/json_wrangler.js");
 
@@ -102,6 +105,32 @@ var controllers = {
             response.end();
         });
 
+    },
+    serveStatic: function(request, response, filePath) {
+        var asset = CONFIG.project_path + '/public/' + filePath;
+
+        path.exists(asset, function (exists) {
+            if (!exists) {
+                response.writeHead(404, {"Content-Type": "text/plain"});
+                response.write("404 Not Found\n");
+                response.end();
+                return;
+            }
+
+            console.log('outputting static file ' + asset);
+            fs.readFile(asset, "binary", function (err, file) {
+                if (err) {
+                    response.writeHead(500, {"Content-Type": "text/plain"});
+                    response.write(err + "\n");
+                    response.end();
+                    return;
+                }
+
+                response.writeHead(200);
+                response.write(file, "binary");
+                response.end();
+            });
+        });
     }
 };
 exports.controllers = controllers;

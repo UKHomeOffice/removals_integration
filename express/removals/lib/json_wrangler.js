@@ -8,11 +8,15 @@ function json_wrangler(validate_against_db){
     this.validate_against_db = validate_against_db;
     this.errors = [];
     this.consume = function(json_data,callback){
-        this.json = json_data;
-        try{
-            this.data = JSON.parse(this.json);
-        } catch(err){
-            throw("Input is not valid JSON");
+        if(typeof(json_data) == 'object'){
+            this.data = json_data;
+        } else {
+            this.json = json_data;
+            try{
+                this.data = JSON.parse(this.json);
+            } catch(err){
+                throw("Input is not valid JSON");
+            }
         }
         var deferred = Q.defer();
         if(this.validate_against_db){
@@ -72,7 +76,6 @@ function json_wrangler(validate_against_db){
     };
     this.update_centres = function(){
         Qx.map(Object.keys(this.data.totals.bed_counts),this.update_centre_by_name)
-            .then(function(){console.log("74")})
             .then(null,function(err){console.log(err)});
         return true;
     };

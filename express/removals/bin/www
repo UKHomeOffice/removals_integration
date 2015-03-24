@@ -1,5 +1,32 @@
 #!/usr/bin/env node
 
+var command_line_flags = {
+    '--build-data': false
+};
+var truthy = function(x) {
+    if(typeof(x) == 'string'){
+        x = x.toLowerCase();
+    }
+    var truthy = ['y','yes','true'];
+    if(truthy.indexOf(x) > -1) {
+        return true;
+    }
+    return false;
+}
+process.argv.forEach(function (val, index, array) {
+  var arg_info = val.split('=');
+  if(arg_info.length > 1){
+    if(Object.keys(command_line_flags).indexOf(arg_info[0]) > -1) {
+        command_line_flags[arg_info[0]] = truthy(arg_info[1]);
+    }
+  }
+});
+
+/*
+example usage: ./bin/www --build-data=y 
+to switch on the installFixtures() 
+*/
+
 /**
  * Module dependencies.
  */
@@ -7,6 +34,8 @@
 var app = require('../app');
 var debug = require('debug')('removals:server');
 var http = require('http');
+var renderSass = require('../lib/render_sass').renderSass;
+var installFixtures = require('../lib/install_fixtures').installFixtures;
 
 /**
  * Get port from environment and store in Express.
@@ -16,10 +45,21 @@ var port = normalizePort(process.env.PORT || '80');
 app.set('port', port);
 
 /**
+ * compile SASS
+ */
+renderSass('base.scss', 'style.css');
+
+if(command_line_flags['--build-data']){
+    installFixtures();
+}
+
+/**
  * Create HTTP server.
  */
 
 var server = http.createServer(app);
+io = require('socket.io').listen(server);
+require('../sockets')(io);
 
 /**
  * Listen on provided port, on all network interfaces.

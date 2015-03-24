@@ -2,42 +2,37 @@ var express = require('express'),
     router = express.Router(),
     json_wrangler = require("../lib/json_wrangler");
 
-/* GET home page. */
 router.post('/', function(req, res, next) {
-    console.log("handling Centre update");
     req.setEncoding("utf8");
-    var postData = "";
-    req.addListener("data", function(postDataChunk) {
-        postData += postDataChunk;
-        var code = 200;
+    var first_key = Object.keys(req.body)[0];
+    if('undefined' == typeof(first_key)){
+        res.status(400).json({"status":"ERROR","error":"Empty body, or content type was not application/json."});
+    } else {
+        if('{' == first_key.substr(0,1)) {
+            var postData = first_key;
+        } else {
+            var postData = req.body;
+        }
+        if('string' == typeof(postData)){
+            postData = JSON.parse(postData);
+        }
         JW = new json_wrangler(true);
         try{
             JW.consume(postData,function(success, error){})
                 .then(function(obj){
-                    var body = '{"status":"OK"}';
-                    res.writeHead(code, {"Content-Type": "application/json"});
-                    res.write(body);
-                    res.end();
+                    res.status(200).json({"status":"OK"});
+                    io.emit("centre-update",postData);
                 })
                 .then(function(){
-                    console.log("ABOUT TO UPDATE");
                     JW.update_centres();
                 })
                 .then(null,function(err){
-                    console.log("Rejected "+err);
-                    code = 404;
-                    res.writeHead(code, {"Content-Type": "application/json"});
-                    res.write('{"status":"ERROR","error":"'+err+'"}');
-                    res.end();
+                    res.status(404).json({"status":"ERROR","error":err});
             });
         }catch(err){
-            console.log("GOT ERROR " + err);
-            code = 400;
-            res.writeHead(code, {"Content-Type": "application/json"});
-            res.write('{"status":"ERROR","error":"'+err+'"}');
-            res.end();
+            res.status(400).json({"status":"ERROR","error":err});
         }
-    });
+    }
 });
 
 module.exports = router;
