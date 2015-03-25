@@ -12,7 +12,8 @@ var truthy = function(x) {
         return true;
     }
     return false;
-}
+};
+
 process.argv.forEach(function (val, index, array) {
   var arg_info = val.split('=');
   if(arg_info.length > 1){
@@ -51,6 +52,7 @@ console.log('Set port to ' + port);
 renderSass('base.scss', 'style.css');
 
 if(command_line_flags['--build-data']){
+    console.log('installing fixtures...');
     installFixtures();
 }
 
