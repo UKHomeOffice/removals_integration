@@ -3,6 +3,7 @@ var map= {
         'DB_PASSWORD' : 'password',
         'DB_HOST' : 'host',
         'DB_NAME' : 'database',
+        'DB_PORT' : 'port'
     },
     get_from_env = Object.keys(map),
     directory_path_components = process.cwd().split('/'),
@@ -31,7 +32,9 @@ CONFIG = {
     db: {
         name: config.database,
         user: config.username,
-        password: config.password
+        password: config.password,
+        host: config.host,
+        port: config.port
     }
 };
 console.log(CONFIG);

@@ -3,8 +3,9 @@ var CONFIG = require('./config').config,
 console.log(CONFIG);
 
 var sequelize = new Sequelize(CONFIG.db.name, CONFIG.db.user, CONFIG.db.password, {
+        host: CONFIG.db.host,
         dialect: "mysql",
-        port:    3306,
+        port:    CONFIG.db.port || 3306
     });
 
 sequelize
