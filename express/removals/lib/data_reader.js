@@ -21,7 +21,7 @@ function data_reader(){
             });
     };
     this.get_centres_by_name_in = function(name_list,callback){
-console.log(name_list);
+        console.log(name_list);
         models.Centre
             .findAll({
                 where : {
