@@ -28,10 +28,12 @@ router.post('/', function(req, res, next) {
                     .then(function(){
                         name_list = Object.keys(JW.data.totals.bed_counts);
                         var DR = new data_reader();
-                        DR.get_centres_by_name_in(name_list,function(outlist){
-                            console.log(outlist);
-                        })});
-                    io.emit("centre-update",postData);
+                        setTimeout(function(){
+                            DR.get_centres_by_name_in(name_list,function(outlist){
+                                console.log(outlist);
+                            })});
+                            io.emit("centre-update",postData);
+                        },1000);
                 })
                 .then(null,function(err){
                     res.status(404).json({"status":"ERROR","error":err});
