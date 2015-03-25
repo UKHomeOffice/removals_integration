@@ -6,9 +6,9 @@ var express = require('express'),
 
 var full = function(centre){
     if(centre.capacity_female > centre.capacity/2){
-        return (centre.current_beds_female == 0);
+        return (centre.current_beds_female === 0);
     } else {
-        return (centre.current_beds_male == 0);
+        return (centre.current_beds_male === 0);
     }
 };
 
