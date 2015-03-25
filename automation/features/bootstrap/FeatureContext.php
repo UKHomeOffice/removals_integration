@@ -37,11 +37,22 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         $client->setDefaultOption('verify', false);
     }
  
+    /**
+     * @When /^wait (\d+) seconds?$/
+     */
+    public function waitSeconds($seconds)
+    {
+        sleep($seconds);
+    }
+ 
     public function getParameter($name)
     {
-        if (count($this->_parameters) === 0) {
+        if (count($this->_parameters) === 0) 
+        {
             throw new \Exception('Parameters not loaded!');
-        } else {
+        } 
+        else 
+        {
             $parameters = $this->_parameters;
             return (isset($parameters[$name])) ? $parameters[$name] : null;
         }
@@ -53,7 +64,6 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     public function iLoadTheJsonFile($arg1)
     {
         $file = file_get_contents($arg1, FILE_USE_INCLUDE_PATH);
-        echo $file;
         return $file;
     }
 

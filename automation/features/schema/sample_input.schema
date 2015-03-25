@@ -61,7 +61,7 @@
           "type":"object",
           "additionalProperties": false,
           "patternProperties":{
-            "^[A-Za-z][a-zA-Z -]+$": {
+            "^[A-Za-z][a-zA-Z - ']+$": {
               "properties":{
                 "male":             {"type":"integer", "minimum": 0, "maximum": 32767},
                 "female":           {"type":"integer", "minimum": 0, "maximum": 32767},
