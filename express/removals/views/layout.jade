@@ -8,28 +8,7 @@ html
     script(type='text/javascript',src='/javascripts/jade_runtime.js')
     script(type='text/javascript',src='http://momentjs.com/downloads/moment.min.js')
     script(type='text/javascript',src='/javascripts/templates.js')
-    script.
-        $(function(){
-            var socket = io();
-            var dashboard_update_centre = function(name,bed_counts){
-                var slug = name.replace(/([^\w])/g,'').toLowerCase();
-                bed_counts.slug = slug;
-                bed_counts.updatedAt = null;
-                var ele = $("#"+slug);
+    script(type='text/javascript',src='/javascripts/updates.js')
 
-                ele.hide(500,function(){
-                    ele.html(window.template_centre_panel({centre:bed_counts})).show(500);
-
-                    if(0 === bed_counts.male || 0 === bed_counts.female) {
-                        $("#"+slug).addClass('full');
-                    } else {
-                        $("#"+slug).removeClass('full');
-                    }
-                });
-            }
-            socket.on("centre-update",function(data){
-                dashboard_update_centre(data.name, data);
-            });
-        });
   body
     block content
