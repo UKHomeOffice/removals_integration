@@ -23,17 +23,6 @@ $(function() {
     }
 
     socket.on("centre-update",function(data){
-        var bed_counts = data.totals.bed_counts, key, centre_data;
-        for(key in bed_counts){
-            if (bed_counts.hasOwnProperty(key)) {
-                centre_data = bed_counts[key];
-                centre_data.name = key;
-                centre_data.updatedAt = new Date();
-                centre_data.current_beds_male = centre_data.male;
-                centre_data.current_beds_female = centre_data.female;
-                centre_data.current_beds_ooc = centre_data.out_of_commission;
-                dashboard_update_centre(key, centre_data);
-            }
-        }
+        dashboard_update_centre(data.name, data);
     });
 });

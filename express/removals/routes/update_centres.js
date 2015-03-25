@@ -1,6 +1,8 @@
 var express = require('express'),
     router = express.Router(),
-    json_wrangler = require("../lib/json_wrangler");
+    json_wrangler = require("../lib/json_wrangler"),
+    Q = require('q'),
+    data_reader = require("../lib/data_reader.js");
 
 router.post('/', function(req, res, next) {
     req.setEncoding("utf8");
@@ -20,11 +22,23 @@ router.post('/', function(req, res, next) {
         try{
             JW.consume(postData,function(success, error){})
                 .then(function(obj){
+                    var deferred = Q.defer();
                     res.status(200).json({"status":"OK"});
-                    io.emit("centre-update",postData);
+                    deferred.resolve();
+                    return deferred.promise;
                 })
                 .then(function(){
-                    JW.update_centres();
+                    return JW.update_centres();
+                })
+                .then(function(){
+                    var bed_counts = Object.keys(JW.data.totals.bed_counts);
+                    for(i in bed_counts){
+                        var centre_name = bed_counts[i];
+                        var centre = JW.find_centre_by_name(centre_name)
+                        .then(function(centre){
+                            io.emit('centre-update',centre);
+                        });
+                    }
                 })
                 .then(null,function(err){
                     res.status(404).json({"status":"ERROR","error":err});
