@@ -75,7 +75,7 @@ function json_wrangler(validate_against_db){
                 })
             return deferred.promise;
     };
-    this.update_centres = function(){
+    this.update_centres = function(callback){
         var deferred = Q.defer();
         name_list = Object.keys(this.data.totals.bed_counts);
         var key_map = {
@@ -83,6 +83,7 @@ function json_wrangler(validate_against_db){
             "female": "current_beds_female",
             "out_of_commission": "current_beds_ooc",
         };
+/*
         for(var i in name_list){
             models.Centre.findOne({where:{"name":name_list[i]}})
             .then(function(centre){
@@ -97,17 +98,20 @@ function json_wrangler(validate_against_db){
                 }
             });
         }
-/*
+*/
         Qx.every(Object.keys(this.data.totals.bed_counts),this.update_centre_by_name)
-            .then(function(){deferred.resolve()},null)
+            .then(function(x){
+                deferred.resolve();
+            },null)
             .then(null,function(err){
                 deferred.reject(err);
                 console.log(err);
             });
-*/
+                //callback(deferred.promise);
         return deferred.promise;
     };
     this.update_centre_by_name = function(centre_name){
+        var deferred = Q.defer();
         var key_map = {
             "male": "current_beds_male",
             "female": "current_beds_female",
@@ -119,8 +123,12 @@ function json_wrangler(validate_against_db){
                     var field_name = key_map[key];
                     centre.set(field_name, self.data.totals.bed_counts[centre_name][key]);
                 }
-                centre.save();
+                centre.save()
+                .then(function(centre){
+                    deferred.resolve();
+                });
             });
+        return deferred.promise;
     }
 };
 module.exports = json_wrangler;
