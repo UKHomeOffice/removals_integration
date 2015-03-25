@@ -43,7 +43,7 @@ var installFixtures = require('../lib/install_fixtures').installFixtures;
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
-console.log('listening on port ' + port);
+console.log('Set port to ' + port);
 
 /**
  * compile SASS
@@ -123,6 +123,7 @@ function onError(error) {
  */
 
 function onListening() {
+  console.log('listening on port ' + port);
   var addr = server.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
