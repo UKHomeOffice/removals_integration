@@ -22,7 +22,18 @@ var Centre = sequelize.define('centre', {
     unisex: { type: Sequelize.BOOLEAN, default: false },
     current_beds_male: Sequelize.INTEGER,
     current_beds_female: Sequelize.INTEGER,
-    current_beds_ooc: Sequelize.INTEGER
+    current_beds_ooc: Sequelize.INTEGER,
+    },
+    {
+    instanceMethods: {
+        is_full: function(){
+            if(this.capacity_female > this.capacity/2){
+                return (this.current_beds_female === 0);
+            } else {
+                return (this.current_beds_male === 0);
+            }
+        }
+    }
 });
 
 var Person = sequelize.define('person', {
