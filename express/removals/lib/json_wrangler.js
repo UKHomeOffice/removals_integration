@@ -72,33 +72,13 @@ function json_wrangler(validate_against_db){
                     } else {
                         deferred.reject("No centre named "+name);
                     }
-                })
+                });
             return deferred.promise;
     };
     this.update_centres = function(callback){
         var deferred = Q.defer();
         name_list = Object.keys(this.data.totals.bed_counts);
-        var key_map = {
-            "male": "current_beds_male",
-            "female": "current_beds_female",
-            "out_of_commission": "current_beds_ooc",
-        };
-/*
-        for(var i in name_list){
-            models.Centre.findOne({where:{"name":name_list[i]}})
-            .then(function(centre){
-                if(centre){
-                    for(key in key_map){
-                        var field_name = key_map[key];
-                        centre.set(field_name, self.data.totals.bed_counts[centre.name][key]);
-                    }
-                    return(centre.save());
-                } else {
-                    console.log("couldn't find centre by name ");
-                }
-            });
-        }
-*/
+
         Qx.every(Object.keys(this.data.totals.bed_counts),this.update_centre_by_name)
             .then(function(x){
                 deferred.resolve();
@@ -117,18 +97,26 @@ function json_wrangler(validate_against_db){
             "female": "current_beds_female",
             "out_of_commission": "current_beds_ooc",
         };
-        self.find_centre_by_name(centre_name,null)
-            .then(function(centre){
-                for(key in key_map){
-                    var field_name = key_map[key];
-                    centre.set(field_name, self.data.totals.bed_counts[centre_name][key]);
+        self.find_centre_by_name(centre_name, null)
+            .then(function(centre) {
+                var key, field_name, normalized_field;
+                for(key in key_map) {
+                    if (key_map.hasOwnProperty(key)) {
+                        field_name = key_map[key];
+                        normalized_field = self.data.totals.bed_counts[centre_name][key];
+
+                        if (typeof(normalized_field) === 'undefined') {
+                            normalized_field = null;
+                        }
+                        centre.set(field_name, normalized_field);
+                    }
                 }
                 centre.save()
-                .then(function(centre){
+                .then(function(centre) {
                     deferred.resolve();
                 });
             });
         return deferred.promise;
     }
-};
+}
 module.exports = json_wrangler;
