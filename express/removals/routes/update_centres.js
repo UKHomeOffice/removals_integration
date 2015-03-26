@@ -4,14 +4,6 @@ var express = require('express'),
     Q = require('q'),
     data_reader = require("../lib/data_reader.js");
 
-var full = function(centre){
-    if(centre.capacity_female > centre.capacity/2){
-        return (centre.current_beds_female === 0);
-    } else {
-        return (centre.current_beds_male === 0);
-    }
-};
-
 router.post('/', function(req, res, next) {
     req.setEncoding("utf8");
     var first_key = Object.keys(req.body)[0];
@@ -44,7 +36,7 @@ router.post('/', function(req, res, next) {
                         var centre_name = bed_counts[i];
                         var centre = JW.find_centre_by_name(centre_name)
                         .then(function(centre){
-                            centre.dataValues.is_full = full(centre);
+                            centre.dataValues.is_full = centre.is_full();
                             centre.dataValues.slug = centre.name.replace(/([^\w])/g,'').toLowerCase();
                             io.emit('centre-update',centre);
                         });

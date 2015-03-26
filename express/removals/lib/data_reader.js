@@ -15,6 +15,7 @@ function data_reader(){
                 for(i = 0; i < list.length; i++){
                     var centre = list[i];
                     centre.dataValues.slug = centre.name.replace(/([^\w])/g,'').toLowerCase();
+                    centre.dataValues.is_full = centre.is_full();
                     outlist[centre.name] = centre.dataValues;
                 }
                 callback(outlist);
@@ -33,6 +34,7 @@ function data_reader(){
                 for(i = 0; i < list.length; i++){
                     var centre = list[i];
                     centre.dataValues.slug = centre.name.replace(/([^\w])/g,'').toLowerCase();
+                    centre.dataValues.is_full = centre.is_full();
                     outlist[centre.name] = centre.dataValues;
                 }
                 callback(outlist);
