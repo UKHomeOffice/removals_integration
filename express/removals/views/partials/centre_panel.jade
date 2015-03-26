@@ -8,7 +8,7 @@
 h2 #{centre.name}
 ul.availability
     li.available Available
-        if centre.current_beds_female
+        if centre.current_beds_female !== null
             span.female Female &nbsp;
                 b.num #{centre.current_beds_female}
             span.male Male &nbsp;
@@ -19,19 +19,6 @@ ul.availability
     li.unavailable Unavailable
         span.ooc 
             b.num #{centre.current_beds_ooc}
-
-
-.tailer
-    - var delta = new Date() - centre.updatedAt
-    - var fourHoursInMilliseconds = 1000 * 60 * 60 * 4
-    if centre.updatedAt && delta > fourHoursInMilliseconds
-        .inner.warning
-            span Last updated
-            span.value #{moment(centre.updatedAt).fromNow()}
-    else
-        .inner
-            span Last updated
-            span.value #{moment(centre.updatedAt).fromNow()}
 
 //
     table.inout
@@ -45,5 +32,18 @@ ul.availability
     ul.availability
         li Reserved
             span zz
+
+.tailer
+    - var delta = new Date() - centre.updatedAt
+    - var fourHoursInMilliseconds = 1000 * 60 * 60 * 4
+    if centre.updatedAt && delta > fourHoursInMilliseconds
+        .inner.warning
+            span Last updated
+            span.value #{moment(centre.updatedAt).fromNow()}
+    else
+        .inner
+            span Last updated
+            span.value #{moment(centre.updatedAt).fromNow()}
+
 
 
