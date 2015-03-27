@@ -6,7 +6,6 @@
                 $tailer = $panel.find('.tailer'),
                 updatedAt = $tailer.data('updated-at');
 
-            console.log($panel.find('h2').text() + ":  " + updatedAt);
             $tailer.replaceWith(template_tailer({updatedAt:updatedAt}));
         });
     }, 1000);
