@@ -4,8 +4,11 @@ Sequelize = require("sequelize");
 var sequelize_fixtures = require('sequelize-fixtures');
 var models = require(process.cwd()+"/lib/models.js").models;
 
-//drop_tables();
-//setup_tables();
+/*
+drop_tables();
+setup_tables();
+process.exit()
+*/
 write_fixtures();
 
 /*
@@ -18,7 +21,6 @@ function setup_tables(){
             models.Nationality.sync({force:true});
         });
 }
-*/
 function drop_tables(){
     var keys = Object.keys(models).reverse();
     for(i in keys){
@@ -26,13 +28,19 @@ function drop_tables(){
         models[keys[i]].drop();
     }
 }
+*/
 function setup_tables(){
-    for(i in models){
-        console.log("SYNCING " + i);
-        models[i].sync();
-    }
+    console.log("syncing Centre");
+    models.Centre.sync()
+    .then(function(){
+        console.log("syncing Nationality");
+        models.Nationality.sync();
+    },null)
+    .then(function(){
+        console.log("syncing Person");
+        models.Person.sync();
+    },null);
 }
-/*
 function drop_tables(){
     models.Person.drop()
         .then(function(){
@@ -42,6 +50,7 @@ function drop_tables(){
             });
         });
 }
+/*
 */
 function write_fixtures(){
     var fixtures = [
