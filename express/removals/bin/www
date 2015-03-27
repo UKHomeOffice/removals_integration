@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 var command_line_flags = {
-    '--build-data': false
+    '--build-data': false,
+    '--compile-templates': true
 };
 var truthy = function(x) {
     if(typeof(x) == 'string'){
@@ -54,6 +55,10 @@ renderSass('base.scss', 'style.css');
 if(command_line_flags['--build-data']){
     console.log('installing fixtures...');
     installFixtures();
+}
+if(command_line_flags['--compile-templates']){
+    console.log('compiling templates');
+    require("./compile_templates");
 }
 
 /**

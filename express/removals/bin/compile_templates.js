@@ -34,3 +34,5 @@ function compile_templates_in(dir){
         }
     });
 }
+
+exports.compile_templates = {}

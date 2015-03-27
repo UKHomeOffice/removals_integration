@@ -7,7 +7,7 @@ block content
                 h1 DEPMU Dashboard
     ul
         each centre in list
-            if centre.current_beds_male == 0 || centre.current_beds_female == 0
+            if centre.is_full
                 li(id=centre.slug).panel.full
                     include partials/centre_panel.jade
             else
