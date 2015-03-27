@@ -4,6 +4,10 @@ var express = require('express'),
     Q = require('q'),
     data_reader = require("../lib/data_reader.js");
 
+router.get('/', function(req, res, next) {
+    res.status(400).json({"status":"ERROR","error":"This enpoint is post only."});
+});
+
 router.post('/', function(req, res, next) {
     req.setEncoding("utf8");
     var first_key = Object.keys(req.body)[0];
