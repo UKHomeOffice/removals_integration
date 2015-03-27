@@ -1,3 +1,9 @@
+/*
+Before running these tests, do
+    export NODE_ENV=test
+    sequelize db:migrate --env=test
+    node tests/fix.js
+*/
 process.env.NODE_ENV = 'test';
 CONFIG = require(process.cwd()+'/config/config').config; // global!
 Sequelize = require("sequelize");
@@ -11,9 +17,9 @@ var chai = require('chai'),
   expect = chai.expect,
   should = chai.should();
 
+
 describe('json_wrangler', function(){
     before(function(){
-        //require("../test/fix");
         var json = '{"totals":{"bed_counts":{"Seacole":{"male":2,"female":3,"out_of_commission":3}}}}';
         JW = new json_wrangler(true);
         JW.consume(json);

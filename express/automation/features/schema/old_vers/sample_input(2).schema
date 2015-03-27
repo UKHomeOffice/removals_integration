@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "individuals",
+  "description": "details of individuals arriving and/or departing from an IRC",
+  "type": "object",
+  "properties":{
+    "title": "arrivals",
+    "description": "bedcounts from an IRC",
+    "type": "array",
+    "items":{
+      "date":               {"type":"string", "pattern": "^[0-9]{2}-[0-9]{2}-[0-9]{4}$"},
+      "time":               {"type":"string", "pattern": "^[0-9]{2}:[0-9]{2}:[0-9]{2}$"},
+      "cid_id":             {"type":"string", "minLength":1,"maxLength":15},
+      "nationality":        {"type":"string", "minLength":1,"maxLength":50},
+      "gender":             {"type":"string", "minLength":1,"maxLength":1},
+      "centre":             {"type":"string", "minLength":1,"maxLength":30},
+      "arrived_from":       {"type":"string", "minLength":1,"maxLength":50},
+      "transferred_from":   {"type":"string", "minLength":1,"maxLength":50},
+      "transfer_details":   {"type":"string", "minLength":1,"maxLength":1000}
+    },
+    "required":["cid_id"],
+    "title": "departees",
+    "description": "bedcounts from an IRC",
+    "type": "array",
+    "items":{
+      "date":               {"type":"string", "pattern": "^[0-9]{2}-[0-9]{2}-[0-9]{4}$"},
+      "time":               {"type":"string", "pattern": "^[0-9]{2}:[0-9]{2}:[0-9]{2}$"},
+      "cid_id":             {"type":"string", "minLength":1,"maxLength":15},
+      "nationality":        {"type":"string", "minLength":1,"maxLength":50},
+      "gender":             {"type":"string", "minLength":1,"maxLength":1},
+      "centre":             {"type":"string", "minLength":1,"maxLength":30},
+      "transferred_to":     {"type":"string", "minLength":1,"maxLength":50},
+      "reason_for_leaving": {"type":"string", "minLength":1,"maxLength":50},
+      "transfer_details":   {"type":"string", "minLength":1,"maxLength":1000}
+    },
+    "required":["cid_id","transferred_to"]
+  },
+  "title": "totals",
+  "description": "bedcounts from an IRC",
+  "type": "object",
+  "properties":{
+    "date":                     {"type":"string", "pattern": "^[0-9]{2}-[0-9]{2}-[0-9]{4}$"},
+    "time":                     {"type":"string", "pattern": "^[0-9]{2}:[0-9]{2}:[0-9]{2}$"},
+    "bed_counts":{
+      "type": "object",
+      "properties":{
+        "irc":{
+          "type": "object",
+          "properties":{
+            "male":             {"type":"integer", "minimum": 0, "maximum": 32767},
+            "female":           {"type":"integer", "minimum": 0, "maximum": 32767},
+            "out_of_commission":{"type":"integer", "minimum": 0, "maximum": 32767}
+          },
+          "required":["male","female","out_of_commission"]
+        }
+      }
+    }
+  }
+}
+
+
