@@ -38,12 +38,14 @@ router.post('/', function(req, res, next) {
                     var bed_counts = Object.keys(JW.data.totals.bed_counts);
                     for(i in bed_counts){
                         var centre_name = bed_counts[i];
-                        var centre = JW.find_centre_by_name(centre_name)
-                        .then(function(centre){
-                            centre.dataValues.is_full = centre.is_full();
-                            centre.dataValues.slug = centre.name.replace(/([^\w])/g,'').toLowerCase();
-                            io.emit('centre-update',centre);
-                        });
+
+                        JW
+                            .find_centre_by_name(centre_name)
+                            .then(function(centre){
+                                centre.dataValues.is_full = centre.is_full();
+                                centre.dataValues.slug = centre.name.replace(/([^\w])/g,'').toLowerCase();
+                                io.emit('centre-update',centre);
+                            });
                     }
                 })
                 .then(null,function(err){
