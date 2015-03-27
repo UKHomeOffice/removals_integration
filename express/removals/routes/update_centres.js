@@ -5,7 +5,7 @@ var express = require('express'),
     data_reader = require("../lib/data_reader.js");
 
 router.get('/', function(req, res, next) {
-    res.status(400).json({"status":"ERROR","error":"This enpoint is post only."});
+    res.status(400).json({"status":"ERROR","error":"This endpoint is post only."});
 });
 
 router.post('/', function(req, res, next) {
