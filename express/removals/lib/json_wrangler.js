@@ -113,7 +113,7 @@ function json_wrangler(validate_against_db){
                 }
                 centre.save()
                 .then(function(centre) {
-                    deferred.resolve();
+                    deferred.resolve(centre);
                 });
             });
         return deferred.promise;
