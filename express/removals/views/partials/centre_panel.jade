@@ -32,18 +32,6 @@ ul.availability
     ul.availability
         li Reserved
             span zz
-
-.tailer
-    - var delta = new Date() - centre.updatedAt
-    - var fourHoursInMilliseconds = 1000 * 60 * 60 * 4
-    if centre.updatedAt && delta > fourHoursInMilliseconds
-        .inner.warning
-            span Last updated
-            span.value #{moment(centre.updatedAt).fromNow()}
-    else
-        .inner
-            span Last updated
-            span.value #{moment(centre.updatedAt).fromNow()}
-
-
+- updatedAt = new Date(centre.updatedAt)
+include tailer.jade
 

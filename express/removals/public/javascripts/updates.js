@@ -8,11 +8,12 @@ $(function() {
             $tailer = $panel.find('.tailer'),
             $centre_panel_html = $(template_centre_panel({centre:bed_counts})),
             $replacement = $centre_panel_html.filter('ul.availability'),
-            $lastUpdated = $centre_panel_html.filter('.tailer');
+            $lastUpdated;
+        console.log(bed_counts.updatedAt);
+        $lastUpdated = $(template_tailer({updatedAt:bed_counts.updatedAt}));
 
         $ul.replaceWith($replacement);
         $tailer.replaceWith($lastUpdated);
-        $panel.data('updated-at', bed_counts.updatedAt);
 
         if (bed_counts.is_full) {
             $panel.addClass('full');
