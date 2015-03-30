@@ -150,7 +150,7 @@ they produce and send a JSON file that conforms to the schema then the
 4.  Using a text editor (e.g. notepad) open the file labelled
     **sample\_input.schema**
 
-5.  Inside the Select All the text and copy into the clipboard
+5.  Select all the text and copy into the clipboard
 
 6.  Navigate to the following website
     <http://json-schema-validator.herokuapp.com/>
