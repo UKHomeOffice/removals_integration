@@ -122,6 +122,8 @@ to test the new functionality.**
 2.  Run the command **behat**
 
 
+
+
 **JSON Verification - Background**
 
 As part of the Removals Integration development process the team
@@ -133,31 +135,37 @@ they produce and send a JSON file that conforms to the schema then the
 
 **How to verify Removals Integration JSON files**
 
-1.  Navigate to **C:\\GIT
+
+1. Create the following folder **C:\\GIT Projects\\removals\_integration\\express\\automation** 
+
+2. Copy **Removals Integration** master branch of the project into the same folder
+
+    **git checkout master**
+
+    **git pull**
+
+3.  Navigate to **C:\\GIT
     Projects\\removals\_integration\\express\\automation\\features\\schema**
 
-2.  Using a text editor (e.g. notepad) open the file labelled
+4.  Using a text editor (e.g. notepad) open the file labelled
     **sample\_input.schema**
 
-3.  Inside the Select All the text and copy into the clipboard
+5.  Inside the Select All the text and copy into the clipboard
 
-4.  Navigate to the following website
+6.  Navigate to the following website
     <http://json-schema-validator.herokuapp.com/>
 
-5.  Paste the text from your clipboard into the section labelled
+7.  Paste the text from your clipboard into the section labelled
     **Schema**
 
-6.  In the section labelled Data enter the JSON file that you propose to
+8.  In the section labelled Data enter the JSON file that you propose to
     send to the **Removal Integration** API
 
-7.  Select the button labelled Validate. In the right side of the screen
+9.  Select the button labelled Validate. In the right side of the screen
     in the section labelled **Validation results** you will expect to
     see Success (if not, the online tool will indicate if the JSON is
     invalid with suggestions why the data may be incorrect)
 
-8.  NOTE: a sample JSON input file (see **sample\_input.json** located
+10.  NOTE: a sample JSON input file (see **sample\_input.json** located
     in the same folder as the schema file) is provided to assist the
     third party/tester
-
-
-
