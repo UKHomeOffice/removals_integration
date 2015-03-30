@@ -11,10 +11,7 @@ small, strong, sub, sup, var,
 b, i,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td/*,
-article, aside, canvas, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section, summary,
-time, mark, audio, video*/ {
+table, caption, tbody, tfoot, thead, tr, th, td {
     margin:0;
     padding:0;
     border:0;
@@ -50,13 +47,13 @@ a {
     vertical-align:baseline;
     background:transparent;
 }
-/* change colours to suit your needs */
+
 ins {
     background-color:#ff9;
     color:#000;
     text-decoration:none;
 }
-/* change colours to suit your needs */
+
 mark {
     background-color:#ff9;
     color:#000;
@@ -74,7 +71,7 @@ table {
     border-collapse:collapse;
     border-spacing:0;
 }
-/* change border colour to suit your needs */
+
 hr {
     display:block;
     height:1px;
