@@ -16,5 +16,5 @@ RUN curl https://deb.nodesource.com/node/pool/main/n/nodejs/nodejs_0.10.30-1node
 
 RUN mkdir /webapp
 ADD ./ /webapp/ 
-ENV PATH /webapp/node_modules/.bin/:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+ENV PATH /webapp/express/removals/node_modules/.bin/:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
