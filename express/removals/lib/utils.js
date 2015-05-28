@@ -118,7 +118,8 @@ function write_csv_to_db(model, list_of_fields, data, callback) {
 
             if (value) {
                 // sort out date fields
-                if (model._isDateAttribute(field)) { // WARNING: uses sequelize internal method
+                //if (model._isDateAttribute(field)) { // WARNING: uses sequelize internal method
+                if (field == 'updatedAt' || field == 'createdAt') { // WARNING: uses sequelize internal method
                     value = parseDate(value);
                 } else if (value.toLowerCase() == 'true') {
                     value = 1;
