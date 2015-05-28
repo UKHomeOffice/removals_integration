@@ -8,7 +8,7 @@ var valid_json_invalid_centre3 = {"totals":{"bed_counts":{"Madstop Bungalo":{"ma
 var invalid_json = '{"totals":{"bed_counts:{"Yarls Wood":{"male":42,"female":19,"out_of_commission":5}}}}';
 */
 
-var valid_json3 = {"totals" : { "date" : "27-2-2015", "time" : "08:02:37", "bed_counts": { "Campsfield":{"male":51,"out_of_commission":3}, "Harmondsworth" : { "male" : 17, "female" : 3, "out_of_commission": 1 }, "Colnbrook" : { "male" : 183, "female" : 8, "out_of_commission": 1 } } } };
+var valid_json3 = {"totals" : { "date" : "27-2-2015", "time" : "08:02:37", "bed_counts": { "Campsfield":{"male":51,"out_of_commission":3}, "Harmondsworth" : { "male" : 0, "female" : 3, "out_of_commission": 1 }, "Colnbrook" : { "male" : 183, "female" : 8, "out_of_commission": 1 } } } };
 
 function api() {
   return hippie()
