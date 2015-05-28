@@ -57,16 +57,17 @@ function json_wrangler(validate_against_db){
     };
     
     this.find_by_cid_id = function(cid_id, callback){
-        models.Person.findOne({where:{"cid_id": cid_id}})
-            .then(function(person){
-                return callback(person);
+        models.Person.findAll({where:{"cid_id": cid_id}})
+            .then(function(person_list){
+                return callback(person_list[0]);
         });
     };
     this.find_centre_by_name = function(name,callback){
             var deferred = Q.defer();
-            models.Centre.findOne({where:{"name": name}})
-                .then(function(centre){
+            models.Centre.findAll({where:{"name": name}})
+                .then(function(centre_list){
                     //return callback(centre,null);
+                    var centre = centre_list[0];
                     if(centre){
                         deferred.resolve(centre);
                     } else {
