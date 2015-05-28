@@ -32,26 +32,26 @@ router.post('/', function(req, res, next) {
                     return deferred.promise;
                 })
                 .then(function(){
-                    return JW.update_centres();
-                })
-                .then(function(){
-                    var bed_counts = Object.keys(JW.data.totals.bed_counts);
-                    for(i in bed_counts){
-                        var centre_name = bed_counts[i];
-
-                        JW
-                            .find_centre_by_name(centre_name)
-                            .then(function(centre){
-                                centre.dataValues.is_full = centre.is_full();
-                                centre.dataValues.slug = centre.name.replace(/([^\w])/g,'').toLowerCase();
-                                io.emit('centre-update',centre);
-                            });
-                    }
+                    JW.update_centres()
+                    setTimeout(function(){  //nasty kludge: should be achievable with a promise
+                        var bed_counts = Object.keys(JW.data.totals.bed_counts);
+                        for(i in bed_counts){
+                            var centre_name = bed_counts[i];
+    
+                            JW
+                                .find_centre_by_name(centre_name)
+                                .then(function(centre){
+                                    centre.dataValues.is_full = centre.is_full();
+                                    centre.dataValues.slug = centre.name.replace(/([^\w])/g,'').toLowerCase();
+                                    io.emit('centre-update',centre);
+                                });
+                        }
+                    },200)
                 })
                 .then(null,function(err){
                     res.status(404).json({"status":"ERROR","error":err});
             });
-        }catch(err){
+        } catch(err) {
             res.status(400).json({"status":"ERROR","error":err});
         }
     }
