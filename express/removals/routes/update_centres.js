@@ -34,7 +34,7 @@ router.post('/', function(req, res, next) {
                 .then(function(){
                     return JW.update_centres();
                 })
-                .then(function(){
+                .then(function(){ //this deferral is not working, and the block below is executing before the update above
                     var bed_counts = Object.keys(JW.data.totals.bed_counts);
                     for(i in bed_counts){
                         var centre_name = bed_counts[i];
