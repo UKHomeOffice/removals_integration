@@ -32,7 +32,10 @@ Post JSON updates to
 eg
 
 \>
+
+
     curl -d @<filename.json> localhost:3000/update-centres
+
 
 JSON example at /express/removals/tests/sample_input.json
 
@@ -42,7 +45,9 @@ eg
 
 \> node tests/http_tests0.js
 
+
 **Unresolved Issue
+
 
 There is a problem in routes/update_centres.js . The purpose of this route is to accept a post requesst, update the database, read the database and emit a socket message IN THAT ORDER. I have tried to implement this with promises, but so far it is not working. The read and socket message is happening before the write. On the branch timing_kludge, I have replaced the failing promise with a nasty setTimeout which is ok for demo purposes but not suitable for production. It introduces a hard-coded 50ms delay regardless of the actual time it takes for the db update to happen. Whoever picks up this project will have to solve this problem (by fixing the promise code or by using a callback or by separating the read/socket messsage into another route and chaining them so they happen in order).
 
