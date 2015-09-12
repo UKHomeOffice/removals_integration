@@ -1,5 +1,5 @@
-def create_hash(location, data, type, date, time, import_data)
-  @data=DC_data::Import.new(data, type, location, date, time, import_data)
+def create_hash(type, centre, date, time, import_data)
+  @data=DC_data::Import.new(type, centre, date, time, import_data)
 end
 
 def create_json

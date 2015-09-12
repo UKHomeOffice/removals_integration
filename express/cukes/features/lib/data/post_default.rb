@@ -1,26 +1,28 @@
 module DC_data
   module Posts
     DC_default ||= {
-        :individuals => {
-            :arrivals => [
+        :date => '',
+        :time => '',
+        :centre => '',
+        :operation => '',
+        :cid_id => '123456',
+        :gender => 'm',
+        :nationality => 'ABD',
 
-            ],
-            :departees => [
+        :bed_counts => {
+            :male => '',
+            :female => '',
 
-            ]
-        },
+            :out_of_commission => {
+                :ooc_male => '',
+                :ooc_female => '',
 
-        :totals => {
-            :date => '',
-            :time => '',
-            :bed_counts => {
-
-
+                :details => [
+                ]
             }
         }
+
     }
-
-
   end
 end
 

@@ -1,5 +1,6 @@
-Given(/^(.*) submits the following (.*) of (.*) on (.*) at (.*)$/) do |location, data, type, date, time, table|
-  create_hash(location, data, type, date, time, table)
+Given(/^an individual has checked (.*) at (.*) on (.*) at (.*) and the following totals are submitted$/) do |type, centre, date, time, table|
+  date= date.to_date
+  create_hash(type, centre, date, time, table)
 end
 
 Then(/^I should see the data on screen$/) do
