@@ -1,14 +1,34 @@
-Given(/^an individual has checked (.*) at (.*) on (.*) at (.*) and the following table of totals are submitted$/) do |operation, centre, date, time, table|
+Given(/^an individual has checked (.*) at (.*) on (.*) at (.*) and the following table of totals are created/) do |operation, centre, date, time, table|
   date= date.to_date
   upload_type='table'
   create_hash(operation, centre, date, time, upload_type, table)
 end
 
-Given(/^an individual has checked (.*) at (.*) and the following table of totals are submitted$/) do |operation, centre, table|
+Given(/^an individual has checked (.*) at (.*) and the following table of totals are created/) do |operation, centre, table|
   date=get_date
   time =get_time
   upload_type='table'
   create_hash(operation, centre, date, time, upload_type, table)
+end
+
+Given(/^(.*) has submitted the following table of information regarding their (.*) beds$/) do |centre, operation, table|
+  date=get_date
+  time =get_time
+  upload_type='table'
+  create_hash(operation, centre, date, time, upload_type, table)
+end
+
+Given(/^the following csv of detention centre totals are created and submitted$/) do
+  require 'csv_hasher'
+
+  centre=nil
+  operation =nil
+  date=nil
+  time=nil
+  upload_type ='csv'
+  array = CSVHasher.hashify(DC_data::Locations::TOTALS_CSV)
+
+  create_hash(operation, centre, date, time, upload_type, array)
 end
 
 Then(/^I should see the data on screen$/) do
@@ -42,29 +62,8 @@ And(/^the information is uploaded$/) do
   create_json
 end
 
-Given(/^the following csv of detention centre totals are created and submitted$/) do
-  require 'csv_hasher'
-
-  centre=nil
-  operation =nil
-  date=nil
-  time=nil
-  upload_type ='csv'
-  array = CSVHasher.hashify(DC_data::Locations::TOTALS_CSV)
-
-  create_hash(operation, centre, date, time, upload_type, array)
-end
-
-
 And(/^the following out of commission references and reasons are submitted$/) do |table|
   assign_ooc_reason(table)
-end
-
-
-Given(/^(.*) has submitted the following information regarding their (.*) beds$/) do |centre, operation, table|
-  date=get_date
-  time =get_time
-  create_hash(operation, centre, date, time, table)
 end
 
 def get_date
