@@ -5,9 +5,9 @@ module DC_data
         :time => '',
         :centre => '',
         :operation => '',
-        :cid_id => '123456',
-        :gender => 'm',
-        :nationality => 'ABD',
+        :cid_id => '',
+        :gender => '',
+        :nationality => '',
 
         :bed_counts => {
             :male => '',

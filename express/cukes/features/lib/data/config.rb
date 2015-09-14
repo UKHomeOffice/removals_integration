@@ -6,7 +6,7 @@ module DC_data
 
   module Locations
     TOTALS_CSV ||= 'features/data/totals.csv'
-    ARRIVALS_CSV ||= 'features/data/arrivals.csv'
+    ARRIVALS_CSV ||= 'features/data/totals.csv'
     DEPARTEES_CSV ||= 'features/data/departees.csv'
   end
 end
