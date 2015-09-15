@@ -5,6 +5,8 @@ require 'faraday_middleware'
 require 'date'
 require 'active_support/all'
 require 'selenium-webdriver'
+require 'csv_hasher'
+
 
 
 

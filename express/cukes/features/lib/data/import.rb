@@ -1,7 +1,7 @@
 module DC_data
 
   class Import
-    def initialize(operation, centre, date, time, upload_type, import_data)
+    def initialize(upload_type, import_data, operation, centre, date, time)
       @case_hash ||= Hash.new
       @default_post = DC_data::Posts::DC_default
 
@@ -14,8 +14,6 @@ module DC_data
 
         @case_hash=hash.symbolize_keys
 
-        @default_post[:date]=date||=@case_hash[:date]
-        @default_post[:time]=time||=@case_hash[:time]
         @default_post[:centre]=centre||=@case_hash[:centre]
         @default_post[:operation]=operation||=@case_hash[:operation]
         @default_post[:bed_counts][:male]=@case_hash[:male]
@@ -53,24 +51,20 @@ module DC_data
           @default_post[:cid_id]=@case_hash[:cid_id]
           @default_post[:gender]=@case_hash[:gender]
           @default_post[:nationality]=@case_hash[:nationality]
+          @default_post[:date]=@case_hash[:date]
+          @default_post[:time]=@case_hash[:time]
           create_json
         else
           if operation.eql?('in') || operation.eql?('out')
             @default_post[:cid_id]='123456'
             @default_post[:gender]='m'
             @default_post[:nationality]='ABD'
+            @default_post[:date]=date
+            @default_post[:time]=time
           end
         end
-
       end
-
-      def get_info
-        @default_post
-      end
-
     end
-
   end
 end
-
 
