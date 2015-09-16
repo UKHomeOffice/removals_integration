@@ -25,10 +25,10 @@ Then(/^I should see the data on screen$/) do
 
   location = DC_data::Post_data.get_post_centre.downcase
 
-  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.available span.male b.num').text).to eq "#{DC_data::Post_data.get_post_bed_counts_male}"
-  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.available span.female b.num').text).to eq "#{DC_data::Post_data.get_post_bed_counts_female}"
-  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.unavailable span.ooc b.num').text).to eq "#{DC_data::Post_data.get_post_bed_counts_ooc_male}"
-  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.unavailable span.ooc b.num').text).to eq "#{DC_data::Post_data.get_post_bed_counts_ooc_female}"
+  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.available span.male b.num').text).to eq "#{DC_data::Post_data.get_post_male}"
+  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.available span.female b.num').text).to eq "#{DC_data::Post_data.get_post_female}"
+  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.unavailable span.ooc b.num').text).to eq "#{DC_data::Post_data.get_post_ooc_male}"
+  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.unavailable span.ooc b.num').text).to eq "#{DC_data::Post_data.get_post_ooc_female}"
 
 end
 
