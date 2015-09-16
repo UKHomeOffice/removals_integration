@@ -1,9 +1,9 @@
 module DC_data
 
-  class Import
-    def initialize(upload_type, import_data, operation, centre, date, time)
+  module Import
+    def Import.import_data(upload_type, import_data, operation, centre, date, time)
       @case_hash ||= Hash.new
-      @default_post = DC_data::Posts::DC_default
+      @default_post = DC_data::Posts::Post_default
 
 
       if import_data.class != Array

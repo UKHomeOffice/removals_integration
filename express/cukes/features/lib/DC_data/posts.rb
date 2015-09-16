@@ -1,6 +1,7 @@
 module DC_data
   module Posts
-    DC_default ||= {
+
+    Post_default ||= {
         :date => '',
         :time => '',
         :centre => '',

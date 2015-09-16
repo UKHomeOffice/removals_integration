@@ -10,6 +10,7 @@ require 'csv_hasher'
 
 
 
+
 if ENV['IN_BROWSER']
   # On demand: non-headless tests via Selenium/WebDriver
   # To run the scenarios in browser (default: Firefox), use the following command line:

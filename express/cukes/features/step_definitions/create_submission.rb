@@ -1,10 +1,10 @@
 def create_hash(upload_type, import_data, operation=nil, centre=nil, date=get_date, time=get_time)
-  DC_data::Import.new(upload_type, import_data, operation, centre, date, time)
+  DC_data::Import.import_data(upload_type, import_data, operation, centre, date, time)
 end
 
 def create_json
-  json= DC_data::Posts::DC_default.to_json
-  response = dashboard_api.post(DC_data::Endpoints::UPDATE_CENTRES, json, {'Content-Type' => 'application/json'}).body
+  json= DC_data::Posts::Post_default.to_json
+  response = dashboard_api.post(DC_data::Config::Endpoints::UPDATE_CENTRES, json, {'Content-Type' => 'application/json'}).body
   puts response
 end
 
@@ -18,7 +18,7 @@ end
 
 def assign_ooc_reason(import_data)
   @import_data_hash ||= Hash.new
-  @default_post = DC_data::Posts::DC_default
+  @default_post = DC_data::Posts::Post_default
 
   import_data= import_data.hashes
   import_data.each do |hash|

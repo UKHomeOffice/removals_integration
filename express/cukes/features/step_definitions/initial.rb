@@ -16,19 +16,19 @@ end
 
 Given(/^the following csv of detention centre totals are created and submitted$/) do
   upload_type ='csv'
-  import_data = CSVHasher.hashify(DC_data::Locations::TOTALS_CSV)
+  import_data = CSVHasher.hashify(DC_data::Config::Locations::TOTALS_CSV)
 
   create_hash(upload_type, import_data)
 end
 
 Then(/^I should see the data on screen$/) do
 
-  location = get_post_centre.downcase
+  location = DC_data::Post_data.get_post_centre.downcase
 
-  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.available span.male b.num').text).to eq "#{get_post_bed_counts_male}"
-  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.available span.female b.num').text).to eq "#{get_post_bed_counts_female}"
-  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.unavailable span.ooc b.num').text).to eq "#{get_post_bed_counts_ooc_male}"
-  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.unavailable span.ooc b.num').text).to eq "#{get_post_bed_counts_ooc_female}"
+  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.available span.male b.num').text).to eq "#{DC_data::Post_data.get_post_bed_counts_male}"
+  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.available span.female b.num').text).to eq "#{DC_data::Post_data.get_post_bed_counts_female}"
+  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.unavailable span.ooc b.num').text).to eq "#{DC_data::Post_data.get_post_bed_counts_ooc_male}"
+  expect(page.find(:css, '#' + "#{location}" + '.panel ul.availability li.unavailable span.ooc b.num').text).to eq "#{DC_data::Post_data.get_post_bed_counts_ooc_female}"
 
 end
 
@@ -44,7 +44,7 @@ Then(/^I should see (.*) unavailable (\d+) on the screen$/) do |location, total|
 end
 
 When(/^I navigate to the bed management dashboard$/) do
-  visit "#{config('dashboard_host')}" + "#{DC_data::Endpoints::DASHBOARD}"
+  visit "#{config('dashboard_host')}" + "#{DC_data::Config::Endpoints::DASHBOARD}"
   expect(page).to have_content ('DEPMU Dashboard')
 end
 
