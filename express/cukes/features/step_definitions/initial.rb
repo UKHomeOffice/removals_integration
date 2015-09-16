@@ -1,24 +1,24 @@
-Given(/^an individual has checked (.*) at (.*) on (.*) at (.*) and the following table of totals are created/) do |operation, centre, date, time, import_data|
+Given(/^an individual has checked (\D+) at (\D+) on (.*) at (.*) and the following table of totals are created/) do |operation, centre, date, time, import_data|
   date= date.to_date
   upload_type='table'
-  create_hash(upload_type, import_data, operation, centre, date, time)
+  create_submission(import_data, upload_type, operation, centre, date, time)
 end
 
-Given(/^an individual has checked (.*) at (.*) and the following table of totals are created/) do |operation, centre, import_data|
+Given(/^an individual has checked (\D+) at (\D+) and the following table of totals are created/) do |operation, centre, import_data|
   upload_type='table'
-  create_hash(upload_type, import_data, operation, centre)
+  create_submission(import_data, upload_type, operation, centre)
 end
 
-Given(/^(.*) has submitted the following table of information regarding their (.*) beds$/) do |centre, operation, import_data|
+Given(/^(\D+) has submitted the following table of information regarding their (\D+) beds$/) do |centre, operation, import_data|
   upload_type='table'
-  create_hash(upload_type, import_data, operation, centre)
+  create_submission(import_data, upload_type, operation, centre)
 end
 
 Given(/^the following csv of detention centre totals are created and submitted$/) do
   upload_type ='csv'
   import_data = CSVHasher.hashify(DC_data::Config::Locations::TOTALS_CSV)
 
-  create_hash(upload_type, import_data)
+  create_submission(import_data, upload_type)
 end
 
 Then(/^I should see the data on screen$/) do
@@ -49,9 +49,9 @@ When(/^I navigate to the bed management dashboard$/) do
 end
 
 And(/^the information is uploaded$/) do
-  create_json
+  @new_post.create_json
 end
 
 And(/^the following out of commission references and reasons are submitted$/) do |import_data|
-  assign_ooc_reason(import_data)
+  create_ooc_reasons(import_data)
 end

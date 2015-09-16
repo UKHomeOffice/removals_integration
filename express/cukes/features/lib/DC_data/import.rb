@@ -1,30 +1,38 @@
 module DC_data
 
-  module Import
-    def Import.import_data(upload_type, import_data, operation, centre, date, time)
-      @case_hash ||= Hash.new
+  class Import
+    def initialize(import_data, upload_type, operation, centre, date, time)
+      @upload_type = upload_type
+      @import_data = import_data
+      @operation = operation
+      @centre = centre
+      @date = date
+      @time = time
+    end
+
+    def create_post
+      @import_data_hash ||= Hash.new
       @default_post = DC_data::Posts::Post_default
 
-
-      if import_data.class != Array
-        import_data= import_data.hashes
+      if @import_data.class != Array
+        @import_data= @import_data.hashes
       end
 
-      import_data.each do |hash|
+      @import_data.each do |hash|
 
-        @case_hash=hash.symbolize_keys
+        @import_data_hash=hash.symbolize_keys
 
-        @default_post[:centre]=centre||=@case_hash[:centre]
-        @default_post[:operation]=operation||=@case_hash[:operation]
-        @default_post[:bed_counts][:male]=@case_hash[:male]
-        @default_post[:bed_counts][:female]=@case_hash[:female]
-        @default_post[:bed_counts][:out_of_commission][:ooc_male]=@case_hash[:ooc_male]
-        @default_post[:bed_counts][:out_of_commission][:ooc_female]=@case_hash[:ooc_female]
+        @default_post[:centre]=@centre||=@import_data_hash[:centre]
+        @default_post[:operation]=@operation||=@import_data_hash[:operation]
+        @default_post[:bed_counts][:male]=@import_data_hash[:male]
+        @default_post[:bed_counts][:female]=@import_data_hash[:female]
+        @default_post[:bed_counts][:out_of_commission][:ooc_male]=@import_data_hash[:ooc_male]
+        @default_post[:bed_counts][:out_of_commission][:ooc_female]=@import_data_hash[:ooc_female]
 
         y=1
-        if @case_hash[:ooc_male].to_i > 1
+        if @import_data_hash[:ooc_male].to_i > 1
           x=1
-          while x <= @case_hash[:ooc_male].to_i
+          while x <= @import_data_hash[:ooc_male].to_i
             ooc = Hash.new
             ooc[:ref] = "#{y}"
             ooc[:reason] = 'reason' + "#{y}"
@@ -34,9 +42,9 @@ module DC_data
           end
         end
 
-        if @case_hash[:ooc_female].to_i > 1
+        if @import_data_hash[:ooc_female].to_i > 1
           x=1
-          while x <= @case_hash[:ooc_female].to_i
+          while x <= @import_data_hash[:ooc_female].to_i
             ooc = Hash.new
             ooc[:ref] = "#{y}"
             ooc[:reason] = 'reason' + "#{y}"
@@ -47,24 +55,49 @@ module DC_data
         end
 
 
-        if upload_type == 'csv'
-          @default_post[:cid_id]=@case_hash[:cid_id]
-          @default_post[:gender]=@case_hash[:gender]
-          @default_post[:nationality]=@case_hash[:nationality]
-          @default_post[:date]=@case_hash[:date]
-          @default_post[:time]=@case_hash[:time]
+        if @upload_type == 'csv'
+          @default_post[:cid_id]=@import_data_hash[:cid_id]
+          @default_post[:gender]=@import_data_hash[:gender]
+          @default_post[:nationality]=@import_data_hash[:nationality]
+          @default_post[:date]=@import_data_hash[:date]
+          @default_post[:time]=@import_data_hash[:time]
           create_json
         else
-          if operation.eql?('in') || operation.eql?('out')
+          if @operation.eql?('in') || @operation.eql?('out')
             @default_post[:cid_id]='123456'
             @default_post[:gender]='m'
             @default_post[:nationality]='ABD'
-            @default_post[:date]=date
-            @default_post[:time]=time
+            @default_post[:date]=@date||= Date.today
+            @default_post[:time]=@time||= Time.now.utc.strftime("%H:%M:%S")
           end
         end
       end
     end
+
+    def create_json
+      json= @default_post.to_json
+      response = dashboard_api.post(DC_data::Config::Endpoints::UPDATE_CENTRES, json, {'Content-Type' => 'application/json'}).body
+      puts response
+    end
+
+    def assign_ooc_reason(import_data)
+      @import_data_hash ||= Hash.new
+      @default_post = DC_data::Posts::Post_default
+
+      import_data= import_data.hashes
+      import_data.each do |hash|
+
+        @import_data_hash=hash.symbolize_keys
+
+        @ooc_reason_hash= Hash.new
+        @ooc_reason_hash[:ref]=@import_data_hash[:reference]
+        @ooc_reason_hash[:reason]= @import_data_hash[:reason]
+
+        ooc_details_index=@import_data_hash[:ref].to_i-1
+        @default_post[:bed_counts][:out_of_commission][:details][ooc_details_index]=@ooc_reason_hash
+      end
+    end
   end
 end
+
 

@@ -1,6 +1,9 @@
 Feature: Submission of data via the web service
 
   Scenario: Submission of data via the web service using tables
+    Given an individual has checked in at Harmondsworth on 12/12/2015 at 08:00:00 and the following table of totals are created
+      | male | female | ooc_male | ooc_female |
+      | 5    | 10     | 3        | 7          |
     Given an individual has checked out at Harmondsworth and the following table of totals are created
       | male | female | ooc_male | ooc_female |
       | 5    | 10     | 3        | 7          |
