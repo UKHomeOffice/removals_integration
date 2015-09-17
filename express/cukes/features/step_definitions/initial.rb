@@ -1,24 +1,24 @@
 Given(/^an individual has checked (\D+) at (\D+) on (.*) at (.*) and the following table of totals are created/) do |operation, centre, date, time, import_data|
   date= date.to_date
   upload_type='table'
-  create_submission(import_data, upload_type, operation, centre, date, time)
+  create_submission(import_data, {:upload_type=>upload_type, :operation=>operation, :centre=>centre, :date=>date, :time=>time})
 end
 
 Given(/^an individual has checked (\D+) at (\D+) and the following table of totals are created/) do |operation, centre, import_data|
   upload_type='table'
-  create_submission(import_data, upload_type, operation, centre)
+  create_submission(import_data, {:upload_type=>upload_type, :operation=>operation, :centre=>centre})
 end
 
 Given(/^(\D+) has submitted the following table of information regarding their (\D+) beds$/) do |centre, operation, import_data|
   upload_type='table'
-  create_submission(import_data, upload_type, operation, centre)
+  create_submission(import_data, {:upload_type=>upload_type, :operation=>operation, :centre=>centre})
 end
 
 Given(/^the following csv of detention centre totals are created and submitted$/) do
   upload_type ='csv'
   import_data = CSVHasher.hashify(DC_data::Config::Locations::TOTALS_CSV)
 
-  create_submission(import_data, upload_type)
+  create_submission(import_data, {:upload_type=>upload_type})
 end
 
 Then(/^I should see the data on screen$/) do

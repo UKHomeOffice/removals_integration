@@ -1,5 +1,5 @@
-def create_submission(import_data, upload_type=nil, operation=nil, centre=nil, date=nil, time=nil)
-  @new_post=DC_data::Import.new(import_data, upload_type, operation, centre, date, time)
+def create_submission(import_data, options={})
+  @new_post=DC_data::Import.new(import_data, options)
   @new_post.create_post
 end
 

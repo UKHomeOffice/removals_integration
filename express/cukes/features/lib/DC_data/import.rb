@@ -1,13 +1,14 @@
 module DC_data
 
   class Import
-    def initialize(import_data, upload_type, operation, centre, date, time)
-      @upload_type = upload_type
+    def initialize(import_data, options)
+
       @import_data = import_data
-      @operation = operation
-      @centre = centre
-      @date = date
-      @time = time
+      @upload_type = options[:upload_type]
+      @operation = options[:operation]
+      @centre = options[:centre]
+      @date = options[:date]
+      @time = options[:time]
     end
 
     def create_post
