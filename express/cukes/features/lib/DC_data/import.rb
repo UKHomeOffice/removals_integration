@@ -37,6 +37,7 @@ module DC_data
             ooc = Hash.new
             ooc[:ref] = "#{y}"
             ooc[:reason] = 'reason' + "#{y}"
+            ooc[:gender] = 'm'
             @default_post[:bed_counts][:out_of_commission][:details].push(ooc)
             x=x+1
             y=y+1
@@ -49,6 +50,7 @@ module DC_data
             ooc = Hash.new
             ooc[:ref] = "#{y}"
             ooc[:reason] = 'reason' + "#{y}"
+            ooc[:gender] = 'f'
             @default_post[:bed_counts][:out_of_commission][:details].push(ooc)
             x=x+1
             y=y+1
@@ -93,7 +95,7 @@ module DC_data
         @ooc_reason_hash= Hash.new
         @ooc_reason_hash[:ref]=@import_data_hash[:reference]
         @ooc_reason_hash[:reason]= @import_data_hash[:reason]
-
+        @ooc_reason_hash[:gender]= @import_data_hash[:gender]
         ooc_details_index=@import_data_hash[:ref].to_i-1
         @default_post[:bed_counts][:out_of_commission][:details][ooc_details_index]=@ooc_reason_hash
       end
