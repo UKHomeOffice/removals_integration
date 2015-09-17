@@ -12,7 +12,7 @@ spec:
         name: removals-app
     spec:
       containers:
-      - name: mediawiki-app
+      - name: removals-app
         image: quay.io/ukhomeofficedigital/removals-app:v0.1.0
         ports:
         - containerPort: 3000
