@@ -66,12 +66,13 @@ module DC_data
           @default_post[:time]=@import_data_hash[:time]
           create_json
         else
+          @default_post[:date]=@date||= Date.today
+          @default_post[:time]=@time||= Time.now.utc.strftime("%H:%M:%S")
+
           if @operation.eql?('in') || @operation.eql?('out')
             @default_post[:cid_id]='123456'
             @default_post[:gender]='m'
             @default_post[:nationality]='ABD'
-            @default_post[:date]=@date||= Date.today
-            @default_post[:time]=@time||= Time.now.utc.strftime("%H:%M:%S")
           end
         end
       end
