@@ -36,11 +36,10 @@ module DC_data
 
       elsif @centre == nil
 
-        @centre = Post_data.get_post_centre.downcase
         expect(page.find(:css, '#' + "#{Post_data.get_post_centre.downcase}"+ '.panel ul.availability li.available span.male b.num').text).to eq "#{Post_data.get_post_male}"
-        expect(page.find(:css, '#' + "#{@centre}" + '.panel ul.availability li.available span.female b.num').text).to eq "#{Post_data.get_post_female}"
-        expect(page.find(:css, '#' + "#{@centre}" + '.panel ul.availability li.unavailable span.ooc b.num').text).to eq "#{Post_data.get_post_ooc_male}"
-        expect(page.find(:css, '#' + "#{@centre}" + '.panel ul.availability li.unavailable span.ooc b.num').text).to eq "#{Post_data.get_post_ooc_female}"
+        expect(page.find(:css, '#' + "#{Post_data.get_post_centre.downcase}" + '.panel ul.availability li.available span.female b.num').text).to eq "#{Post_data.get_post_female}"
+        expect(page.find(:css, '#' + "#{Post_data.get_post_centre.downcase}" + '.panel ul.availability li.unavailable span.ooc b.num').text).to eq "#{Post_data.get_post_ooc_male}"
+        expect(page.find(:css, '#' + "#{Post_data.get_post_centre.downcase}" + '.panel ul.availability li.unavailable span.ooc b.num').text).to eq "#{Post_data.get_post_ooc_female}"
 
       else
 
