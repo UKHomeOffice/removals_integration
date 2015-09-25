@@ -1,53 +1,64 @@
 module DC_data
-
   module Post_data
 
+    def Post_data.define_default_post(operation)
+      if operation.eql?('tra')
+        @default_post = DC_data::Posts::Inter_transfer.clone
+      else
+         @default_post = DC_data::Posts::Post_default.clone
+      end
+    end
+
+    def Post_data.get_post
+      @default_post
+    end
+
     def Post_data.get_post_date
-      DC_data::Posts::Post_default[:date]
+      @default_post[:date]
     end
 
     def Post_data.get_post_time
-      DC_data::Posts::Post_default[:time]
+      @default_post[:time]
     end
 
     def Post_data.get_post_centre
-      DC_data::Posts::Post_default[:centre]
+      @default_post[:centre]
     end
 
     def Post_data.get_post_operation
-      DC_data::Posts::Post_default[:operation]
+      @default_post[:operation]
     end
 
     def Post_data.get_post_cid_id
-      DC_data::Posts::Post_default[:cid_id]
+      @default_post[:cid_id]
     end
 
     def Post_data.get_post_gender
-      DC_data::Posts::Post_default[:gender]
+      @default_post[:gender]
     end
 
     def Post_data.get_post_nationality
-      DC_data::Posts::Post_default[:nationality]
+      @default_post[:nationality]
     end
 
     def Post_data.get_post_male
-      DC_data::Posts::Post_default[:bed_counts][:male]
+      @default_post[:bed_counts][:male]
     end
 
     def Post_data.get_post_female
-      DC_data::Posts::Post_default[:bed_counts][:female]
+      @default_post[:bed_counts][:female]
     end
 
     def Post_data.get_post_ooc_male
-      DC_data::Posts::Post_default[:bed_counts][:out_of_commission][:ooc_male]
+      @default_post[:bed_counts][:out_of_commission][:ooc_male]
     end
 
     def Post_data.get_post_ooc_female
-      DC_data::Posts::Post_default[:bed_counts][:out_of_commission][:ooc_female]
+      @default_post[:bed_counts][:out_of_commission][:ooc_female]
     end
 
     def Post_data.get_post_ooc_details
-      DC_data::Posts::Post_default[:bed_counts][:out_of_commission][:details]
+      @default_post[:bed_counts][:out_of_commission][:details]
     end
 
   end

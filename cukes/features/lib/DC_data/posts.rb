@@ -24,6 +24,32 @@ module DC_data
         }
 
     }
+
+    Inter_transfer = {
+        :date => '',
+        :time => '',
+        :centre => '',
+        :operation => '',
+        :cid_id => '',
+        :gender => '',
+        :nationality => '',
+        :centre_to => '',
+
+
+        :bed_counts => {
+            :male => '',
+            :female => '',
+
+            :out_of_commission => {
+                :ooc_male => '',
+                :ooc_female => '',
+
+                :details => [
+                ]
+            }
+        }
+
+    }
   end
 end
 
