@@ -3,25 +3,40 @@
   "type": "object",
   "properties": {
     "date": {
-      "type": "string"
+      "type": "date-time",
+      "format": "date"
     },
     "time": {
-      "type": "string"
+      "type": "date-time",
+      "format": "time"
     },
     "centre": {
-      "type": "string"
+      "type": "regex",
+      "pattern": "^[a-z].*$"
     },
     "operation": {
-      "type": "string"
+      "enum": [
+        "ooc",
+        "bic",
+        "in",
+        "out",
+        "tra"
+      ]
     },
     "cid_id": {
       "type": "integer"
     },
     "gender": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "na",
+        "m",
+        "f"
+      ]
     },
     "nationality": {
-      "type": "string"
+      "type": "regex",
+      "pattern": "^(na)|([a-z]{3})$"
     },
     "bed_counts": {
       "type": "object",
@@ -53,7 +68,12 @@
                     "type": "string"
                   },
                   "gender": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                      "na",
+                      "m",
+                      "f"
+                    ]
                   }
                 }
               }
