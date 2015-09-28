@@ -18,9 +18,9 @@ module.exports = {
     var validation_response = validate(req.body, validation_schema);
 
     if (validation_response.errors.length > 0) {
-      return res.status(400).json(validation_response.errors);
+      return res.badRequest(validation_response.errors);
     }
-    return res.status(200).send('OK');
+    return res.ok();
   }
 };
 
