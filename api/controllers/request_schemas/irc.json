@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string"
+    },
+    "time": {
+      "type": "string"
+    },
+    "centre": {
+      "type": "string"
+    },
+    "operation": {
+      "type": "string"
+    },
+    "cid_id": {
+      "type": "integer"
+    },
+    "gender": {
+      "type": "string"
+    },
+    "nationality": {
+      "type": "string"
+    },
+    "bed_counts": {
+      "type": "object",
+      "properties": {
+        "male": {
+          "type": "integer"
+        },
+        "female": {
+          "type": "integer"
+        },
+        "out_of_commission": {
+          "type": "object",
+          "properties": {
+            "ooc_male": {
+              "type": "integer"
+            },
+            "ooc_female": {
+              "type": "integer"
+            },
+            "details": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ref": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "gender": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "date",
+    "time",
+    "centre",
+    "operation",
+    "gender",
+    "nationality",
+    "bed_counts"
+  ]
+}

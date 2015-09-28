@@ -1,0 +1,34 @@
+{
+  "date": "2015-08-26",
+  "time": "09:10:40",
+  "centre": "harmondsworth",
+  "operation": "bic",
+  "cid_id": 0,
+  "gender": " na",
+  "nationality": "na",
+  "bed_counts": {
+    "male": 13,
+    "female": 24,
+    "out_of_commission": {
+      "ooc_male": 2,
+      "ooc_female": 1,
+      "details": [
+        {
+          "ref": "bed101",
+          "reason": "",
+          "gender": "m"
+        },
+        {
+          "ref": "bed102",
+          "reason": "",
+          "gender": "m"
+        },
+        {
+          "ref": "bed103",
+          "reason": "",
+          "gender": "f"
+        }
+      ]
+    }
+  }
+}
