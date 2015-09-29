@@ -15,7 +15,7 @@ describe('IrcPostController', function () {
       return _.map(scenarios, function (scenario) {
         return it(Object.keys(scenario)[0] + ' should pass json schema check', function () {
           return request(sails.hooks.http.app)
-            .post('/IrcPost/post')
+            .post('/IrcPost')
             .send(scenario[Object.keys(scenario)[0]])
             .expect(200);
 
@@ -25,7 +25,7 @@ describe('IrcPostController', function () {
 
     it('should fail invalid json', function () {
       return request(sails.hooks.http.app)
-        .post('/IrcPost/post')
+        .post('/IrcPost')
         .send('4')
         .expect(400);
     });

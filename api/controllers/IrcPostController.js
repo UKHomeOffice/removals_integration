@@ -9,9 +9,9 @@ Promise = require('bluebird');
 module.exports = {
 
   /**
-   * `IrcPostController.post()`
+   * `IrcPostController.index()`
    */
-  post: function (req, res) {
+  index: function (req, res) {
     return IrcRequestValidatorService.validate(req.body)
       .tap(this.process_operation)
       .tap(this.process_bed_counts)
