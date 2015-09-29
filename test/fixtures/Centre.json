@@ -1,11 +1,16 @@
 [
   {
-    "name": "BIG ONE",
+    "name": "bigone",
     "male_capacity": 1000,
     "female_capacity": 2500
   },
   {
-    "name": "SMALL ONE",
+    "name": "smallone",
+    "male_capacity": 10,
+    "female_capacity": 5
+  },
+  {
+    "name": "harmondsworth",
     "male_capacity": 10,
     "female_capacity": 5
   }

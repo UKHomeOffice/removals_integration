@@ -43,7 +43,15 @@ module.exports = {
     return request_body;
   },
   process_bed_counts: function (request_body) {
-    console.log(request_body.bed_counts);
-    return request_body;
+    return Centre.findOne({name: request_body.centre})
+      .then(function (centre) {
+        centre.male_in_use = request_body.bed_counts.male;
+        centre.female_in_use = request_body.bed_counts.female;
+        centre.male_out_of_commission = request_body.bed_counts.out_of_commission.ooc_male;
+        centre.female_out_of_commission = request_body.bed_counts.out_of_commission.ooc_female;
+        return centre.save();
+      }).finally(function () {
+        return request_body;
+      });
   },
 };

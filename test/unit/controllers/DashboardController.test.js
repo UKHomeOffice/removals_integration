@@ -9,7 +9,7 @@ describe('DashboardController', function () {
       .get('/Dashboard')
       .expect(200)
       .expect(function (res) {
-        expect(res.body).to.have.length(2);
+        expect(res.body).to.have.length(3);
       });
   });
 });
