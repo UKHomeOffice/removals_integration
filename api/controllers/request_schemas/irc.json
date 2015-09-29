@@ -2,19 +2,35 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
+
+    "trans_id":{
+      "description": "Auto incremented number to identify flow of API call",
+      "type": "integer"
+    },
     "date": {
+      "description": "Date when API invoked",
       "type": "date-time",
       "format": "date"
     },
     "time": {
+      "description": "Time when API invoked",
       "type": "date-time",
       "format": "time"
     },
     "centre": {
+      "description": "Name of centre",
       "type": "regex",
       "pattern": "^[a-z].*$"
     },
+    "centre_to": {
+      "description": "Name of centre - Apply for inter centre move ONLY",
+      "type": "regex",
+      "pattern": "^(na)|([a-z])$"
+
+    },
     "operation": {
+      "description": "Name of operation API invoked for",
+      "type":"string",
       "enum": [
         "ooc",
         "bic",
@@ -24,9 +40,11 @@
       ]
     },
     "cid_id": {
+      "description": "Person identification number",
       "type": "integer"
     },
     "gender": {
+      "description": "Person gender",
       "type": "string",
       "enum": [
         "na",
@@ -35,6 +53,7 @@
       ]
     },
     "nationality": {
+      "description": "Person nationality. XXX when nationality is not known",
       "type": "regex",
       "pattern": "^(na)|([a-z]{3})$"
     },
@@ -42,18 +61,22 @@
       "type": "object",
       "properties": {
         "male": {
+          "description": "Number of male beds occupied",
           "type": "integer"
         },
         "female": {
+          "description": "Number of female beds occupied",
           "type": "integer"
         },
         "out_of_commission": {
           "type": "object",
           "properties": {
             "ooc_male": {
+              "description": "Number of male out of commission beds",
               "type": "integer"
             },
             "ooc_female": {
+              "description": "Number of female out of commission beds",
               "type": "integer"
             },
             "details": {
@@ -75,21 +98,23 @@
                       "f"
                     ]
                   }
-                }
+                },"required": ["ref","reason"]
               }
             }
-          }
+          },"required": ["ooc_male","ooc_female"]
         }
       }
-    }
+    },"required": ["male","female"]
   },
   "required": [
     "date",
     "time",
     "centre",
+    "trans_id",
     "operation",
     "gender",
     "nationality",
-    "bed_counts"
+    "bed_counts",
+    "centre_to"
   ]
 }

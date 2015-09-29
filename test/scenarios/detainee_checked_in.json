@@ -1,4 +1,5 @@
 {
+  "trans_id": 3,
   "date": "2015-08-21",
   "time": "14:20:30",
   "centre": "harmondsworth",
@@ -6,6 +7,7 @@
   "cid_id": 123456,
   "gender": "m",
   "nationality": "afg",
+  "centre_to":"na",
   "bed_counts": {
     "male": 20,
     "female": 34,

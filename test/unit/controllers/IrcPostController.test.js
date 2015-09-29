@@ -10,8 +10,8 @@ describe('IrcPostController', function () {
         {bed_out_of_commission: require('../../scenarios/bed_out_of_commission.json')},
         {detainee_checked_in: require('../../scenarios/detainee_checked_in.json')},
         {detainee_checked_out: require('../../scenarios/detainee_checked_out.json')},
-        {inter_centre_move: require('../../scenarios/inter_centre_move.json')},
-      ];
+        {inter_centre_move: require('../../scenarios/inter_centre_move.json')}
+       ];
       return _.map(scenarios, function (scenario) {
         return it(Object.keys(scenario)[0] + ' should pass json schema check', function () {
           return request(sails.hooks.http.app)
