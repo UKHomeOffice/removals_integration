@@ -1,14 +1,11 @@
+var chai = require('chai')
+  .use(require("chai-as-promised"));
+var expect = chai.expect;
+
 describe('CentreModel', function () {
 
-  describe('#find()', function () {
-    it('should check find function', function (done) {
-      Centre.find()
-        .then(function (results) {
-          // some tests
-          done();
-        })
-      //.catch(done);
-    });
+  it('should get the fixtures', function () {
+    return expect(Centre.find()).to.eventually.have.length(2);
   });
 
 });

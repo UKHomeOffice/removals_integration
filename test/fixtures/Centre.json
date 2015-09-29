@@ -1,0 +1,12 @@
+[
+  {
+    "name": "BIG ONE",
+    "male_capacity": 1000,
+    "female_capacity": 2500
+  },
+  {
+    "name": "SMALL ONE",
+    "male_capacity": 10,
+    "female_capacity": 5
+  }
+]

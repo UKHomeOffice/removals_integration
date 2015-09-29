@@ -12,30 +12,37 @@ module.exports = {
   attributes: {
     name: {
       type: "string",
+      defaultsTo: 0,
       required: true
     },
     male_capacity: {
       type: "integer",
+      defaultsTo: 0,
       required: true
     },
     female_capacity: {
       type: "integer",
+      defaultsTo: 0,
       required: true
     },
     male_in_use: {
       type: "integer",
+      defaultsTo: 0,
       required: true
     },
     female_in_use: {
       type: "integer",
+      defaultsTo: 0,
       required: true
     },
     male_out_of_commission: {
       type: "integer",
+      defaultsTo: 0,
       required: true
     },
     female_out_of_commission: {
       type: "integer",
+      defaultsTo: 0,
       required: true
     }
   }
