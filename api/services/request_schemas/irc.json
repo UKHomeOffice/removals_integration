@@ -59,6 +59,7 @@
     },
     "bed_counts": {
       "type": "object",
+      "required": ["male", "female"],
       "properties": {
         "male": {
           "description": "Number of male beds occupied",
@@ -70,6 +71,7 @@
         },
         "out_of_commission": {
           "type": "object",
+          "required": ["ooc_male", "ooc_female"],
           "properties": {
             "ooc_male": {
               "description": "Number of male out of commission beds",

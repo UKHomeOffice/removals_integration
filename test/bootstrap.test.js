@@ -10,7 +10,9 @@ before(function (done) {
     // configuration for testing purposes
   }, function (err, server) {
     sails = server;
-    if (err) return done(err);
+    if (err) {
+      return done(err);
+    }
     // here you can load fixtures, etc.
     done(err, sails);
   });
