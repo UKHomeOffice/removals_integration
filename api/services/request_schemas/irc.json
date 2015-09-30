@@ -1,11 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
+  "version": "0.3",
   "type": "object",
   "properties": {
-
-    "trans_id":{
+    "trans_id": {
       "description": "Auto incremented number to identify flow of API call",
-      "type": "integer"
+      "type": "integer",
+      "minimum": 0
     },
     "date": {
       "description": "Date when API invoked",
@@ -19,18 +20,23 @@
     },
     "centre": {
       "description": "Name of centre",
-      "type": "regex",
-      "pattern": "^[a-z].*$"
+      "type": "string",
+      "pattern": "^[a-z].*$",
+      "minLength": 3,
+      "maxLength": 50
     },
     "centre_to": {
       "description": "Name of centre - Apply for inter centre move ONLY",
       "type": "regex",
-      "pattern": "^(na)|([a-z])$"
-
+      "pattern": "^(na)|([a-z])$",
+      "minLength": 2,
+      "maxLength": 50
     },
     "operation": {
       "description": "Name of operation API invoked for",
-      "type":"string",
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 3,
       "enum": [
         "ooc",
         "bic",
@@ -41,11 +47,14 @@
     },
     "cid_id": {
       "description": "Person identification number",
-      "type": "integer"
+      "type": "integer",
+      "minLength": 6
     },
     "gender": {
       "description": "Person gender",
       "type": "string",
+      "minLength": 1,
+      "maxLength": 2,
       "enum": [
         "na",
         "m",
@@ -55,31 +64,37 @@
     "nationality": {
       "description": "Person nationality. XXX when nationality is not known",
       "type": "regex",
-      "pattern": "^(na)|([a-z]{3})$"
+      "pattern": "^(na)|([a-z]{3})$",
+      "minLength": 2,
+      "maxLength": 3
     },
     "bed_counts": {
       "type": "object",
-      "required": ["male", "female"],
+      "additionalProperties": false,
       "properties": {
         "male": {
           "description": "Number of male beds occupied",
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         },
         "female": {
           "description": "Number of female beds occupied",
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         },
         "out_of_commission": {
           "type": "object",
-          "required": ["ooc_male", "ooc_female"],
+          "additionalProperties": false,
           "properties": {
             "ooc_male": {
               "description": "Number of male out of commission beds",
-              "type": "integer"
+              "type": "integer",
+              "minimum": 0
             },
             "ooc_female": {
               "description": "Number of female out of commission beds",
-              "type": "integer"
+              "type": "integer",
+              "minimum": 0
             },
             "details": {
               "type": "array",
@@ -87,27 +102,49 @@
                 "type": "object",
                 "properties": {
                   "ref": {
-                    "type": "string"
+                    "type": "string",
+                    "pattern": "^[a-z].*$",
+                    "minLength": 0,
+                    "maxLength": 10
                   },
                   "reason": {
-                    "type": "string"
+                    "type": "string",
+                    "pattern": "^[a-z].*$",
+                    "minLength": 0,
+                    "maxLength": 75
                   },
                   "gender": {
                     "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2,
                     "enum": [
                       "na",
                       "m",
                       "f"
                     ]
                   }
-                },"required": ["ref","reason"]
+                },
+                "required": [
+                  "ref",
+                  "reason"
+                ]
               }
             }
-          },"required": ["ooc_male","ooc_female"]
+          },
+          "required": [
+            "ooc_male",
+            "ooc_female"
+          ]
         }
       }
-    },"required": ["male","female"]
+    },
+    "required": [
+      "male",
+      "female",
+      "out_of_commission"
+    ]
   },
+  "additionalProperties": false,
   "required": [
     "date",
     "time",

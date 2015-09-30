@@ -31,6 +31,27 @@ describe('IrcPostController', function () {
         .expect(400);
     });
   });
+
+  describe('all scenarios should fail json schema check', function () {
+    var scenarios = [
+      {invalid_ref_missing: require('../../scenarios/invalid_ref_missing.json')},
+      {invalid_reason_missing: require('../../scenarios/invalid_reason_missing.json')},
+      {invalid_json_additional_properties: require('../../scenarios/invalid_json_additional_properties.json')},
+      {invalid_negative_number: require('../../scenarios/invalid_negative_number.json')}
+
+    ];
+
+    return _.map(scenarios, function (scenario) {
+      return it(Object.keys(scenario)[0] + ' should pass json schema check', function () {
+        return request(sails.hooks.http.app)
+          .post('/IrcPost')
+          .send(scenario[Object.keys(scenario)[0]])
+          .expect(400);
+
+      });
+    });
+  });
+
   describe('Updating the centre model', function () {
     it('should update the centre model with available bed counts', function () {
 
