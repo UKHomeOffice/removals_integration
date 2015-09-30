@@ -25,7 +25,8 @@ $ npm test
 ```
 ### CI Test:
 ```
-$ npm ci test
+$ npm run-script coverage-test
+$ npm run-script coverage-report
 ```
 ### Start single-threaded unmanaged server:
 ```
