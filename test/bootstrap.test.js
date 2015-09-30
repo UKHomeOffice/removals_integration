@@ -5,6 +5,9 @@ var Barrels = require('barrels');
 before(function (done) {
   // Lift Sails with test database
   Sails.lift({
+    hooks: {
+      grunt: false
+    },
     log: {
       level: 'verbose'
     },
