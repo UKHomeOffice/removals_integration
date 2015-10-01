@@ -4,8 +4,9 @@
  * @description :: Server-side logic for managing ircposts
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-var Promise;
-Promise = require('bluebird');
+var Promise = require('bluebird');
+var ValidationError = require('../lib/exceptions/ValidationError');
+
 module.exports = {
 
   /**
@@ -13,11 +14,10 @@ module.exports = {
    */
   index: function (req, res) {
     return IrcRequestValidatorService.validate(req.body)
+      .catch(ValidationError, res.badRequest)
       .tap(this.process_operation)
       .tap(this.process_bed_counts)
-      .catch(function (e) {
-        return res.badRequest(e);
-      })
+      .catch(res.serverError)
       .finally(function () {
         return res.ok();
       });
