@@ -1,0 +1,46 @@
+{
+  "trans_id": 5,
+  "date": "2015-08-26",
+  "time": "09:10:40",
+  "centre": "harmondsworth",
+  "operation": "tra",
+  "cid_id": 46576,
+  "gender": "m",
+  "nationality": "xyz",
+  "centre_to": "colnbrook",
+  "bed_counts": {
+    "male": 20.50,
+    "female": 34.30,
+    "out_of_commission": {
+      "ooc_male": 2.2,
+      "ooc_female": 3.9,
+      "details": [
+        {
+          "ref": "bed101",
+          "reason": "bed bug",
+          "gender": "m"
+        },
+        {
+          "ref": "bed102",
+          "reason": "fire",
+          "gender": "m"
+        },
+        {
+          "ref": "bed103",
+          "reason": "broken door",
+          "gender": "f"
+        },
+        {
+          "ref": "bed104",
+          "reason": "bed bug",
+          "gender": "f"
+        },
+        {
+          "ref": "bed105",
+          "reason": "broken door",
+          "gender": "f"
+        }
+      ]
+    }
+  }
+}

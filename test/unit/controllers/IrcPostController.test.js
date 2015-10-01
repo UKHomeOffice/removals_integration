@@ -37,7 +37,8 @@ describe('IrcPostController', function () {
       {invalid_ref_missing: require('../../scenarios/invalid_ref_missing.json')},
       {invalid_reason_missing: require('../../scenarios/invalid_reason_missing.json')},
       {invalid_json_additional_properties: require('../../scenarios/invalid_json_additional_properties.json')},
-      {invalid_negative_number: require('../../scenarios/invalid_negative_number.json')}
+      {invalid_negative_number: require('../../scenarios/invalid_negative_number.json')},
+      {invalid_floting_number: require('../../scenarios/invalid_floting_number.json')}
 
     ];
 
