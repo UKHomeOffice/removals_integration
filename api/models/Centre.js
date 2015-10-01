@@ -44,6 +44,10 @@ module.exports = {
       type: "integer",
       defaultsTo: 0,
       required: true
+    },
+    reservations: {
+      collection: 'reservation',
+      via: 'centre'
     }
   }
 };
