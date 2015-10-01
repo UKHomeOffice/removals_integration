@@ -3,6 +3,9 @@
     "modules": {}
   },
   "hooks": {
-      "grunt": false
+    "grunt": false,
+    "i18n": false,
+    "sockets": false,
+    "pubsub": false
   }
 }
