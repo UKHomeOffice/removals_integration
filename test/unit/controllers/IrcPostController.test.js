@@ -2,6 +2,7 @@ var request = require('supertest-as-promised');
 var _ = require('lodash');
 var chai = require('chai');
 var expect = chai.expect;
+chai.use(require('chai-as-promised'));
 
 describe('IrcPostController', function () {
 

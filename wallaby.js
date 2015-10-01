@@ -1,15 +1,13 @@
 module.exports = function () {
   return {
     files: [
-      'api/**/*.js',
+      'api/**/*.*',
       'config/**/*.*',
-      'test/fixtures/**/*.*',
-      'test/helpers/**/*.*',
-      'views/**/*.ejs'
     ],
 
     tests: [
       'test/**/*.js',
+      'test/**/*.*',
       '!test/bootstrap.test.js',
       '!test/helpers/**.js'
     ],
@@ -25,30 +23,12 @@ module.exports = function () {
       process.env.NODE_PATH = __base;
       require('module').Module._initPaths();
       global.chai = require('chai');
-      var chaiAsPromised = require('chai-as-promised');
-      global.expect = chai.expect;
-      global.chai.should();
-      global.Promise = require('bluebird');
-      var SailsOrientdbMochaHelper = require(__base + '/test/helpers/SailsOrientdbMochaHelper')
-      var chaiAsPromised = require('chai-as-promised');
-      global.chai.use(chaiAsPromised);
-      global.chai.use(SailsOrientdbMochaHelper);
-      global.chai.use(require('chai-things'));
+      //global.expect = chai.expect;
 
       var freeport = require('freeport');
       var path = require('path');
-      var cp = require('child_process');
       var fs = require('fs');
-      var fork = cp.fork;
       var existsSync = fs.existsSync;
-
-      // Replacing fork to make sails start grunt in local project folder
-      cp.fork = function (file, args, opts) {
-        if (file.indexOf('grunt-cli')) {
-          opts.cwd = wallaby.localProjectDir;
-        }
-        return fork.apply(this, arguments);
-      };
 
       // Replacing existsSync to make sails not throw error when it doesn't find node module in wallaby cache.
       // Wallaby will use local node module anyway.
@@ -60,7 +40,6 @@ module.exports = function () {
       };
 
       var Sails = require('sails');
-      //var should = require('should');
 
       var Barrels = require('barrels');
 
@@ -71,15 +50,18 @@ module.exports = function () {
           global.sails = Sails.lift({
             hooks: {
               grunt: false,
+              i18n: false,
+              sockets: false,
+              pubsub: false
             },
             log: {
-              level: 'info',
+              level: 'verbose'
             },
             models: {
               connection: 'test',
-              migrate: 'drop',
+              migrate: 'drop'
             },
-            port: port,
+            port: port
           }, function (err) {
             if (err) {
               if (err) throw err;
@@ -99,11 +81,10 @@ module.exports = function () {
             });
           });
         }
-      )
-      ;
+      );
     },
     env: {
-      type: 'node',
-    },
+      type: 'node'
+    }
   };
 };

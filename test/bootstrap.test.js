@@ -1,33 +1,43 @@
 var Sails = require('sails');
 var Barrels = require('barrels');
+var freeport = require('freeport');
+
 
 // Global before hook
 before(function (done) {
   // Lift Sails with test database
-  Sails.lift({
-    hooks: {
-      grunt: false
-    },
-    log: {
-      level: 'verbose'
-    },
-    models: {
-      connection: 'test',
-      migrate: 'drop'
-    }
-  }, function (err, sails) {
-    if (err) {
-      return done(err);
-    }
-    // Load fixtures
-    var barrels = new Barrels();
+  freeport(function (err, port) {
+    if (err) throw err;
 
-    // Save original objects in `fixtures` variable
-    var fixtures = barrels.data;
+    Sails.lift({
+      hooks: {
+        grunt: false,
+        i18n: false,
+        sockets: false,
+        pubsub: false
+      },
+      log: {
+        level: 'verbose'
+      },
+      models: {
+        connection: 'test',
+        migrate: 'drop'
+      },
+      port: port
+    }, function (err, sails) {
+      if (err) {
+        return done(err);
+      }
+      // Load fixtures
+      var barrels = new Barrels();
 
-    // Populate the DB
-    barrels.populate(function (err) {
-      done(err, sails);
+      // Save original objects in `fixtures` variable
+      var fixtures = barrels.data;
+
+      // Populate the DB
+      barrels.populate(function (err) {
+        done(err, sails);
+      });
     });
   });
 });
