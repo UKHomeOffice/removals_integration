@@ -5,19 +5,20 @@ module DC_data
   class Import
     extend DC_data::Post_data
 
-
-    def initialize(import_data, options)
-      @import_data = import_data
-      @upload_type = options[:upload_type]
-      @operation = options[:operation]
-      @centre = options[:centre]
-      @centre_to = options[:centre_to]
-      @date = options[:date]
-      @time = options[:time]
-      @import_data_hash ||= Hash.new
-    end
+        def initialize(import_data, options)
+          @import_data = import_data
+          @upload_type = options[:upload_type]
+          @operation = options[:operation]
+          @centre = options[:centre]
+          @centre_to = options[:centre_to]
+          @date = options[:date]
+          @time = options[:time]
+        end
 
     def create_post
+
+      @import_data_hash ||= Hash.new
+
 
       if @import_data.class != Array
         @import_data= @import_data.hashes
@@ -33,10 +34,10 @@ module DC_data
 
         Post_data.get_post[:centre]=@centre||=@import_data_hash[:centre]
         Post_data.get_post[:operation]=@operation||=@import_data_hash[:operation]
-        Post_data.get_post[:bed_counts][:male]=@import_data_hash[:male]
-        Post_data.get_post[:bed_counts][:female]=@import_data_hash[:female]
-        Post_data.get_post[:bed_counts][:out_of_commission][:ooc_male]=@import_data_hash[:ooc_male]
-        Post_data.get_post[:bed_counts][:out_of_commission][:ooc_female]=@import_data_hash[:ooc_female]
+        Post_data.get_post[:bed_counts][:male]=@import_data_hash[:male].to_i
+        Post_data.get_post[:bed_counts][:female]=@import_data_hash[:female].to_i
+        Post_data.get_post[:bed_counts][:out_of_commission][:ooc_male]=@import_data_hash[:ooc_male].to_i
+        Post_data.get_post[:bed_counts][:out_of_commission][:ooc_female]=@import_data_hash[:ooc_female].to_i
 
         y=1
         if @import_data_hash[:ooc_male].to_i > 1
@@ -67,7 +68,7 @@ module DC_data
 
 
         if @upload_type == 'csv'
-          Post_data.get_post[:cid_id]=@import_data_hash[:cid_id]
+          Post_data.get_post[:cid_id]=@import_data_hash[:cid_id].to_i
           Post_data.get_post[:gender]=@import_data_hash[:gender]
           Post_data.get_post[:nationality]=@import_data_hash[:nationality]
           Post_data.get_post[:date]=@import_data_hash[:date]
@@ -84,9 +85,13 @@ module DC_data
           Post_data.get_post[:time]=@time||= Time.now.utc.strftime("%H:%M:%S")
 
           if @operation != 'bic' && @operation != 'ooc'
-            Post_data.get_post[:cid_id]=@import_data_hash[:cid_id]||= '123456'
+            Post_data.get_post[:cid_id]=@import_data_hash[:cid_id].to_i||= 123456
             Post_data.get_post[:gender]=@import_data_hash[:gender]||='m'
             Post_data.get_post[:nationality]=@import_data_hash[:nationality]||='abd'
+          else
+            Post_data.get_post[:cid_id]=0
+            Post_data.get_post[:gender]='na'
+            Post_data.get_post[:nationality]='na'
           end
 
           if @operation == 'tra'
@@ -100,6 +105,7 @@ module DC_data
       json= Post_data.get_post.to_json
       response = dashboard_api.post(DC_data::Config::Endpoints::UPDATE_CENTRES, json, {'Content-Type' => 'application/json'}).body
       puts response
+      response.include?('ooc_male_beds')
     end
 
     def assign_ooc_reason

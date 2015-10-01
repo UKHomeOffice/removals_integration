@@ -2,21 +2,21 @@ module DC_data
   module Posts
 
     Post_default = {
-        :date => '',
-        :time => '',
-        :centre => '',
-        :operation => '',
-        :cid_id => '',
-        :gender => '',
-        :nationality => '',
+        :date => '2015-01-01',
+        :time => '08:00:00',
+        :centre => 'harmondsworth',
+        :operation => 'in',
+        :cid_id => 01234,
+        :gender => 'm',
+        :nationality => 'afg',
 
         :bed_counts => {
-            :male => '',
-            :female => '',
+            :male => 1,
+            :female => 0,
 
             :out_of_commission => {
-                :ooc_male => '',
-                :ooc_female => '',
+                :ooc_male => 0,
+                :ooc_female => 0,
 
                 :details => [
                 ]
@@ -26,23 +26,23 @@ module DC_data
     }
 
     Inter_transfer = {
-        :date => '',
-        :time => '',
-        :centre => '',
-        :operation => '',
-        :cid_id => '',
-        :gender => '',
-        :nationality => '',
-        :centre_to => '',
+        :date => '2015-01-01',
+        :time => '08:00:00',
+        :centre => 'harmondsworth',
+        :operation => 'tra',
+        :cid_id => 01234,
+        :gender => 'm',
+        :nationality => 'afg',
+        :centre_to => 'colnbrook',
 
 
         :bed_counts => {
-            :male => '',
-            :female => '',
+            :male => 1,
+            :female => 0,
 
             :out_of_commission => {
-                :ooc_male => '',
-                :ooc_female => '',
+                :ooc_male => 0,
+                :ooc_female => 0,
 
                 :details => [
                 ]

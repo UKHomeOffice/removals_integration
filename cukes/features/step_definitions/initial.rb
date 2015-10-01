@@ -59,8 +59,8 @@ Then(/^I should see (.*) unavailable (\d+) on the screen$/) do |centre, total|
 end
 
 When(/^I navigate to the bed management dashboard$/) do
-  visit "#{config('dashboard_host')}" + "#{DC_data::Config::Endpoints::DASHBOARD}"
-  expect(page).to have_content ('DEPMU Dashboard')
+  visit "#{config('dashboard_host')}" #+ "#{DC_data::Config::Endpoints::DASHBOARD}"
+  expect(page).to have_content ('IRC Bed Management')
 end
 
 And(/^the information is uploaded$/) do

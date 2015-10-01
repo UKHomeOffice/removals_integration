@@ -3,7 +3,7 @@ module DC_data
 
     module Endpoints
       DASHBOARD = '/dashboard'
-      UPDATE_CENTRES = '/update-centres'
+      UPDATE_CENTRES = '/submit'
     end
 
     module Locations
