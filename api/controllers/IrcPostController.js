@@ -13,14 +13,19 @@ module.exports = {
    * `IrcPostController.index()`
    */
   index: function (req, res) {
-    return IrcRequestValidatorService.validate(req.body)
-      .catch(ValidationError, res.badRequest)
+    var response = IrcRequestValidatorService.validate(req.body)
       .tap(this.process_operation)
       .tap(this.process_bed_counts)
-      .catch(res.serverError)
-      .finally(function () {
-        return res.ok();
-      });
+      .catch(ValidationError, function (error) {
+        res.badRequest(error.message);
+        return response.cancel();
+      })
+      .catch(function (error) {
+        res.serverError(error.message);
+        return response.cancel();
+      })
+      .then(res.ok);
+    return response;
   },
 
   process_operation: function (request_body) {
