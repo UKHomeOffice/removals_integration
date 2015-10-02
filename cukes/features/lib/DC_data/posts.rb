@@ -4,9 +4,9 @@ module DC_data
     Post_default = {
         :date => '2015-01-01',
         :time => '08:00:00',
-        :centre => 'harmondsworth',
+        :centre => 'colnbrook',
         :operation => 'in',
-        :cid_id => 01234,
+        :cid_id => 41234,
         :gender => 'm',
         :nationality => 'afg',
 
@@ -17,7 +17,6 @@ module DC_data
             :out_of_commission => {
                 :ooc_male => 0,
                 :ooc_female => 0,
-
                 :details => [
                 ]
             }
@@ -30,7 +29,7 @@ module DC_data
         :time => '08:00:00',
         :centre => 'harmondsworth',
         :operation => 'tra',
-        :cid_id => 01234,
+        :cid_id => 41234,
         :gender => 'm',
         :nationality => 'afg',
         :centre_to => 'colnbrook',

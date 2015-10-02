@@ -7,6 +7,7 @@ require 'active_support/all'
 require 'selenium-webdriver'
 require 'csv_hasher'
 
+require_relative '../lib/DC_data/post_data.rb'
 
 
 

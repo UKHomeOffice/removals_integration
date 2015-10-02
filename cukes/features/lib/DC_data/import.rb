@@ -1,19 +1,17 @@
-require "#{File.dirname(__FILE__)}/post_data.rb"
-
 module DC_data
 
   class Import
     extend DC_data::Post_data
 
-        def initialize(import_data, options)
-          @import_data = import_data
-          @upload_type = options[:upload_type]
-          @operation = options[:operation]
-          @centre = options[:centre]
-          @centre_to = options[:centre_to]
-          @date = options[:date]
-          @time = options[:time]
-        end
+    def initialize(import_data, options)
+      @import_data = import_data
+      @upload_type = options[:upload_type]
+      @operation = options[:operation]
+      @centre = options[:centre]
+      @centre_to = options[:centre_to]
+      @date = options[:date]
+      @time = options[:time]
+    end
 
     def create_post
 
@@ -29,15 +27,17 @@ module DC_data
         @import_data_hash=hash.symbolize_keys
 
 
-        Post_data.define_default_post(@operation||=@import_data_hash[:operation])
+        Post_data.define_default_post(@operation.nil? ? @import_data_hash[:operation] : @operation)
 
 
-        Post_data.get_post[:centre]=@centre||=@import_data_hash[:centre]
-        Post_data.get_post[:operation]=@operation||=@import_data_hash[:operation]
+        Post_data.get_post[:centre]= @centre.nil? ? @import_data_hash[:centre] : @centre
+        Post_data.get_post[:operation]= @operation.nil? ? @import_data_hash[:operation] : @operation
         Post_data.get_post[:bed_counts][:male]=@import_data_hash[:male].to_i
         Post_data.get_post[:bed_counts][:female]=@import_data_hash[:female].to_i
         Post_data.get_post[:bed_counts][:out_of_commission][:ooc_male]=@import_data_hash[:ooc_male].to_i
         Post_data.get_post[:bed_counts][:out_of_commission][:ooc_female]=@import_data_hash[:ooc_female].to_i
+
+        Post_data.get_post[:bed_counts][:out_of_commission][:details].clear
 
         y=1
         if @import_data_hash[:ooc_male].to_i > 1
@@ -81,13 +81,13 @@ module DC_data
 
         else
 
-          Post_data.get_post[:date]=@date||= Date.today
-          Post_data.get_post[:time]=@time||= Time.now.utc.strftime("%H:%M:%S")
+          Post_data.get_post[:date]= @date.nil? ? Date.today : @date
+          Post_data.get_post[:time]= @time.nil? ? Time.now.utc.strftime("%H:%M:%S") : @time
 
           if @operation != 'bic' && @operation != 'ooc'
-            Post_data.get_post[:cid_id]=@import_data_hash[:cid_id].to_i||= 123456
-            Post_data.get_post[:gender]=@import_data_hash[:gender]||='m'
-            Post_data.get_post[:nationality]=@import_data_hash[:nationality]||='abd'
+            Post_data.get_post[:cid_id]=@import_data_hash[:cid_id].nil? ? Post_data.get_post[:cid_id] : @import_data_hash[:cid_id].to_i
+            Post_data.get_post[:gender]=@import_data_hash[:gender].nil? ? Post_data.get_post[:gender] : @import_data_hash[:gender]
+            Post_data.get_post[:nationality]=@import_data_hash[:nationality].nil? ? Post_data.get_post[:nationality] : @import_data_hash[:nationality]
           else
             Post_data.get_post[:cid_id]=0
             Post_data.get_post[:gender]='na'
