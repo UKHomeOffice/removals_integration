@@ -24,6 +24,9 @@ module.exports = {
         res.serverError(error.message);
         return response.cancel();
       })
+      .tap(function () {
+        sails.sockets.blast('wallboardUpdate');
+      })
       .then(res.ok);
     return response;
   },
