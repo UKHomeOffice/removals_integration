@@ -2,10 +2,10 @@ var request = require('supertest');
 var chai = require('chai');
 var expect = chai.expect;
 
-describe('DashboardController', function () {
-  it('should return a valid json dashboard', function () {
+describe('WallboardController', function () {
+  it('should return a valid json wallboard', function () {
     return request(sails.hooks.http.app)
-      .get('/Dashboard')
+      .get('/Wallboard')
       .expect(200)
       .expect(function (res) {
         return expect(res.body).to.have.length(3).and.to.contain(

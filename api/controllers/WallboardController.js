@@ -1,14 +1,14 @@
 /**
- * DashboardController
+ * WallboardController
  *
- * @description :: Server-side logic for managing dashboard
+ * @description :: Server-side logic for managing wallboard
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
 module.exports = {
 
   /**
-   * `DashboardController.index()`
+   * `WallboardController.index()`
    */
   index: function (req, res) {
     return Centre.find()
