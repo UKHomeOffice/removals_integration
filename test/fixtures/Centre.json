@@ -2,16 +2,19 @@
   {
     "name": "bigone",
     "male_capacity": 1000,
-    "female_capacity": 2500
+    "female_capacity": 2500,
+    "id": 1
   },
   {
     "name": "smallone",
     "male_capacity": 10,
-    "female_capacity": 5
+    "female_capacity": 5,
+    "id": 2
   },
   {
     "name": "harmondsworth",
     "male_capacity": 10,
-    "female_capacity": 5
+    "female_capacity": 5,
+    "id": 3
   }
 ]
