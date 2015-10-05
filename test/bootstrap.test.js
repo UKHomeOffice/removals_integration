@@ -2,6 +2,7 @@ var Sails = require('sails');
 var Barrels = require('barrels');
 var freeport = require('freeport');
 
+var barrels = new Barrels();
 
 // Global before hook
 before(function (done) {
@@ -12,9 +13,7 @@ before(function (done) {
     Sails.lift({
       hooks: {
         grunt: false,
-        i18n: false,
-        sockets: false,
-        pubsub: false
+        i18n: false
       },
       log: {
         level: 'verbose'
@@ -28,18 +27,14 @@ before(function (done) {
       if (err) {
         return done(err);
       }
-      // Load fixtures
-      var barrels = new Barrels();
-
-      // Save original objects in `fixtures` variable
-      var fixtures = barrels.data;
-
-      // Populate the DB
-      barrels.populate(function (err) {
-        done(err, sails);
-      });
+      done(err, sails);
     });
   });
+});
+
+beforeEach(function () {
+  // Load fixtures
+  return barrels.populate();
 });
 
 // Global after hook

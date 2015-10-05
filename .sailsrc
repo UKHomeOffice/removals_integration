@@ -4,8 +4,6 @@
   },
   "hooks": {
     "grunt": false,
-    "i18n": false,
-    "sockets": false,
-    "pubsub": false
+    "i18n": false
   }
 }
