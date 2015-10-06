@@ -28,7 +28,7 @@
     },
     "centre_to": {
       "description": "Name of centre - Apply for inter centre move ONLY",
-      "type": "regex",
+      "type": "string",
       "pattern": "^(na)|([a-z])$",
       "minLength": 2,
       "maxLength": 50
@@ -65,8 +65,8 @@
     },
     "nationality": {
       "description": "Person nationality. XXX when nationality is not known",
-      "type": "regex",
-      "pattern": "^(na)|([a-z]{3})$",
+      "type": "string",
+      "pattern": "^(na)|([a-z])$",
       "minLength": 2,
       "maxLength": 3
     },
