@@ -1,13 +1,4 @@
 {
-  "trans_id":2,
-  "date": "2015-08-26",
-  "time": "09:10:40",
-  "centre": "harmondsworth",
-  "operation": "ooc",
-  "cid_id": 0,
-  "gender": "na",
-  "nationality": "na",
-  "centre_to":"na",
   "bed_counts": {
     "male": 13,
     "female": 24,

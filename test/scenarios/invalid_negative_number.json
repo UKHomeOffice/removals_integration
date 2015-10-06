@@ -7,40 +7,5 @@
   "cid_id": -123456,
   "gender": "m",
   "nationality": "chn",
-  "centre_to": "na",
-  "bed_counts": {
-    "male": -13,
-    "female": -24,
-    "out_of_commission": {
-      "ooc_male": -2,
-      "ooc_female": -3,
-      "details": [
-        {
-          "ref": "bed101",
-          "reason": "bed bug",
-          "gender": "m"
-        },
-        {
-          "ref": "bed102",
-          "reason": "fire",
-          "gender": "m"
-        },
-        {
-          "ref": "bed103",
-          "reason": "broken door",
-          "gender": "f"
-        },
-        {
-          "ref": "bed104",
-          "reason": "bed bug",
-          "gender": "f"
-        },
-        {
-          "ref": "bed105",
-          "reason": "broken door",
-          "gender": "f"
-        }
-      ]
-    }
-  }
+  "centre_to": "na"
 }

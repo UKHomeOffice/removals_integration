@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "version": "0.3",
+  "type": "object",
+  "properties": {
+    "bed_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "male": {
+          "description": "Number of male beds occupied",
+          "type": "integer",
+          "minimum": 0,
+          "multipleOf": 1.0
+        },
+        "female": {
+          "description": "Number of female beds occupied",
+          "type": "integer",
+          "minimum": 0,
+          "multipleOf": 1.0
+        },
+        "out_of_commission": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ooc_male": {
+              "description": "Number of male out of commission beds",
+              "type": "integer",
+              "minimum": 0,
+              "multipleOf": 1.0
+            },
+            "ooc_female": {
+              "description": "Number of female out of commission beds",
+              "type": "integer",
+              "minimum": 0,
+              "multipleOf": 1.0
+            },
+            "details": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ref": {
+                    "type": "string",
+                    "pattern": "^[a-z].*$",
+                    "minLength": 0,
+                    "maxLength": 10
+                  },
+                  "reason": {
+                    "type": "string",
+                    "pattern": "^[a-z].*$",
+                    "minLength": 0,
+                    "maxLength": 75
+                  },
+                  "gender": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2,
+                    "enum": [
+                      "na",
+                      "m",
+                      "f"
+                    ]
+                  }
+                },
+                "required": [
+                  "ref",
+                  "reason"
+                ]
+              }
+            }
+          },
+          "required": [
+            "ooc_male",
+            "ooc_female"
+          ]
+        }
+      }
+    },
+    "required": [
+      "male",
+      "female",
+      "out_of_commission"
+    ]
+  }
+}
