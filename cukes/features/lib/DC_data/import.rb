@@ -1,7 +1,6 @@
 module DC_data
 
   class Import
-    extend DC_data::Post_data
 
     def initialize(import_data, options)
       @import_data = import_data
@@ -17,7 +16,7 @@ module DC_data
 
       @import_data_hash ||= Hash.new
 
-
+      # tables need to be hashed
       if @import_data.class != Array
         @import_data= @import_data.hashes
       end
@@ -40,7 +39,7 @@ module DC_data
         Post_data.get_post[:bed_counts][:out_of_commission][:details].clear
 
         y=1
-        if @import_data_hash[:ooc_male].to_i > 1
+        if @import_data_hash[:ooc_male].to_i > 0
           x=1
           while x <= @import_data_hash[:ooc_male].to_i
             ooc = Hash.new
@@ -53,7 +52,7 @@ module DC_data
           end
         end
 
-        if @import_data_hash[:ooc_female].to_i > 1
+        if @import_data_hash[:ooc_female].to_i > 0
           x=1
           while x <= @import_data_hash[:ooc_female].to_i
             ooc = Hash.new
@@ -103,6 +102,7 @@ module DC_data
 
     def create_json
       json= Post_data.get_post.to_json
+      puts json
       response = dashboard_api.post(DC_data::Config::Endpoints::UPDATE_CENTRES, json, {'Content-Type' => 'application/json'}).body
       puts response
       response.include?('ooc_male_beds')

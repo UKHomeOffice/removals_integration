@@ -1,4 +1,4 @@
-def import_initial_data(import_data, options={})
+def initialize_import(import_data, options={})
   @new_post=DC_data::Import.new(import_data, options)
 end
 
