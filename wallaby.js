@@ -7,7 +7,7 @@ module.exports = function () {
 
     tests: [
       'test/**/*.js',
-      'test/**/*.*',
+      'test/**/*.json',
       '!test/bootstrap.test.js',
       '!test/helpers/**.js'
     ],
@@ -50,9 +50,7 @@ module.exports = function () {
           global.sails = Sails.lift({
             hooks: {
               grunt: false,
-              i18n: false,
-              sockets: false,
-              pubsub: false
+              i18n: false
             },
             log: {
               level: 'verbose'
