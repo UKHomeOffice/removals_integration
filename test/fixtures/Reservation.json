@@ -1,47 +1,38 @@
 [
   {
+    "id": 1,
     "status": true,
-    "taskforce": "east west task force",
     "centre": 1,
-    "male_count": 1000,
-    "female_count": 2500,
-    "start_date": "2120-12-15",
-    "end_date": "2122-12-15"
+    "case": 2
   },
   {
+    "id": 2,
     "status": true,
-    "taskforce": "east west task force",
     "centre": 1,
-    "male_count": 1000,
-    "female_count": 2500,
-    "start_date": "2120-12-15",
-    "end_date": "2122-12-15"
+    "case": 3
   },
   {
+    "id": 3,
     "status": true,
-    "taskforce": "north south task force",
     "centre": 1,
-    "male_count": 1000,
-    "female_count": 2500,
-    "start_date": "2120-12-15",
-    "end_date": "2122-12-15"
+    "case": 4
   },
   {
+    "id": 4,
     "status": true,
-    "taskforce": "east west task force",
     "centre": 2,
-    "male_count": 1000,
-    "female_count": 2500,
-    "start_date": "2120-12-15",
-    "end_date": "2122-12-15"
+    "case": 5
   },
   {
+    "id": 5,
     "status": true,
-    "taskforce": "east west task force",
+    "centre": 3,
+    "case": 6
+  },
+  {
+    "id": 6,
+    "status": true,
     "centre": 2,
-    "male_count": 1000,
-    "female_count": 2500,
-    "start_date": "2001-12-15",
-    "end_date": "2012-12-15"
+    "case": 7
   }
 ]

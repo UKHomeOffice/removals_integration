@@ -8,7 +8,7 @@ describe('ReservationController', function () {
       .get('/Reservation')
       .expect(200)
       .expect(function (res) {
-        return expect(res.body).to.have.length(5);
+        return expect(res.body).to.have.length(6);
       });
   });
   it('should be able to get a single reservation', function () {

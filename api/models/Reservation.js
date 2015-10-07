@@ -1,3 +1,5 @@
+var moment = require('moment');
+
 module.exports = {
   schema: true,
   autoCreatedAt: true,
@@ -8,36 +10,31 @@ module.exports = {
       defaultsTo: true,
       required: true
     },
+    expiry: {
+      type: 'datetime',
+      //required: true,
+      defaultsTo: function () {
+        return moment().add(1, 'day').toDate();
+      }
+    },
     taskforce: {
-      type: "string",
-      required: true
+      model: 'taskforce'
     },
-    male_count: {
-      type: "integer",
-      defaultsTo: 0,
-      required: true
-    },
-    female_count: {
-      type: "integer",
-      defaultsTo: 0,
-      required: true
-    },
-    start_date: {
-      type: "date",
-      required: true
-    },
-    end_date: {
-      type: "date",
-      required: true
+    case: {
+      model: 'case'
     },
     centre: {
-      model: 'centre',
+      model: 'centre'
+    },
+    required_male: {
+      type: 'integer',
+      required: true,
+      defaultsTo: 0
+    },
+    required_female: {
+      type: 'integer',
+      required: true,
+      defaultsTo: 0
     }
-  },
-  beforeCreate: function (values, cb) {
-    // @todo: validate that end_date is after start date
-    // @todo: validate that start_date is >= 3 days in the future
-    cb();
   }
 };
-
