@@ -1,7 +1,6 @@
 var Sails = require('sails');
 var Barrels = require('barrels');
 var freeport = require('freeport');
-
 var barrels = new Barrels();
 
 // Global before hook
@@ -32,13 +31,14 @@ before(function (done) {
   });
 });
 
-beforeEach(function () {
+beforeEach(function (done) {
   // Load fixtures
-  return barrels.populate();
+  return barrels.populate(function () {
+    done();
+  });
 });
 
 // Global after hook
 after(function (done) {
-  console.log(); // Skip a line before displaying Sails lowering logs
   sails.lower(done);
 });
