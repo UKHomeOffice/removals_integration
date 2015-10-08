@@ -12,7 +12,7 @@ module.exports = {
     },
     expiry: {
       type: 'datetime',
-      //required: true,
+      required: true,
       defaultsTo: function () {
         return moment().add(1, 'day').toDate();
       }
