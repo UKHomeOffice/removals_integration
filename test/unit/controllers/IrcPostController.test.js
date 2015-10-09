@@ -3,6 +3,7 @@ var _ = require('lodash');
 var chai = require('chai');
 var expect = chai.expect;
 chai.use(require('chai-as-promised'));
+var json_schema_faker = require('json-schema-faker');
 
 
 describe('IrcPostController', function () {
@@ -34,41 +35,24 @@ describe('IrcPostController', function () {
     });
   });
 
-  describe('Json Schema should pass all fake data', function () {
-    var faker = require('faker');
-    var x = 0;
-    while (x < 100) // set test range
-    {
-      it('should pass', function () {
-        base_json = _.assign(require('../../scenarios/detainee_checked_out.json'), {
-          trans_id: faker.random.number(),
-          centre: faker.random.arrayElement(['bigone', 'smallone', 'harmondsworth']),
-          operation: faker.random.arrayElement(['in', 'out', 'ooc', 'bic', 'tra']),
-          centre_to: faker.random.arrayElement(['heathrow', 'colnbrook', 'hamanoth']),
-          gender: faker.random.arrayElement(['m', 'f', 'na']),
-          nationality: (faker.address.countryCode().toLowerCase()),
-          cid_id: _.random(0, 999999),
-          bed_counts: {
-            male: _.random(0, 100),
-            female: _.random(0, 100),
-            out_of_commission: {
-              ooc_male: _.random(0, 100),
-              ooc_female: _.random(0, 100),
-              details: [{
-                ref: faker.random.arrayElement(['ref1', 'ref2', 'ref3']),
-                reason: faker.random.arrayElement(['bed bugs', 'fire', 'broken']),
-                gender: faker.random.arrayElement(['m', 'f', 'na'])
-              }]
-            }
-          }
-        });
+  describe('Use JSON schema to generate false data', function () {
+    var schema = require('../../../api/services/request_schemas/irc.json');
+    return _.times(10, function (n) {
+      return it('Should pass with generated data ' + n, function () {
+        var generated_json = json_schema_faker(schema);
+        // need to force a valid centre
+        generated_json.centre = 'harmondsworth';
         return request(sails.hooks.http.app)
           .post('/IrcPost')
-          .send(base_json)
-          .expect(200);
+          .send(generated_json)
+          .expect(200)
+          .toPromise()
+          .catch(function (error) {
+            error.message += JSON.stringify(generated_json, null, " ");
+            throw error;
+          });
       });
-      x++;
-    }
+    });
   });
 
   describe('all scenarios should fail json schema check', function () {
