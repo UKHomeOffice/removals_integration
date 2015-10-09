@@ -1,0 +1,13 @@
+@import '../../node_modules/govuk_frontend_toolkit/stylesheets/colours';
+
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+h1 {
+  color: $home-office;
+}
+
+a {
+  color: #00B7FF;
+}

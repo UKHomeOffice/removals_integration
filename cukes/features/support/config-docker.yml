@@ -1,0 +1,2 @@
+dashboard_host: http://192.168.99.100:3000
+update_centre_host: http://192.168.99.100:3000

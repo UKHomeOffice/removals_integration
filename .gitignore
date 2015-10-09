@@ -3,3 +3,5 @@ node/config.js
 .*
 */.*
 *~
+
+express_api_spike/node_modules/*

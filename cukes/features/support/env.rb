@@ -5,6 +5,10 @@ require 'faraday_middleware'
 require 'date'
 require 'active_support/all'
 require 'selenium-webdriver'
+require 'csv_hasher'
+
+require_relative '../lib/DC_data/post_data.rb'
+
 
 
 
@@ -59,8 +63,8 @@ end
 def dashboard_api
   @dashboard_api = Faraday.new(:url => config('dashboard_host')) do |faraday|
     #faraday.response :logger
-    faraday.response :json, :content_type => /\bjson$/
+    # faraday.response :json, :content_type => /\bjson$/
     faraday.use Faraday::Adapter::NetHttp
-    faraday.use FaradayMiddleware::ParseJson
+    # faraday.use FaradayMiddleware::ParseJson
   end
 end

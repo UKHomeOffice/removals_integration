@@ -1,0 +1,41 @@
+<h1>{{title}}</h1>
+<p>Welcome to {{title}}</p>
+
+<table border="1">
+<thead>
+    <tr>
+        <th>ID</th>
+        <th>CENTRE NAME</th>
+        <th>FULL CAPACITY</th>
+        <th>MALE CAPACITY</th>
+        <th>FEMALE CAPACITY</th>
+        <th>CURRENT MALE BEDS</th>
+        <th>CURRENT FEMALE BEDS</th>
+        <th>OOC MALE BEDS</th>
+        <th>OOC FEMALE BEDS</th>
+        <th>DAILY CAP</th>
+        <th>UNISEX</th>
+        <th>RESERVABLE</th>
+        <th>FAST TRACK</th>
+    </tr>
+</thead>
+<tbody>
+{{#each data}}
+    <tr>
+        <td>{{centre_id}}</td>
+        <td>{{name}}</td>
+        <td>{{full_capacity}}</td>
+        <td>{{male_capacity}}</td>
+        <td>{{female_capacity}}</td>
+        <td>{{current_male_beds}}</td>
+        <td>{{current_female_beds}}</td>
+        <td>{{ooc_male_beds}}</td>
+        <td>{{ooc_female_beds}}</td>
+        <td>{{daily_cap}}</td>
+        <td>{{unisex}}</td>
+        <td>{{reservable}}</td>
+        <td>{{fast_track}}</td>
+    </tr>
+{{/each}}
+</tbody>
+</table>
