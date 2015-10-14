@@ -18,6 +18,7 @@
     "moment": "^2.10.6",
     "pm2": "^0.15.7",
     "rc": "~0.5.0",
+    "removals_schema": "ukhomeoffice/removals_schema#0.1",
     "sails": "~0.11.0",
     "sails-disk": "~0.10.0",
     "tv4": "^1.2.7"
@@ -34,8 +35,7 @@
     "type": "git",
     "url": "git@github.com:UKHomeOffice/removals_integration.git"
   },
-  "author": "cns",
-  "license": "",
+  "license": "GPLv2",
   "devDependencies": {
     "barrels": "^1.5.0",
     "chai": "^3.3.0",
