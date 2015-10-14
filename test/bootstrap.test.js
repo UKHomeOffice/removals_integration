@@ -3,6 +3,15 @@ var Barrels = require('barrels');
 var freeport = require('freeport');
 var barrels = new Barrels();
 
+global.chai = require('chai')
+  .use(require('chai-as-promised'))
+  .use(require('sinon-chai'));
+global.expect = chai.expect;
+global._ = require('lodash');
+global.request = require('supertest-as-promised');
+global.sinon = require('sinon');
+
+
 // Global before hook
 before(function (done) {
   // Lift Sails with test database

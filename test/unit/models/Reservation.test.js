@@ -1,9 +1,3 @@
-var chai = require('chai')
-  .use(require("chai-as-promised"));
-var expect = chai.expect;
-var sinon = require('sinon');
-var _ = require('lodash');
-
 describe('Reservation Model', function () {
 
   var valid_reservation = {

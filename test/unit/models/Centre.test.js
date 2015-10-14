@@ -1,8 +1,4 @@
-var chai = require('chai')
-  .use(require("chai-as-promised"));
-var expect = chai.expect;
 var ValidationError = require('../../../api/lib/exceptions/ValidationError');
-
 
 describe('CentreModel', function () {
 

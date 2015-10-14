@@ -1,7 +1,3 @@
-var chai = require('chai')
-  .use(require('sinon-chai'));
-var expect = chai.expect;
-var sinon = require('sinon');
 var validation_schema = require('removals_schema').event;
 
 describe('IrcEntryEventRequestValidatorService', function () {

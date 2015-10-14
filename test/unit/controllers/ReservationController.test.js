@@ -1,7 +1,3 @@
-var request = require('supertest-as-promised');
-var chai = require('chai');
-var expect = chai.expect;
-
 describe('ReservationController', function () {
   it('should be able to get a listing of reservations', function () {
     return request(sails.hooks.http.app)

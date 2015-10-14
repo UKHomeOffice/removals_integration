@@ -1,7 +1,3 @@
-var request = require('supertest');
-var chai = require('chai');
-var expect = chai.expect;
-
 describe('WallboardController', function () {
   it('should return a valid json wallboard', function () {
     return request(sails.hooks.http.app)
