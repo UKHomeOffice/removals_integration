@@ -1,4 +1,4 @@
-var validation_schema = require('./request_schemas/irc.json');
+var validation_schema = require('removals_schema').heartbeat;
 
 module.exports = {
   validate: function (request_body) {
