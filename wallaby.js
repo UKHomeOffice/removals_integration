@@ -3,6 +3,7 @@ module.exports = function () {
     files: [
       'api/**/*.*',
       'config/**/*.*',
+      'test/helpers/**/*.*'
     ],
 
     tests: [
