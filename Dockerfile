@@ -8,6 +8,8 @@ ENV DB_HOST 127.0.0.1
 ENV DB_PORT 3306
 ENV NODE_ENV production
 
+EXPOSE 1337
+
 RUN npm test
 
 CMD ["npm start"]
