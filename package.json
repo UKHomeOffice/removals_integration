@@ -1,14 +1,16 @@
 {
   "name": "bedspacemanagement",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=4.0.0"
+  },
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
     "bluebird": "^2.10.1",
     "ejs": "~0.8.4",
     "error-factory": "^0.1.6",
-    "faker": "^3.0.1",
     "include-all": "~0.1.3",
     "jsonschema": "^1.0.2",
     "lodash": "^3.10.1",
@@ -16,8 +18,10 @@
     "moment": "^2.10.6",
     "pm2": "^0.15.7",
     "rc": "~0.5.0",
+    "removals_schema": "ukhomeoffice/removals_schema#0.1",
     "sails": "~0.11.0",
-    "sails-disk": "~0.10.0"
+    "sails-disk": "~0.10.0",
+    "tv4": "^1.2.7"
   },
   "scripts": {
     "start": "node app.js",
@@ -31,8 +35,7 @@
     "type": "git",
     "url": "git@github.com:UKHomeOffice/removals_integration.git"
   },
-  "author": "cns",
-  "license": "",
+  "license": "GPLv2",
   "devDependencies": {
     "barrels": "^1.5.0",
     "chai": "^3.3.0",
@@ -42,6 +45,7 @@
     "freeport": "^1.0.5",
     "istanbul": "^0.3.21",
     "jscs": "^2.1.1",
+    "json-schema-faker": "^0.2.1",
     "mocha": "^2.3.3",
     "mocha-multi": "^0.7.2",
     "sails-memory": "^0.10.5",

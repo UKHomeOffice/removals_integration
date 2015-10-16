@@ -4,6 +4,8 @@
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/#!documentation/models
  */
+var ValidationError = require('../lib/exceptions/ValidationError');
+
 
 module.exports = {
   schema: true,
@@ -49,6 +51,15 @@ module.exports = {
       collection: 'reservation',
       via: 'centre'
     }
+  },
+  getByName: function (name) {
+    return this.findByName(name)
+      .then(function (centre) {
+        if (centre === undefined || centre.length !== 1) {
+          throw new ValidationError("Invalid centre");
+        }
+        return centre[0];
+      });
   }
 };
 

@@ -3,6 +3,7 @@ module.exports = function () {
     files: [
       'api/**/*.*',
       'config/**/*.*',
+      'test/helpers/**/*.*'
     ],
 
     tests: [
@@ -22,8 +23,13 @@ module.exports = function () {
       require('magic-globals');
       process.env.NODE_PATH = __base;
       require('module').Module._initPaths();
-      global.chai = require('chai');
-      //global.expect = chai.expect;
+      global.chai = require('chai')
+        .use(require('chai-as-promised'))
+        .use(require('sinon-chai'));
+      global.expect = chai.expect;
+      global._ = require('lodash');
+      global.request = require('supertest-as-promised');
+      global.sinon = require('sinon');
 
       var freeport = require('freeport');
       var path = require('path');

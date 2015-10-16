@@ -1,16 +1,14 @@
 var Promise = require('bluebird');
-var validate = require('jsonschema').validate;
+var tv4 = require('tv4');
 
 var ValidationError = require('../lib/exceptions/ValidationError');
 
 module.exports = {
   validate: function (request_body, validation_schema) {
     return new Promise(function (resolve) {
-
-      var validation_response = validate(request_body, validation_schema);
-
-      if (validation_response.errors.length > 0) {
-        throw new ValidationError(validation_response.errors);
+      var result = tv4.validateMultiple(request_body, validation_schema);
+      if (result.valid !== true) {
+        throw new ValidationError(result);
       }
       return resolve(request_body);
     });
