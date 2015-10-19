@@ -8,11 +8,22 @@ var Promise = require('bluebird');
 var ValidationError = require('../lib/exceptions/ValidationError');
 
 module.exports = {
+  _config: {
+    actions: false,
+    shortcuts: false,
+    rest: false,
+    exposedMethods: [
+      'heartbeat'
+    ]
+  },
+
+  heartbeatOptions: function (req, res) {
+    return res.ok(IrcEntryHeartbeatValidatorService.schema);
+  },
 
   index: function (req, res) {
     return res.ok;
   },
-
 
   process_heartbeat: function (request_body) {
     return Centre.getByName(request_body.centre)
@@ -25,7 +36,7 @@ module.exports = {
       });
   },
 
-  heartbeat: function (req, res) {
+  heartbeatPost: function (req, res) {
     var response = IrcEntryHeartbeatValidatorService.validate(req.body)
       .catch(ValidationError, function (error) {
         res.badRequest(error.message);
@@ -43,7 +54,4 @@ module.exports = {
     return response;
   },
 
-  process_event: function (request_body) {
-
-  }
 };
