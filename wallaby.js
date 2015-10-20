@@ -30,11 +30,22 @@ module.exports = function () {
       global._ = require('lodash');
       global.request = require('supertest-as-promised');
       global.sinon = require('sinon');
+      require('sinon-as-promised')(require('bluebird'));
 
       var freeport = require('freeport');
       var path = require('path');
       var fs = require('fs');
       var existsSync = fs.existsSync;
+
+      // Replacing buildDictionary.optional to resolve hooks from local node_modules
+      var buildDictionary = require('sails/node_modules/sails-build-dictionary');
+      var originalOptional = buildDictionary.optional;
+      buildDictionary.optional = function () {
+        if (~arguments[0].dirname.indexOf('node_modules')) {
+          arguments[0].dirname = path.join(wallaby.localProjectDir, 'node_modules');
+        }
+        return originalOptional.apply(this, arguments);
+      };
 
       // Replacing existsSync to make sails not throw error when it doesn't find node module in wallaby cache.
       // Wallaby will use local node module anyway.

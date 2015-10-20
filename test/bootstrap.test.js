@@ -10,6 +10,7 @@ global.expect = chai.expect;
 global._ = require('lodash');
 global.request = require('supertest-as-promised');
 global.sinon = require('sinon');
+require('sinon-as-promised')(require('bluebird'));
 
 
 // Global before hook
