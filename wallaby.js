@@ -30,6 +30,7 @@ module.exports = function () {
       global._ = require('lodash');
       global.request = require('supertest-as-promised');
       global.sinon = require('sinon');
+      require('sinon-as-promised')(require('bluebird'));
 
       var freeport = require('freeport');
       var path = require('path');

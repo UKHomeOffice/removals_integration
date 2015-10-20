@@ -51,6 +51,7 @@
     "mocha-multi": "^0.7.2",
     "sails-memory": "^0.10.5",
     "sinon": "^1.17.1",
+    "sinon-as-promised": "^4.0.0",
     "sinon-chai": "^2.8.0",
     "supertest": "^1.1.0",
     "supertest-as-promised": "^2.0.2"
