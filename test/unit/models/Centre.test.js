@@ -7,7 +7,7 @@ describe('CentreModel', function () {
   });
 
   it('should be able to get a centre by the name', function () {
-    return expect(Centre.getByName("harmondsworth")).to.be.eventually.fulfilled;
+    return expect(Centre.getByName("anotherone")).to.be.eventually.fulfilled;
   });
 
   it('should throw exception when unable to get by name', function () {

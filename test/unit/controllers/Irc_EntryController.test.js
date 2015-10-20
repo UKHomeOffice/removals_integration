@@ -15,7 +15,7 @@ describe('Irc_EntryController', function () {
         schema = require('removals_schema').heartbeat;
         schema.properties.centre.faker = 'custom.centre';
         custom_fakes = {
-          centre: 'harmondsworth'
+          centre: 'anotherone'
         };
         fake_json = jhg(schema, custom_fakes);
       });
