@@ -4,7 +4,6 @@
  * @description :: Server-side logic for managing ircposts
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-var Promise = require('bluebird');
 var ValidationError = require('../lib/exceptions/ValidationError');
 
 module.exports = {
@@ -52,6 +51,6 @@ module.exports = {
       })
       .then(res.ok);
     return response;
-  },
+  }
 
 };

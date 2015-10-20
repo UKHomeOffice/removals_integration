@@ -1,4 +1,5 @@
 var jhg = require('../../helpers/JsonHelperGenerator');
+var ValidationError = require('../../../api/lib/exceptions/ValidationError');
 
 describe('Irc_EntryController', function () {
   var controller;
@@ -7,6 +8,7 @@ describe('Irc_EntryController', function () {
   });
 
   describe('Heartbeat', function () {
+
     describe('Heartbeat_process', function () {
       var schema, custom_fakes, fake_json;
       before(function () {
@@ -17,6 +19,7 @@ describe('Irc_EntryController', function () {
         };
         fake_json = jhg(schema, custom_fakes);
       });
+
       it('should be able to process update the centre with heartbeat information', function () {
         return expect(controller.process_heartbeat(fake_json)
           .then(function () {
@@ -30,20 +33,48 @@ describe('Irc_EntryController', function () {
           });
       });
     });
-    it('should validate the request');
-    it('should return a 403 if the request is invalid');
-    it('should validate the centre name against the centres in the database');
-    it('should return a 200 if all is good');
+
+    it('should validate the request', function () {
+      sinon.stub(IrcEntryHeartbeatValidatorService, 'validate').rejects(new ValidationError());
+      return request(sails.hooks.http.app)
+        .post('/irc_entry/heartbeat')
+        .send()
+        .then(function () {
+          return expect(IrcEntryHeartbeatValidatorService.validate).to.be.calledOnce;
+        })
+        .tap(function () {
+          IrcEntryHeartbeatValidatorService.validate.restore();
+        });
+    });
+
+    it('should return a 400 if the request is invalid', function () {
+      return request(sails.hooks.http.app)
+        .post('/irc_entry/heartbeat')
+        .send()
+        .expect(400);
+    });
+
+    it('should return a 200 if all is good', function () {
+      sinon.stub(IrcEntryHeartbeatValidatorService, 'validate').resolves(true);
+      sinon.stub(controller, 'process_heartbeat').resolves(true);
+      return request(sails.hooks.http.app)
+        .post('/irc_entry/heartbeat')
+        .send()
+        .expect(200)
+        .toPromise()
+        .tap(function () {
+          controller.process_heartbeat.restore();
+          IrcEntryHeartbeatValidatorService.validate.restore();
+        });
+    });
   });
+
   describe('Integration - Routes', function () {
-    it('should present the correct route to the heartbeat method');
-    it('should present the links available from the index');
     it('should return the schema for an options request', function () {
-      var expected = require('removals_schema').heartbeat;
+      var expected = IrcEntryHeartbeatValidatorService.schema;
       return request(sails.hooks.http.app)
         .options('/irc_entry/heartbeat')
         .expect(200, expected);
     });
   });
-
 });
