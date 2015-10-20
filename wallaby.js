@@ -25,6 +25,7 @@ module.exports = function () {
       require('module').Module._initPaths();
       global.chai = require('chai')
         .use(require('chai-as-promised'))
+        .use(require('chai-things'))
         .use(require('sinon-chai'));
       global.expect = chai.expect;
       global._ = require('lodash');

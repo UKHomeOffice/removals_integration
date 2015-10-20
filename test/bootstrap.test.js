@@ -5,6 +5,7 @@ var barrels = new Barrels();
 
 global.chai = require('chai')
   .use(require('chai-as-promised'))
+  .use(require('chai-things'))
   .use(require('sinon-chai'));
 global.expect = chai.expect;
 global._ = require('lodash');
