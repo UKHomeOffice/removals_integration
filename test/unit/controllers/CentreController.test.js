@@ -12,7 +12,7 @@ describe('CentreController', function () {
       .expect(200)
       .expect(function (res) {
         return expect(res.body).to.have.length(3)
-          .and.to.contain.a.thing.with.property('id', 1)
+          .and.to.contain.a.thing.with.property('centre_id', 1)
           .and.to.contain.a.thing.with.property('name', 'bigone');
       });
   });
@@ -23,7 +23,7 @@ describe('CentreController', function () {
       .send()
       .expect(201)
       .expect(function (res) {
-        return expect(res.body).to.have.property('id');
+        return expect(res.body).to.have.property('centre_id');
       });
   });
 

@@ -46,6 +46,28 @@ module.exports = {
       type: "integer",
       defaultsTo: 0,
       required: true
+    },
+    toJSON: function () {
+      return {
+        updated: this.updatedAt,
+        name: this.name,
+        centre_id: this.id,
+        beds: [
+          {
+            type: "male",
+            capacity: this.male_capacity,
+            occupied: this.male_in_use,
+            ooc: this.male_out_of_commission
+          },
+          {
+            type: "female",
+            capacity: this.female_capacity,
+            occupied: this.female_in_use,
+            ooc: this.female_out_of_commission
+          }
+        ],
+        links: []
+      };
     }
   },
   getByName: function (name) {
