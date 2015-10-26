@@ -53,7 +53,7 @@ describe('CentreController', function () {
   describe('Schema checks', function () {
     var validation_schema = require('../../../node_modules/removals_dashboard/assets/schema').centre;
     it('should provide valid output for a centre', function () {
-      return request(sails.hooks.http.app)
+      return request_auth(sails.hooks.http.app)
         .get('/centre/1')
         .expect(200)
         .then(function (response) {
@@ -62,7 +62,7 @@ describe('CentreController', function () {
     });
 
     it('should provide valid output for centres', function () {
-      return request(sails.hooks.http.app)
+      return request_auth(sails.hooks.http.app)
         .get('/centre')
         .expect(200)
         .then(function (response) {
