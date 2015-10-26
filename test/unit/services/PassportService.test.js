@@ -1,3 +1,3 @@
-descripe('Passport service', function () {
+describe('Passport service', function () {
   it('TODO');
 });

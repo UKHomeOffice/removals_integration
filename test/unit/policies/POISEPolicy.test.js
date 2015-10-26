@@ -1,3 +1,3 @@
-descripe('POISE policy', function () {
+describe('POISE policy', function () {
   it('TODO');
 });
