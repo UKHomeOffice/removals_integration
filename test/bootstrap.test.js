@@ -12,6 +12,11 @@ global._ = require('lodash');
 global.request = require('supertest-as-promised');
 global.sinon = require('sinon');
 require('sinon-as-promised')(require('bluebird'));
+var defaults = require('superagent-defaults');
+global.request_auth = function (app) {
+  return defaults(global.request(app))
+    .set('HTTP_EMAIL', 'test@example.com');
+};
 
 
 // Global before hook
