@@ -32,6 +32,12 @@ module.exports = function () {
       global.request = require('supertest-as-promised');
       global.sinon = require('sinon');
       require('sinon-as-promised')(require('bluebird'));
+      var defaults = require('superagent-defaults');
+      global.request_auth = function (app) {
+        return defaults(global.request(app))
+          .set('HTTP_EMAIL', 'test@example.com');
+      };
+
 
       var freeport = require('freeport');
       var path = require('path');
@@ -62,10 +68,10 @@ module.exports = function () {
       var Barrels = require('barrels');
 
       freeport(function (err, port) {
-          if (err) throw err;
+        if (err) throw err;
 
           // Lift Sails with test database
-          global.sails = Sails.lift({
+        global.sails = Sails.lift({
             hooks: {
               grunt: false,
               i18n: false
@@ -96,7 +102,7 @@ module.exports = function () {
               wallaby.start();
             });
           });
-        }
+      }
       );
     },
     env: {
