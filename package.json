@@ -25,6 +25,7 @@
   },
   "scripts": {
     "start": "node app.js",
+    "start-with-fixtures": "node utils/sails_with_fixtures.js",
     "debug": "node debug app.js",
     "test": "./node_modules/mocha/bin/mocha",
     "coverage-test": "multi='xunit=shippable/testresults/result.xml' ./node_modules/.bin/istanbul cover _mocha",
