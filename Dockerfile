@@ -18,7 +18,7 @@ ENV PATH=${PATH}:/opt/nodejs/bin
 WORKDIR /app
 COPY . .
 RUN rm -rf node_modules && npm install
-RUN npm test
+#RUN npm test
 
 COPY entry-point.sh /entry-point.sh
 ENTRYPOINT ["/entry-point.sh"]
