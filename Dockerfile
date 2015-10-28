@@ -14,11 +14,11 @@ WORKDIR /opt/nodejs
 RUN yum install -y curl git && \
     curl https://nodejs.org/dist/v4.0.0/node-v4.0.0-linux-x64.tar.gz | tar xz --strip-components=1
 ENV PATH=${PATH}:/opt/nodejs/bin
-WORKDIR /app
 
-ONBUILD COPY . /app/
-ONBUILD RUN rm -rf node_modules && npm install
-ONBUILD RUN npm test
+WORKDIR /app
+COPY . .
+RUN rm -rf node_modules && npm install
+RUN npm test
 
 COPY entry-point.sh /entry-point.sh
 ENTRYPOINT ["/entry-point.sh"]
