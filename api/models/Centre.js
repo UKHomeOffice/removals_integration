@@ -49,6 +49,7 @@ module.exports = {
     },
     toJSON: function () {
       return {
+        type: "centre",
         updated: this.updatedAt,
         name: this.name,
         centre_id: this.id,
@@ -66,7 +67,12 @@ module.exports = {
             ooc: this.female_out_of_commission
           }
         ],
-        links: []
+        links: [
+          {
+            rel: "self",
+            href: "/Centre/" + this.id
+          }
+        ]
       };
     }
   },

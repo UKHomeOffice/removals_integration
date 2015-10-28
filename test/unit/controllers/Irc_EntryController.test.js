@@ -74,7 +74,8 @@ describe('Irc_EntryController', function () {
       var expected = IrcEntryHeartbeatValidatorService.schema;
       return request(sails.hooks.http.app)
         .options('/irc_entry/heartbeat')
-        .expect(200, expected);
+        .expect(200)
+        .expect((res) => expect(res.body.data).to.eql(expected));
     });
   });
 });

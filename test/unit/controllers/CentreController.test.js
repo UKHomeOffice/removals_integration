@@ -1,4 +1,5 @@
 var jhg = require('../../helpers/JsonHelperGenerator');
+var validation_schema = require('../../../node_modules/removals_dashboard/assets/schema').centre;
 
 describe('CentreController', function () {
   var controller;
@@ -11,7 +12,7 @@ describe('CentreController', function () {
       .get('/centre')
       .expect(200)
       .expect(function (res) {
-        return expect(res.body).to.have.length(3)
+        return expect(res.body.data).to.have.length(3)
           .and.to.contain.a.thing.with.property('centre_id', 1)
           .and.to.contain.a.thing.with.property('name', 'bigone');
       });
@@ -51,13 +52,12 @@ describe('CentreController', function () {
   });
 
   describe('Schema checks', function () {
-    var validation_schema = require('../../../node_modules/removals_dashboard/assets/schema').centre;
     it('should provide valid output for a centre', function () {
       return request_auth(sails.hooks.http.app)
         .get('/centre/1')
         .expect(200)
         .then(function (response) {
-          return expect(RequestValidatorService.validate(response.body, validation_schema)).to.be.eventually.fulfilled;
+          return expect(RequestValidatorService.validate(response.body.data, validation_schema)).to.be.eventually.fulfilled;
         });
     });
 
@@ -66,7 +66,7 @@ describe('CentreController', function () {
         .get('/centre')
         .expect(200)
         .then(function (response) {
-          return _.map(response.body, function (response_body) {
+          return _.map(response.body.data, function (response_body) {
             return expect(RequestValidatorService.validate(response_body, validation_schema)).to.be.eventually.fulfilled;
           });
         });
