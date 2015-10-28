@@ -32,6 +32,8 @@ module.exports = {
         centre.male_out_of_commission = request_body.male_outofcommission;
         centre.female_out_of_commission = request_body.female_outofcommission;
         return centre.save();
+      }).tap(function (centre) {
+        Centre.publishUpdate(centre.id, centre.toJSON());
       });
   },
 
