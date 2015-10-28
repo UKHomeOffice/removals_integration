@@ -46,9 +46,6 @@ module.exports = {
         return response.cancel();
       })
       .then(this.process_heartbeat)
-      .tap(function () {
-        sails.sockets.blast('wallboardUpdate');
-      })
       .then(res.ok);
     return response;
   }
