@@ -1,4 +1,4 @@
-FROM quay.io/ukhomeofficedigital/nodejs:v1.0.0
+FROM quay.io/ukhomeofficedigital/docker-centos-base
 
 ENV DB_TYPE mysql
 ENV DB_NAME removals
@@ -8,8 +8,20 @@ ENV DB_HOST 127.0.0.1
 ENV DB_PORT 3306
 ENV NODE_ENV production
 
+RUN mkdir -p /opt/nodejs /app
+
+WORKDIR /opt/nodejs
+RUN yum install -y curl git && \
+    curl https://nodejs.org/dist/v4.0.0/node-v4.0.0-linux-x64.tar.gz | tar xz --strip-components=1
+ENV PATH=${PATH}:/opt/nodejs/bin
+
+WORKDIR /app
+COPY . .
+RUN rm -rf node_modules && npm install
+#RUN npm test
+
+COPY entry-point.sh /entry-point.sh
+ENTRYPOINT ["/entry-point.sh"]
+
 EXPOSE 1337
-
-RUN npm test
-
-CMD ["npm start"]
+CMD ["start"]
