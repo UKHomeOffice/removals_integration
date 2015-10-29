@@ -16,40 +16,32 @@ module.exports = {
     ]
   },
 
-  heartbeatOptions: function (req, res) {
-    return res.ok(IrcEntryHeartbeatValidatorService.schema);
-  },
+  heartbeatOptions: (req, res) => res.ok(IrcEntryHeartbeatValidatorService.schema),
 
-  index: function (req, res) {
-    return res.ok;
-  },
+  index: (req, res) => res.ok,
 
-  process_heartbeat: function (request_body) {
-    return Centre.getByName(request_body.centre)
-      .then(function (centre) {
+  process_heartbeat: (request_body) =>
+    Centre.getByName(request_body.centre)
+      .then((centre) => {
         centre.male_in_use = request_body.male_occupied;
         centre.female_in_use = request_body.female_occupied;
         centre.male_out_of_commission = request_body.male_outofcommission;
         centre.female_out_of_commission = request_body.female_outofcommission;
         return centre.save();
-      }).tap(function (centre) {
-        Centre.publishUpdate(centre.id, centre.toJSON());
-      });
-  },
-
-  heartbeatPost: function (req, res) {
-    var response = IrcEntryHeartbeatValidatorService.validate(req.body)
-      .catch(ValidationError, function (error) {
-        res.badRequest(error.message);
-        return response.cancel();
       })
-      .catch(function (error) {
+      .tap((centre) => Centre.publishUpdate(centre.id, centre.toJSON())),
+
+  heartbeatPost: (req, res) =>
+    promise = IrcEntryHeartbeatValidatorService.validate(req.body)
+      .catch(ValidationError, (error) => {
+        res.badRequest(error.message);
+        return promise.cancel();
+      })
+      .catch((error) => {
         res.serverError(error.message);
-        return response.cancel();
+        return promise.cancel();
       })
       .then(this.process_heartbeat)
-      .then(res.ok);
-    return response;
-  }
+      .then(res.ok)
 
 };
