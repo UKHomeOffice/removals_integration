@@ -15,7 +15,8 @@ module.exports = {
     name: {
       type: "string",
       defaultsTo: 0,
-      required: true
+      required: true,
+      unique: true
     },
     male_capacity: {
       type: "integer",
