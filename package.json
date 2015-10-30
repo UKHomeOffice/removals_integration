@@ -8,7 +8,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
-    "bluebird": "^2.10.1",
+    "bluebird": "^3.0.2",
     "ejs": "~0.8.4",
     "error-factory": "^0.1.6",
     "include-all": "~0.1.3",
