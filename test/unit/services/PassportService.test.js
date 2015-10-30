@@ -1,13 +1,11 @@
 var Passport = require('passport');
-describe('Passport service', function () {
-  beforeEach(function () {
-    sinon.stub(User, 'findOne');
-  });
-  afterEach(function () {
-    User.findOne.restore();
-  });
-  it('Should call through to User.findOne', function () {
-    PassportService.authenticate('POISE', function (err, user) {
+
+describe('INTEGRATION Passport service', () => {
+  beforeEach(() => sinon.stub(User, 'findOne'));
+  afterEach(() => User.findOne.restore());
+
+  it('Should call through to User.findOne', () => {
+    PassportService.authenticate('POISE', (err, user) => {
     })({
       headers: {
         http_email: 'foobar'

@@ -1,18 +1,19 @@
+"use strict";
 var validation_schema = require('removals_schema').event;
+var service = require('../../../api/services/IrcEntryEventValidatorService');
 
-describe('IrcEntryEventRequestValidatorService', function () {
-
-  before(function () {
-    sinon.stub(sails.services.requestvalidatorservice, 'validate');
+describe('UNIT IrcEntryEventValidatorService', function () {
+  let originalvalidatorservice;
+  before(() => {
+    originalvalidatorservice = global.RequestValidatorService;
+    global.RequestValidatorService = {
+      validate: sinon.stub()
+    };
+    service.validate({centre: 'bar'});
   });
+  after(() => global.RequestValidatorService = originalvalidatorservice);
 
-  it('Should call the RequstValidatorService', function () {
-    IrcEntryEventValidatorService.validate({});
-    return expect(sails.services.requestvalidatorservice.validate).to.be.calledWith({}, validation_schema);
-  });
-
-  after(function () {
-    sails.services.requestvalidatorservice.validate.restore();
-  });
-
+  it('Should call the RequstValidatorService', () =>
+      expect(global.RequestValidatorService.validate).to.be.calledWith({centre: 'bar'}, validation_schema)
+  );
 });

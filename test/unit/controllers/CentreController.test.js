@@ -1,7 +1,7 @@
 var jhg = require('../../helpers/JsonHelperGenerator');
 var validation_schema = require('../../../node_modules/removals_dashboard/assets/schema').centre;
 
-describe('CentreController', () => {
+describe('INTEGRATION CentreController', () => {
   var centre;
 
   beforeEach(() => Centre.create({name: _.uniqueId("test")})
@@ -10,7 +10,7 @@ describe('CentreController', () => {
 
   afterEach(() => centre.destroy());
 
-  it('should be able to get a list of all the centres', () =>
+  it.only('should be able to get a list of all the centres', () =>
       request_auth(sails.hooks.http.app)
         .get('/centre')
         .expect(200)
@@ -50,7 +50,7 @@ describe('CentreController', () => {
 
 });
 
-describe('CentreController Schema checks', () => {
+describe('INTEGRATION CentreController Schema checks', () => {
   it('should provide valid output for a centre', () =>
       request_auth(sails.hooks.http.app)
         .get('/centre/1')

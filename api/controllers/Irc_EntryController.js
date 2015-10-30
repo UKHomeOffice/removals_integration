@@ -21,27 +21,34 @@ module.exports = {
   index: (req, res) => res.ok,
 
   process_heartbeat: (request_body) =>
-    Centre.getByName(request_body.centre)
-      .then((centre) => {
-        centre.male_in_use = request_body.male_occupied;
-        centre.female_in_use = request_body.female_occupied;
-        centre.male_out_of_commission = request_body.male_outofcommission;
-        centre.female_out_of_commission = request_body.female_outofcommission;
-        return centre.save();
+    Centre.update(
+      {name: request_body.centre},
+      {
+        male_in_use: request_body.male_occupied,
+        female_in_use: request_body.female_occupied,
+        male_out_of_commission: request_body.male_outofcommission,
+        female_out_of_commission: request_body.female_outofcommission
+      }
+    )
+      .then(centres => {
+        if (centres.length !== 1) {
+          throw new ValidationError("Invalid centre");
+        }
+        return centres;
       })
-      .tap((centre) => Centre.publishUpdate(centre.id, centre.toJSON())),
+      .each(centre => {
+        Centre.publishUpdate(centre.id, centre.toJSON());
+        return centre;
+      }),
 
   heartbeatPost: (req, res) =>
     promise = IrcEntryHeartbeatValidatorService.validate(req.body)
+      .then(this.process_heartbeat)
+      .then(res.ok)
       .catch(ValidationError, (error) => {
         res.badRequest(error.message);
-        return promise.cancel();
       })
       .catch((error) => {
         res.serverError(error.message);
-        return promise.cancel();
       })
-      .then(this.process_heartbeat)
-      .then(res.ok)
-
 };
