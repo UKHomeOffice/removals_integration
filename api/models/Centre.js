@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Centre.js
  *
@@ -49,25 +50,12 @@ module.exports = {
       required: true
     },
     toJSON: function () {
-      return {
+      let response = {
         type: "centre",
         updated: this.updatedAt,
         name: this.name,
         centre_id: this.id,
-        beds: [
-          {
-            type: "male",
-            capacity: this.male_capacity,
-            occupied: this.male_in_use,
-            ooc: this.male_out_of_commission
-          },
-          {
-            type: "female",
-            capacity: this.female_capacity,
-            occupied: this.female_in_use,
-            ooc: this.female_out_of_commission
-          }
-        ],
+        beds: [],
         links: [
           {
             rel: "self",
@@ -75,11 +63,32 @@ module.exports = {
           }
         ]
       };
+      if (this.male_capacity && this.male_capacity > 0) {
+        response.beds.push(
+          {
+            type: "male",
+            capacity: this.male_capacity,
+            occupied: this.male_in_use,
+            ooc: this.male_out_of_commission
+          }
+        );
+      }
+      if (this.female_capacity && this.female_capacity > 0) {
+        response.beds.push(
+          {
+            type: "female",
+            capacity: this.female_capacity,
+            occupied: this.female_in_use,
+            ooc: this.female_out_of_commission
+          }
+        );
+      }
+      return response;
     }
   },
   getByName: function (name) {
     return this.findByName(name)
-      .then(function (centre) {
+      .then((centre) => {
         if (centre === undefined || centre.length !== 1) {
           throw new ValidationError("Invalid centre");
         }
