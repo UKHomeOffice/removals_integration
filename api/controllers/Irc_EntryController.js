@@ -16,41 +16,39 @@ module.exports = {
     ]
   },
 
-  heartbeatOptions: function (req, res) {
-    return res.ok(IrcEntryHeartbeatValidatorService.schema);
-  },
+  heartbeatOptions: (req, res) => res.ok(IrcEntryHeartbeatValidatorService.schema),
 
-  index: function (req, res) {
-    return res.ok;
-  },
+  index: (req, res) => res.ok,
 
-  process_heartbeat: function (request_body) {
-    return Centre.getByName(request_body.centre)
-      .then(function (centre) {
-        centre.male_in_use = request_body.male_occupied;
-        centre.female_in_use = request_body.female_occupied;
-        centre.male_out_of_commission = request_body.male_outofcommission;
-        centre.female_out_of_commission = request_body.female_outofcommission;
-        return centre.save();
-      });
-  },
-
-  heartbeatPost: function (req, res) {
-    var response = IrcEntryHeartbeatValidatorService.validate(req.body)
-      .catch(ValidationError, function (error) {
-        res.badRequest(error.message);
-        return response.cancel();
+  process_heartbeat: (request_body) =>
+    Centre.update(
+      {name: request_body.centre},
+      {
+        male_in_use: request_body.male_occupied,
+        female_in_use: request_body.female_occupied,
+        male_out_of_commission: request_body.male_outofcommission,
+        female_out_of_commission: request_body.female_outofcommission
+      }
+    )
+      .then(centres => {
+        if (centres.length !== 1) {
+          throw new ValidationError("Invalid centre");
+        }
+        return centres;
       })
-      .catch(function (error) {
-        res.serverError(error.message);
-        return response.cancel();
-      })
+      .each(centre => {
+        Centre.publishUpdate(centre.id, centre.toJSON());
+        return centre;
+      }),
+
+  heartbeatPost: (req, res) =>
+    promise = IrcEntryHeartbeatValidatorService.validate(req.body)
       .then(this.process_heartbeat)
-      .tap(function () {
-        sails.sockets.blast('wallboardUpdate');
+      .then(res.ok)
+      .catch(ValidationError, (error) => {
+        res.badRequest(error.message);
       })
-      .then(res.ok);
-    return response;
-  }
-
+      .catch((error) => {
+        res.serverError(error.message);
+      })
 };

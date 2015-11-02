@@ -1,4 +1,5 @@
-var validation_schema = require('removals_schema').event;
+"use strict";
+const validation_schema = require('removals_schema').event;
 
 module.exports = {
   validate: function (request_body) {

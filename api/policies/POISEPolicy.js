@@ -1,8 +1,8 @@
 /**
  * Allow any known POISE authenticated user.
  */
-module.exports = function (req, res, next) {
-  PassportService.authenticate('POISE', {session: false}, function (err, user) {
+module.exports = (req, res, next) =>
+  PassportService.authenticate('POISE', {session: false}, (err, user) => {
     if (err || user === false) {
       res.forbidden();
     }
@@ -10,4 +10,3 @@ module.exports = function (req, res, next) {
       next();
     }
   })(req, res);
-};
