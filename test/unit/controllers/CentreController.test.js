@@ -10,7 +10,7 @@ describe('INTEGRATION CentreController', () => {
 
   afterEach(() => centre.destroy());
 
-  it.only('should be able to get a list of all the centres', () =>
+  it('should be able to get a list of all the centres', () =>
       request_auth(sails.hooks.http.app)
         .get('/centre')
         .expect(200)
