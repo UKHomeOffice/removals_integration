@@ -1,7 +1,6 @@
 var policy = require('../../../api/policies/POISEPolicy');
 
 describe('UNIT POISE policy', () => {
-
   describe('forbidden', () => {
     var res = {};
     beforeEach(done => {
