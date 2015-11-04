@@ -41,8 +41,8 @@ module.exports = {
         return centre;
       }),
 
-  heartbeatPost: (req, res) =>
-    promise = IrcEntryHeartbeatValidatorService.validate(req.body)
+  heartbeatPost: function (req, res) {
+    return IrcEntryHeartbeatValidatorService.validate(req.body)
       .then(this.process_heartbeat)
       .then(res.ok)
       .catch(ValidationError, (error) => {
@@ -50,5 +50,6 @@ module.exports = {
       })
       .catch((error) => {
         res.serverError(error.message);
-      })
+      });
+  }
 };
