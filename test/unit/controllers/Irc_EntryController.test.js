@@ -45,8 +45,8 @@ describe('INTEGRATION Irc_EntryController', () => {
     );
 
     it('should return a 200 if all is good', () => {
-      sinon.stub(IrcEntryHeartbeatValidatorService, 'validate').resolves(true);
-      sinon.stub(controller, 'process_heartbeat').resolves(true);
+      sinon.stub(global.sails.services.ircentryheartbeatvalidatorservice, 'validate').resolves(true);
+      sinon.stub(global.sails.controllers.irc_entry, 'process_heartbeat').resolves(true);
       return request(sails.hooks.http.app)
         .post('/irc_entry/heartbeat')
         .send()
