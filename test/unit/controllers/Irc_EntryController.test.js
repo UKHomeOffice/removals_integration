@@ -27,22 +27,37 @@ describe('INTEGRATION Irc_EntryController', () => {
             })
       );
     });
-
-    it('should validate the request', () => {
-      sinon.stub(IrcEntryHeartbeatValidatorService, 'validate').rejects(new ValidationError());
-      return request(sails.hooks.http.app)
-        .post('/irc_entry/heartbeat')
-        .send()
-        .then(() => expect(IrcEntryHeartbeatValidatorService.validate).to.be.calledOnce)
-        .tap(() =>IrcEntryHeartbeatValidatorService.validate.restore());
-    });
-
-    it('should return a 400 if the request is invalid', () =>
-        request(sails.hooks.http.app)
+    describe('isolated verbose log level', () => {
+      beforeEach(() => {
+        sinon.stub(global.sails.log, 'verbose');
+      });
+      afterEach(() =>
+          global.sails.log.verbose.restore()
+      );
+      it('should validate the request', () => {
+        sinon.stub(IrcEntryHeartbeatValidatorService, 'validate').rejects(new ValidationError());
+        return request(sails.hooks.http.app)
           .post('/irc_entry/heartbeat')
           .send()
-          .expect(400)
-    );
+          .then(() => expect(IrcEntryHeartbeatValidatorService.validate).to.be.calledOnce)
+          .finally(IrcEntryHeartbeatValidatorService.validate.restore);
+      });
+
+      it('should return a 400 if the request is invalid', () =>
+          request(sails.hooks.http.app)
+            .post('/irc_entry/heartbeat')
+            .send()
+            .expect(400)
+      );
+      describe('Policy check', () => {
+        it('should return 403 if a poise user tries to post a heartbeat', () =>
+            request_auth(sails.hooks.http.app)
+              .post('/irc_entry/heartbeat')
+              .send()
+              .expect(403)
+        );
+      });
+    });
 
     it('should return a 200 if all is good', () => {
       sinon.stub(global.sails.services.ircentryheartbeatvalidatorservice, 'validate').resolves(true);
@@ -52,18 +67,10 @@ describe('INTEGRATION Irc_EntryController', () => {
         .send()
         .expect(200)
         .then(controller.process_heartbeat.restore)
-        .then(IrcEntryHeartbeatValidatorService.validate.restore);
+        .finally(IrcEntryHeartbeatValidatorService.validate.restore);
     });
   });
 
-  describe('Policy check', () => {
-    it('should return 403 if a poise user tries to post a heartbeat', () =>
-        request_auth(sails.hooks.http.app)
-          .post('/irc_entry/heartbeat')
-          .send()
-          .expect(403)
-    );
-  });
 
   describe('Integration - Routes', () => {
     it('should return the schema for an options request', () =>
