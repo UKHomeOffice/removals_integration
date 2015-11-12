@@ -47,8 +47,14 @@ module.exports.cors = {
    *                                                                          *
    ***************************************************************************/
 
-  origin: 'http://localhost:8000',
-
+  origin: ['http://localhost:8000',
+    'https://dashboard.ircbd.homeoffice.gov.uk',
+    'https://wallboard.ircbd.homeoffice.gov.uk',
+    'https://dashboard-ircbd-dev.notprod.homeoffice.gov.uk',
+    'https://wallboard-ircbd-dev.notprod.homeoffice.gov.uk',
+    'https://dashboard-ircbd-uat.notprod.homeoffice.gov.uk',
+    'https://wallboard-ircbd-uat.notprod.homeoffice.gov.uk'
+  ].join(),
   /***************************************************************************
    *                                                                          *
    * Allow cookies to be shared for CORS requests?                            *
