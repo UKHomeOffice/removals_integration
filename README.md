@@ -5,20 +5,16 @@
  Get [NodeJS](https://nodejs.org) via [nvm](https://github.com/creationix/nvm)
 ```
 $ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.27.1/install.sh | bash
-````
-* Install NodeJS 4.1.1
 ```
-$ nvm install 4.1.1
-$ nvm use 4.1.1
+#### Install NodeJS 5.0.0
 ```
-* Install [PM2](https://github.com/Unitech/pm2)
-```
-$ npm install -g pm2
+$ nvm install 5.0.0
+$ nvm use 5.0.0
 ```
 ### Build:
 ```
 $ npm install
-````
+```
 ### Test:
 ```
 $ npm test
@@ -32,12 +28,18 @@ $ npm run-script coverage-report
 ```
 $ npm start
 ```
-### Start multi-threaded managed server:
+### Start in production mode with MySQL server and Redis server:
+
+(set environment variables to whatever you've configured)
 ```
-$ pm2 start process.json
+NODE_ENV=productionAlter \
+DB_HOST=localhost \
+DB_port=3306 \
+DB_USER=root \
+DB_PASSWORD=root \
+DB_NAME=sails \
+REDIS_SENTINEL_SERVICE_HOST=localhost \
+REDIS_SENTINEL_SERVICE_PORT=6379 \
+PORT=8080 \
+npm start
 ```
-* Watch logs: ```$ pm2 logs```
-* See status: ```$ pm2 status```
-* Generate a system startup script ```$ pm2 startup```
-* Reload all threads: ```$ pm2 reload```
-* Further docs on PM2 see [here](https://github.com/Unitech/pm2)
