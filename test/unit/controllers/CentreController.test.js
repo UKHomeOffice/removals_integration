@@ -11,7 +11,7 @@ describe('INTEGRATION CentreController', () => {
   afterEach(() => centre.destroy());
 
   it('should be able to get a list of all the centres', () =>
-      request_auth(sails.hooks.http.app)
+      request(sails.hooks.http.app)
         .get('/centre')
         .expect(200)
         .expect(res => expect(res.body.data)
@@ -52,7 +52,7 @@ describe('INTEGRATION CentreController', () => {
 
 describe('INTEGRATION CentreController Schema checks', () => {
   it('should provide valid output for a centre', () =>
-      request_auth(sails.hooks.http.app)
+      request(sails.hooks.http.app)
         .get('/centre/1')
         .expect(200)
         .then(response =>
@@ -62,7 +62,7 @@ describe('INTEGRATION CentreController Schema checks', () => {
   );
 
   it('should provide valid output for centres', () =>
-      request_auth(sails.hooks.http.app)
+      request(sails.hooks.http.app)
         .get('/centre')
         .expect(200)
         .then(response =>
