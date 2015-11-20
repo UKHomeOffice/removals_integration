@@ -6,9 +6,8 @@
  * @docs        :: http://sailsjs.org/#!documentation/models
  */
 var ValidationError = require('../lib/exceptions/ValidationError');
-
-
-module.exports = {
+var LinkingModels = require('sails-linking-models');
+const model = {
   schema: true,
   autoCreatedAt: true,
   autoUpdatedAt: true,
@@ -56,12 +55,7 @@ module.exports = {
         name: this.name,
         centre_id: this.id,
         beds: [],
-        links: [
-          {
-            rel: "self",
-            href: "/Centre/" + this.id
-          }
-        ]
+        links: this.modelLinks('centre', reverseRouteService)
       };
       if (this.male_capacity && this.male_capacity > 0) {
         response.beds.push(
@@ -97,3 +91,4 @@ module.exports = {
   }
 };
 
+module.exports = LinkingModels.mixin(model);
