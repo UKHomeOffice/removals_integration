@@ -8,7 +8,7 @@ ENV DB_HOST 127.0.0.1
 ENV DB_PORT 3306
 ENV NODE_ENV production
 
-RUN mkdir -p /opt/nodejs 
+RUN mkdir -p /opt/nodejs
 
 WORKDIR /opt/nodejs
 RUN yum update -y && yum clean all
@@ -20,11 +20,7 @@ USER app
 ENV PATH=${PATH}:/opt/nodejs/bin
 WORKDIR /home/app
 COPY . .
-RUN rm -rf node_modules && npm install --no-optional 
-
-# This attempts to delete yum for some reason.  Blah
-#USER root
-#RUN yum remove -y curl git
+RUN rm -rf node_modules && npm install --no-optional
 
 USER app
 COPY entry-point.sh /entry-point.sh
