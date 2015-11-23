@@ -8,12 +8,11 @@ ENV DB_HOST 127.0.0.1
 ENV DB_PORT 3306
 ENV NODE_ENV production
 
-RUN mkdir -p /opt/nodejs
+RUN RUN rpm --rebuilddb && yum update -y && yum install -y curl git && yum clean all
 
+RUN mkdir -p /opt/nodejs
 WORKDIR /opt/nodejs
-RUN yum update -y && yum clean all
-RUN yum install -y curl git && \
-    curl https://nodejs.org/dist/v4.2.2/node-v4.2.2-linux-x64.tar.gz | tar xz --strip-components=1
+RUN curl https://nodejs.org/dist/v4.2.2/node-v4.2.2-linux-x64.tar.gz | tar xz --strip-components=1
 
 RUN useradd app
 USER app
