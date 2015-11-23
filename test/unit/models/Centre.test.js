@@ -38,7 +38,8 @@ describe('UNIT CentreModel', () => {
       male_in_use: 4,
       female_in_use: 4,
       male_out_of_commission: 3,
-      female_out_of_commission: 9
+      female_out_of_commission: 9,
+      modelLinks: sinon.stub().returns(['links'])
     };
 
     it('should match the expected output', () => {
@@ -63,10 +64,7 @@ describe('UNIT CentreModel', () => {
           }
         ],
         links: [
-          {
-            rel: "self",
-            href: "/Centre/" + that.id
-          }
+	  'links'
         ]
       };
       return expect(model.attributes.toJSON.call(that)).to.eql(expected);
