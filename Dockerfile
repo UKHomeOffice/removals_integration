@@ -8,7 +8,7 @@ ENV DB_HOST 127.0.0.1
 ENV DB_PORT 3306
 ENV NODE_ENV production
 
-RUN RUN rpm --rebuilddb && yum update -y && yum install -y curl git && yum clean all
+RUN rpm --rebuilddb && yum update -y && yum install -y curl git && yum clean all
 
 RUN mkdir -p /opt/nodejs
 WORKDIR /opt/nodejs
