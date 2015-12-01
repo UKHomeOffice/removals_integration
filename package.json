@@ -20,6 +20,7 @@
     "removals_schema": "ukhomeoffice/removals_schema#RELEASE/0.1.2",
     "sails": "~0.11.0",
     "sails-controller-driven-routing": "^1.0.0",
+    "sails-linking-controllers": "^1.0.3",
     "sails-linking-models": "^1.0.9",
     "sails-mysql": "^0.11.0",
     "sails-reverse-routing": "^1.0.12",
