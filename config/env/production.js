@@ -9,7 +9,7 @@ module.exports = {
   port: 8000,
   sockets: {
     adapter: 'redis',
-    host: process.env.REDIS_SENTINEL_SERVICE_HOST,
-    port: process.env.REDIS_SENTINEL_SERVICE_PORT
+    host: process.env.REDIS_SERVICE_HOST,
+    port: process.env.REDIS_SERVICE_PORT
   }
 };
