@@ -5,7 +5,7 @@ describe('INTEGRATION Passport service', () => {
   afterEach(() => User.findOne.restore());
 
   it('Should call through to User.findOne', () => {
-    PassportService.authenticate('POISE', (err, user) => {
+    PassportService.authenticate('Header', (err, user) => {
     })({
       headers: {
         http_email: 'foobar'
