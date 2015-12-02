@@ -11,5 +11,10 @@ module.exports = {
     adapter: 'redis',
     host: process.env.REDIS_SERVICE_HOST,
     port: process.env.REDIS_SERVICE_PORT
+  },
+  session: {
+    adapter: 'redis',
+    host: process.env.REDIS_SERVICE_HOST,
+    port: process.env.REDIS_SERVICE_PORT
   }
 };
