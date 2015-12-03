@@ -8,13 +8,15 @@ module.exports = {
   },
   port: 8000,
   sockets: {
-    adapter: 'redis',
+    adapter: 'socket.io-redis',
     host: process.env.REDIS_SERVICE_HOST,
-    port: process.env.REDIS_SERVICE_PORT
+    port: process.env.REDIS_SERVICE_PORT,
+    db: 'sockets'
   },
   session: {
     adapter: 'redis',
     host: process.env.REDIS_SERVICE_HOST,
-    port: process.env.REDIS_SERVICE_PORT
+    port: process.env.REDIS_SERVICE_PORT,
+    db: 'sessions'
   }
 };
