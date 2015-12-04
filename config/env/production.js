@@ -11,12 +11,12 @@ module.exports = {
     adapter: 'socket.io-redis',
     host: process.env.REDIS_SERVICE_HOST,
     port: process.env.REDIS_SERVICE_PORT,
-    db: 'sockets'
+    db: 0
   },
   session: {
     adapter: 'redis',
     host: process.env.REDIS_SERVICE_HOST,
     port: process.env.REDIS_SERVICE_PORT,
-    db: 'sessions'
+    db: 1
   }
 };
