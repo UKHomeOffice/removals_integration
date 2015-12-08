@@ -51,14 +51,16 @@ const model = {
     toJSON: function () {
       let response = {
         type: "centre",
-        updated: this.updatedAt,
-        name: this.name,
-        centre_id: this.id,
-        beds: [],
+        id: this.id,
+        attributes: {
+          updated: this.updatedAt,
+          name: this.name,
+          beds: [],
+        },
         links: this.modelLinks('centre', reverseRouteService)
       };
       if (this.male_capacity && this.male_capacity > 0) {
-        response.beds.push(
+        response.attributes.beds.push(
           {
             type: "male",
             capacity: this.male_capacity,
@@ -68,7 +70,7 @@ const model = {
         );
       }
       if (this.female_capacity && this.female_capacity > 0) {
-        response.beds.push(
+        response.attributes.beds.push(
           {
             type: "female",
             capacity: this.female_capacity,
