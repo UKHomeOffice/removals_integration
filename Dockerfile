@@ -19,7 +19,10 @@ USER app
 ENV PATH=${PATH}:/opt/nodejs/bin
 WORKDIR /home/app
 COPY . .
-RUN rm -rf node_modules && npm install --no-optional && npm test
+RUN rm -rf node_modules
+RUN npm --production=false install --no-optional
+RUN NODE_ENV=development npm test
+RUN npm prune --production
 
 USER app
 COPY entry-point.sh /entry-point.sh
