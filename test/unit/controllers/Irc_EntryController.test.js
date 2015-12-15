@@ -49,14 +49,6 @@ describe('INTEGRATION Irc_EntryController', () => {
             .send()
             .expect(400)
       );
-      describe('Policy check', () => {
-        it('should return 403 if a poise user tries to post a heartbeat', () =>
-            request_auth(sails.hooks.http.app)
-              .post('/irc_entry/heartbeat')
-              .send()
-              .expect(403)
-        );
-      });
     });
 
     it('should return a 200 if all is good', () => {
