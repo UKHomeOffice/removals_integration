@@ -18,12 +18,4 @@
 
 
 module.exports.policies = {
-  'CentreController': {
-    '*': 'POISEPolicy',
-    'find': true,
-    'findOne': true
-  },
-  'Irc_EntryController': {
-    '*': 'NoPOISEPolicy'
-  }
 };
