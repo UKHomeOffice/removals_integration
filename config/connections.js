@@ -54,12 +54,12 @@ module.exports.connections = {
 
   environmentLedMysqlServer: {
     adapter: 'sails-mysql',
-    host: process.env.dbhost,
-    port: process.env.dbport,
-    user: process.env.dbuser,
-    password: process.env.dbpassword,
-    database: process.env.dbname,
-    ssl: process.env.dbssl
+    host: process.env.DBHOST,
+    port: process.env.DBPORT,
+    user: process.env.DBUSER,
+    password: process.env.DBPASS,
+    database: process.env.DBNAME,
+    ssl: process.env.DBSSL
   },
   /***************************************************************************
    *                                                                          *

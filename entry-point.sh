@@ -9,8 +9,8 @@ fi
 
 #Pickup any secrets
 for f in /etc/secrets/* ; do 
-    if test -f "$f"; then 
-        export $(basename $f)="$(eval "echo \"`<$f`\"")"
+    if test -f "$f"; then
+        export $(echo $(basename $f) | awk '{print toupper($0)}')="$(eval "echo \"`<$f`\"")" 
     fi
 done
 
