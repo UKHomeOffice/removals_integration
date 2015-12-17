@@ -33,13 +33,13 @@ $ npm start
 (set environment variables to whatever you've configured)
 ```
 NODE_ENV=productionAlter \
-DB_HOST=localhost \
-DB_port=3306 \
-DB_USER=root \
-DB_PASSWORD=root \
-DB_NAME=sails \
-REDIS_SENTINEL_SERVICE_HOST=localhost \
-REDIS_SENTINEL_SERVICE_PORT=6379 \
+DBHOST=localhost \
+DBPORT=3306 \
+DBUSER=root \
+DBPASS=root \
+DBNAME=sails \
+REDIS_SERVICE_HOST=localhost \
+REDIS_SERVICE_PORT=6379 \
 PORT=8080 \
 npm start
 ```
