@@ -2,21 +2,20 @@ var jhg = require('../../helpers/JsonHelperGenerator');
 var Validator = require('jsonapi-validator').Validator;
 var validator = new Validator();
 describe('INTEGRATION CentreController', () => {
-    var centre;
+  var centre;
 
-    beforeEach(() => Centre.create({name: _.uniqueId("test")})
-        .then(newcentre => centre = newcentre)
-    );
+  beforeEach(() => Centre.create({name: _.uniqueId("test")})
+      .then(newcentre => centre = newcentre)
+  );
 
-    afterEach(() => centre.destroy());
+  afterEach(() => centre.destroy());
 
-    it('should be able to get a list of all the centres', () =>
-      request(sails.hooks.http.app)
-        .get('/centres')
-        .expect(200)
-        .expect(res => {
-          console.log(res.body);
-          expect(res.body.data)
+   it('should be able to get a list of all the centres', () =>
+     request(sails.hooks.http.app)
+       .get('/centres')
+       .expect(200)
+       .expect(res => {
+         expect(res.body.data)
             .to.have.length.at.least(3)
 
 
@@ -35,7 +34,7 @@ describe('INTEGRATION CentreController', () => {
           .expect(201)
           .expect(res => expect(res.body).to.have.property('id'))
           .toPromise()
-          .tap(res => Centre.destroy(res.body.centre_id))
+          .tap(res => Centre.destroy(res.body.id))
     );
 
     it('should be able to update an existing centre', () =>
@@ -64,8 +63,10 @@ describe('INTEGRATION CentreController Schema checks', () => {
       request(sails.hooks.http.app)
         .get('/centres/1')
         .expect(200)
-        .then(response =>
+        .then(response => {
+          console.log(response.body);
           expect(validator.isValid(response.body)).to.be.true
+        }
       )
   );
 
