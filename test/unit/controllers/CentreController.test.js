@@ -1,75 +1,80 @@
 var jhg = require('../../helpers/JsonHelperGenerator');
-var validation_schema = require('../../../node_modules/removals_dashboard/assets/schema').centre;
-
+var Validator = require('jsonapi-validator').Validator;
+var validator = new Validator();
 describe('INTEGRATION CentreController', () => {
-  var centre;
+    var centre;
 
-  beforeEach(() => Centre.create({name: _.uniqueId("test")})
-      .then(newcentre => centre = newcentre)
-  );
+    beforeEach(() => Centre.create({name: _.uniqueId("test")})
+        .then(newcentre => centre = newcentre)
+    );
 
-  afterEach(() => centre.destroy());
+    afterEach(() => centre.destroy());
 
-  it('should be able to get a list of all the centres', () =>
+    it('should be able to get a list of all the centres', () =>
       request(sails.hooks.http.app)
-        .get('/centre')
+        .get('/centres')
         .expect(200)
-        .expect(res => expect(res.body.data)
-          .to.have.length.at.least(3)
-          .and.to.contain.a.thing.with.property('centre_id', 1)
-          .and.to.contain.a.thing.with.property('name', 'bigone')
-      )
-  );
+        .expect(res => {
+          console.log(res.body);
+          expect(res.body.data)
+            .to.have.length.at.least(3)
 
-  it('should be able to add a new centre', () =>
-      request_auth(sails.hooks.http.app)
-        .post('/centre')
-        .send()
-        .expect(201)
-        .expect(res => expect(res.body).to.have.property('centre_id'))
-        .toPromise()
-        .tap(res => Centre.destroy(res.body.centre_id))
-  );
 
-  it('should be able to update an existing centre', () =>
-      request_auth(sails.hooks.http.app)
-        .post('/centre/' + centre.id)
-        .send({name: "renamed"})
-        .expect(200)
-        .then(() => Centre.findOne(centre.id))
-        .then(centre => expect(centre).to.have.property('name', 'renamed'))
-  );
+          expect(res.body.data)
+            .to.contain.a.thing.with.property('id', '1')
+            .and.to.contain.a.thing.with.property('attributes')
 
-  it('should be able to delete an existing centre', () =>
-      request_auth(sails.hooks.http.app)
-        .del('/centre/' + centre.id)
-        .expect(200)
-        .then(() => Centre.findOne(centre.id))
-        .then(centre => expect(centre).to.be.empty)
-  );
 
-});
+        }
+      ));
+
+    it('should be able to add a new centre', () =>
+        request_auth(sails.hooks.http.app)
+          .post('/centres')
+          .send()
+          .expect(201)
+          .expect(res => expect(res.body).to.have.property('id'))
+          .toPromise()
+          .tap(res => Centre.destroy(res.body.centre_id))
+    );
+
+    it('should be able to update an existing centre', () =>
+        request_auth(sails.hooks.http.app)
+          .post('/centres/' + centre.id)
+          .send({name: "renamed"})
+          .expect(200)
+          .then(() => Centre.findOne(centre.id))
+          .then(centre => expect(centre).to.have.property('name', 'renamed'))
+    );
+
+    it('should be able to delete an existing centre', () =>
+        request_auth(sails.hooks.http.app)
+          .del('/centres/' + centre.id)
+          .expect(200)
+          .then(() => Centre.findOne(centre.id))
+          .then(centre => expect(centre).to.be.empty)
+    );
+
+  }
+);
+
 
 describe('INTEGRATION CentreController Schema checks', () => {
   it('should provide valid output for a centre', () =>
       request(sails.hooks.http.app)
-        .get('/centre/1')
+        .get('/centres/1')
         .expect(200)
         .then(response =>
-          expect(RequestValidatorService.validate(response.body.data, validation_schema))
-            .to.be.eventually.fulfilled
+          expect(validator.isValid(response.body)).to.be.true
       )
   );
 
   it('should provide valid output for centres', () =>
       request(sails.hooks.http.app)
-        .get('/centre')
+        .get('/centres')
         .expect(200)
         .then(response =>
-          Promise.all(_.map(response.body.data, response_body =>
-              expect(RequestValidatorService.validate(response_body, validation_schema))
-                .to.be.eventually.fulfilled
-          ))
+          expect(validator.isValid(response.body)).to.be.true
       )
   );
 });

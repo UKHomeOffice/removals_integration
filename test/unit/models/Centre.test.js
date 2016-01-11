@@ -45,26 +45,28 @@ describe('UNIT CentreModel', () => {
     it('should match the expected output', () => {
       let that = dummy_model;
       var expected = {
-        type: "centre",
-        updated: that.updatedAt,
-        name: that.name,
-        centre_id: that.id,
-        beds: [
-          {
-            type: "male",
-            capacity: that.male_capacity,
-            occupied: that.male_in_use,
-            ooc: that.male_out_of_commission
-          },
-          {
-            type: "female",
-            capacity: that.female_capacity,
-            occupied: that.female_in_use,
-            ooc: that.female_out_of_commission
-          }
-        ],
+        attributes: {
+          name: that.name,
+          updated: that.updatedAt,
+          beds: [
+            {
+              type: "male",
+              capacity: that.male_capacity,
+              occupied: that.male_in_use,
+              ooc: that.male_out_of_commission
+            },
+            {
+              type: "female",
+              capacity: that.female_capacity,
+              occupied: that.female_in_use,
+              ooc: that.female_out_of_commission
+            }
+          ]
+        },
+        id: that.id,
+        type: "centres",
         links: [
-	  'links'
+          'links'
         ]
       };
       return expect(model.attributes.toJSON.call(that)).to.eql(expected);
@@ -73,7 +75,7 @@ describe('UNIT CentreModel', () => {
     it('should not return female bed stats if there is 0 female capacity', () => {
       let that = _.clone(dummy_model);
       that.female_capacity = 0;
-      return expect(model.attributes.toJSON.call(that))
+      return expect(model.attributes.toJSON.call(that).attributes)
         .to.have.a.property('beds')
         .and.to.contain.a.thing.with.property('type', 'male')
         .and.to.not.contain.a.thing.with.property('type', 'female');
@@ -82,7 +84,7 @@ describe('UNIT CentreModel', () => {
     it('should not return female bed stats if there is 0 male capacity', () => {
       let that = _.clone(dummy_model);
       that.male_capacity = 0;
-      return expect(model.attributes.toJSON.call(that))
+      return expect(model.attributes.toJSON.call(that).attributes)
         .to.have.a.property('beds')
         .and.to.contain.a.thing.with.property('type', 'female')
         .and.to.not.contain.a.thing.with.property('type', 'male');

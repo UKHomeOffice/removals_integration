@@ -82,7 +82,7 @@ describe('INTEGRATION Irc_EntryController', () => {
   });
 });
 
-describe('UNIT Irc_EntryController', () => {
+describe('UNIT Irc_EntryCongit git troller', () => {
   describe('index', () => {
     it('should return res.ok', () =>
         expect(controller.index(null, {ok: 'flo'})).to.eql('flo')

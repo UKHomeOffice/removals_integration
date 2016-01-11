@@ -50,12 +50,12 @@ const model = {
     },
     toJSON: function () {
       let response = {
-        type: "centre",
-        id: this.id,
+        type: "centres",
+        id: this.id.toString(),
         attributes: {
           updated: this.updatedAt,
           name: this.name,
-          beds: [],
+          beds: []
         },
         links: this.modelLinks('centre', reverseRouteService)
       };
