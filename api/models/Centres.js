@@ -47,6 +47,12 @@ const model = {
       defaultsTo: 0,
       required: true
     },
+    male_cid_name: {
+      type: "string",
+    },
+    female_cid_name: {
+      type: "string",
+    },
     toJSON: function () {
       const maleCapacity = this.male_capacity - this.male_in_use;
       const femaleCapacity = this.female_capacity - this.female_in_use;
@@ -71,6 +77,26 @@ const model = {
       return response;
     }
   },
+  getGenderAndCentreByCIDLocation: function (location) {
+    return this.findOne({
+        or: [
+          {male_cid_name: location},
+          {female_cid_name: location}
+        ]
+      }
+      )
+      .then(centre => {
+          if (!centre) {
+            return centre;
+          }
+          return {
+            centre: centre.id,
+            gender: centre.male_cid_name == location ? "male" : "female"
+          }
+        }
+      )
+  },
+
   getByName: function (name) {
     return this.findByName(name)
       .then((centre) => {
