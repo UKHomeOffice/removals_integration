@@ -107,7 +107,7 @@ describe('UNIT Cid_EntryController', () => {
         {
           centre: 1,
           detainee: 2,
-          movementOrderRef: 3,
+          id: 3,
           active: true,
         });
     });
@@ -195,7 +195,7 @@ describe('UNIT Cid_EntryController', () => {
   describe('markNonMatchingMovementsAsInactive', () => {
     it('should pass correct mapping to Movement.update', () => {
       controller.markNonMatchingMovementsAsInactive([1, 2, 3]);
-      expect(Movement.update).to.be.calledWith({movementOrderRef: {'not': [1, 2, 3]}}, {active: false});
+      expect(Movement.update).to.be.calledWith({id: {'not': [1, 2, 3]}}, {active: false});
     });
   });
 

@@ -19,7 +19,7 @@ module.exports = {
       {
         centre: movement.centre,
         detainee: movement.detainee,
-        movementOrderRef: movement['MO Ref'],
+        id: movement['MO Ref'],
         active: true,
       }
     ),
@@ -52,7 +52,7 @@ module.exports = {
 
   markNonMatchingMovementsAsInactive: movements =>
     Movement.update(
-      {movementOrderRef: {'not': movements}},
+      {id: {'not': movements}},
       {active: false}
     ),
 
@@ -69,7 +69,7 @@ module.exports = {
       .map(this.detaineeProcess)
       .map(this.movementProcess)
 
-      .map(movement => movement.movementOrderRef)
+      .map(movement => movement.id)
       .then(this.markNonMatchingMovementsAsInactive)
 
       .then(res.ok)

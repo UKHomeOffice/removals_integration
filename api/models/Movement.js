@@ -8,7 +8,6 @@ const model = {
   schema: true,
   autoCreatedAt: true,
   autoUpdatedAt: true,
-  autoPK: false,
   attributes: {
     centre: {
       model: "centre",
@@ -17,12 +16,6 @@ const model = {
     detainee: {
       model: "detainee",
       required: true
-    },
-    movementOrderRef: {
-      type: "integer",
-      required: true,
-      unique: true,
-      primaryKey: true
     },
     active: {
       type: "boolean",

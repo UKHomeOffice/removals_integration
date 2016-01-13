@@ -2,31 +2,31 @@
   {
     "centre": 1,
     "detainee": 1,
-    "movementOrderRef": 1,
+    "id": 1,
     "active": true
   },
   {
     "centre": 2,
     "detainee": 1,
-    "movementOrderRef": 2,
+    "id": 2,
     "active": true
   },
   {
     "centre": 1,
     "detainee": 2,
-    "movementOrderRef": 3,
+    "id": 3,
     "active": true
   },
   {
     "centre": 1,
     "detainee": 2,
-    "movementOrderRef": 316512,
+    "id": 316512,
     "active": false
   },
   {
     "centre": 1,
     "detainee": 3,
-    "movementOrderRef": 132023,
+    "id": 132023,
     "active": true
   }
 ]
