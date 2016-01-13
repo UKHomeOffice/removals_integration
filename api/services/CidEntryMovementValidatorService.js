@@ -22,9 +22,6 @@ const validation_schema = {
         }, {
           "type": "null"
         }]
-    },
-    CurrentRFO: {
-      type: "string"
     }
   },
   properties: {
@@ -41,7 +38,6 @@ const validation_schema = {
           "MO Ref",
           "MO Date",
           "CID Person ID",
-          "Current RFO"
         ],
         properties: {
           "Location": {"$ref": "#/definitions/Location"},
@@ -49,7 +45,6 @@ const validation_schema = {
           "MO Ref": {"$ref": "#/definitions/MORef"},
           "MO Date": {"$ref": "#/definitions/MODate"},
           "CID Person ID": {"$ref": "#/definitions/CIDPersonID"},
-          "Current RFO": {"$ref": "#/definitions/CurrentRFO"}
         }
       }
     }
