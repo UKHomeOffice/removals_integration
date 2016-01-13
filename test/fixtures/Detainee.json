@@ -1,0 +1,17 @@
+[
+  {
+    "id":1,
+    "gender": "male",
+    "cid_id": 123
+  },
+  {
+    "id": 2,
+    "gender": "male",
+    "cid_id": 321
+  },
+  {
+    "id": 3,
+    "gender": "male",
+    "cid_id": 312
+  }
+]
