@@ -52,11 +52,12 @@ module.exports = {
         port: port
       }, err => {
         if (err) throw err;
-
-        barrels.populate(done);
+        done();
       });
     });
   },
+  beforeEach: done =>
+    barrels.populate(done),
   after: done => {
     sails.lower(done);
   }
