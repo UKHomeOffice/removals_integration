@@ -45,47 +45,33 @@ describe('UNIT CentreModel', () => {
     it('should match the expected output', () => {
       let that = dummy_model;
       var expected = {
-        type: "centre",
-        updated: that.updatedAt,
-        name: that.name,
-        centre_id: that.id,
-        beds: [
-          {
-            type: "male",
-            capacity: that.male_capacity,
-            occupied: that.male_in_use,
-            ooc: that.male_out_of_commission
-          },
-          {
-            type: "female",
-            capacity: that.female_capacity,
-            occupied: that.female_in_use,
-            ooc: that.female_out_of_commission
-          }
-        ],
+        attributes: {
+          name: that.name,
+          updated: that.updatedAt,
+          maleCapacity: that.male_capacity.toString(),
+          maleInUse: that.male_in_use.toString(),
+          maleOutOfCommission: that.male_out_of_commission.toString(),
+          femaleCapacity: that.female_capacity.toString(),
+          femaleInUse: that.female_in_use.toString(),
+          femaleOutOfCommission: that.female_out_of_commission.toString()
+        },
+        id: that.id.toString(),
+        type: "centres",
         links: [
-	  'links'
+          'links'
         ]
       };
       return expect(model.attributes.toJSON.call(that)).to.eql(expected);
     });
 
-    it('should not return female bed stats if there is 0 female capacity', () => {
-      let that = _.clone(dummy_model);
-      that.female_capacity = 0;
-      return expect(model.attributes.toJSON.call(that))
-        .to.have.a.property('beds')
-        .and.to.contain.a.thing.with.property('type', 'male')
-        .and.to.not.contain.a.thing.with.property('type', 'female');
-    });
-
-    it('should not return female bed stats if there is 0 male capacity', () => {
-      let that = _.clone(dummy_model);
-      that.male_capacity = 0;
-      return expect(model.attributes.toJSON.call(that))
-        .to.have.a.property('beds')
-        .and.to.contain.a.thing.with.property('type', 'female')
-        .and.to.not.contain.a.thing.with.property('type', 'male');
+    it('Should have properties set for male and female capacity and occupancy', () => {
+      const that = _.clone(dummy_model);
+      const subject = model.attributes.toJSON.call(that).attributes
+      expect(subject).to.have.a.property('name', 'fo')
+      expect(subject).to.have.a.property('maleCapacity', '9')
+      expect(subject).to.have.a.property('femaleCapacity', '12')
+      expect(subject).to.have.a.property('maleInUse', '4')
+      expect(subject).to.have.a.property('femaleInUse', '4')
     });
 
   });
