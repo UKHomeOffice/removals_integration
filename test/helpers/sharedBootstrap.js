@@ -57,7 +57,11 @@ module.exports = {
     });
   },
   beforeEach: done =>
-    barrels.populate(done),
+    barrels.populate([
+      'centre',
+      'detainee',
+      'movement',
+    ], done),
   after: done => {
     sails.lower(done);
   }
