@@ -53,6 +53,10 @@ const model = {
     female_cid_name: {
       type: "string",
     },
+    movements: {
+      collection: 'movement',
+      via: 'centre'
+    },
     toJSON: function () {
       const maleCapacity = this.male_capacity - this.male_in_use;
       const femaleCapacity = this.female_capacity - this.female_in_use;
