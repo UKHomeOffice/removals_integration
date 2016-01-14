@@ -52,9 +52,14 @@ module.exports = {
 
   markNonMatchingMovementsAsInactive: movements =>
     Movement.update(
-      {id: {'not': movements}},
+      {id: {'not': _.map(movements, movement => movement.id)}},
       {active: false}
     ),
+
+  publishCentreUpdates: movements =>
+    Centre.find()
+      .then(centres => _.map(centres, centre => Centre.publishUpdate(centre.id, centre)))
+      .then(() => movements),
 
   movementPost: function (req, res) {
     return CidEntryMovementValidatorService.validate(req.body)
@@ -69,8 +74,8 @@ module.exports = {
       .map(this.detaineeProcess)
       .map(this.movementProcess)
 
-      .map(movement => movement.id)
       .then(this.markNonMatchingMovementsAsInactive)
+      .then(this.publishCentreUpdates)
 
       .then(res.ok)
       .catch(ValidationError, error => {
@@ -80,5 +85,4 @@ module.exports = {
         res.serverError(error.message);
       });
   }
-
 };

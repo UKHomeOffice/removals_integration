@@ -52,18 +52,22 @@ describe('INTEGRATION Cid_EntryController', () => {
   describe('pubsub', () => {
     before(() => {
       sinon.stub(Centre, 'publishUpdate').resolves({bar: 'raa'});
+      sinon.stub(Centre, 'publishAdd').resolves({bar: 'raa'});
 
     });
     after(() => {
       Centre.publishUpdate.restore();
+      Centre.publishAdd.restore();
     });
-    it.skip('should push out an update to subscribers watching the centres', () =>
-      request_auth(sails.hooks.http.app)
-        .post('/cid_entry/movement')
-        .send(validdummydata)
-        .then(() =>
-          expect(Centre.publishUpdate).to.be.called
-        )
+    it('should push out an update to subscribers watching the centres', () =>
+        request_auth(sails.hooks.http.app)
+          .post('/cid_entry/movement')
+          .send(validdummydata)
+          .then(() => expect(Centre.publishAdd).to.be.called)
+          .then(() => expect(Centre.publishUpdate).to.be.calledWith(1))
+          .then(() => expect(Centre.publishUpdate).to.be.calledWith(2))
+          .then(() => expect(Centre.publishUpdate).to.be.calledWith(3))
+      //.then(() => expect(Centre.publishUpdate).to.be.calledWith(301))
     );
   });
 });
@@ -194,7 +198,7 @@ describe('UNIT Cid_EntryController', () => {
 
   describe('markNonMatchingMovementsAsInactive', () => {
     it('should pass correct mapping to Movement.update', () => {
-      controller.markNonMatchingMovementsAsInactive([1, 2, 3]);
+      controller.markNonMatchingMovementsAsInactive([{id: 1}, {id: 2}, {id: 3}]);
       expect(Movement.update).to.be.calledWith({id: {'not': [1, 2, 3]}}, {active: false});
     });
   });

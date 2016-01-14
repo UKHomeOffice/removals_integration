@@ -20,8 +20,20 @@ const model = {
     active: {
       type: "boolean",
       defaultsTo: true,
-    }
-  }
+    },
+  },
+  afterCreate: function (record, done) {
+    this.publishCreate(record);
+    done();
+  },
+  afterUpdate: function (record, done) {
+    this.publishUpdate(record.id, record);
+    done();
+  },
+  afterDestroy: function (records, done) {
+    _.map(records, (record) => this.publishDestroy(record.id, record));
+    done();
+  },
 };
 
 module.exports = LinkingModels.mixin(ModelHelpers.mixin(model));
