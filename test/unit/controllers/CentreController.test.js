@@ -1,6 +1,6 @@
 var jhg = require('../../helpers/JsonHelperGenerator');
-var Validator = require('jsonapi-validator').Validator;
-var validator = new Validator();
+var validation_schema = require('../../../node_modules/removals_dashboard/assets/schema').centre;
+
 describe('INTEGRATION CentreController', () => {
   var centre;
 
@@ -10,72 +10,66 @@ describe('INTEGRATION CentreController', () => {
 
   afterEach(() => centre.destroy());
 
-   it('should be able to get a list of all the centres', () =>
-     request(sails.hooks.http.app)
-       .get('/centres')
-       .expect(200)
-       .expect(res => {
-         expect(res.body.data)
-            .to.have.length.at.least(3)
+  it('should be able to get a list of all the centres', () =>
+      request(sails.hooks.http.app)
+        .get('/centre')
+        .expect(200)
+        .expect(res => expect(res.body.data)
+          .to.have.length.at.least(3)
+          .and.to.contain.a.thing.with.property('centre_id', 1)
+          .and.to.contain.a.thing.with.property('name', 'bigone')
+      )
+  );
 
+  it('should be able to add a new centre', () =>
+      request_auth(sails.hooks.http.app)
+        .post('/centre')
+        .send()
+        .expect(201)
+        .expect(res => expect(res.body).to.have.property('centre_id'))
+        .toPromise()
+        .tap(res => Centre.destroy(res.body.centre_id))
+  );
 
-          expect(res.body.data)
-            .to.contain.a.thing.with.property('id', '1')
-            .and.to.contain.a.thing.with.property('attributes')
+  it('should be able to update an existing centre', () =>
+      request_auth(sails.hooks.http.app)
+        .post('/centre/' + centre.id)
+        .send({name: "renamed"})
+        .expect(200)
+        .then(() => Centre.findOne(centre.id))
+        .then(centre => expect(centre).to.have.property('name', 'renamed'))
+  );
 
+  it('should be able to delete an existing centre', () =>
+      request_auth(sails.hooks.http.app)
+        .del('/centre/' + centre.id)
+        .expect(200)
+        .then(() => Centre.findOne(centre.id))
+        .then(centre => expect(centre).to.be.empty)
+  );
 
-        }
-      ));
-
-    it('should be able to add a new centre', () =>
-        request_auth(sails.hooks.http.app)
-          .post('/centres')
-          .send()
-          .expect(201)
-          .expect(res => expect(res.body).to.have.property('id'))
-          .toPromise()
-          .tap(res => Centre.destroy(res.body.id))
-    );
-
-    it('should be able to update an existing centre', () =>
-        request_auth(sails.hooks.http.app)
-          .post('/centres/' + centre.id)
-          .send({name: "renamed"})
-          .expect(200)
-          .then(() => Centre.findOne(centre.id))
-          .then(centre => expect(centre).to.have.property('name', 'renamed'))
-    );
-
-    it('should be able to delete an existing centre', () =>
-        request_auth(sails.hooks.http.app)
-          .del('/centres/' + centre.id)
-          .expect(200)
-          .then(() => Centre.findOne(centre.id))
-          .then(centre => expect(centre).to.be.empty)
-    );
-
-  }
-);
-
+});
 
 describe('INTEGRATION CentreController Schema checks', () => {
   it('should provide valid output for a centre', () =>
       request(sails.hooks.http.app)
-        .get('/centres/1')
+        .get('/centre/1')
         .expect(200)
-        .then(response => {
-          console.log(response.body);
-          expect(validator.isValid(response.body)).to.be.true
-        }
+        .then(response =>
+          expect(RequestValidatorService.validate(response.body.data, validation_schema))
+            .to.be.eventually.fulfilled
       )
   );
 
   it('should provide valid output for centres', () =>
       request(sails.hooks.http.app)
-        .get('/centres')
+        .get('/centre')
         .expect(200)
         .then(response =>
-          expect(validator.isValid(response.body)).to.be.true
+          Promise.all(_.map(response.body.data, response_body =>
+              expect(RequestValidatorService.validate(response_body, validation_schema))
+                .to.be.eventually.fulfilled
+          ))
       )
   );
 });
