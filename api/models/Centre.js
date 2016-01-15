@@ -50,20 +50,33 @@ const model = {
     },
     toJSON: function () {
       let response = {
-        type: "centres",
-        id: this.id.toString(),
-        attributes: {
-          updated: this.updatedAt,
-          name: this.name,
-          maleCapacity: this.male_capacity.toString(),
-          femaleCapacity: this.female_capacity.toString(),
-          maleInUse: this.male_in_use.toString(),
-          femaleInUse: this.female_in_use.toString(),
-          maleOutOfCommission: this.male_out_of_commission.toString(),
-          femaleOutOfCommission: this.female_out_of_commission.toString()
-        },
+        type: "centre",
+        updated: this.updatedAt,
+        name: this.name,
+        centre_id: this.id,
+        beds: [],
         links: this.modelLinks('centre', reverseRouteService)
       };
+      if (this.male_capacity && this.male_capacity > 0) {
+        response.beds.push(
+          {
+            type: "male",
+            capacity: this.male_capacity,
+            occupied: this.male_in_use,
+            ooc: this.male_out_of_commission
+          }
+        );
+      }
+      if (this.female_capacity && this.female_capacity > 0) {
+        response.beds.push(
+          {
+            type: "female",
+            capacity: this.female_capacity,
+            occupied: this.female_in_use,
+            ooc: this.female_out_of_commission
+          }
+        );
+      }
       return response;
     }
   },
