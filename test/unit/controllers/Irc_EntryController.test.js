@@ -18,7 +18,7 @@ describe('INTEGRATION Irc_EntryController', () => {
 
       it('should be able to process update the centre with heartbeat information', () =>
           expect(controller.process_heartbeat(fake_json)
-            .then(() => Centre.findOne({name: fake_json.centre})))
+	    .then(() => Centres.findOne({name: fake_json.centre})))
             .to.eventually.contain({
               female_in_use: fake_json.female_occupied,
               female_out_of_commission: fake_json.female_outofcommission,
@@ -157,17 +157,17 @@ describe('UNIT Irc_EntryController', () => {
   describe('process_heartbeat', () => {
     let centre, fake_request, output, original_centre;
     before(() => {
-      original_centre = global.Centre;
+      original_centre = global.Centres;
       centre = {
         id: 123,
         toJSON: () => 'json'
       };
-      global.Centre = {
+      global.Centres = {
         update: sinon.stub().resolves([centre]),
         publishUpdate: sinon.stub()
       };
       fake_request = {
-        centre: 'foobar',
+	centres: 'foobar',
         male_occupied: 112,
         female_occupied: 999,
         male_outofcommission: 123,
@@ -177,11 +177,11 @@ describe('UNIT Irc_EntryController', () => {
     });
 
     after(() => {
-      global.Centre = original_centre;
+      global.Centres = original_centre;
     });
 
     it('should update the centre', () =>
-        expect(global.Centre.update).to.be.calledWith(
+	expect(global.Centres.update).to.be.calledWith(
           {name: fake_request.centre},
           {
             male_in_use: fake_request.male_occupied,
@@ -193,12 +193,11 @@ describe('UNIT Irc_EntryController', () => {
     );
 
     it('should broadcast an event', () =>
-        expect(global.Centre.publishUpdate).to.be.calledWith(centre.id, 'json')
+	expect(global.Centres.publishUpdate).to.be.calledWith(centre.id, 'json')
     );
 
     it('should return the amended centre', () =>
         expect(output).eventually.to.eql([centre])
     );
   });
-})
-;
+});
