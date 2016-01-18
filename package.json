@@ -39,7 +39,7 @@
     "type": "git",
     "url": "git@github.com:UKHomeOffice/removals_integration.git"
   },
-  "license": "GPLv2",
+  "license": "MIT",
   "devDependencies": {
     "barrels": "^1.5.0",
     "chai": "^3.3.0",
