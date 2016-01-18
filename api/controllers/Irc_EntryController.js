@@ -21,7 +21,7 @@ module.exports = {
   index: (req, res) => res.ok,
 
   process_heartbeat: (request_body) =>
-    Centre.update(
+    Centres.update(
       {name: request_body.centre},
       {
         male_in_use: request_body.male_occupied,
@@ -37,7 +37,7 @@ module.exports = {
         return centres;
       })
       .each(centre => {
-        Centre.publishUpdate(centre.id, centre.toJSON());
+	Centres.publishUpdate(centre.id, centre.toJSON());
         return centre;
       }),
 
