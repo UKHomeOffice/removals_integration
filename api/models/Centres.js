@@ -106,6 +106,21 @@ const model = {
       )
   },
 
+  afterCreate: function (record, done) {
+    this.publishCreate(record);
+    done();
+  },
+
+  afterUpdate: function (record, done) {
+    this.publishUpdate(record.id, record);
+    done();
+  },
+
+  afterDestroy: function (records, done) {
+    _.map(records, (record) => this.publishDestroy(record.id, record));
+    done();
+  },
+
   getByName: function (name) {
     return this.findByName(name)
       .then((centre) => {
