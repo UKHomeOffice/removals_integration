@@ -52,12 +52,20 @@ module.exports = {
 
   markNonMatchingMovementsAsInactive: movements =>
     Movement.update(
-      {id: {'not': _.map(movements, movement => movement.id)}},
-      {active: false}
+      {
+        id: {
+          'not': _.map(movements, movement => movement.id)
+        }
+      },
+      {
+        active: false
+      }
     ),
 
   publishCentreUpdates: movements =>
     Centres.find()
+      .populate("male_active_movements")
+      .populate("female_active_movements")
       .then(centres => _.map(centres, centre => Centres.publishUpdate(centre.id, centre)))
       .then(() => movements),
 
