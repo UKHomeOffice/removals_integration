@@ -1,3 +1,4 @@
+global.rewire = require('rewire');
 global.Sails = require('sails');
 global.Barrels = require('barrels');
 global.freeport = require('freeport');
