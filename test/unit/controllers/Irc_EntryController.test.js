@@ -42,7 +42,7 @@ describe('INTEGRATION Irc_EntryController', () => {
         sinon.stub(global.sails.log, 'verbose');
       });
       afterEach(() =>
-          global.sails.log.verbose.restore()
+        global.sails.log.verbose.restore()
       );
       it('should validate the request', () => {
         sinon.stub(IrcEntryHeartbeatValidatorService, 'validate').rejects(new ValidationError());
@@ -54,10 +54,10 @@ describe('INTEGRATION Irc_EntryController', () => {
       });
 
       it('should return a 400 if the request is invalid', () =>
-          request(sails.hooks.http.app)
-            .post('/irc_entry/heartbeat')
-            .send()
-            .expect(400)
+        request(sails.hooks.http.app)
+          .post('/irc_entry/heartbeat')
+          .send()
+          .expect(400)
       );
     });
 
@@ -73,13 +73,12 @@ describe('INTEGRATION Irc_EntryController', () => {
     });
   });
 
-
   describe('Integration - Routes', () => {
     it('should return the schema for an options request', () =>
-        request(sails.hooks.http.app)
-          .options('/irc_entry/heartbeat')
-          .expect(200)
-          .expect((res) => expect(res.body.data).to.eql(IrcEntryHeartbeatValidatorService.schema))
+      request(sails.hooks.http.app)
+        .options('/irc_entry/heartbeat')
+        .expect(200)
+        .expect((res) => expect(res.body.data).to.eql(IrcEntryHeartbeatValidatorService.schema))
     );
   });
 });
@@ -87,7 +86,7 @@ describe('INTEGRATION Irc_EntryController', () => {
 describe('UNIT Irc_EntryController', () => {
   describe('index', () => {
     it('should return res.ok', () =>
-        expect(controller.index(null, {ok: 'flo'})).to.eql('flo')
+      expect(controller.index(null, {ok: 'flo'})).to.eql('flo')
     );
   });
 
@@ -113,36 +112,35 @@ describe('UNIT Irc_EntryController', () => {
     afterEach(() => global.IrcEntryHeartbeatValidatorService = validationservice);
 
     it('Should validate the req.body', () =>
-        controller.heartbeatPost.apply(context, [req, res])
-          .then(() =>expect(global.IrcEntryHeartbeatValidatorService.validate).to.be.calledWith(req.body))
+      controller.heartbeatPost.apply(context, [req, res])
+        .then(() =>expect(global.IrcEntryHeartbeatValidatorService.validate).to.be.calledWith(req.body))
     )
 
     it('Should return res.ok', () =>
-        controller.heartbeatPost.apply(context, [req, res])
-          .then(() => expect(res.ok).to.be.calledOnce)
+      controller.heartbeatPost.apply(context, [req, res])
+        .then(() => expect(res.ok).to.be.calledOnce)
     );
 
     it('Should return res.badRequest on validationError', () => {
       global.IrcEntryHeartbeatValidatorService.validate = sinon.stub().rejects(new ValidationError('f'));
       return controller.heartbeatPost.apply(context, [req, res]).finally(() =>
-          expect(res.badRequest).to.be.calledOnce
+        expect(res.badRequest).to.be.calledOnce
       );
     });
 
     it('Should return res.serverError on validationError', () => {
       global.IrcEntryHeartbeatValidatorService.validate = sinon.stub().rejects('error');
       return controller.heartbeatPost.apply(context, [req, res]).finally(() =>
-          expect(res.serverError).to.be.calledOnce
+        expect(res.serverError).to.be.calledOnce
       );
     });
 
     it('Should not return res.ok on error', () => {
       global.IrcEntryHeartbeatValidatorService.validate = sinon.stub().rejects('error');
       return controller.heartbeatPost.apply(context, [req, res]).finally(() =>
-          expect(res.ok).to.not.be.called
+        expect(res.ok).to.not.be.called
       );
     });
-
 
   });
 
@@ -178,7 +176,7 @@ describe('UNIT Irc_EntryController', () => {
         publishUpdate: sinon.stub()
       };
       fake_request = {
-	      centres: 'foobar',
+        centre: 'foobar',
         male_occupied: 112,
         female_occupied: 999,
         male_outofcommission: 123,
@@ -193,24 +191,24 @@ describe('UNIT Irc_EntryController', () => {
     });
 
     it('should update the centre', () =>
-	     expect(global.Centres.update).to.be.calledWith(
-          {name: fake_request.centre},
-          {
-            heartbeat_recieved: new Date(),
-            male_in_use: fake_request.male_occupied,
-            female_in_use: fake_request.female_occupied,
-            male_out_of_commission: fake_request.male_outofcommission,
-            female_out_of_commission: fake_request.female_outofcommission
-          }
-        )
+      expect(global.Centres.update).to.be.calledWith(
+        {name: fake_request.centre},
+        {
+          heartbeat_recieved: new Date(),
+          male_in_use: fake_request.male_occupied,
+          female_in_use: fake_request.female_occupied,
+          male_out_of_commission: fake_request.male_outofcommission,
+          female_out_of_commission: fake_request.female_outofcommission
+        }
+      )
     );
 
     it('should broadcast an event', () =>
-	     expect(global.Centres.publishUpdate).to.be.calledWith(centre.id, 'json')
+      expect(global.Centres.publishUpdate).to.be.calledWith(centre.id, 'json')
     );
 
     it('should return the amended centre', () =>
-        expect(output).eventually.to.eql([centre])
+      expect(output).eventually.to.eql([centre])
     );
   });
 });

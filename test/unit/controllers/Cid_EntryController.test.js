@@ -51,22 +51,22 @@ describe('INTEGRATION Cid_EntryController', () => {
   });
   describe('pubsub', () => {
     before(() => {
-      sinon.stub(Centre, 'publishUpdate').resolves({bar: 'raa'});
-      sinon.stub(Centre, 'publishAdd').resolves({bar: 'raa'});
+      sinon.stub(Centres, 'publishUpdate').resolves({bar: 'raa'});
+      sinon.stub(Centres, 'publishAdd').resolves({bar: 'raa'});
 
     });
     after(() => {
-      Centre.publishUpdate.restore();
-      Centre.publishAdd.restore();
+      Centres.publishUpdate.restore();
+      Centres.publishAdd.restore();
     });
     it('should push out an update to subscribers watching the centres', () =>
         request_auth(sails.hooks.http.app)
           .post('/cid_entry/movement')
           .send(validdummydata)
-          .then(() => expect(Centre.publishAdd).to.be.called)
-          .then(() => expect(Centre.publishUpdate).to.be.calledWith(1))
-          .then(() => expect(Centre.publishUpdate).to.be.calledWith(2))
-          .then(() => expect(Centre.publishUpdate).to.be.calledWith(3))
+          .then(() => expect(Centres.publishAdd).to.be.called)
+          .then(() => expect(Centres.publishUpdate).to.be.calledWith(1))
+          .then(() => expect(Centres.publishUpdate).to.be.calledWith(2))
+          .then(() => expect(Centres.publishUpdate).to.be.calledWith(3))
       //.then(() => expect(Centre.publishUpdate).to.be.calledWith(301))
     );
   });
@@ -81,14 +81,14 @@ describe('UNIT Cid_EntryController', () => {
     sinon.stub(Detainee, 'findAndUpdateOrCreate').resolves({id: 'bar'});
     sinon.stub(Movement, 'findAndUpdateOrCreate').resolves({bar: 'foo'});
     sinon.stub(Movement, 'update').resolves({bar: 'foo'});
-    sinon.stub(Centre, 'getGenderAndCentreByCIDLocation').resolves({bar: 'raa'});
+    sinon.stub(Centres, 'getGenderAndCentreByCIDLocation').resolves({bar: 'raa'});
   });
 
   after(() => {
     Movement.findAndUpdateOrCreate.restore();
     Movement.update.restore();
     Detainee.findAndUpdateOrCreate.restore();
-    Centre.getGenderAndCentreByCIDLocation.restore();
+    Centres.getGenderAndCentreByCIDLocation.restore();
   });
 
   describe('movementOptions', () => {
@@ -164,7 +164,7 @@ describe('UNIT Cid_EntryController', () => {
     };
     it('should pass the correct mapping to Centre.getGenderAndCentreByCIDLocation', () => {
         controller.populateMovementWithCentreAndGender(dummyMovement);
-        return expect(Centre.getGenderAndCentreByCIDLocation).to.be.calledWith("helloworld");
+        return expect(Centres.getGenderAndCentreByCIDLocation).to.be.calledWith("helloworld");
       }
     );
     it('should merge the result into the response', () =>

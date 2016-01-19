@@ -11,7 +11,7 @@ module.exports = {
   roomName: 'dashboard',
 
   index: function (req, res) {
-    Centre.find()
+    Centres.find()
       .then(centres => centres)
       .map(this.populateCentre)
       .then(res.ok)
@@ -25,7 +25,7 @@ module.exports = {
   },
 
   broadcastAllCentreUpdates: function () {
-    Centre.find()
+    Centres.find()
       .then(centres => centres)
       .map(this.broadcastCentreUpdate)
   },

@@ -58,7 +58,7 @@ module.exports = {
   },
   beforeEach: done =>
     barrels.populate([
-      'centre',
+      'centres',
       'detainee',
       'movement',
     ], done),

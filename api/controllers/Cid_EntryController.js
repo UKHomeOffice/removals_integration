@@ -41,7 +41,7 @@ module.exports = {
   },
 
   populateMovementWithCentreAndGender: movement =>
-    Centre.getGenderAndCentreByCIDLocation(movement.Location)
+    Centres.getGenderAndCentreByCIDLocation(movement.Location)
       .then(result => _.merge(movement, result)),
 
   filterNonEmptyMovements: movement =>
@@ -57,8 +57,8 @@ module.exports = {
     ),
 
   publishCentreUpdates: movements =>
-    Centre.find()
-      .then(centres => _.map(centres, centre => Centre.publishUpdate(centre.id, centre)))
+    Centres.find()
+      .then(centres => _.map(centres, centre => Centres.publishUpdate(centre.id, centre)))
       .then(() => movements),
 
   movementPost: function (req, res) {

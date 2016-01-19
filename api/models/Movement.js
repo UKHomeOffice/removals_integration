@@ -10,7 +10,7 @@ const model = {
   autoUpdatedAt: true,
   attributes: {
     centre: {
-      model: "centre",
+      model: "centres",
       required: true
     },
     detainee: {
