@@ -1,4 +1,4 @@
-FROM quay.io/ukhomeofficedigital/docker-centos-base
+FROM quay.io/ukhomeofficedigital/centos-base
 
 ENV DB_TYPE mysql
 ENV DB_NAME removals
