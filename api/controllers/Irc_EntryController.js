@@ -33,16 +33,17 @@ module.exports = {
       male_out_of_commission: request_body.male_outofcommission,
       female_out_of_commission: request_body.female_outofcommission
     })
-    .then(centres => {
-      if (centres.length !== 1) {
-        throw new ValidationError("Invalid centre");
-      }
-      return centres;
-    })
-    .each(centre => {
-      Centres.publishUpdate(centre.id, centre.toJSON());
-      return centre;
-    }),
+      .then(centres => {
+        if (centres.length !== 1) {
+          throw new ValidationError("Invalid centre");
+        }
+        return centres;
+      })
+      .each(centre => {
+        Centres.publishUpdate(centre.id, centre.toJSON());
+        sails.controllers.dashboard.broadcastCentreUpdate(centre);
+        return centre;
+      }),
 
   heartbeatPost: function (req, res) {
     return IrcEntryHeartbeatValidatorService.validate(req.body)

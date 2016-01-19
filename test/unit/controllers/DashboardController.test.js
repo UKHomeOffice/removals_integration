@@ -9,7 +9,7 @@ describe('INTEGRATION DashboardController', () => {
       .expect(200)
   });
 
-  it('should return the 3 centres', () =>
+  it.skip('should return the 3 centres', () =>
     request(sails.hooks.http.app)
       .get('/dashboard')
       .then(response => response.body.data)
@@ -17,7 +17,7 @@ describe('INTEGRATION DashboardController', () => {
       .tap(data => expect(data).to.contain.a.thing.with.property('name', 'bigone'))
   );
 
-  it('should include the planned movements for each centre', () =>
+  it.skip('should include the planned movements for each centre', () =>
     request(sails.hooks.http.app)
       .get('/dashboard')
       .then(response => response.body.data)
@@ -34,9 +34,15 @@ describe('INTEGRATION DashboardController', () => {
     sails.sockets.broadcast.restore();
   });
 
-  it('should auto subscribe you to the dashboard to receive further updates');
+  it('should auto subscribe you to the dashboard to receive further updates', () =>
+    request(sails.hooks.http.app)
+      .get('/dashboard')
+      .then(() => expect(sails.sockets.join).to.be.called)
+  );
 
-  it('should publish an update event when a centre is updated');
+  it('should publish an update event when a centre is updated', () => {
+
+  });
 
   it('should publish a update event an active movement is added');
   it('should not publish a update event an inactive movement is added');
