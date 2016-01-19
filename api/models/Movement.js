@@ -5,6 +5,7 @@ var LinkingModels = require('sails-linking-models');
 var ModelHelpers = require('../lib/ModelHelpers');
 
 var setNormalisedRelationships = (record, done) => {
+  //this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645
   delete record.active_male_centre;
   delete record.active_female_centre;
   if (!record.active) {

@@ -55,10 +55,12 @@ const model = {
     },
     male_active_movements: {
       collection: 'movement',
+      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
       via: 'active_male_centre'
     },
     female_active_movements: {
       collection: 'movement',
+      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
       via: 'active_female_centre'
     },
 
