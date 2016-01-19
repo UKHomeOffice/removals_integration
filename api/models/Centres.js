@@ -81,9 +81,11 @@ const model = {
           maleOutOfCommission: this.male_out_of_commission,
           femaleOutOfCommission: this.female_out_of_commission,
           maleAvailability: maleCapacity - this.male_out_of_commission,
-          femaleAvailability: femaleCapacity - this.female_out_of_commission
+          femaleAvailability: femaleCapacity - this.female_out_of_commission,
+          maleActiveMovements: this.male_active_movements.length,
+          femaleActiveMovements: this.female_active_movements.length
         },
-        links: this.modelLinks('centre', reverseRouteService)
+        links: this.modelLinks('centres', reverseRouteService)
       };
       return response;
     }
@@ -107,7 +109,7 @@ const model = {
         }
       )
   },
-
+  
   afterCreate: function (record, done) {
     this.publishCreate(record);
     done();

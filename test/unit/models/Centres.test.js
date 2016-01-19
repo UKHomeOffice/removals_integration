@@ -39,6 +39,8 @@ describe('UNIT CentreModel', () => {
       female_in_use: 4,
       male_out_of_commission: 3,
       female_out_of_commission: 9,
+      male_active_movements: [{centres: 123, detainee: 1, id: 1}, {centres: 123, detainee: 2, id: 2}],
+      female_active_movements: [{centres: 123, detainee: 3, id: 1}],
       modelLinks: sinon.stub().returns(['links'])
     };
 
@@ -56,7 +58,9 @@ describe('UNIT CentreModel', () => {
           femaleInUse: that.female_in_use,
           femaleOutOfCommission: that.female_out_of_commission,
           maleAvailability: 2,
-          femaleAvailability: -1
+          femaleAvailability: -1,
+          maleActiveMovements: that.male_active_movements.length,
+          femaleActiveMovements: that.female_active_movements.length
         },
         id: that.id.toString(),
         type: "centre",
@@ -75,6 +79,8 @@ describe('UNIT CentreModel', () => {
       expect(subject).to.have.a.property('femaleCapacity', 12);
       expect(subject).to.have.a.property('maleInUse', 4);
       expect(subject).to.have.a.property('femaleInUse', 4);
+      expect(subject).to.have.a.property('maleActiveMovements', 2);
+      expect(subject).to.have.a.property('femaleActiveMovements', 1);
     });
 
   });
