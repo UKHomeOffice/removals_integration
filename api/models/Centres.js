@@ -55,12 +55,14 @@ const model = {
         attributes: {
           updated: this.updatedAt,
           name: this.name,
-          maleCapacity: this.male_capacity.toString(),
-          femaleCapacity: this.female_capacity.toString(),
-          maleInUse: this.male_in_use.toString(),
-          femaleInUse: this.female_in_use.toString(),
-          maleOutOfCommission: this.male_out_of_commission.toString(),
-          femaleOutOfCommission: this.female_out_of_commission.toString()
+          maleCapacity: this.male_capacity,
+          femaleCapacity: this.female_capacity,
+          maleInUse: this.male_in_use,
+          femaleInUse: this.female_in_use,
+          maleOutOfCommission: this.male_out_of_commission,
+          femaleOutOfCommission: this.female_out_of_commission,
+          maleAvailability: this.male_capacity - this.male_in_use - this.male_out_of_commission,
+          femaleAvailability: this.female_capacity - this.female_in_use - this.female_out_of_commission,
         },
         links: this.modelLinks('centre', reverseRouteService)
       };
