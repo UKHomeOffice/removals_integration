@@ -7,21 +7,21 @@ describe('UNIT CentreModel', () => {
     it('should return a centre if there is one', () => {
       let centre = {name: 'foo'};
       let that = {
-	findByName: () => Promise.resolve([centre])
+        findByName: () => Promise.resolve([centre])
       };
       return expect(model.getByName.call(that)).to.eventually.eql(centre);
     });
 
     it('should throw an exception if there if there is no matching centre', () => {
       let that = {
-	findByName: () => Promise.resolve([])
+        findByName: () => Promise.resolve([])
       };
       return expect(model.getByName.call(that)).to.be.eventually.rejectedWith(ValidationError)
     });
 
     it('should pass the name through to the findByName', () => {
       let that = {
-	findByName: sinon.stub().resolves([{name: 'foo'}])
+        findByName: sinon.stub().resolves([{name: 'foo'}])
       };
       model.getByName.call(that, 'foo');
       return expect(that.findByName).to.be.calledWith('foo');
@@ -45,21 +45,23 @@ describe('UNIT CentreModel', () => {
     it('should match the expected output', () => {
       let that = dummy_model;
       var expected = {
-	attributes: {
-	  name: that.name,
-	  updated: that.updatedAt,
-	  maleCapacity: that.male_capacity.toString(),
-	  maleInUse: that.male_in_use.toString(),
-	  maleOutOfCommission: that.male_out_of_commission.toString(),
-	  femaleCapacity: that.female_capacity.toString(),
-	  femaleInUse: that.female_in_use.toString(),
-	  femaleOutOfCommission: that.female_out_of_commission.toString()
-	},
-	id: that.id.toString(),
-	type: "centres",
-	links: [
-	  'links'
-	]
+        attributes: {
+          name: that.name,
+          updated: that.updatedAt,
+          maleCapacity: that.male_capacity,
+          maleInUse: that.male_in_use,
+          maleOutOfCommission: that.male_out_of_commission,
+          femaleCapacity: that.female_capacity,
+          femaleInUse: that.female_in_use,
+          femaleOutOfCommission: that.female_out_of_commission,
+          maleAvailability: 2,
+          femaleAvailability: -1
+        },
+        id: that.id.toString(),
+        type: "centres",
+        links: [
+          'links'
+        ]
       };
       return expect(model.attributes.toJSON.call(that)).to.eql(expected);
     });
@@ -68,10 +70,10 @@ describe('UNIT CentreModel', () => {
       const that = _.clone(dummy_model);
       const subject = model.attributes.toJSON.call(that).attributes;
       expect(subject).to.have.a.property('name', 'fo');
-      expect(subject).to.have.a.property('maleCapacity', '9');
-      expect(subject).to.have.a.property('femaleCapacity', '12');
-      expect(subject).to.have.a.property('maleInUse', '4');
-      expect(subject).to.have.a.property('femaleInUse', '4');
+      expect(subject).to.have.a.property('maleCapacity', 9);
+      expect(subject).to.have.a.property('femaleCapacity', 12);
+      expect(subject).to.have.a.property('maleInUse', 4);
+      expect(subject).to.have.a.property('femaleInUse', 4);
     });
 
   });
@@ -79,14 +81,14 @@ describe('UNIT CentreModel', () => {
 
 describe('INTEGRATION CentreModel', () => {
   it('should get the fixtures', () =>
-      expect(Centres.find()).to.eventually.have.length(3)
+    expect(Centres.find()).to.eventually.have.length(3)
   );
 
   it('should be able to get a centre by the name', () =>
-      expect(Centres.getByName("anotherone")).to.be.eventually.fulfilled
+    expect(Centres.getByName("anotherone")).to.be.eventually.fulfilled
   );
 
   it('should throw exception when unable to get by name', () =>
-      expect(Centres.getByName("invalid centre")).to.be.eventually.rejectedWith(ValidationError)
+    expect(Centres.getByName("invalid centre")).to.be.eventually.rejectedWith(ValidationError)
   );
 });
