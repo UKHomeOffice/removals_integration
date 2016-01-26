@@ -50,7 +50,7 @@ const model = {
     },
     toJSON: function () {
       let response = {
-        type: "centres",
+        type: "centre",
         id: this.id.toString(),
         attributes: {
           updated: this.updatedAt,

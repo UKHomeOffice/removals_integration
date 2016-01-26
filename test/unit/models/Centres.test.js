@@ -58,7 +58,7 @@ describe('UNIT CentreModel', () => {
           femaleAvailability: -1
         },
         id: that.id.toString(),
-        type: "centres",
+        type: "centre",
         links: [
           'links'
         ]
