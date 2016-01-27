@@ -12,6 +12,9 @@ const model = {
   autoCreatedAt: true,
   autoUpdatedAt: true,
   attributes: {
+    heartbeat_recieved: {
+      type: "datetime"
+    },
     name: {
       type: "string",
       defaultsTo: 0,
@@ -54,6 +57,7 @@ const model = {
         id: this.id.toString(),
         attributes: {
           updated: this.updatedAt,
+          heartbeatRecieved: this.heartbeat_recieved ? this.heartbeat_recieved.toString() : null,
           name: this.name,
           maleCapacity: this.male_capacity,
           femaleCapacity: this.female_capacity,
