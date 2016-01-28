@@ -17,6 +17,7 @@ module.exports = function sendOK(data, options) {
   var req = this.req;
   var res = this.res;
   var sails = req._sails;
+  var links = res.links;
 
   sails.log.silly('res.ok() :: Sending 200 ("OK") response');
 
@@ -25,9 +26,9 @@ module.exports = function sendOK(data, options) {
 
   // If appropriate, serve data as JSON(P)
   var JSONresponse = {
-    links: {
+    links: _.extend({
       self: req.baseUrl + req.url
-    },
+    }, links),
     data: data
   };
   return res.jsonx(JSONresponse);
