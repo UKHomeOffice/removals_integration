@@ -53,6 +53,7 @@
     "magic-globals": "^0.5.0",
     "mocha": "^2.3.3",
     "mocha-multi": "^0.7.2",
+    "proxyquire": "^1.7.3",
     "sails-disk": "^0.10.8",
     "sails-memory": "^0.10.5",
     "sinon": "^1.17.1",

@@ -51,13 +51,13 @@ describe('INTEGRATION Irc_EntryController', () => {
       );
     });
 
-    it('should return a 200 if all is good', () => {
+    it('should return a 201 if all is good', () => {
       sinon.stub(global.sails.services.ircentryheartbeatvalidatorservice, 'validate').resolves(true);
       sinon.stub(global.sails.controllers.irc_entry, 'process_heartbeat').resolves(true);
       return request(sails.hooks.http.app)
         .post('/irc_entry/heartbeat')
         .send()
-        .expect(200)
+        .expect(201)
         .then(controller.process_heartbeat.restore)
         .finally(IrcEntryHeartbeatValidatorService.validate.restore);
     });
