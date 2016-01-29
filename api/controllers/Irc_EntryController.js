@@ -24,6 +24,7 @@ module.exports = {
     Centres.update(
       {name: request_body.centre},
       {
+        heartbeat_recieved: new Date,
         male_in_use: request_body.male_occupied,
         female_in_use: request_body.female_occupied,
         male_out_of_commission: request_body.male_outofcommission,
