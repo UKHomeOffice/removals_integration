@@ -20,6 +20,4 @@
  * http://sailsjs.org/#/documentation/concepts/Routes/RouteTargetSyntax.html
  */
 
-module.exports.routes = {
-  'get /': 'RootController.index'
-}
+module.exports.routes = {}
