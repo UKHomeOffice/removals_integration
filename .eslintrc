@@ -1,5 +1,9 @@
 {
   "rules": {
+    "strict": [
+      2,
+      "global"
+    ],
     "indent": [
       2,
       2
@@ -51,12 +55,7 @@
     "no-new-object": 2,
     "no-new-require": 2,
     "no-new-wrappers": 1,
-    "no-param-reassign": [
-      2,
-      {
-        "props": true
-      }
-    ],
+    "no-param-reassign": 0,
     "no-path-concat": 2,
     "no-process-env": 2,
     "no-process-exit": 2,
@@ -72,7 +71,7 @@
     "no-throw-literal": 2,
     "no-undef-init": 2,
     "no-unexpected-multiline": 2,
-    "no-underscore-dangle": 2,
+    "no-underscore-dangle": 0,
     "no-unneeded-ternary": 2,
     "no-unreachable": 2,
     "no-unused-expressions": 2,
@@ -85,7 +84,7 @@
       2,
       "never"
     ],
-    "arrow-parens": 2,
+    "arrow-parens": 0,
     "arrow-spacing": 2,
     "block-scoped-var": 1,
     "brace-style": 2,
@@ -146,6 +145,7 @@
       {
         "min": 3,
         "max": 15,
+        "properties": "never",
         "exceptions": [
           "_"
         ]
@@ -259,6 +259,10 @@
     "browser": false
   },
   "globals": {
+    "reverseRouteService": true,
+    "Centres": true,
+    "RequestValidatorService": true,
+    "IrcEntryHeartbeatValidatorService": true,
     "expect": true,
     "_": true,
     "request": true,

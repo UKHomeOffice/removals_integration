@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * 200 (OK) Response
  *
@@ -10,32 +12,34 @@
  * @param  {String|Object} options
  *          - pass string to render specified view
  */
+const okCode = 200;
+const okEmptyCode = 204;
+const okPostCode = 201;
 
 var getJSONresponse = require('../lib/getJSONresponse');
 
-module.exports = function sendOK(data, options) {
-
+module.exports = function sendOK (data) {
   var req = this.req;
   var res = this.res;
   var sails = req._sails;
   var method = req.method;
-  var statusCode = 200;
+  var statusCode = okCode;
   var JSONresponse = getJSONresponse(req, res, data);
   var isEmpty = _.isEmpty(JSONresponse);
 
   if (method === 'DELETE' && isEmpty) {
-    statusCode = 204;
+    statusCode = okEmptyCode;
   }
 
   if (method === 'PUT' && isEmpty) {
-    statusCode = 204;
+    statusCode = okEmptyCode;
   }
 
   if (method === 'POST') {
-    statusCode = 201;
+    statusCode = okPostCode;
   }
 
-  sails.log.silly('res.ok() :: Sending ' + statusCode + ' ("OK") response');
+  sails.log.silly('res.ok() :: Sending ${statusCode} ("OK") response');
   res.status(statusCode);
 
   return res.jsonx(JSONresponse);
