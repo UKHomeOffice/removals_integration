@@ -15,13 +15,12 @@ var getJSONresponse = require('../lib/getJSONresponse');
 
 module.exports = function sendOK(data, options) {
 
-  // Get access to `req`, `res`, & `sails`
   var req = this.req;
   var res = this.res;
   var sails = req._sails;
   var method = req.method;
   var statusCode = 200;
-  var JSONresponse = getJSONresponse(req, data);
+  var JSONresponse = getJSONresponse(req, res, data);
   var isEmpty = _.isEmpty(JSONresponse);
 
   if (method === 'DELETE' && isEmpty) {
@@ -37,7 +36,6 @@ module.exports = function sendOK(data, options) {
   }
 
   sails.log.silly('res.ok() :: Sending ' + statusCode + ' ("OK") response');
-  // Set status code
   res.status(statusCode);
 
   return res.jsonx(JSONresponse);
