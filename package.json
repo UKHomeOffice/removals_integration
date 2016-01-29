@@ -30,10 +30,11 @@
     "start": "node app.js",
     "start-with-fixtures": "node utils/sails_with_fixtures.js",
     "debug": "node debug app.js",
-    "test": "istanbul cover node_modules/mocha/bin/_mocha",
+    "test": "istanbul cover _mocha",
     "postinstall": "precommit install",
     "coverage-test": "multi='xunit=shippable/testresults/result.xml' istanbul cover _mocha",
-    "coverage-report": "istanbul report cobertura --dir shippable/codecoverage/"
+    "coverage-report": "istanbul report cobertura --dir shippable/codecoverage/",
+    "lint": "eslint ."
   },
   "main": "app.js",
   "repository": {
@@ -67,7 +68,8 @@
   },
   "precommit": {
     "tasks": [
-      "npm test"
+      "npm test",
+      "npm run lint"
     ],
     "onDirtyState": "ask",
     "coloredOutput": true

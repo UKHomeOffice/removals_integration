@@ -1,0 +1,9 @@
+node_modules
+coverage
+.tmp
+shippable
+wallaby.js
+utils
+test
+config
+app.js

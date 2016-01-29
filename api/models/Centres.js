@@ -1,12 +1,8 @@
 "use strict";
-/**
- * Centres.js
- *
- * @description :: TODO: You might write a short summary of how this model works and what it represents here.
- * @docs        :: http://sailsjs.org/#!documentation/models
- */
+
 var ValidationError = require('../lib/exceptions/ValidationError');
 var LinkingModels = require('sails-linking-models');
+
 const model = {
   schema: true,
   autoCreatedAt: true,
@@ -52,7 +48,9 @@ const model = {
       required: true
     },
     toJSON: function () {
-      let response = {
+      const maleCapacity = this.male_capacity - this.male_in_use;
+      const femaleCapacity = this.female_capacity - this.female_in_use;
+      const response = {
         type: "centre",
         id: this.id.toString(),
         attributes: {
@@ -65,8 +63,8 @@ const model = {
           femaleInUse: this.female_in_use,
           maleOutOfCommission: this.male_out_of_commission,
           femaleOutOfCommission: this.female_out_of_commission,
-          maleAvailability: this.male_capacity - this.male_in_use - this.male_out_of_commission,
-          femaleAvailability: this.female_capacity - this.female_in_use - this.female_out_of_commission,
+          maleAvailability: maleCapacity - this.male_out_of_commission,
+          femaleAvailability: femaleCapacity - this.female_out_of_commission
         },
         links: this.modelLinks('centre', reverseRouteService)
       };
