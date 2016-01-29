@@ -38,7 +38,7 @@ describe('INTEGRATION CentreController', () => {
 
     it('should be able to update an existing centre', () =>
         request_auth(sails.hooks.http.app)
-          .post('/centres/' + centre.id)
+          .put('/centres/' + centre.id)
           .send({name: "renamed"})
           .expect(200)
           .then(() => Centres.findOne(centre.id))

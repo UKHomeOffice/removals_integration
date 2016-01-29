@@ -11,24 +11,34 @@
  *          - pass string to render specified view
  */
 
+var getJSONresponse = require('../lib/getJSONresponse');
+
 module.exports = function sendOK(data, options) {
 
   // Get access to `req`, `res`, & `sails`
   var req = this.req;
   var res = this.res;
   var sails = req._sails;
+  var method = req.method;
+  var statusCode = 200;
+  var JSONresponse = getJSONresponse(req, data);
+  var isEmpty = _.isEmpty(JSONresponse);
 
-  sails.log.silly('res.ok() :: Sending 200 ("OK") response');
+  if (method === 'DELETE' && isEmpty) {
+    statusCode = 204;
+  }
 
+  if (method === 'PUT' && isEmpty) {
+    statusCode = 204;
+  }
+
+  if (method === 'POST') {
+    statusCode = 201;
+  }
+
+  sails.log.silly('res.ok() :: Sending ' + statusCode + ' ("OK") response');
   // Set status code
-  res.status(200);
+  res.status(statusCode);
 
-  // If appropriate, serve data as JSON(P)
-  var JSONresponse = {
-    links: {
-      self: req.baseUrl + req.url
-    },
-    data: data
-  };
   return res.jsonx(JSONresponse);
 };
