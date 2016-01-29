@@ -47,6 +47,7 @@ describe('UNIT CentreModel', () => {
       var expected = {
         attributes: {
           name: that.name,
+          heartbeatRecieved: null,
           updated: that.updatedAt,
           maleCapacity: that.male_capacity,
           maleInUse: that.male_in_use,
