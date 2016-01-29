@@ -17,15 +17,25 @@ describe('INTEGRATION Irc_EntryController', () => {
       });
 
       it('should be able to process update the centre with heartbeat information', () =>
-          expect(controller.process_heartbeat(fake_json)
-	    .then(() => Centres.findOne({name: fake_json.centre})))
-            .to.eventually.contain({
-              female_in_use: fake_json.female_occupied,
-              female_out_of_commission: fake_json.female_outofcommission,
-              male_in_use: fake_json.male_occupied,
-              male_out_of_commission: fake_json.male_outofcommission
-            })
+        expect(controller.process_heartbeat(fake_json)
+          .then(() => Centres.findOne({name: fake_json.centre})))
+          .to.eventually.contain({
+            female_in_use: fake_json.female_occupied,
+            female_out_of_commission: fake_json.female_outofcommission,
+            male_in_use: fake_json.male_occupied,
+            male_out_of_commission: fake_json.male_outofcommission
+          })
       );
+      describe('with heartbeat timestamp', () => {
+        it('should update the centre heartbeat timestamp on processing an update', () => {
+          return expect(controller.process_heartbeat(fake_json)
+            .then(() => {
+              return Centres.findOne({name: fake_json.centre})
+            }))
+            .to.eventually.have.property('heartbeat_recieved')
+            .and.be.a('date')
+        });
+      })
     });
     describe('isolated verbose log level', () => {
       beforeEach(() => {
@@ -155,8 +165,9 @@ describe('UNIT Irc_EntryController', () => {
   });
 
   describe('process_heartbeat', () => {
-    let centre, fake_request, output, original_centre;
+    let centre, fake_request, output, original_centre, clock;
     before(() => {
+      clock = sinon.useFakeTimers();
       original_centre = global.Centres;
       centre = {
         id: 123,
@@ -167,7 +178,7 @@ describe('UNIT Irc_EntryController', () => {
         publishUpdate: sinon.stub()
       };
       fake_request = {
-	centres: 'foobar',
+	      centres: 'foobar',
         male_occupied: 112,
         female_occupied: 999,
         male_outofcommission: 123,
@@ -177,13 +188,15 @@ describe('UNIT Irc_EntryController', () => {
     });
 
     after(() => {
+      clock.restore();
       global.Centres = original_centre;
     });
 
     it('should update the centre', () =>
-	expect(global.Centres.update).to.be.calledWith(
+	     expect(global.Centres.update).to.be.calledWith(
           {name: fake_request.centre},
           {
+            heartbeat_recieved: new Date(),
             male_in_use: fake_request.male_occupied,
             female_in_use: fake_request.female_occupied,
             male_out_of_commission: fake_request.male_outofcommission,
@@ -193,7 +206,7 @@ describe('UNIT Irc_EntryController', () => {
     );
 
     it('should broadcast an event', () =>
-	expect(global.Centres.publishUpdate).to.be.calledWith(centre.id, 'json')
+	     expect(global.Centres.publishUpdate).to.be.calledWith(centre.id, 'json')
     );
 
     it('should return the amended centre', () =>
