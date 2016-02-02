@@ -10,6 +10,7 @@
   "dependencies": {
     "bluebird": "^3.0.2",
     "connect-redis": "1.4.x",
+    "custom-fields-middleware": "^1.0.8",
     "ejs": "~0.8.4",
     "error-factory": "^0.1.6",
     "include-all": "~0.1.3",

@@ -3,7 +3,7 @@
 var proxyquire = require('proxyquire');
 var getJSONresponse = sinon.stub();
 var okResponse = proxyquire('../../../api/responses/ok', {
-  '../lib/getJSONresponse': getJSONresponse
+  '../lib/helpers/json-api-response': getJSONresponse
 });
 
 describe('UNIT api/responses/ok', () => {
