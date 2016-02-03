@@ -11,9 +11,22 @@ global._ = require('lodash');
 global.sinon = require('sinon');
 require('sinon-as-promised')(require('bluebird'));
 global.request = require('supertest-as-promised');
+var date = new Date();
+date.setDate(date.getDate() + 1);
 global.request_auth = app =>
   require('superagent-defaults')(global.request(app))
-    .set('HTTP_EMAIL', 'test@example.com');
+    .set('x-auth-email', 'foo.bar@digital.homeoffice.gov.uk')
+    .set('x-auth-expiresin', date.toUTCString())
+    .set('x-auth-roles', '')
+    .set('x-auth-subject', 'test')
+    .set('x-auth-token', 'ejkosjlkj3elkjlkj')
+    .set('x-auth-userid', 'af53a021-94a9-4f3c-b70d-1df33a6c881e')
+    .set('x-auth-username', 'foobar')
+    .set('x-forwarded-agent', 'keycloak-proxy')
+    .set('x-forwarded-for', '127.0.0.1:38880, 127.0.0.1')
+    .set('x-forwarded-proto', 'https')
+    .set('x-forwarded-proto$', 'https')
+    .set('x-real-ip', '127.0.0.1');
 
 module.exports = {
   before: done => {
