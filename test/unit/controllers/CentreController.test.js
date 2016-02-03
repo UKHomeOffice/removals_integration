@@ -1,5 +1,8 @@
+'use strict';
+
 var Validator = require('jsonapi-validator').Validator;
 var validator = new Validator();
+
 describe('INTEGRATION CentreController', () => {
     var centre;
 
@@ -16,7 +19,6 @@ describe('INTEGRATION CentreController', () => {
         .expect(res => {
           expect(res.body.data)
             .to.have.length.at.least(3)
-
 
           expect(res.body.data)
             .to.contain.a.thing.with.property('id', '1')
@@ -52,10 +54,8 @@ describe('INTEGRATION CentreController', () => {
           .then(() => Centres.findOne(centre.id))
           .then(centre => expect(centre).to.be.empty)
     );
-
   }
 );
-
 
 describe('INTEGRATION CentreController Schema checks', () => {
   it('should provide valid output for a centre', () =>
