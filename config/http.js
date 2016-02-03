@@ -39,12 +39,10 @@ module.exports.http = {
       'handleBodyParserError',
       'compress',
       'methodOverride',
-      'poweredBy',
       '$custom',
       'customFieldsMiddleware',
       'router',
       'www',
-      'favicon',
       '404',
       '500'
     ],
