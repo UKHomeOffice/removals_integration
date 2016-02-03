@@ -1,15 +1,15 @@
 'use strict';
 
 describe('INTEGRATION RootController', () =>
-  it('should be able to get the root page', () =>
+  it('should return 200 and links', () =>
     request(sails.hooks.http.app)
       .get('/')
       .expect(200)
-      .expect(res => {
-        expect(res.body.links)
-          .to.have.property('centres')
-          .and.equal('/centres')
-
+      .expect((res) => {
+        expect(res.body.links).to.deep.equal({
+          centres: 'http://' + res.req._headers.host + '/centres',
+          self: 'http://' + res.req._headers.host + '/'
+        });
       })
   )
 );
