@@ -39,6 +39,7 @@ module.exports = {
           i18n: false,
           cors: false,
           csrf: false,
+          views: false,
           skipper: false
         },
         log: {
