@@ -39,9 +39,8 @@ Sails.lift(
         return request(sails.hooks.http.app)
           .post('/Irc_Entry/heartbeat')
           .send(update_json)
-          .expect(200)
           .toPromise()
-          .delay(2000)
+          .delay(500)
           .finally(loop);
       };
       return loop();
