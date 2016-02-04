@@ -1,6 +1,6 @@
+/* global Movement CidEntryMovementValidatorService Detainee */
+'use strict';
 var ValidationError = require('../lib/exceptions/ValidationError');
-
-var movementSchema = {};
 
 module.exports = {
   _config: {
@@ -20,7 +20,7 @@ module.exports = {
         centre: movement.centre,
         detainee: movement.detainee,
         id: movement['MO Ref'],
-        active: true,
+        active: true
       }
     ),
 
@@ -44,17 +44,15 @@ module.exports = {
     Centres.getGenderAndCentreByCIDLocation(movement.Location)
       .then(result => _.merge(movement, result)),
 
-  filterNonEmptyMovements: movement =>
-    (movement.centre &&
-    movement['MO Ref'] > 1),
+  filterNonEmptyMovements: movement => movement.centre && movement['MO Ref'] > 1,
 
-  filterOnlyInMovements: movement => movement['MO In/MO Out'] == 'in',
+  filterOnlyInMovements: movement => movement['MO In/MO Out'] === 'in',
 
   markNonMatchingMovementsAsInactive: movements =>
     Movement.update(
       {
         id: {
-          'not': _.map(movements, movement => movement.id)
+          not: _.map(movements, movement => movement.id)
         }
       },
       {

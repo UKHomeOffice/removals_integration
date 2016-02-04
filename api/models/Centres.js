@@ -48,10 +48,10 @@ const model = {
       required: true
     },
     male_cid_name: {
-      type: "string",
+      type: "string"
     },
     female_cid_name: {
-      type: "string",
+      type: "string"
     },
     male_active_movements: {
       collection: 'movement',
@@ -91,25 +91,19 @@ const model = {
     }
   },
   getGenderAndCentreByCIDLocation: function (location) {
-    return this.findOne({
+    return this.findOne(
+      {
         or: [
           {male_cid_name: location},
           {female_cid_name: location}
         ]
-      }
-      )
-      .then(centre => {
-          if (!centre) {
-            return centre;
-          }
-          return {
-            centre: centre.id,
-            gender: centre.male_cid_name == location ? "male" : "female"
-          }
-        }
-      )
+      })
+      .then(centre => centre ? {
+        centre: centre.id,
+        gender: centre.male_cid_name === location ? "male" : "female"
+      } : centre);
   },
-  
+
   afterCreate: function (record, done) {
     this.publishCreate(record);
     done();

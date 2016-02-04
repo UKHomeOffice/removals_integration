@@ -10,7 +10,7 @@ describe('INTEGRATION Cid_EntryController', () => {
       request_auth(sails.hooks.http.app)
         .post('/cid_entry/movement')
         .send(validdummydata)
-        .expect(200)
+        .expect(201)
     );
     describe('isolated verbose log level', () => {
       beforeEach(() => {
@@ -135,7 +135,7 @@ describe('UNIT Cid_EntryController', () => {
           gender: "male"
         });
     });
-    it('should return the movement with the detainee added to it', ()  =>
+    it('should return the movement with the detainee added to it', () =>
       expect(controller.detaineeProcess(dummyMovement)).to.eventually.eql({
         "gender": "male",
         "CID Person ID": 4,

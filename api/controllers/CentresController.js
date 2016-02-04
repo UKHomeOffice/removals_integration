@@ -9,7 +9,7 @@
 
 module.exports = {
   _config: {
-    populate: true,
+    populate: true
   }
 };
 

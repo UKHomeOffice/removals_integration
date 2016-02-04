@@ -20,21 +20,21 @@ describe('INTEGRATION Irc_EntryController', () => {
         expect(controller.process_heartbeat(fake_json)
           .then(() => Centres.findOne({name: fake_json.centre})))
           .to.eventually.contain({
-            female_in_use: fake_json.female_occupied,
-            female_out_of_commission: fake_json.female_outofcommission,
-            male_in_use: fake_json.male_occupied,
-            male_out_of_commission: fake_json.male_outofcommission
-          })
+          female_in_use: fake_json.female_occupied,
+          female_out_of_commission: fake_json.female_outofcommission,
+          male_in_use: fake_json.male_occupied,
+          male_out_of_commission: fake_json.male_outofcommission
+        })
       );
       describe('with heartbeat timestamp', () => {
-        it('should update the centre heartbeat timestamp on processing an update', () => {
-          return expect(controller.process_heartbeat(fake_json)
-            .then(() => {
-              return Centres.findOne({name: fake_json.centre})
-            }))
+        it('should update the centre heartbeat timestamp on processing an update', () =>
+          expect(controller.process_heartbeat(fake_json)
+            .then(() =>
+              Centres.findOne({name: fake_json.centre})
+            ))
             .to.eventually.have.property('heartbeat_recieved')
             .and.be.a('date')
-        });
+        );
       })
     });
     describe('isolated verbose log level', () => {
@@ -164,11 +164,12 @@ describe('UNIT Irc_EntryController', () => {
 
   describe('process_heartbeat', () => {
     let centre, fake_request, output, original_centre, clock;
-    before(() => {
+    beforeEach(() => {
       clock = sinon.useFakeTimers();
       original_centre = global.Centres;
       centre = {
-        id: 123
+        id: 123,
+        toJSON: () => 'json'
       };
       sinon.stub(Centres, 'update').resolves([centre]);
       fake_request = {
@@ -181,7 +182,7 @@ describe('UNIT Irc_EntryController', () => {
       output = controller.process_heartbeat(fake_request);
     });
 
-    after(() => {
+    afterEach(() => {
       clock.restore();
       global.Centres = original_centre;
       Centres.update.restore();

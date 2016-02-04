@@ -1,6 +1,6 @@
 "use strict";
 const validation_schema = {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  $schema: "http://json-schema.org/draft-04/schema#",
   type: "object",
   definitions: {
     Location: {
@@ -18,9 +18,9 @@ const validation_schema = {
     CIDPersonID: {
       oneOf: [
         {
-          "type": "integer"
+          type: "integer"
         }, {
-          "type": "null"
+          type: "null"
         }]
     }
   },
@@ -37,14 +37,14 @@ const validation_schema = {
           "MO In/MO Out",
           "MO Ref",
           "MO Date",
-          "CID Person ID",
+          "CID Person ID"
         ],
         properties: {
-          "Location": {"$ref": "#/definitions/Location"},
-          "MO In/MO Out": {"$ref": "#/definitions/InOut"},
-          "MO Ref": {"$ref": "#/definitions/MORef"},
-          "MO Date": {"$ref": "#/definitions/MODate"},
-          "CID Person ID": {"$ref": "#/definitions/CIDPersonID"},
+          Location: {$ref: "#/definitions/Location"},
+          "MO In/MO Out": {$ref: "#/definitions/InOut"},
+          "MO Ref": {$ref: "#/definitions/MORef"},
+          "MO Date": {$ref: "#/definitions/MODate"},
+          "CID Person ID": {$ref: "#/definitions/CIDPersonID"}
         }
       }
     }

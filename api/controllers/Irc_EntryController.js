@@ -24,15 +24,16 @@ module.exports = {
   index: (req, res) => res.ok,
 
   process_heartbeat: (request_body) =>
-    Centres.update({
-      name: request_body.centre
-    }, {
-      heartbeat_recieved: new Date(),
-      male_in_use: request_body.male_occupied,
-      female_in_use: request_body.female_occupied,
-      male_out_of_commission: request_body.male_outofcommission,
-      female_out_of_commission: request_body.female_outofcommission
-    })
+    Centres.update(
+      {
+        name: request_body.centre
+      }, {
+        heartbeat_recieved: new Date(),
+        male_in_use: request_body.male_occupied,
+        female_in_use: request_body.female_occupied,
+        male_out_of_commission: request_body.male_outofcommission,
+        female_out_of_commission: request_body.female_outofcommission
+      })
       .then(centres => {
         if (centres.length !== 1) {
           throw new ValidationError("Invalid centre");
@@ -41,7 +42,6 @@ module.exports = {
       })
       .each(centre => {
         Centres.publishUpdate(centre.id, centre.toJSON());
-        sails.controllers.dashboard.broadcastCentreUpdate(centre);
         return centre;
       }),
 

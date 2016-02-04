@@ -1,6 +1,5 @@
 "use strict";
 
-var ValidationError = require('../lib/exceptions/ValidationError');
 var LinkingModels = require('sails-linking-models');
 var ModelHelpers = require('../lib/ModelHelpers');
 

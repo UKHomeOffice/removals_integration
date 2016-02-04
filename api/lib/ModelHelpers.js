@@ -1,15 +1,9 @@
 "use strict";
 
 module.exports = {
-  findAndUpdateOrCreate: function findAndUpdateOrCreate(criteria, values) {
+  findAndUpdateOrCreate: function findAndUpdateOrCreate (criteria, values) {
     return this.update(criteria, values)
-      .then(result => {
-        if (!_.isEmpty(result)) {
-          return result[0];
-        } else {
-          return this.create(values);
-        }
-      })
+      .then(result => _.isEmpty(result) ? this.create(values) : result[0]);
   },
   mixin: function (model) {
     model.findAndUpdateOrCreate = this.findAndUpdateOrCreate;
