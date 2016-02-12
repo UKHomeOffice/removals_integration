@@ -5,7 +5,8 @@
     "female_capacity": 750,
     "id": 1,
     "male_cid_name": "bigone male holding",
-    "female_cid_name": "bigone female office"
+    "female_cid_name": "bigone female office",
+    "mo_type": "removal"
   },
   {
     "name": "smallone",
@@ -13,7 +14,8 @@
     "female_capacity": 300,
     "id": 2,
     "male_cid_name": "smale one male unit",
-    "female_cid_name": "small one unit"
+    "female_cid_name": "small one unit",
+    "mo_type": "occupancy"
   },
   {
     "name": "anotherone",
@@ -21,6 +23,7 @@
     "female_capacity": 573,
     "id": 3,
     "male_cid_name": "anotherone unit",
-    "female_cid_name": "anotherone female unit"
+    "female_cid_name": "anotherone female unit",
+    "mo_type": "non-occupancy"
   }
 ]

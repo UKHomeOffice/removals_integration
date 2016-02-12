@@ -63,7 +63,11 @@ const model = {
       note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
       via: 'active_female_centre'
     },
-
+    mo_type: {
+      type: 'string',
+      required: true,
+      defaultsTo: 0
+    },
     toJSON: function () {
       const maleCapacity = this.male_capacity - this.male_in_use;
       const femaleCapacity = this.female_capacity - this.female_in_use;
