@@ -1,6 +1,8 @@
 /* global Movement CidEntryMovementValidatorService Detainee */
 'use strict';
+
 var ValidationError = require('../lib/exceptions/ValidationError');
+var memoize = require('memoizejs');
 
 module.exports = {
   _config: {
@@ -41,7 +43,7 @@ module.exports = {
   },
 
   populateMovementWithCentreAndGender: movement =>
-    Centres.memoizeCentresByLocation(movement.Location)
+    memoize(Centres.getGenderAndCentreByCIDLocation)(movement.Location)
       .then(result => _.merge(movement, result)),
 
   filterNonEmptyMovements: movement => movement.centre && movement['MO Ref'] > 1,
