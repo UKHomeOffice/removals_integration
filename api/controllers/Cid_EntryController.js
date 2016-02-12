@@ -41,7 +41,7 @@ module.exports = {
   },
 
   populateMovementWithCentreAndGender: movement =>
-    Centres.getGenderAndCentreByCIDLocation(movement.Location)
+    Centres.memoizeCentresByLocation(movement.Location)
       .then(result => _.merge(movement, result)),
 
   filterNonEmptyMovements: movement => movement.centre && movement['MO Ref'] > 1,

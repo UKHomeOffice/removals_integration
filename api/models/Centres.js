@@ -114,6 +114,18 @@ const model = {
     );
   },
 
+  memoizeCentresByLocation: (function () {
+    var memo = {};
+    var memoize = function (location) {
+      if (location in memo) {
+        return memo[location];
+      }
+      memo[location] = this.getGenderAndCentreByCIDLocation(location);
+      return memo[location];
+    };
+    return memoize;
+  }()),
+
   afterCreate: function (record, done) {
     this.publishCreate(record);
     done();
