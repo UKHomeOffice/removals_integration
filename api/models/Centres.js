@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');
 var LinkingModels = require('sails-linking-models');
@@ -9,49 +9,49 @@ const model = {
   autoUpdatedAt: true,
   attributes: {
     heartbeat_recieved: {
-      type: "datetime"
+      type: 'datetime'
     },
     name: {
-      type: "string",
+      type: 'string',
       defaultsTo: 0,
       required: true,
       unique: true
     },
     male_capacity: {
-      type: "integer",
+      type: 'integer',
       defaultsTo: 0,
       required: true
     },
     female_capacity: {
-      type: "integer",
+      type: 'integer',
       defaultsTo: 0,
       required: true
     },
     male_in_use: {
-      type: "integer",
+      type: 'integer',
       defaultsTo: 0,
       required: true
     },
     female_in_use: {
-      type: "integer",
+      type: 'integer',
       defaultsTo: 0,
       required: true
     },
     male_out_of_commission: {
-      type: "integer",
+      type: 'integer',
       defaultsTo: 0,
       required: true
     },
     female_out_of_commission: {
-      type: "integer",
+      type: 'integer',
       defaultsTo: 0,
       required: true
     },
     male_cid_name: {
-      type: "string"
+      type: 'array'
     },
     female_cid_name: {
-      type: "string"
+      type: 'array'
     },
     male_active_movements: {
       collection: 'movement',
@@ -72,7 +72,7 @@ const model = {
       const maleCapacity = this.male_capacity - this.male_in_use;
       const femaleCapacity = this.female_capacity - this.female_in_use;
       const response = {
-        type: "centre",
+        type: 'centre',
         id: this.id.toString(),
         attributes: {
           updated: this.updatedAt,
@@ -94,18 +94,24 @@ const model = {
       return response;
     }
   },
+
   getGenderAndCentreByCIDLocation: function (location) {
-    return this.findOne(
-      {
-        or: [
-          {male_cid_name: location},
-          {female_cid_name: location}
-        ]
-      })
-      .then(centre => centre ? {
-        centre: centre.id,
-        gender: centre.male_cid_name === location ? "male" : "female"
-      } : centre);
+    return this.find().then(centres =>
+      _.compact(_.map(centres, centre => {
+        if (_.contains(centre.male_cid_name, location)) {
+          return {
+            centre: centre.id,
+            gender: 'male'
+          };
+        }
+        if (_.contains(centre.female_cid_name, location)) {
+          return {
+            centre: centre.id,
+            gender: 'female'
+          };
+        }
+      }))[0]
+    );
   },
 
   afterCreate: function (record, done) {
@@ -127,7 +133,7 @@ const model = {
     return this.findByName(name)
       .then((centre) => {
         if (centre === undefined || centre.length !== 1) {
-          throw new ValidationError("Invalid centre");
+          throw new ValidationError('Invalid centre');
         }
         return centre[0];
       });
