@@ -2,7 +2,6 @@
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');
-var memoize = require('memoizejs');
 
 module.exports = {
   _config: {
@@ -46,7 +45,7 @@ module.exports = {
     Centres.removeNonOccupancy().then(() => movement),
 
   populateMovementWithCentreAndGender: movement =>
-    memoize(Centres.getGenderAndCentreByCIDLocation)(movement.Location)
+    _.memoize(Centres.getGenderAndCentreByCIDLocation)(movement.Location)
       .then(result => _.merge(movement, result)),
 
   filterNonEmptyMovements: movement => movement.centre && movement['MO Ref'] > 1,
