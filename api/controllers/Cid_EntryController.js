@@ -42,6 +42,9 @@ module.exports = {
     return movement;
   },
 
+  removeNonOccupancy: movement =>
+    Centres.removeNonOccupancy().then(() => movement),
+
   populateMovementWithCentreAndGender: movement =>
     memoize(Centres.getGenderAndCentreByCIDLocation)(movement.Location)
       .then(result => _.merge(movement, result)),
@@ -74,6 +77,7 @@ module.exports = {
       .then(body => body.cDataSet)
       .map(this.formatMovement)
       .filter(this.filterOnlyInMovements)
+      .then(this.removeNonOccupancy)
 
       .map(this.populateMovementWithCentreAndGender)
 

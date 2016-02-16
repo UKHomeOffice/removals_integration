@@ -157,6 +157,22 @@ describe('UNIT Cid_EntryController', () => {
     );
   });
 
+  describe('removeNonOccupancy', () => {
+    var dummyMovement = {
+      "foo": "bar"
+    };
+    beforeEach(() => sinon.spy(Centres, 'removeNonOccupancy'));
+    afterEach(() => Centres.removeNonOccupancy.restore());
+
+    it('should call Centres.removeNonOccupancy', () => {
+      controller.removeNonOccupancy(dummyMovement);
+      expect(Centres.removeNonOccupancy).to.have.been.called;
+    });
+    it('should return the movement', () =>
+      expect(controller.removeNonOccupancy(dummyMovement)).to.eventually.eql(dummyMovement)
+    );
+  });
+
   describe('populateMovementWithCentreAndGender', () => {
     var dummyMovement = {
       "Location": "helloworld"

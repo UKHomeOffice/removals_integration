@@ -24,7 +24,6 @@ describe('INTEGRATION CentreController', () => {
             .to.contain.a.thing.with.property('id', '1')
             .and.to.contain.a.thing.with.property('attributes')
 
-
         }
       ));
 

@@ -114,6 +114,10 @@ const model = {
     );
   },
 
+  removeNonOccupancy: function () {
+    return this.destroy({'mo-type': 'non-occupancy'});
+  },
+
   afterCreate: function (record, done) {
     this.publishCreate(record);
     done();
