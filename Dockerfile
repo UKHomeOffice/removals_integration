@@ -19,9 +19,13 @@ RUN useradd app
 USER app
 ENV PATH=${PATH}:/opt/nodejs/bin
 WORKDIR /home/app
-COPY . .
-RUN rm -rf node_modules
+RUN mkdir -p /home/app/coverage
+
+
+ADD package.json package.json
 RUN npm --production=false install --no-optional
+
+COPY . .
 RUN NODE_ENV=development npm test
 RUN npm prune --production
 
