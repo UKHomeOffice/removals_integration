@@ -1,3 +1,7 @@
-language: node_js
-node_js:
-  - 4.2.2
+sudo: required
+
+services:
+  - docker
+
+script:
+  - docker build -t quay.io/ukhomeofficedigital/removals_integration:travis .
