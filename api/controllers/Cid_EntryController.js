@@ -50,7 +50,6 @@ module.exports = {
 
   filterNonEmptyMovements: movement => movement.centre && movement['MO Ref'] > 1,
 
-  filterOnlyInMovements: movement => movement['MO In/MO Out'] === 'in',
 
   markNonMatchingMovementsAsInactive: movements =>
     Movement.update(
@@ -75,7 +74,7 @@ module.exports = {
     return CidEntryMovementValidatorService.validate(req.body)
       .then(body => body.cDataSet)
       .map(this.formatMovement)
-      .filter(this.filterOnlyInMovements)
+
       .then(this.removeNonOccupancy)
 
       .map(this.populateMovementWithCentreAndGender)

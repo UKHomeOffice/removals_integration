@@ -33,7 +33,7 @@ describe('INTEGRATION Cid_EntryController', () => {
           .send(validdummydata)
       );
       it('should create new active movements found in the payload', () =>
-        expect(Movement.find({active: true})).to.eventually.have.length(15)
+        expect(Movement.find({active: true})).to.eventually.have.length(24)
       );
       it('should mark existing all movements in the payload as active that were previously inactive', () =>
         expect(Movement.findOne(316512)).to.eventually.include({'active': true})
@@ -201,15 +201,6 @@ describe('UNIT Cid_EntryController', () => {
       expect(controller.filterNonEmptyMovements({"centre": 1})).to.not.be.ok
     );
   })
-
-  describe('filterOnlyInMovements', () => {
-    it('should filter leave in "in" movements', () =>
-      expect(controller.filterOnlyInMovements({"MO In/MO Out": "in"})).to.be.ok
-    );
-    it('should remove any movement that is not "in"', () =>
-      expect(controller.filterOnlyInMovements({"MO In/MO Out": "not in"})).to.not.be.ok
-    );
-  });
 
   describe('markNonMatchingMovementsAsInactive', () => {
     it('should pass correct mapping to Movement.update', () => {
