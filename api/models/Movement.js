@@ -7,12 +7,14 @@ var ModelHelpers = require('../lib/ModelHelpers');
 var setNormalisedRelationships = (record, done) => {
   // this is a workaround until waterline supports conditional
   // joins see balderdashy/waterline#988 and balderdashy/waterline#645
-  delete record.active_male_centre;
-  delete record.active_female_centre;
+  delete record.active_male_centre_in;
+  delete record.active_male_centre_out;
+  delete record.active_female_centre_in;
+  delete record.active_female_centre_out;
   if (record.active) {
     Detainee.findOne(record.detainee)
       .then(detainee => {
-        record[`active_${detainee.gender}_centre`] = record.centre;
+        record[`active_${detainee.gender}_centre_${record.direction}`] = record.centre;
       })
       .finally(() => done());
   } else {
@@ -37,10 +39,21 @@ const model = {
       type: "boolean",
       defaultsTo: true
     },
-    active_male_centre: {
+    direction: {
+      type: 'string',
+      required: true,
+      defaultsTo: 0
+    },
+    active_male_centre_in: {
       model: "centres"
     },
-    active_female_centre: {
+    active_male_centre_out: {
+      model: "centres"
+    },
+    active_female_centre_in: {
+      model: "centres"
+    },
+    active_female_centre_out: {
       model: "centres"
     }
   },

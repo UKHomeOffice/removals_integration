@@ -53,15 +53,25 @@ const model = {
     female_cid_name: {
       type: 'array'
     },
-    male_active_movements: {
+    male_active_movements_in: {
       collection: 'movement',
       note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
-      via: 'active_male_centre'
+      via: 'active_male_centre_in'
     },
-    female_active_movements: {
+    male_active_movements_out: {
       collection: 'movement',
       note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
-      via: 'active_female_centre'
+      via: 'active_male_centre_out'
+    },
+    female_active_movements_in: {
+      collection: 'movement',
+      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
+      via: 'active_female_centre_in'
+    },
+    female_active_movements_out: {
+      collection: 'movement',
+      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
+      via: 'active_female_centre_out'
     },
     mo_type: {
       type: 'string',
@@ -86,8 +96,10 @@ const model = {
           femaleOutOfCommission: this.female_out_of_commission,
           maleAvailability: maleCapacity - this.male_out_of_commission,
           femaleAvailability: femaleCapacity - this.female_out_of_commission,
-          maleActiveMovements: this.male_active_movements.length,
-          femaleActiveMovements: this.female_active_movements.length
+          maleActiveMovementsIn: this.male_active_movements_in.length,
+          maleActiveMovementsOut: this.male_active_movements_out.length,
+          femaleActiveMovementsIn: this.female_active_movements_in.length,
+          femaleActiveMovementsOut: this.female_active_movements_out.length
         },
         links: this.modelLinks('centres', reverseRouteService)
       };

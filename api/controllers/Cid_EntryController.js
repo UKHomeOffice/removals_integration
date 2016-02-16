@@ -21,6 +21,7 @@ module.exports = {
         centre: movement.centre,
         detainee: movement.detainee,
         id: movement['MO Ref'],
+        direction: movement['MO In/MO Out'],
         active: true
       }
     ),
@@ -65,8 +66,10 @@ module.exports = {
 
   publishCentreUpdates: movements =>
     Centres.find()
-      .populate("male_active_movements")
-      .populate("female_active_movements")
+      .populate('male_active_movements_in')
+      .populate('male_active_movements_out')
+      .populate('female_active_movements_in')
+      .populate('female_active_movements_out')
       .then(centres => _.map(centres, centre => Centres.publishUpdate(centre.id, centre)))
       .then(() => movements),
 

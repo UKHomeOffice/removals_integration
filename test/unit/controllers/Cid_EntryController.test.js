@@ -102,7 +102,8 @@ describe('UNIT Cid_EntryController', () => {
       "centre": 1,
       "detainee": 2,
       "MO Ref": 3,
-      "CID Person ID": 4
+      "CID Person ID": 4,
+      "MO In/MO Out": "in"
     };
     it('should pass the correct mapping to findAndUpdateOrCreate', () => {
       controller.movementProcess(dummyMovement);
@@ -112,6 +113,7 @@ describe('UNIT Cid_EntryController', () => {
           detainee: 2,
           id: 3,
           active: true,
+          direction: 'in'
         });
     });
     it('should return findAndUpdateOrCreate', () =>

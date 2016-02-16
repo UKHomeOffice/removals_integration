@@ -13,16 +13,21 @@ describe('UNIT MovementModel', () => {
     var method = Promise.promisify(model.__get__('setNormalisedRelationships'));
 
     var record = {
-      active_male_centre: 'fooo',
-      active_female_centre: 'rra',
+      active_male_centre_in: 'foo',
+      active_male_centre_out: 'bar',
+      active_female_centre_in: 'baz',
+      active_female_centre_out: 'raa',
       centre: 123,
-      active: true
+      active: true,
+      direction: 'out'
     };
 
     it('should delete the records relationships if its not active', () => {
       var record = {
-        active_male_centre: 'fooo',
-        active_female_centre: 'rra',
+        active_male_centre_in: 'foo',
+        active_male_centre_out: 'bar',
+        active_female_centre_in: 'baz',
+        active_female_centre_out: 'raa',
         active: false
       };
       return method(record)
@@ -38,7 +43,7 @@ describe('UNIT MovementModel', () => {
       model.__set__('Detainee', Detainee);
       return method(record)
         .then(() =>
-          expect(record.active_male_centre).to.eql(123)
+          expect(record.active_male_centre_out).to.eql(123)
         )
     });
 
@@ -47,7 +52,7 @@ describe('UNIT MovementModel', () => {
       model.__set__('Detainee', Detainee);
       return method(record)
         .then(() =>
-          expect(record.active_female_centre).to.eql(123)
+          expect(record.active_female_centre_out).to.eql(123)
         )
     });
   });
