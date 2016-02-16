@@ -24,7 +24,7 @@
     "sails-linking-models": "^1.0.9",
     "sails-mysql": "^0.11.0",
     "sails-reverse-routing": "^1.0.12",
-    "socket.io-redis": "^0.1.4",
+    "socket.io-redis": "^1.0.0",
     "tv4": "^1.2.7"
   },
   "scripts": {
