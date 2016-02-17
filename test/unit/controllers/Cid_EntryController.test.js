@@ -6,12 +6,16 @@ var controller = require('../../../api/controllers/Cid_EntryController');
 describe('INTEGRATION Cid_EntryController', () => {
 
   describe('Movement', () => {
-    it('should accept a valid payload', () =>
-      request_auth(sails.hooks.http.app)
-        .post('/cid_entry/movement')
-        .send(validdummydata)
-        .expect(201)
-    );
+    describe('a valid payload', () => {
+      before(() => sinon.stub(Centres, 'update'));
+      after(() => Centres.update.restore());
+      it('should be accepted', () =>
+        request_auth(sails.hooks.http.app)
+          .post('/cid_entry/movement')
+          .send(validdummydata)
+          .expect(201)
+      );
+    })
     describe('isolated verbose log level', () => {
       beforeEach(() => {
         sinon.stub(global.sails.log, 'verbose');
@@ -27,11 +31,13 @@ describe('INTEGRATION Cid_EntryController', () => {
       );
     });
     describe('good payload', () => {
-      beforeEach(() =>
-        request_auth(sails.hooks.http.app)
+      beforeEach(() => {
+        sinon.stub(Centres, 'update');
+        return request_auth(sails.hooks.http.app)
           .post('/cid_entry/movement')
           .send(validdummydata)
-      );
+      });
+      afterEach(() => Centres.update.restore());
       it('should create new active movements found in the payload', () =>
         expect(Movement.find({active: true})).to.eventually.have.length(24)
       );
@@ -53,11 +59,12 @@ describe('INTEGRATION Cid_EntryController', () => {
     before(() => {
       sinon.stub(Centres, 'publishUpdate');
       sinon.stub(Centres, 'publishAdd');
-
+      sinon.stub(Centres, 'update');
     });
     after(() => {
       Centres.publishUpdate.restore();
       Centres.publishAdd.restore();
+      Centres.update.restore();
     });
     it('should push out an update to subscribers watching the centres', () =>
       request_auth(sails.hooks.http.app)
@@ -214,12 +221,11 @@ describe('UNIT Cid_EntryController', () => {
   });
 
   describe('publishCentreUpdates', () => {
-    it('should eventually update Centres with cid_received_date', (done) =>
-      controller.publishCentreUpdates().then(() => {
-        expect(Centres.update).to.have.been.calledOnce;
-        expect(Centres.update.args[0][0]).to.have.property('cid_received_date').and.be.an.instanceof(Date);
-        done();
-      })
+    it('should eventually update Centres with cid_received_date', () =>
+      controller.publishCentreUpdates().then(() =>
+        expect(Centres.update).to.have.been.calledOnce
+          .and.calledWith({cid_received_date: sinon.match.instanceOf(Date)})
+      )
     );
   });
 

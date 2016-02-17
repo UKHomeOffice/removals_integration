@@ -71,12 +71,7 @@ module.exports = {
       .populate('female_active_movements_in')
       .populate('female_active_movements_out')
       .then(centres => _.map(centres, centre => Centres.publishUpdate(centre.id, centre)))
-      .then(() => {
-        Centres.update({
-          cid_received_date: new Date()
-        });
-        return movements;
-      })
+      .then(() => Centres.update({cid_received_date: new Date()}))
       .then(() => movements),
 
   movementPost: function (req, res) {
