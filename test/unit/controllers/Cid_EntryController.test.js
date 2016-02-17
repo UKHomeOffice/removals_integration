@@ -81,6 +81,7 @@ describe('UNIT Cid_EntryController', () => {
     sinon.stub(Movement, 'findAndUpdateOrCreate').resolves({bar: 'foo'});
     sinon.stub(Movement, 'update').resolves({bar: 'foo'});
     sinon.stub(Centres, 'getGenderAndCentreByCIDLocation').resolves({bar: 'raa'});
+    sinon.stub(Centres, 'update').resolves({bar: 'raa'});
   });
 
   after(() => {
@@ -88,6 +89,7 @@ describe('UNIT Cid_EntryController', () => {
     Movement.update.restore();
     Detainee.findAndUpdateOrCreate.restore();
     Centres.getGenderAndCentreByCIDLocation.restore();
+    Centres.update.restore();
   });
 
   describe('movementOptions', () => {
@@ -209,6 +211,16 @@ describe('UNIT Cid_EntryController', () => {
       controller.markNonMatchingMovementsAsInactive([{id: 1}, {id: 2}, {id: 3}]);
       expect(Movement.update).to.be.calledWith({id: {'not': [1, 2, 3]}}, {active: false});
     });
+  });
+
+  describe('publishCentreUpdates', () => {
+    it('should eventually update Centres with cid_received_date', (done) =>
+      controller.publishCentreUpdates().then(() => {
+        expect(Centres.update).to.have.been.calledOnce;
+        expect(Centres.update.args[0][0]).to.have.property('cid_received_date').and.be.an.instanceof(Date);
+        done();
+      })
+    );
   });
 
 });

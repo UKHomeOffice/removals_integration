@@ -31,6 +31,7 @@ describe('UNIT CentreModel', () => {
   describe('attributes.toJSON', () => {
     var dummy_model = {
       updatedAt: 'f',
+      cid_received_date: new Date,
       name: 'fo',
       id: 123,
       male_capacity: 9,
@@ -51,6 +52,7 @@ describe('UNIT CentreModel', () => {
       var expected = {
         attributes: {
           name: that.name,
+          cidReceivedDate: that.cid_received_date,
           heartbeatRecieved: null,
           updated: that.updatedAt,
           maleCapacity: that.male_capacity,

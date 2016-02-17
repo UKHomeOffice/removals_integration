@@ -11,6 +11,9 @@ const model = {
     heartbeat_recieved: {
       type: 'datetime'
     },
+    cid_received_date: {
+      type: 'datetime'
+    },
     name: {
       type: 'string',
       defaultsTo: 0,
@@ -85,6 +88,7 @@ const model = {
         type: 'centre',
         id: this.id.toString(),
         attributes: {
+          cidReceivedDate: this.cid_received_date,
           updated: this.updatedAt,
           heartbeatRecieved: this.heartbeat_recieved ? this.heartbeat_recieved.toString() : null,
           name: this.name,
