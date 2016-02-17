@@ -15,6 +15,9 @@ const validation_schema = {
     MODate: {
       type: "string"
     },
+    MOType: {
+      type: "string"
+    },
     CIDPersonID: {
       oneOf: [
         {
@@ -37,6 +40,7 @@ const validation_schema = {
           "MO In/MO Out",
           "MO Ref",
           "MO Date",
+          "MO Type",
           "CID Person ID"
         ],
         properties: {
@@ -44,6 +48,7 @@ const validation_schema = {
           "MO In/MO Out": {$ref: "#/definitions/InOut"},
           "MO Ref": {$ref: "#/definitions/MORef"},
           "MO Date": {$ref: "#/definitions/MODate"},
+          "MO Type": {$ref: "#/definitions/MOType"},
           "CID Person ID": {$ref: "#/definitions/CIDPersonID"}
         }
       }

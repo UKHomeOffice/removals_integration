@@ -2,7 +2,7 @@
 var service = require('../../../api/services/CidEntryMovementValidatorService');
 var validation_schema = service.schema;
 
-describe('UNIT IrcEntryEventValidatorService', function () {
+describe('UNIT CidEntryMovementValidatorService', function () {
   let originalvalidatorservice;
   before(() => {
     originalvalidatorservice = global.RequestValidatorService;
