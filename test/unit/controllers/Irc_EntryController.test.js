@@ -68,8 +68,8 @@ describe('INTEGRATION Irc_EntryController', () => {
         .post('/irc_entry/heartbeat')
         .send({})
         .expect(201)
-        .then(controller.process_heartbeat.restore)
-        .finally(IrcEntryHeartbeatValidatorService.validate.restore);
+        .then(() => global.sails.controllers.irc_entry.process_heartbeat.restore())
+        .finally(() => IrcEntryHeartbeatValidatorService.validate.restore());
     });
   });
 
