@@ -1,0 +1,11 @@
+app:
+  build: .
+  environment:
+  - NODE_ENV=docker-compose
+redis:
+  image: redis
+  net: "host"
+mysql:
+  image: mysql
+  environment:
+    MYSQL_ROOT_PASSWORD:
