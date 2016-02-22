@@ -14,12 +14,15 @@ module.exports = {
     shortcuts: false,
     rest: false,
     exposedMethods: [
-      'heartbeat'
+      'heartbeat',
+      'event'
     ]
   },
 
   heartbeatOptions: (req, res) =>
     res.ok(IrcEntryHeartbeatValidatorService.schema),
+  eventOptions: (req, res) =>
+    res.ok(IrcEntryEventValidatorService.schema),
 
   index: (req, res) => res.ok,
 
@@ -48,6 +51,39 @@ module.exports = {
   heartbeatPost: function (req, res) {
     return IrcEntryHeartbeatValidatorService.validate(req.body)
       .then(this.process_heartbeat)
+      .then(res.ok)
+      .catch(ValidationError, (error) => {
+        res.badRequest(error.message);
+      })
+      .catch((error) => {
+        res.serverError(error.message);
+      });
+  },
+
+  process_event: function (request_body) {
+    if (request_body.operation === 'check in' ||
+      request_body.operation === 'update individual') {
+      return this.processEventDetaineeCreateOrUpdate(request_body);
+    }
+    throw new ValidationError('Unknown');
+  },
+
+
+  processEventDetaineeCreateOrUpdate: (request_body) => {
+    return Detainee.findOrCreate({
+      person_id: request_body.person_id
+    }, {
+      person_id: request_body.person_id,
+      cid_id: request_body.cid_id,
+      gender: request_body.gender,
+      nationality: request_body.nationality
+
+    });
+  },
+
+  eventPost: function (req, res) {
+    return IrcEntryEventValidatorService.validate(req.body)
+      .then(this.process_event)
       .then(res.ok)
       .catch(ValidationError, (error) => {
         res.badRequest(error.message);

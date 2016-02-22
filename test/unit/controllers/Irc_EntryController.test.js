@@ -73,13 +73,58 @@ describe('INTEGRATION Irc_EntryController', () => {
     });
   });
 
+  describe('Event', () => {
+    describe('isolated verbose log level', () => {
+      beforeEach(() => {
+        sinon.stub(global.sails.log, 'verbose');
+      });
+      afterEach(() =>
+          global.sails.log.verbose.restore()
+      );
+      it('should validate the request', () => {
+        sinon.stub(IrcEntryEventValidatorService, 'validate').rejects(new ValidationError());
+        return request(sails.hooks.http.app)
+          .post('/irc_entry/event')
+          .send()
+          .then(() => expect(IrcEntryEventValidatorService.validate).to.be.calledOnce)
+          .finally(IrcEntryEventValidatorService.validate.restore);
+      });
+
+      it('should return a 400 if the request is invalid', () =>
+          request(sails.hooks.http.app)
+            .post('/irc_entry/event')
+            .send()
+            .expect(400)
+      );
+    });
+
+    it('should return a 200 if all is good', () => {
+      sinon.stub(IrcEntryEventValidatorService, 'validate').resolves(true);
+      sinon.stub(global.sails.controllers.irc_entry, 'process_event').resolves(true);
+      return request(sails.hooks.http.app)
+        .post('/irc_entry/event')
+        .send()
+        .expect(200)
+        .then(controller.process_event.restore)
+        .finally(IrcEntryEventValidatorService.validate.restore);
+    });
+  });
+
   describe('Integration - Routes', () => {
-    it('should return the schema for an options request', () =>
+    it('should return the heartbeat schema for an options request', () =>
       request(sails.hooks.http.app)
         .options('/irc_entry/heartbeat')
         .expect(200)
         .expect((res) => expect(res.body.data).to.eql(IrcEntryHeartbeatValidatorService.schema))
     );
+
+    it('should return the event schema for an options request', () =>
+      request(sails.hooks.http.app)
+        .options('/irc_entry/event')
+        .expect(200)
+        .expect((res) => expect(res.body.data).to.eql(IrcEntryEventValidatorService.schema))
+    );
+
   });
 });
 
@@ -140,6 +185,23 @@ describe('UNIT Irc_EntryController', () => {
       return controller.heartbeatPost.apply(context, [req, res]).finally(() =>
         expect(res.ok).to.not.be.called
       );
+    });
+  });
+
+  describe('eventOptions', () => {
+    let validationservice;
+    before(() => {
+      validationservice = global.IrcEntryEventValidatorService;
+      global.IrcEntryEventValidatorService = {
+        schema: 'foobar'
+      };
+    });
+    after(() => global.IrcEntryEventValidatorService = validationservice);
+
+    it('should return the schema', () => {
+      let res = {ok: sinon.stub()}
+      controller.eventOptions(null, res);
+      expect(res.ok).to.be.calledWith('foobar');
     });
 
   });
@@ -204,5 +266,66 @@ describe('UNIT Irc_EntryController', () => {
     it('should return the amended centre', () =>
       expect(output).eventually.to.eql([centre])
     );
+  });
+
+  describe('process_event', () => {
+    beforeEach(() =>
+        sinon.stub(controller, 'processEventDetaineeCreateOrUpdate')
+    );
+    afterEach(() =>
+        controller.processEventDetaineeCreateOrUpdate.restore()
+    );
+
+    it('should run processEventDetaineeCreateOrUpdate on checkin operation', () => {
+      controller.process_event({operation: 'check in'});
+      return expect(controller.processEventDetaineeCreateOrUpdate).to.be.calledOnce;
+    });
+
+    it('should run processEventDetaineeCreateOrUpdate on update operation', () => {
+      controller.process_event({operation: 'update individual'});
+      return expect(controller.processEventDetaineeCreateOrUpdate).to.be.calledOnce;
+    });
+
+    it('should reject an unknown operation', () =>
+        expect(() => controller.process_event({operation: 'foo'})).to.throw(ValidationError)
+    );
+  });
+
+  describe('processEventDetaineeCreateOrUpdate', () => {
+    var fake_request_body;
+    before(() => {
+      fake_request_body = {
+        timestamp: new Date(),
+        centre: 'bigone',
+        operation: 'check in',
+        person_id: 1243,
+        cid_id: 4567,
+        gender: 'm',
+        nationality: 'ONE'
+      };
+    });
+    after(() =>
+        Detainee.findOne(fake_request_body.person_id).then((record) => record.destroy())
+    );
+    it('check in should be captured', () =>
+        expect(controller.processEventDetaineeCreateOrUpdate(fake_request_body)).to.be.eventually.ok
+    );
+
+    it('should map the fields correctly to the model', () => {
+      sinon.stub(Detainee, 'findOrCreate').resolves({});
+      controller.processEventDetaineeCreateOrUpdate(fake_request_body);
+      expect(Detainee.findOrCreate).to.be.calledWith(
+        {
+          person_id: fake_request_body.person_id
+        }, {
+          cid_id: fake_request_body.cid_id,
+          gender: fake_request_body.gender,
+          nationality: fake_request_body.nationality,
+          person_id: fake_request_body.person_id
+        }
+      );
+      Detainee.findOrCreate.restore();
+
+    });
   });
 });
