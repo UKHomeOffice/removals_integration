@@ -98,13 +98,13 @@ describe('INTEGRATION Irc_EntryController', () => {
       );
     });
 
-    it('should return a 200 if all is good', () => {
+    it('should return a 201 if all is good', () => {
       sinon.stub(IrcEntryEventValidatorService, 'validate').resolves(true);
       sinon.stub(global.sails.controllers.irc_entry, 'process_event').resolves(true);
       return request(sails.hooks.http.app)
         .post('/irc_entry/event')
         .send()
-        .expect(200)
+        .expect(201)
         .then(controller.process_event.restore)
         .finally(IrcEntryEventValidatorService.validate.restore);
     });
@@ -300,21 +300,25 @@ describe('UNIT Irc_EntryController', () => {
         operation: 'check in',
         person_id: 1243,
         cid_id: 4567,
-        gender: 'm',
+        gender: 'male',
         nationality: 'ONE'
       };
     });
     after(() =>
-        Detainee.findOne(fake_request_body.person_id).then((record) => record.destroy())
+        Subjects.findOne(fake_request_body.person_id).then((record) => {
+          if (record) {
+            record.destroy()
+          }
+        })
     );
     it('check in should be captured', () =>
         expect(controller.processEventDetaineeCreateOrUpdate(fake_request_body)).to.be.eventually.ok
     );
 
     it('should map the fields correctly to the model', () => {
-      sinon.stub(Detainee, 'findOrCreate').resolves({});
+      sinon.stub(Subjects, 'findOrCreate').resolves({});
       controller.processEventDetaineeCreateOrUpdate(fake_request_body);
-      expect(Detainee.findOrCreate).to.be.calledWith(
+      expect(Subjects.findOrCreate).to.be.calledWith(
         {
           person_id: fake_request_body.person_id
         }, {
@@ -324,7 +328,7 @@ describe('UNIT Irc_EntryController', () => {
           person_id: fake_request_body.person_id
         }
       );
-      Detainee.findOrCreate.restore();
+      Subjects.findOrCreate.restore();
 
     });
   });

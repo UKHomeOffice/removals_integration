@@ -1,31 +1,31 @@
 [
   {
     "centre": 1,
-    "detainee": 1,
+    "subjects": 1,
     "id": 1,
     "active": true
   },
   {
     "centre": 2,
-    "detainee": 1,
+    "subjects": 1,
     "id": 2,
     "active": true
   },
   {
     "centre": 1,
-    "detainee": 2,
+    "subjects": 2,
     "id": 3,
     "active": true
   },
   {
     "centre": 1,
-    "detainee": 2,
+    "subjects": 2,
     "id": 316512,
     "active": false
   },
   {
     "centre": 1,
-    "detainee": 3,
+    "subjects": 3,
     "id": 132023,
     "active": true
   }

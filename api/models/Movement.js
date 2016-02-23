@@ -1,4 +1,4 @@
-/* global Detainee */
+/* global Subjects */
 "use strict";
 
 var LinkingModels = require('sails-linking-models');
@@ -12,9 +12,9 @@ var setNormalisedRelationships = (record, done) => {
   delete record.active_female_centre_in;
   delete record.active_female_centre_out;
   if (record.active) {
-    Detainee.findOne(record.detainee)
-      .then(detainee => {
-        record[`active_${detainee.gender}_centre_${record.direction}`] = record.centre;
+    Subjects.findOne(record.subjects)
+      .then(subjects => {
+        record[`active_${subjects.gender}_centre_${record.direction}`] = record.centre;
       })
       .finally(() => done());
   } else {
@@ -31,8 +31,8 @@ const model = {
       model: "centres",
       required: true
     },
-    detainee: {
-      model: "detainee",
+    subjects: {
+      model: "subjects",
       required: true
     },
     active: {
