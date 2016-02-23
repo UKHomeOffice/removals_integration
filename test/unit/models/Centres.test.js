@@ -31,7 +31,7 @@ describe('UNIT CentreModel', () => {
   describe('attributes.toJSON', () => {
     var dummy_model = {
       updatedAt: 'f',
-      cid_received_date: new Date,
+      cid_received_date: null,
       name: 'fo',
       id: 123,
       male_capacity: 9,

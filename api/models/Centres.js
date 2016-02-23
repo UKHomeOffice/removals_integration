@@ -88,7 +88,7 @@ const model = {
         type: 'centre',
         id: this.id.toString(),
         attributes: {
-          cidReceivedDate: this.cid_received_date,
+          cidReceivedDate: this.cid_received_date ? this.cid_received_date.toString() : null,
           updated: this.updatedAt,
           heartbeatRecieved: this.heartbeat_recieved ? this.heartbeat_recieved.toString() : null,
           name: this.name,
