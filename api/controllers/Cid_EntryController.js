@@ -1,4 +1,4 @@
-/* global Movement CidEntryMovementValidatorService Detainee */
+/* global Movement CidEntryMovementValidatorService Subjects */
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');
@@ -19,22 +19,22 @@ module.exports = {
     Movement.findAndUpdateOrCreate(movement['MO Ref'],
       {
         centre: movement.centre,
-        detainee: movement.detainee,
+        subjects: movement.subjects,
         id: movement['MO Ref'],
         direction: movement['MO In/MO Out'],
         active: true
       }
     ),
 
-  detaineeProcess: movement =>
-    Detainee.findAndUpdateOrCreate(
+  subjectsProcess: movement =>
+    Subjects.findAndUpdateOrCreate(
       {cid_id: movement['CID Person ID']},
       {
         cid_id: movement['CID Person ID'],
         gender: movement.gender
       }
       )
-      .then(detainee => _.merge(movement, {detainee: detainee.id})),
+      .then(subjects => _.merge(movement, {subjects: subjects.id})),
 
   formatMovement: movement => {
     movement['MO Ref'] = parseInt(movement['MO Ref']);
@@ -50,7 +50,6 @@ module.exports = {
       .then(result => _.merge(movement, result)),
 
   filterNonEmptyMovements: movement => movement.centre && movement['MO Ref'] > 1,
-
 
   markNonMatchingMovementsAsInactive: movements =>
     Movement.update(
@@ -85,7 +84,7 @@ module.exports = {
 
       .filter(this.filterNonEmptyMovements)
 
-      .map(this.detaineeProcess)
+      .map(this.subjectsProcess)
       .map(this.movementProcess)
 
       .then(this.markNonMatchingMovementsAsInactive)

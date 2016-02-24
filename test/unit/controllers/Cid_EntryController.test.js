@@ -84,7 +84,7 @@ describe('UNIT Cid_EntryController', () => {
     res = {
       ok: sinon.stub()
     };
-    sinon.stub(Detainee, 'findAndUpdateOrCreate').resolves({id: 'bar'});
+    sinon.stub(Subjects, 'findAndUpdateOrCreate').resolves({id: 'bar'});
     sinon.stub(Movement, 'findAndUpdateOrCreate').resolves({bar: 'foo'});
     sinon.stub(Movement, 'update').resolves({bar: 'foo'});
     sinon.stub(Centres, 'getGenderAndCentreByCIDLocation').resolves({bar: 'raa'});
@@ -94,7 +94,7 @@ describe('UNIT Cid_EntryController', () => {
   after(() => {
     Movement.findAndUpdateOrCreate.restore();
     Movement.update.restore();
-    Detainee.findAndUpdateOrCreate.restore();
+    Subjects.findAndUpdateOrCreate.restore();
     Centres.getGenderAndCentreByCIDLocation.restore();
     Centres.update.restore();
   });
@@ -109,7 +109,7 @@ describe('UNIT Cid_EntryController', () => {
   describe('movementProcess', () => {
     var dummyMovement = {
       "centre": 1,
-      "detainee": 2,
+      "subjects": 2,
       "MO Ref": 3,
       "CID Person ID": 4,
       "MO In/MO Out": "in"
@@ -119,7 +119,7 @@ describe('UNIT Cid_EntryController', () => {
       return expect(Movement.findAndUpdateOrCreate).to.be.calledWith(dummyMovement['MO Ref'],
         {
           centre: 1,
-          detainee: 2,
+          subjects: 2,
           id: 3,
           active: true,
           direction: 'in'
@@ -130,14 +130,14 @@ describe('UNIT Cid_EntryController', () => {
     );
   });
 
-  describe('detaineeProcess', () => {
+  describe('subjectsProcess', () => {
     var dummyMovement = {
       "gender": "male",
       "CID Person ID": 4
     };
     it('should pass the correct mapping to findAndUpdateOrCreate', () => {
-      controller.detaineeProcess(dummyMovement);
-      return expect(Detainee.findAndUpdateOrCreate).to.be.calledWith(
+      controller.subjectsProcess(dummyMovement);
+      return expect(Subjects.findAndUpdateOrCreate).to.be.calledWith(
         {
           cid_id: dummyMovement['CID Person ID']
         },
@@ -146,11 +146,11 @@ describe('UNIT Cid_EntryController', () => {
           gender: "male"
         });
     });
-    it('should return the movement with the detainee added to it', () =>
-      expect(controller.detaineeProcess(dummyMovement)).to.eventually.eql({
+    it('should return the movement with the subjects added to it', () =>
+      expect(controller.subjectsProcess(dummyMovement)).to.eventually.eql({
         "gender": "male",
         "CID Person ID": 4,
-        "detainee": "bar"
+        "subjects": "bar"
       })
     );
   });

@@ -40,10 +40,10 @@ describe('UNIT CentreModel', () => {
       female_in_use: 4,
       male_out_of_commission: 3,
       female_out_of_commission: 9,
-      male_active_movements_in: [{centres: 123, detainee: 1, id: 1}, {centres: 123, detainee: 2, id: 2}],
-      male_active_movements_out: [{centres: 123, detainee: 1, id: 1}, {centres: 123, detainee: 2, id: 2}],
-      female_active_movements_in: [{centres: 123, detainee: 3, id: 1}],
-      female_active_movements_out: [{centres: 123, detainee: 3, id: 1}],
+      male_active_movements_in: [{centres: 123, subjects: 1, id: 1}, {centres: 123, subjects: 2, id: 2}],
+      male_active_movements_out: [{centres: 123, subjects: 1, id: 1}, {centres: 123, subjects: 2, id: 2}],
+      female_active_movements_in: [{centres: 123, subjects: 3, id: 1}],
+      female_active_movements_out: [{centres: 123, subjects: 3, id: 1}],
       modelLinks: sinon.stub().returns(['links'])
     };
 

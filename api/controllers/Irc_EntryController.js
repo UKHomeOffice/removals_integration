@@ -1,3 +1,5 @@
+/* global IrcEntryEventValidatorService Subjects */
+
 'use strict';
 
 /**
@@ -61,8 +63,7 @@ module.exports = {
   },
 
   process_event: function (request_body) {
-    if (request_body.operation === 'check in' ||
-      request_body.operation === 'update individual') {
+    if (request_body.operation === 'check in' || request_body.operation === 'update individual') {
       return this.processEventDetaineeCreateOrUpdate(request_body);
     }
     throw new ValidationError('Unknown');
@@ -70,7 +71,7 @@ module.exports = {
 
 
   processEventDetaineeCreateOrUpdate: (request_body) => {
-    return Detainee.findOrCreate({
+    return Subjects.findOrCreate({
       person_id: request_body.person_id
     }, {
       person_id: request_body.person_id,
