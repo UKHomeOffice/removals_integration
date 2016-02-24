@@ -7,7 +7,7 @@ describe('INTEGRATION Cid_EntryController', () => {
 
   describe('Movement', () => {
     describe('a valid payload', () => {
-      before(() => sinon.stub(Centres, 'update'));
+      before(() => sinon.stub(Centres, 'update').resolves(true));
       after(() => Centres.update.restore());
       it('should be accepted', () =>
         request_auth(sails.hooks.http.app)
@@ -32,7 +32,7 @@ describe('INTEGRATION Cid_EntryController', () => {
     });
     describe('good payload', () => {
       beforeEach(() => {
-        sinon.stub(Centres, 'update');
+        sinon.stub(Centres, 'update').resolves(true);
         return request_auth(sails.hooks.http.app)
           .post('/cid_entry/movement')
           .send(validdummydata)
@@ -51,7 +51,7 @@ describe('INTEGRATION Cid_EntryController', () => {
     it('should return the schema for an options request', () =>
       request(sails.hooks.http.app)
         .options('/cid_entry/movement')
-        .expect(200)
+       .expect(200)
         .expect((res) => expect(res.body.data).to.eql(CidEntryMovementValidatorService.schema))
     );
   });
@@ -59,7 +59,7 @@ describe('INTEGRATION Cid_EntryController', () => {
     before(() => {
       sinon.stub(Centres, 'publishUpdate');
       sinon.stub(Centres, 'publishAdd');
-      sinon.stub(Centres, 'update');
+      sinon.stub(Centres, 'update').resolves(true);
     });
     after(() => {
       Centres.publishUpdate.restore();
@@ -220,12 +220,22 @@ describe('UNIT Cid_EntryController', () => {
     });
   });
 
-  describe('publishCentreUpdates', () => {
-    it('should eventually update Centres with cid_received_date', () =>
-      controller.publishCentreUpdates().then(() =>
+  describe('updateReceivedDate', () => {
+    var dummyMovement = [{id: 1}, {id: 2}, {id: 3}];
+    it('should call Centres.update with a new date', () =>
+      expect(controller.updateReceivedDate(dummyMovement).then(() =>
         expect(Centres.update).to.have.been.calledOnce
-          .and.calledWith({cid_received_date: sinon.match.instanceOf(Date)})
-      )
+          .and.calledWith({}, {cid_received_date: sinon.match.instanceOf(Date)})))
+    );
+    it('should eventually resolve with the movements', () =>
+      expect(controller.updateReceivedDate(dummyMovement)).to.eventually.eql(dummyMovement)
+    );
+  });
+
+  describe('publishCentreUpdates', () => {
+    var dummyMovement = [{id: 1}, {id: 2}, {id: 3}];
+    it('should eventually resolve with the movements', () =>
+      expect(controller.publishCentreUpdates(dummyMovement)).to.eventually.eql(dummyMovement)
     );
   });
 
