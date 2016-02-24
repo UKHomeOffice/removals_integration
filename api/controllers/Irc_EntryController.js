@@ -1,4 +1,4 @@
-/* global IrcEntryEventValidatorService Subjects */
+/* global IrcEntryEventValidatorService Events Detainees */
 
 'use strict';
 
@@ -63,23 +63,35 @@ module.exports = {
   },
 
   process_event: function (request_body) {
-    if (request_body.operation === 'check in' || request_body.operation === 'update individual') {
-      return this.processEventDetaineeCreateOrUpdate(request_body);
+    if (request_body.operation === 'check in') {
+      return this.processEventDetaineesCreateOrUpdate(request_body);
+    }
+    if (request_body.operation === 'update individual') {
+      return this.processEventDetaineesCreateOrUpdate(request_body);
     }
     throw new ValidationError('Unknown');
   },
 
 
-  processEventDetaineeCreateOrUpdate: (request_body) => {
-    return Subjects.findOrCreate({
-      person_id: request_body.person_id
+  processEventDetaineesCreateOrUpdate: (request_body) => {
+    var person_id = request_body.cid_id + '_' + request_body.person_id;
+    return Events.findOrCreate({
+      person_id: person_id
     }, {
-      person_id: request_body.person_id,
-      cid_id: request_body.cid_id,
-      gender: request_body.gender,
-      nationality: request_body.nationality
-
-    });
+      operation: request_body.operation,
+      event_received: request_body.timestamp,
+      person_id: person_id
+    }).then(() =>
+      Detainees.findOrCreate({
+        person_id: person_id
+      }, {
+        person_id: person_id,
+        cid_id: request_body.cid_id,
+        gender: request_body.gender,
+        nationality: request_body.nationality,
+        centre: request_body.centre
+      })
+    );
   },
 
   eventPost: function (req, res) {

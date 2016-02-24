@@ -1,0 +1,22 @@
+[
+  {
+    "operation": "check in",
+    "event_received": "Fri Feb 26 2016 09:24:20 GMT+0000 (GMT)",
+    "person_id": "01_123"
+  },
+  {
+    "operation": "check in",
+    "event_received": "Fri Sep 23 2015 14:24:20 GMT+0000 (GMT)",
+    "person_id": "02_234"
+  },
+  {
+    "operation": "check in",
+    "event_received": "Fri Jan 21 2016 10:34:20 GMT+0000 (GMT)",
+    "person_id": "01_345"
+  },
+  {
+    "operation": "check in",
+    "event_received": "Fri Feb 24 2016 19:24:20 GMT+0000 (GMT)",
+    "person_id": "01_456"
+  }
+]
