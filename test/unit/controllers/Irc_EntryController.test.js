@@ -32,7 +32,7 @@ describe('INTEGRATION Irc_EntryController', () => {
             .then(() =>
               Centres.findOne({name: fake_json.centre})
             ))
-            .to.eventually.have.property('heartbeat_recieved')
+            .to.eventually.have.property('heartbeat_received')
             .and.be.a('date')
         );
       })
@@ -192,7 +192,7 @@ describe('UNIT Irc_EntryController', () => {
       expect(global.Centres.update).to.be.calledWith(
         {name: fake_request.centre},
         {
-          heartbeat_recieved: new Date(),
+          heartbeat_received: new Date(),
           male_in_use: fake_request.male_occupied,
           female_in_use: fake_request.female_occupied,
           male_out_of_commission: fake_request.male_outofcommission,

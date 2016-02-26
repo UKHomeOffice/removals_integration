@@ -8,7 +8,7 @@ const model = {
   autoCreatedAt: true,
   autoUpdatedAt: true,
   attributes: {
-    heartbeat_recieved: {
+    heartbeat_received: {
       type: 'datetime'
     },
     cid_received_date: {
@@ -88,9 +88,9 @@ const model = {
         type: 'centre',
         id: this.id.toString(),
         attributes: {
-          cidReceivedDate: this.cid_received_date ? this.cid_received_date.toString() : null,
+          cidReceivedDate: this.cid_received_date ? this.cid_received_date.toString(): null,
           updated: this.updatedAt,
-          heartbeatRecieved: this.heartbeat_recieved ? this.heartbeat_recieved.toString() : null,
+          heartbeatReceived: this.heartbeat_received ? this.heartbeat_received.toString(): null,
           name: this.name,
           maleCapacity: this.male_capacity,
           femaleCapacity: this.female_capacity,
