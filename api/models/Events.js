@@ -7,7 +7,6 @@ const model = {
   schema: true,
   autoCreatedAt: true,
   autoUpdatedAt: true,
-  autoPK: false,
   attributes: {
     operation: {
       type: 'string',
@@ -19,9 +18,7 @@ const model = {
       required: true
     },
     person_id: {
-      type: 'string',
-      required: true,
-      primaryKey: true
+      model: 'detainees'
     }
   }
 };
