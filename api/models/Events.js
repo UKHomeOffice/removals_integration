@@ -17,7 +17,7 @@ const model = {
       type: 'datetime',
       required: true
     },
-    person_id: {
+    detainee: {
       model: 'detainees'
     }
   }

@@ -9,7 +9,7 @@ const model = {
   autoUpdatedAt: true,
   autoPK: false,
   attributes: {
-    person_id: {
+    id: {
       type: 'string',
       required: true,
       unique: true,

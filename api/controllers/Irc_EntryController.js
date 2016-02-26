@@ -64,7 +64,8 @@ module.exports = {
 
   process_event: function (request_body) {
     if (request_body.operation === 'check in') {
-      return this.saveEvent(request_body).then(this.saveDetainee);
+      return this.saveDetainee(request_body)
+        .then(this.saveEvent.bind(this, request_body));
     }
     throw new ValidationError('Unknown');
   },
@@ -73,24 +74,20 @@ module.exports = {
     return `${entity.centre}_${entity.person_id}`;
   },
 
-  saveEvent: function (request_body) {
-    var person_id = this.getPID(request_body);
-    return Events.findOrCreate({
-      person_id: person_id
-    }, {
+  saveEvent: function (request_body, detainee) {
+    return Events.create({
       operation: request_body.operation,
       timestamp: request_body.timestamp,
-      person_id: person_id
-    })
-    .then(() => request_body);
+      detainee: detainee
+    });
   },
 
   saveDetainee: function (request_body) {
     var person_id = this.getPID(request_body);
     return Detainees.findOrCreate({
-      person_id: person_id
+      id: person_id
     }, {
-      person_id: person_id,
+      id: person_id,
       cid_id: request_body.cid_id,
       gender: request_body.gender,
       centre: request_body.centre

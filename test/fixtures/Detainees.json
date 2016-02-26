@@ -1,12 +1,12 @@
 [
   {
-    "person_id": "98_123",
+    "id": "bigone_123",
     "cid_id": 98,
     "gender": "female",
     "centre": "big one"
   },
   {
-    "person_id": "98_345",
+    "id": "bigone_345",
     "cid_id": 98,
     "gender": "male",
     "centre": "big one"
