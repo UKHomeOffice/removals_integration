@@ -79,7 +79,7 @@ module.exports = {
       person_id: person_id
     }, {
       operation: request_body.operation,
-      event_received: request_body.timestamp,
+      timestamp: request_body.timestamp,
       person_id: person_id
     })
     .then(() => request_body);

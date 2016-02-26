@@ -13,7 +13,7 @@ const model = {
       required: true,
       enum: ['check in']
     },
-    event_received: {
+    timestamp: {
       type: 'datetime',
       required: true
     },

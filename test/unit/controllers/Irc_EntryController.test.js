@@ -124,7 +124,7 @@ describe('INTEGRATION Irc_EntryController', () => {
             person_id: person_id
           }, {
             operation: fake_request_body.operation,
-            event_received: fake_request_body.timestamp,
+            timestamp: fake_request_body.timestamp,
             person_id: person_id
           }));
       });
@@ -385,7 +385,7 @@ describe('UNIT Irc_EntryController', () => {
           person_id: fake_request_body.centre + '_' + fake_request_body.person_id
         }, {
           operation: fake_request_body.operation,
-          event_received: sinon.match.instanceOf(Date),
+          timestamp: sinon.match.instanceOf(Date),
           person_id: fake_request_body.centre + '_' + fake_request_body.person_id,
         }
       );
