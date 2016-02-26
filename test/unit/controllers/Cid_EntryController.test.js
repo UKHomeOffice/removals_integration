@@ -51,7 +51,7 @@ describe('INTEGRATION Cid_EntryController', () => {
     it('should return the schema for an options request', () =>
       request(sails.hooks.http.app)
         .options('/cid_entry/movement')
-       .expect(200)
+        .expect(200)
         .expect((res) => expect(res.body.data).to.eql(CidEntryMovementValidatorService.schema))
     );
   });

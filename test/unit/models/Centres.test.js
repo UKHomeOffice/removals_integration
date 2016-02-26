@@ -53,7 +53,7 @@ describe('UNIT CentreModel', () => {
         attributes: {
           name: that.name,
           cidReceivedDate: that.cid_received_date,
-          heartbeatRecieved: null,
+          heartbeatReceived: null,
           updated: that.updatedAt,
           maleCapacity: that.male_capacity,
           maleInUse: that.male_in_use,
