@@ -64,34 +64,38 @@ module.exports = {
 
   process_event: function (request_body) {
     if (request_body.operation === 'check in') {
-      return this.processEventDetaineesCreateOrUpdate(request_body);
-    }
-    if (request_body.operation === 'update individual') {
-      return this.processEventDetaineesCreateOrUpdate(request_body);
+      return this.saveEvent(request_body).then(this.saveDetainee);
     }
     throw new ValidationError('Unknown');
   },
 
+  getPID: function (entity) {
+    return `${entity.centre}_${entity.person_id}`;
+  },
 
-  processEventDetaineesCreateOrUpdate: (request_body) => {
-    var person_id = request_body.cid_id + '_' + request_body.person_id;
+  saveEvent: function (request_body) {
+    var person_id = this.getPID(request_body);
     return Events.findOrCreate({
       person_id: person_id
     }, {
       operation: request_body.operation,
       event_received: request_body.timestamp,
       person_id: person_id
-    }).then(() =>
-      Detainees.findOrCreate({
-        person_id: person_id
-      }, {
-        person_id: person_id,
-        cid_id: request_body.cid_id,
-        gender: request_body.gender,
-        nationality: request_body.nationality,
-        centre: request_body.centre
-      })
-    );
+    })
+    .then(() => request_body);
+  },
+
+  saveDetainee: function (request_body) {
+    var person_id = this.getPID(request_body);
+    return Detainees.findOrCreate({
+      person_id: person_id
+    }, {
+      person_id: person_id,
+      cid_id: request_body.cid_id,
+      gender: request_body.gender,
+      nationality: request_body.nationality,
+      centre: request_body.centre
+    });
   },
 
   eventPost: function (req, res) {

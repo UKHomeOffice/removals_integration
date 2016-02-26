@@ -114,8 +114,8 @@ describe('INTEGRATION Irc_EntryController', () => {
           .then((res) => expect(res.statusCode).to.equal(201));
       });
 
-      it('should create or update an event and a detainees by person_id', () => {
-        var person_id = fake_request_body.cid_id + '_' + fake_request_body.person_id;
+      it('should create or update an event', () => {
+        var person_id = fake_request_body.centre + '_' + fake_request_body.person_id;
         return request(sails.hooks.http.app)
           .post('/irc_entry/event')
           .send(fake_request_body)
@@ -126,7 +126,14 @@ describe('INTEGRATION Irc_EntryController', () => {
             operation: fake_request_body.operation,
             event_received: fake_request_body.timestamp,
             person_id: person_id
-          }))
+          }));
+      });
+      it('should create or update a detainee', () => {
+        var person_id = fake_request_body.centre + '_' + fake_request_body.person_id;
+        return request(sails.hooks.http.app)
+          .post('/irc_entry/event')
+          .send(fake_request_body)
+          .expect(201)
           .then(() => expect(Detainees.findOrCreate).to.have.been.calledWith({
             person_id: person_id
           }, {
@@ -136,7 +143,7 @@ describe('INTEGRATION Irc_EntryController', () => {
             nationality: fake_request_body.nationality,
             centre: fake_request_body.centre
           }));
-      });
+      })
     });
   });
 });
@@ -315,29 +322,77 @@ describe('UNIT Irc_EntryController', () => {
   });
 
   describe('process_event', () => {
-    beforeEach(() =>
-        sinon.stub(controller, 'processEventDetaineesCreateOrUpdate')
-    );
-    afterEach(() =>
-        controller.processEventDetaineesCreateOrUpdate.restore()
-    );
-
-    it('should run processEventDetaineesCreateOrUpdate on checkin operation', () => {
-      controller.process_event({operation: 'check in'});
-      return expect(controller.processEventDetaineesCreateOrUpdate).to.be.calledOnce;
+    beforeEach(() => {
+      sinon.stub(controller, 'getPID').returns('abc_123');
+      sinon.stub(controller, 'saveEvent').resolves(true);
+      sinon.stub(controller, 'saveDetainee');
+    });
+    afterEach(() => {
+      controller.getPID.restore();
+      controller.saveEvent.restore();
+      controller.saveDetainee.restore();
     });
 
-    it('should run processEventDetaineesCreateOrUpdate on update operation', () => {
-      controller.process_event({operation: 'update individual'});
-      return expect(controller.processEventDetaineesCreateOrUpdate).to.be.calledOnce;
-    });
+    describe('check in operation', () => {
+      beforeEach(() => controller.process_event({operation: 'check in'}));
 
-    it('should reject an unknown operation', () =>
+      it('should save the event', () => {
+        return expect(controller.saveEvent).to.be.calledOnce;
+      });
+
+      it('should save the detainee', () => {
+        return expect(controller.saveDetainee).to.be.calledOnce;
+      });
+    })
+
+    describe('unkown operation', () => {
+      it('should reject an unknown operation', () =>
         expect(() => controller.process_event({operation: 'foo'})).to.throw(ValidationError)
-    );
+      );
+    })
   });
 
-  describe('processEventDetaineesCreateOrUpdate', () => {
+  describe('saveEvent', () => {
+    var fake_request_body;
+
+    before(() => {
+      fake_request_body = {
+        timestamp: new Date(),
+        centre: 'bigone',
+        operation: 'check in',
+        person_id: 1243
+      };
+      sinon.stub(Events, 'findOrCreate').resolves(true);
+      sinon.stub(controller, 'getPID').returns(fake_request_body.centre + '_' + fake_request_body.person_id);
+    });
+
+    after(() => {
+      Events.findOrCreate.restore();
+      controller.getPID.restore();
+    });
+
+    it('check in should be captured', () =>
+      expect(controller.saveEvent(fake_request_body)).to.be.eventually.ok
+        .and.to.eql(fake_request_body)
+    );
+    it('should call getPID', () => {
+      expect(controller.getPID).to.have.been.calledWith(fake_request_body);
+    });
+    it('should map the fields correctly to the Events model', () => {
+      controller.saveEvent(fake_request_body);
+      expect(Events.findOrCreate).to.be.calledWith(
+        {
+          person_id: fake_request_body.centre + '_' + fake_request_body.person_id
+        }, {
+          operation: fake_request_body.operation,
+          event_received: sinon.match.instanceOf(Date),
+          person_id: fake_request_body.centre + '_' + fake_request_body.person_id,
+        }
+      );
+    });
+  });
+
+  describe('saveDetainee', () => {
     var fake_request_body;
 
     before(() => {
@@ -350,43 +405,40 @@ describe('UNIT Irc_EntryController', () => {
         gender: 'male',
         nationality: 'ONE'
       };
-      sinon.stub(Events, 'findOrCreate').resolves(true);
       sinon.stub(Detainees, 'findOrCreate').resolves(true);
+      sinon.stub(controller, 'getPID').returns(fake_request_body.centre + '_' + fake_request_body.person_id);
     });
 
     after(() => {
       Detainees.findOrCreate.restore();
-      Events.findOrCreate.restore();
+      controller.getPID.restore();
     });
 
     it('check in should be captured', () =>
-      expect(controller.processEventDetaineesCreateOrUpdate(fake_request_body)).to.be.eventually.ok
+      expect(controller.saveDetainee(fake_request_body)).to.be.eventually.ok
     );
-    it('should map the fields correctly to the Events model', () => {
-      controller.processEventDetaineesCreateOrUpdate(fake_request_body);
-      expect(Events.findOrCreate).to.be.calledWith(
-        {
-          person_id: fake_request_body.cid_id + '_' + fake_request_body.person_id
-        }, {
-          operation: fake_request_body.operation,
-          event_received: sinon.match.instanceOf(Date),
-          person_id: fake_request_body.cid_id + '_' + fake_request_body.person_id,
-        }
-      );
+    it('should call getPID', () => {
+      expect(controller.getPID).to.have.been.calledWith(fake_request_body);
     });
     it('should map the fields correctly to the Detainees model', () => {
-      controller.processEventDetaineesCreateOrUpdate(fake_request_body);
+      controller.saveDetainee(fake_request_body);
       expect(Detainees.findOrCreate).to.be.calledWith(
         {
-          person_id: fake_request_body.cid_id + '_' + fake_request_body.person_id
+          person_id: fake_request_body.centre + '_' + fake_request_body.person_id
         }, {
           cid_id: fake_request_body.cid_id,
           gender: fake_request_body.gender,
           nationality: fake_request_body.nationality,
-          person_id: fake_request_body.cid_id + '_' + fake_request_body.person_id,
+          person_id: fake_request_body.centre + '_' + fake_request_body.person_id,
           centre: fake_request_body.centre
         }
       );
     });
+  });
+
+  describe('getPID', () => {
+    it('should return a string', () =>
+      expect(controller.getPID({centre: 'foo', person_id: 123})).to.equal('foo_123')
+    );
   });
 });
