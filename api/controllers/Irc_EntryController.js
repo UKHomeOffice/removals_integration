@@ -93,7 +93,6 @@ module.exports = {
       person_id: person_id,
       cid_id: request_body.cid_id,
       gender: request_body.gender,
-      nationality: request_body.nationality,
       centre: request_body.centre
     });
   },

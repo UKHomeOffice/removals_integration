@@ -92,8 +92,7 @@ describe('INTEGRATION Irc_EntryController', () => {
           operation: 'check in',
           person_id: 1243,
           cid_id: 4567,
-          gender: 'male',
-          nationality: 'fr'
+          gender: 'male'
         };
       });
       beforeEach(() => {
@@ -140,7 +139,6 @@ describe('INTEGRATION Irc_EntryController', () => {
             person_id: person_id,
             cid_id: fake_request_body.cid_id,
             gender: fake_request_body.gender,
-            nationality: fake_request_body.nationality,
             centre: fake_request_body.centre
           }));
       })
@@ -402,8 +400,7 @@ describe('UNIT Irc_EntryController', () => {
         operation: 'check in',
         person_id: 1243,
         cid_id: 4567,
-        gender: 'male',
-        nationality: 'ONE'
+        gender: 'male'
       };
       sinon.stub(Detainees, 'findOrCreate').resolves(true);
       sinon.stub(controller, 'getPID').returns(fake_request_body.centre + '_' + fake_request_body.person_id);
@@ -428,7 +425,6 @@ describe('UNIT Irc_EntryController', () => {
         }, {
           cid_id: fake_request_body.cid_id,
           gender: fake_request_body.gender,
-          nationality: fake_request_body.nationality,
           person_id: fake_request_body.centre + '_' + fake_request_body.person_id,
           centre: fake_request_body.centre
         }

@@ -3,14 +3,12 @@
     "person_id": "98_123",
     "cid_id": 98,
     "gender": "female",
-    "nationality": "fr",
     "centre": "big one"
   },
   {
     "person_id": "98_345",
     "cid_id": 98,
     "gender": "male",
-    "nationality": "de",
     "centre": "big one"
   }
 ]

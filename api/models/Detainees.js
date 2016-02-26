@@ -22,9 +22,6 @@ const model = {
       type: "string",
       enum: ["male", "female"]
     },
-    nationality: {
-      type: 'string'
-    },
     centre: {
       model: 'centres'
     }
