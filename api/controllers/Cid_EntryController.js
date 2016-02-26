@@ -16,11 +16,11 @@ module.exports = {
   movementOptions: (req, res) => res.ok(CidEntryMovementValidatorService.schema),
 
   movementProcess: movement =>
-    Movement.findAndUpdateOrCreate(movement['MO Ref'],
+    Movement.findAndUpdateOrCreate(movement['MO Ref.'],
       {
         centre: movement.centre,
         detainee: movement.detainee,
-        id: movement['MO Ref'],
+        id: movement['MO Ref.'],
         direction: movement['MO In/MO Out'],
         active: true
       }
@@ -37,7 +37,8 @@ module.exports = {
       .then(detainee => _.merge(movement, {detainee: detainee.id})),
 
   formatMovement: movement => {
-    movement['MO Ref'] = parseInt(movement['MO Ref']);
+    movement['MO Ref.'] = parseInt(movement['MO Ref.']);
+    movement['CID Person ID'] = parseInt(movement['CID Person ID']);
     movement['MO In/MO Out'] = movement['MO In/MO Out'].toLowerCase().trim();
     return movement;
   },
@@ -49,8 +50,7 @@ module.exports = {
     _.memoize(Centres.getGenderAndCentreByCIDLocation)(movement.Location)
       .then(result => _.merge(movement, result)),
 
-  filterNonEmptyMovements: movement => movement.centre && movement['MO Ref'] > 1,
-
+  filterNonEmptyMovements: movement => movement.centre && movement['MO Ref.'] > 1,
 
   markNonMatchingMovementsAsInactive: movements =>
     Movement.update(
@@ -79,7 +79,7 @@ module.exports = {
 
   movementPost: function (req, res) {
     return CidEntryMovementValidatorService.validate(req.body)
-      .then(body => body.cDataSet)
+      .then(body => body.Output)
       .map(this.formatMovement)
 
       .then(this.removeNonOccupancy)
