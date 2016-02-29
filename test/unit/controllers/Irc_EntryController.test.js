@@ -5,38 +5,6 @@ var controller = require('../../../api/controllers/Irc_EntryController');
 
 describe('INTEGRATION Irc_EntryController', () => {
   describe('Heartbeat', () => {
-    describe('Heartbeat_process', () => {
-      let schema, custom_fakes, fake_json;
-      before(() => {
-        schema = require('removals_schema').heartbeat;
-        schema.properties.centre.faker = 'custom.centre';
-        custom_fakes = {
-          centre: 'anotherone'
-        };
-        fake_json = jhg(schema, custom_fakes);
-      });
-
-      it('should be able to process update the centre with heartbeat information', () =>
-        expect(controller.process_heartbeat(fake_json)
-          .then(() => Centres.findOne({name: fake_json.centre})))
-          .to.eventually.contain({
-          female_in_use: fake_json.female_occupied,
-          female_out_of_commission: fake_json.female_outofcommission,
-          male_in_use: fake_json.male_occupied,
-          male_out_of_commission: fake_json.male_outofcommission
-        })
-      );
-      describe('with heartbeat timestamp', () => {
-        it('should update the centre heartbeat timestamp on processing an update', () =>
-          expect(controller.process_heartbeat(fake_json)
-            .then(() =>
-              Centres.findOne({name: fake_json.centre})
-            ))
-            .to.eventually.have.property('heartbeat_recieved')
-            .and.be.a('date')
-        );
-      })
-    });
     describe('isolated verbose log level', () => {
       beforeEach(() => {
         sinon.stub(global.sails.log, 'verbose');
@@ -44,6 +12,7 @@ describe('INTEGRATION Irc_EntryController', () => {
       afterEach(() =>
         global.sails.log.verbose.restore()
       );
+
       it('should validate the request', () => {
         sinon.stub(IrcEntryHeartbeatValidatorService, 'validate').rejects(new ValidationError());
         return request(sails.hooks.http.app)
@@ -60,16 +29,25 @@ describe('INTEGRATION Irc_EntryController', () => {
           .expect(400)
       );
     });
-
-    it('should return a 201 if all is good', () => {
-      sinon.stub(global.sails.services.ircentryheartbeatvalidatorservice, 'validate').resolves(true);
-      sinon.stub(global.sails.controllers.irc_entry, 'process_heartbeat').resolves(true);
-      return request(sails.hooks.http.app)
-        .post('/irc_entry/heartbeat')
-        .send({})
-        .expect(201)
-        .then(() => global.sails.controllers.irc_entry.process_heartbeat.restore())
-        .finally(() => IrcEntryHeartbeatValidatorService.validate.restore());
+    describe('options', () => {
+      it('should return the heartbeat schema for an options request', () =>
+        request(sails.hooks.http.app)
+          .options('/irc_entry/heartbeat')
+          .expect(200)
+          .expect((res) => expect(res.body.data).to.eql(IrcEntryHeartbeatValidatorService.schema))
+      );
+    })
+    describe('post', () => {
+      it('should return a 201 if all is good', () => {
+        sinon.stub(global.sails.services.ircentryheartbeatvalidatorservice, 'validate').resolves(true);
+        sinon.stub(global.sails.controllers.irc_entry, 'process_heartbeat').resolves(true);
+        return request(sails.hooks.http.app)
+          .post('/irc_entry/heartbeat')
+          .send({})
+          .expect(201)
+          .then(() => global.sails.controllers.irc_entry.process_heartbeat.restore())
+          .finally(() => IrcEntryHeartbeatValidatorService.validate.restore());
+      });
     });
   });
 
@@ -97,34 +75,79 @@ describe('INTEGRATION Irc_EntryController', () => {
             .expect(400)
       );
     });
+    describe('options', () => {
+      it('should return the event schema for an options request', () =>
+        request(sails.hooks.http.app)
+          .options('/irc_entry/event')
+          .expect(200)
+          .expect((res) => expect(res.body.data).to.eql(IrcEntryEventValidatorService.schema))
+      );
+    })
+    describe('post', () => {
+      var fake_request_body;
+      var detainee;
+      before(() => {
+        fake_request_body = {
+          timestamp: new Date().toString(),
+          centre: 'bigone',
+          operation: 'check in',
+          person_id: 1243,
+          cid_id: 4567,
+          gender: 'male'
+        };
+        detainee = {
+          id: 'bigone_123',
+          cid_id: 98,
+          gender: 'female',
+          centre: 'big one'
+        };
+      });
+      beforeEach(() => {
+        sinon.stub(IrcEntryEventValidatorService, 'validate').resolves(fake_request_body)
+        sinon.stub(Detainees, 'findOrCreate').resolves(detainee);
+        sinon.stub(Events, 'create').resolves(true);
+      });
+      afterEach(() => {
+        IrcEntryEventValidatorService.validate.restore();
+        Detainees.findOrCreate.restore();
+        Events.create.restore();
+      });
 
-    it('should return a 201 if all is good', () => {
-      sinon.stub(IrcEntryEventValidatorService, 'validate').resolves(true);
-      sinon.stub(global.sails.controllers.irc_entry, 'process_event').resolves(true);
-      return request(sails.hooks.http.app)
-        .post('/irc_entry/event')
-        .send()
-        .expect(201)
-        .then(controller.process_event.restore)
-        .finally(IrcEntryEventValidatorService.validate.restore);
+      it('should return a 201 if all is good', () => {
+        return request(sails.hooks.http.app)
+          .post('/irc_entry/event')
+          .send(fake_request_body)
+          .then((res) => expect(res.statusCode).to.equal(201));
+      });
+
+      it('should create or update an event', () => {
+        var person_id = fake_request_body.centre + '_' + fake_request_body.person_id;
+        return request(sails.hooks.http.app)
+          .post('/irc_entry/event')
+          .send(fake_request_body)
+          .expect(201)
+          .then(() => expect(Events.create).to.have.been.calledWith({
+            operation: fake_request_body.operation,
+            timestamp: fake_request_body.timestamp,
+            detainee: detainee
+          }));
+      });
+      it('should create or update a detainee', () => {
+        var person_id = fake_request_body.centre + '_' + fake_request_body.person_id;
+        return request(sails.hooks.http.app)
+          .post('/irc_entry/event')
+          .send(fake_request_body)
+          .expect(201)
+          .then(() => expect(Detainees.findOrCreate).to.have.been.calledWith({
+            id: person_id
+          }, {
+            id: person_id,
+            cid_id: fake_request_body.cid_id,
+            gender: fake_request_body.gender,
+            centre: fake_request_body.centre
+          }));
+      })
     });
-  });
-
-  describe('Integration - Routes', () => {
-    it('should return the heartbeat schema for an options request', () =>
-      request(sails.hooks.http.app)
-        .options('/irc_entry/heartbeat')
-        .expect(200)
-        .expect((res) => expect(res.body.data).to.eql(IrcEntryHeartbeatValidatorService.schema))
-    );
-
-    it('should return the event schema for an options request', () =>
-      request(sails.hooks.http.app)
-        .options('/irc_entry/event')
-        .expect(200)
-        .expect((res) => expect(res.body.data).to.eql(IrcEntryEventValidatorService.schema))
-    );
-
   });
 });
 
@@ -133,6 +156,39 @@ describe('UNIT Irc_EntryController', () => {
     it('should return res.ok', () =>
       expect(controller.index(null, {ok: 'flo'})).to.eql('flo')
     );
+  });
+
+  describe('Heartbeat_process', () => {
+    let schema, custom_fakes, fake_json;
+    before(() => {
+      schema = require('removals_schema').heartbeat;
+      schema.properties.centre.faker = 'custom.centre';
+      custom_fakes = {
+        centre: 'anotherone'
+      };
+      fake_json = jhg(schema, custom_fakes);
+    });
+
+    it('should be able to process update the centre with heartbeat information', () =>
+      expect(controller.process_heartbeat(fake_json)
+        .then(() => Centres.findOne({name: fake_json.centre})))
+        .to.eventually.contain({
+        female_in_use: fake_json.female_occupied,
+        female_out_of_commission: fake_json.female_outofcommission,
+        male_in_use: fake_json.male_occupied,
+        male_out_of_commission: fake_json.male_outofcommission
+      })
+    );
+    describe('with heartbeat timestamp', () => {
+      it('should update the centre heartbeat timestamp on processing an update', () =>
+        expect(controller.process_heartbeat(fake_json)
+          .then(() =>
+            Centres.findOne({name: fake_json.centre})
+          ))
+          .to.eventually.have.property('heartbeat_recieved')
+          .and.be.a('date')
+      );
+    })
   });
 
   describe('heartbeatPost', () => {
@@ -269,30 +325,87 @@ describe('UNIT Irc_EntryController', () => {
   });
 
   describe('process_event', () => {
-    beforeEach(() =>
-        sinon.stub(controller, 'processEventDetaineeCreateOrUpdate')
-    );
-    afterEach(() =>
-        controller.processEventDetaineeCreateOrUpdate.restore()
-    );
-
-    it('should run processEventDetaineeCreateOrUpdate on checkin operation', () => {
-      controller.process_event({operation: 'check in'});
-      return expect(controller.processEventDetaineeCreateOrUpdate).to.be.calledOnce;
+    var fake_request_body;
+    var detainee;
+    beforeEach(() => {
+      fake_request_body = {
+        timestamp: new Date(),
+        operation: 'check in',
+      };
+      detainee = {
+        id: 'bigone_123',
+        cid_id: 98,
+        gender: 'female',
+        centre: 'big one'
+      };
+      sinon.stub(controller, 'getPID').returns('abc_123');
+      sinon.stub(controller, 'saveEvent');
+      sinon.stub(controller, 'saveDetainee').resolves(detainee);
+    });
+    afterEach(() => {
+      controller.getPID.restore();
+      controller.saveEvent.restore();
+      controller.saveDetainee.restore();
     });
 
-    it('should run processEventDetaineeCreateOrUpdate on update operation', () => {
-      controller.process_event({operation: 'update individual'});
-      return expect(controller.processEventDetaineeCreateOrUpdate).to.be.calledOnce;
-    });
+    describe('check in operation', () => {
+      beforeEach(() => controller.process_event(fake_request_body));
 
-    it('should reject an unknown operation', () =>
+      it('should save the event', () => {
+        return expect(controller.saveEvent).to.be.calledWith(fake_request_body, detainee);
+      });
+
+      it('should save the detainee', () => {
+        return expect(controller.saveDetainee).to.be.calledOnce;
+      });
+    })
+
+    describe('unkown operation', () => {
+      it('should reject an unknown operation', () =>
         expect(() => controller.process_event({operation: 'foo'})).to.throw(ValidationError)
-    );
+      );
+    })
   });
 
-  describe('processEventDetaineeCreateOrUpdate', () => {
+  describe('saveEvent', () => {
     var fake_request_body;
+    var detainee;
+
+    beforeEach(() => {
+      fake_request_body = {
+        timestamp: new Date().toString(),
+        operation: 'check in',
+      };
+      detainee = {
+        id: 'bigone_123',
+        cid_id: 98,
+        gender: 'female',
+        centre: 'big one'
+      };
+      sinon.stub(Events, 'create').resolves(true);
+    });
+
+    afterEach(() => {
+      Events.create.restore();
+    });
+
+    it('check in should be captured', () =>
+      expect(controller.saveEvent(fake_request_body, detainee)).to.be.eventually.ok
+    );
+    it('should map the fields correctly to the Events model', () => {
+      controller.saveEvent(fake_request_body, detainee);
+      expect(Events.create).to.be.calledWith({
+          operation: fake_request_body.operation,
+          timestamp: fake_request_body.timestamp,
+          detainee: detainee,
+        }
+      );
+    });
+  });
+
+  describe('saveDetainee', () => {
+    var fake_request_body;
+
     before(() => {
       fake_request_body = {
         timestamp: new Date(),
@@ -300,36 +413,41 @@ describe('UNIT Irc_EntryController', () => {
         operation: 'check in',
         person_id: 1243,
         cid_id: 4567,
-        gender: 'male',
-        nationality: 'ONE'
+        gender: 'male'
       };
+      sinon.stub(Detainees, 'findOrCreate').resolves(true);
+      sinon.stub(controller, 'getPID').returns(fake_request_body.centre + '_' + fake_request_body.person_id);
     });
-    after(() =>
-        Subjects.findOne(fake_request_body.person_id).then((record) => {
-          if (record) {
-            record.destroy()
-          }
-        })
-    );
-    it('check in should be captured', () =>
-        expect(controller.processEventDetaineeCreateOrUpdate(fake_request_body)).to.be.eventually.ok
-    );
 
-    it('should map the fields correctly to the model', () => {
-      sinon.stub(Subjects, 'findOrCreate').resolves({});
-      controller.processEventDetaineeCreateOrUpdate(fake_request_body);
-      expect(Subjects.findOrCreate).to.be.calledWith(
+    after(() => {
+      Detainees.findOrCreate.restore();
+      controller.getPID.restore();
+    });
+
+    it('check in should be captured', () =>
+      expect(controller.saveDetainee(fake_request_body)).to.be.eventually.ok
+    );
+    it('should call getPID', () => {
+      expect(controller.getPID).to.have.been.calledWith(fake_request_body);
+    });
+    it('should map the fields correctly to the Detainees model', () => {
+      controller.saveDetainee(fake_request_body);
+      expect(Detainees.findOrCreate).to.be.calledWith(
         {
-          person_id: fake_request_body.person_id
+          id: fake_request_body.centre + '_' + fake_request_body.person_id
         }, {
           cid_id: fake_request_body.cid_id,
           gender: fake_request_body.gender,
-          nationality: fake_request_body.nationality,
-          person_id: fake_request_body.person_id
+          id: fake_request_body.centre + '_' + fake_request_body.person_id,
+          centre: fake_request_body.centre
         }
       );
-      Subjects.findOrCreate.restore();
-
     });
+  });
+
+  describe('getPID', () => {
+    it('should return a string', () =>
+      expect(controller.getPID({centre: 'foo', person_id: 123})).to.equal('foo_123')
+    );
   });
 });

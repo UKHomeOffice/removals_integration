@@ -1,4 +1,4 @@
-/* global IrcEntryEventValidatorService Subjects */
+/* global IrcEntryEventValidatorService Events Detainees */
 
 'use strict';
 
@@ -63,22 +63,31 @@ module.exports = {
   },
 
   process_event: function (request_body) {
-    if (request_body.operation === 'check in' || request_body.operation === 'update individual') {
-      return this.processEventDetaineeCreateOrUpdate(request_body);
+    if (request_body.operation === 'check in') {
+      return this.saveDetainee(request_body)
+        .then(this.saveEvent.bind(this, request_body));
     }
     throw new ValidationError('Unknown');
   },
 
+  getPID: (entity) => `${entity.centre}_${entity.person_id}`,
 
-  processEventDetaineeCreateOrUpdate: (request_body) => {
-    return Subjects.findOrCreate({
-      person_id: request_body.person_id
+  saveEvent: (request_body, detainee) =>
+    Events.create({
+      operation: request_body.operation,
+      timestamp: request_body.timestamp,
+      detainee: detainee
+    }),
+
+  saveDetainee: function (request_body) {
+    var person_id = this.getPID(request_body);
+    return Detainees.findOrCreate({
+      id: person_id
     }, {
-      person_id: request_body.person_id,
+      id: person_id,
       cid_id: request_body.cid_id,
       gender: request_body.gender,
-      nationality: request_body.nationality
-
+      centre: request_body.centre
     });
   },
 
