@@ -62,8 +62,8 @@ module.exports = {
       'centres',
       'subjects',
       'movement',
-      'events',
-      'detainees'
+      'detainees',
+      'events'
     ], done),
   after: done => {
     sails.lower(done);

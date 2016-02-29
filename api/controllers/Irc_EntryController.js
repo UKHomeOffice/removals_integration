@@ -70,17 +70,14 @@ module.exports = {
     throw new ValidationError('Unknown');
   },
 
-  getPID: function (entity) {
-    return `${entity.centre}_${entity.person_id}`;
-  },
+  getPID: (entity) => `${entity.centre}_${entity.person_id}`,
 
-  saveEvent: function (request_body, detainee) {
-    return Events.create({
+  saveEvent: (request_body, detainee) =>
+    Events.create({
       operation: request_body.operation,
       timestamp: request_body.timestamp,
       detainee: detainee
-    });
-  },
+    }),
 
   saveDetainee: function (request_body) {
     var person_id = this.getPID(request_body);

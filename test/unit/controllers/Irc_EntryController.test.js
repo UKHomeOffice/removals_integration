@@ -88,7 +88,7 @@ describe('INTEGRATION Irc_EntryController', () => {
       var detainee;
       before(() => {
         fake_request_body = {
-          timestamp: new Date(),
+          timestamp: new Date().toString(),
           centre: 'bigone',
           operation: 'check in',
           person_id: 1243,
@@ -373,7 +373,7 @@ describe('UNIT Irc_EntryController', () => {
 
     beforeEach(() => {
       fake_request_body = {
-        timestamp: new Date(),
+        timestamp: new Date().toString(),
         operation: 'check in',
       };
       detainee = {
@@ -396,7 +396,7 @@ describe('UNIT Irc_EntryController', () => {
       controller.saveEvent(fake_request_body, detainee);
       expect(Events.create).to.be.calledWith({
           operation: fake_request_body.operation,
-          timestamp: sinon.match.instanceOf(Date),
+          timestamp: fake_request_body.timestamp,
           detainee: detainee,
         }
       );
