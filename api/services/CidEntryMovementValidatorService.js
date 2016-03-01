@@ -19,7 +19,8 @@ const validation_schema = {
       type: "string"
     },
     CIDPersonID: {
-      type: "string"
+      type: "string",
+      pattern: "^[0-9]+$"
     }
   },
   properties: {
