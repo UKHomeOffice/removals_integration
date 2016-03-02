@@ -438,12 +438,5 @@ var validdummydata = {
     "MO Date": "05/01/2016 18:00:00",
     "MO Type": "Occupancy",
     "CID Person ID": "2315616"
-  }, {
-    "Location": " ",
-    "MO In/MO Out": "",
-    "MO Ref.": "",
-    "MO Date": "",
-    "MO Type": "Occupancy",
-    "CID Person ID": ""
   }]
 };
