@@ -6,6 +6,7 @@ var _ = require('lodash');
 
 Sails.lift(
   {
+    port: 8080,
     models: {
       connection: 'test',
       migrate: 'drop'
