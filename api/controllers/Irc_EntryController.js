@@ -39,15 +39,21 @@ module.exports = {
           throw new ValidationError("Invalid centre");
         }
         return centres;
-      })
-      .each(centre => {
-        Centres.publishUpdate(centre.id, centre.toJSON());
-        return centre;
       }),
+
+  publishCentreUpdates: centres =>
+    Centres.find()
+      .populate('male_active_movements_in')
+      .populate('male_active_movements_out')
+      .populate('female_active_movements_in')
+      .populate('female_active_movements_out')
+      .then(centres => _.map(centres, centre => Centres.publishUpdate(centre.id, centre.toJSON())))
+      .then(() => centres),
 
   heartbeatPost: function (req, res) {
     return IrcEntryHeartbeatValidatorService.validate(req.body)
       .then(this.process_heartbeat)
+      .then(this.publishCentreUpdates)
       .then(res.ok)
       .catch(ValidationError, (error) => {
         res.badRequest(error.message);
