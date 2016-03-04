@@ -10,6 +10,7 @@ global.chai = require('chai')
 global.expect = chai.expect;
 global._ = require('lodash');
 global.sinon = require('sinon');
+require('mocha-cakes-2');
 require('sinon-as-promised')(require('bluebird'));
 global.request = require('supertest-as-promised');
 var date = new Date();
