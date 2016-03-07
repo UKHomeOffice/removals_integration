@@ -32,7 +32,6 @@
     "start-with-fixtures": "node utils/sails_with_fixtures.js",
     "debug": "node debug app.js",
     "test": "istanbul cover _mocha",
-    "test:features": "_mocha test/features",
     "postinstall": "precommit install",
     "coverage-test": "multi='xunit=shippable/testresults/result.xml' istanbul cover _mocha",
     "coverage-report": "istanbul report cobertura --dir shippable/codecoverage/",

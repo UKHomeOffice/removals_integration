@@ -3,11 +3,13 @@ global.Sails = require('sails');
 global.Barrels = require('barrels');
 global.freeport = require('freeport');
 global.barrels = new Barrels;
+global.overrideSharedBeforeEach = false;
 global.chai = require('chai')
   .use(require('chai-as-promised'))
   .use(require('chai-things'))
   .use(require('sinon-chai'));
 global.expect = chai.expect;
+global.should = chai.should();
 global._ = require('lodash');
 global.sinon = require('sinon');
 require('mocha-cakes-2');
@@ -57,15 +59,21 @@ module.exports = {
         done();
       });
     });
+
   },
-  beforeEach: done =>
-    barrels.populate([
-      'centres',
-      'subjects',
-      'movement',
-      'detainees',
-      'events'
-    ], done),
+  beforeEach: done => {
+    if (!global.overrideSharedBeforeEach) {
+      barrels.populate([
+        'centres',
+        'subjects',
+        'movement',
+        'detainees',
+        'events'
+      ], done)
+    } else {
+      done();
+    }
+  },
   after: done => {
     sails.lower(done);
   }
