@@ -3,44 +3,42 @@
 Feature('Check In Event', () => {
 
   Scenario('Non-Existent Event should be Created', () => {
-    // ** There's a question around cardinality here - how do we identify an event? **
 
-    Given('a check in event relating to person id `xx` does not already exist', () => {
-      // check that an event relating to a detainee with person_id `xx` does not exist
+    Given('a check in event from centre `abc` relating to person id `xx` has not already occurred', () => {
+      // check that an event from centre `abc` relating to a detainee with person_id `xx` does not exist
     });
-    When('a valid check in event with person id `xx` occurs', () => {
+    When('a valid check in event from centre `abc` with person id `xx` occurs', () => {
       // trigger a check in event with a payload
     });
-    Then('an event relating to detainee with person id `xx` is created from the check in event received', () => {
-      // check that an event relating to detainee `xx` exists
+    Then('an event relating to detainee with person id `abc_xx` is created from the check in event received', () => {
+      // check that an event relating to detainee `abc_xx` exists
     });
 
   });
 
-  Scenario('Existing Event should ...', () => {
-    // ** There's a question around cardinality here - how do we identify an event? **
+  Scenario('Event should be created', () => {
 
-    Given('a check in event relating to person id `xx` already exists', () => {
-      // create an event relating to a detainee with person_id `xx`
+    Given('a check in event from centre `abc` relating to person id `xx` has already occurred', () => {
+      // trigger a check in event from centre `abc` relating to a detainee with person_id `xx`
     });
     When('a valid check in event with person id `xx` occurs', () => {
       // trigger a check in event with a payload
     });
-    Then('...', () => {
-      // ...
+    Then('an event relating to person id `abc_xx` should be created from the check in received', () => {
+      // check that an event relating to detainee `abc_xx` has been created
     });
 
   });
 
   Scenario('Non-Existent Detainee Should be Created', () => {
 
-    Given('a detainee with the person id `xx` does not already exist', () => {
+    Given('a detainee with the person id `abc_xx` does not already exist', () => {
       // check that no detainee model with person_id `xx` exists
     });
-    When('a valid check in event with person id `xx` occurs', () => {
+    When('a valid check in event from centre `abc` with person id `xx` occurs', () => {
       // trigger a check in event with a payload
     });
-    Then('a detainee with person id `xx` is created from the check in event received', () => {
+    Then('a detainee with person id `abc_xx` is created from the check in event received', () => {
       // check that a detainee exists and that the detainee properties are as expected
     });
 
@@ -48,16 +46,16 @@ Feature('Check In Event', () => {
 
   Scenario('Existing Detainee Should Updated', () => {
 
-    Given('a detainee with the person id `xx` already exists', () => {
-      // Create a detainee model with person_id `xx`
+    Given('a detainee with the person id `abc_xx` already exists', () => {
+      // Create a detainee model with person_id `abc_xx`
     });
     And('the time of the event timestamp is later than the existing detainee update timestamp', () => {
-      // Update the detainee model person_id `xx` to ensure the timestamp is < event timestamp
+      // Update the detainee model person_id `abc_xx` to ensure the timestamp is < event timestamp
     });
-    When('a valid check in event with person id `xx` occurs', () => {
+    When('a valid check in event from centre `abc` with person id `xx` occurs', () => {
       // trigger a check in event with a payload
     });
-    Then('the existing detainee with person id `xx` is updated from the check in event received', () => {
+    Then('the existing detainee with person id `abc_xx` is updated from the check in event received', () => {
       // check that the existing detainee properties now match the check in event detainee properties
     });
 
@@ -65,16 +63,16 @@ Feature('Check In Event', () => {
 
   Scenario('Existing Detainee Should Not Be Updated', () => {
 
-    Given('a detainee with the person id `xx` already exists', () => {
-      // Create a detainee model with person_id `xx`
+    Given('a detainee with the person id `abc_xx` already exists', () => {
+      // Create a detainee model with person_id `abc_xx`
     });
     And('the time of the existing detainee update timestamp is later than the event timestamp', () => {
-      // Update the detainee model person_id `xx` to ensure the timestamp is > event timestamp
+      // Update the detainee model person_id `abc_xx` to ensure the timestamp is > event timestamp
     });
-    When('a valid check in event with person id `xx` occurs', () => {
+    When('a valid check in event with from centre `abc` and person id `xx` occurs', () => {
       // trigger a check in event with a payload
     });
-    Then('the existing detainee with person id `xx` should not be updated from the event received', () => {
+    Then('the existing detainee with person id `abc_xx` should not be updated from the event received', () => {
       // check that the existing detainee properties remain the same
     });
 
