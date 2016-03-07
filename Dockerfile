@@ -6,7 +6,7 @@ ENV DB_USER removals
 ENV DB_PASS removals
 ENV DB_HOST 127.0.0.1
 ENV DB_PORT 3306
-ENV NODE_ENV productionAlter
+ENV NODE_ENV production
 ENV LOG_QUERIES 'true'
 
 RUN rpm --rebuilddb && yum update -y && yum install -y curl git which && yum clean all
