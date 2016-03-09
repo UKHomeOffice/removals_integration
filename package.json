@@ -35,6 +35,7 @@
     "postinstall": "precommit install",
     "coverage-test": "multi='xunit=shippable/testresults/result.xml' istanbul cover _mocha",
     "coverage-report": "istanbul report cobertura --dir shippable/codecoverage/",
+    "migrations": "NODE_ENV=productionAlter node utils/run-migrations.js",
     "lint": "eslint ."
   },
   "main": "app.js",
