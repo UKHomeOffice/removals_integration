@@ -2,8 +2,8 @@ global.rewire = require('rewire');
 global.Sails = require('sails');
 global.Barrels = require('barrels');
 global.freeport = require('freeport');
-global.barrels = new Barrels;
-global.overrideSharedBeforeEach = false;
+global.barrels = new Barrels
+
 global.chai = require('chai')
   .use(require('chai-as-promised'))
   .use(require('chai-things'))
@@ -12,6 +12,13 @@ global.expect = chai.expect;
 global.should = chai.should();
 global._ = require('lodash');
 global.sinon = require('sinon');
+global.initializeBarrelsFixtures = function (done) {
+  return barrels.populate([
+        'centres',
+        'subjects',
+        'movement',
+      ], done);
+};
 require('mocha-cakes-2');
 require('sinon-as-promised')(require('bluebird'));
 global.request = require('supertest-as-promised');
@@ -31,6 +38,10 @@ global.request_auth = app =>
     .set('x-forwarded-proto', 'https')
     .set('x-forwarded-proto$', 'https')
     .set('x-real-ip', '127.0.0.1');
+
+global.testConfig = {
+  initializeBarrelsFixtures: true
+};
 
 module.exports = {
   before: done => {
@@ -62,14 +73,8 @@ module.exports = {
 
   },
   beforeEach: done => {
-    if (!global.overrideSharedBeforeEach) {
-      barrels.populate([
-        'centres',
-        'subjects',
-        'movement',
-        'detainees',
-        'events'
-      ], done)
+    if (global.testConfig.initializeBarrelsFixtures) {
+      initializeBarrelsFixtures(done);
     } else {
       done();
     }

@@ -1,0 +1,30 @@
+[
+  {
+    "cid_id": "123",
+    "operation": "check in",
+    "updatedAt": "Fri Feb 26 2016 09:24:20 GMT+0000 (GMT)",
+    "detainee": "bigone_345",
+    "centre": "bigone"
+  },
+  {
+    "cid_id": "234",
+    "operation": "check in",
+    "updatedAt": "Fri Sep 23 2015 14:24:20 GMT+0000 (GMT)",
+    "detainee": "bigone_345",
+    "centre": "bigone"
+  },
+  {
+    "cid_id": "123",
+    "operation": "check in",
+    "updatedAt": "Fri Jan 21 2016 10:34:20 GMT+0000 (GMT)",
+    "detainee": "bigone_345",
+    "centre": "bigone"
+  },
+  {
+    "cid_id": "234",
+    "operation": "check in",
+    "updatedAt": "Fri Feb 24 2016 19:24:20 GMT+0000 (GMT)",
+    "detainee": "bigone_345",
+    "centre": "bigone"
+  }
+]

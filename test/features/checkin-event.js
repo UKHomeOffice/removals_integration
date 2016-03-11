@@ -2,211 +2,284 @@
 
 Feature('Check In Event', () => {
 
-  Scenario('Non-Existent Event should be Created', () => {
+  Scenario('Non-Existent DetaineeEvent should be Created', () => {
 
-    var promise;
     var date = new Date();
-    var isoDate = date.toISOString();
+    var dateString = date.toISOString();
     var payload = {
       person_id: 123,
       cid_id: 100,
       operation: 'check in',
-      timestamp: isoDate,
+      timestamp: dateString,
       gender: 'm',
       nationality: 'gbr',
       centre: 'abc'
     };
-    var detainee = {
-      id: 'abc_123'
-    };
 
     before(function () {
-      global.overrideSharedBeforeEach = true;
+      global.testConfig.initializeBarrelsFixtures = false;
     });
 
     after(function () {
-      return Events.destroy();
+      global.testConfig.initializeBarrelsFixtures = true;
     });
 
-    Given('a check in event from centre `abc` relating to person id 123 has not already occurred', function () {
+    Given('a check in event with timestamp "' + dateString + '" has not already occurred', (done) =>
 
-      return Events.find().then((models) => {
-        return expect(models.length).to.equal(0);
+      global.initializeBarrelsFixtures(function () {
+        DetaineeEvent.find({
+          where: {
+            timestamp: dateString,
+            operation: 'check in'
+          }
+        }).then((models) => {
+          expect(models.length).to.equal(0);
+        }).then(() => done());
       })
 
-    });
+    );
 
-    When('a valid check in event from centre `abc` with person id 123 occurs', function () {
+    When('a valid check in event with timestamp "' + dateString + '" occurs', () =>
 
-      return request(sails.hooks.http.app)
+      request(sails.hooks.http.app)
         .post('/irc_entry/event')
         .send(payload)
-        .expect(201);
+        .expect(201)
 
-    });
+    );
 
-    Then('an event relating to detainee with person id `abc_123` is created from the check in event received', function () {
+    Then('an event with specific timestamp "' + dateString + '" is created from the check in event received', () =>
 
-      return Events.find().then((models) => {
-        models.should.have.length(1);
-        models.should.include.an.item.with.property('detainee', 'abc_123');
-        models.should.include.an.item.with.property('operation', 'check in');
-      });
+      DetaineeEvent.find({
+        where: {
+          timestamp: dateString,
+          operation: 'check in',
+          cid_id: 100,
+          gender: 'male',
+          id: 'abc_123',
+          centre: 'abc'
+        }
+      }).then((models) => expect(models.length).to.equal(1))
 
-    });
+    );
 
   });
 
-  Scenario('Event should be created', () => {
+  Scenario('DetaineeEvent should be created', () => {
 
-    var chain;
     var date = new Date();
-    var isoDate = date.toISOString();
+    var dateString = date.toISOString();
     var payload = {
       person_id: 123,
       cid_id: 100,
       operation: 'check in',
-      timestamp: isoDate,
+      timestamp: dateString,
       gender: 'm',
       nationality: 'gbr',
       centre: 'abc'
-    };
-    var detainee = {
-      id: 'abc_123'
     };
 
     before(function () {
-      global.overrideSharedBeforeEach = true;
+      global.testConfig.initializeBarrelsFixtures = false;
     });
 
     after(function () {
-      return Events.destroy();
+      global.testConfig.initializeBarrelsFixtures = true;
     });
 
-    Given('a check in event from centre `abc` relating to person id 123 has already occurred', () => {
-      // trigger a check in event from centre `abc` relating to a detainee with person_id `xx`
-      Events.find().then((models) => {
-        expect(models.length).to.equal(0);
-      });
-
-      return request(sails.hooks.http.app)
-        .post('/irc_entry/event')
-        .send(payload)
-        .expect(201)
-        .then(() => {
-          return Events.find();
-        });
-
-    });
-
-    When('a valid check in event with person id 123 occurs', () => {
-      // trigger a check in event with a payload
-      return request(sails.hooks.http.app)
-        .post('/irc_entry/event')
-        .send(payload)
-        .expect(201)
-        .then(() => {
-          return Events.find();
-        });
-    });
-
-    Then('an event relating to person id `abc_123` should be created from the check in received', () => {
-      // check that an event relating to detainee `abc_xx` has been created
-      return Events.find().then((models) => {
-        expect(models.length).to.equal(2);
-        expect(models).to.include.an.item.with.property('detainee', 'abc_123');
-        expect(models).to.include.an.item.with.property('operation', 'check in');
-      });
-
-    });
-
-  });
-
-  Scenario('Non-Existent Detainee Should be Created', () => {
-
-    var date = new Date();
-    var isoDate = date.toISOString();
-    var payload = {
-      person_id: 123,
-      cid_id: 100,
-      operation: 'check in',
-      timestamp: isoDate,
-      gender: 'm',
-      nationality: 'gbr',
-      centre: 'abc'
-    };
-    var detainee = {
-      id: 'abc_123'
-    };
-
-    before(function (done) {
-      global.overrideSharedBeforeEach = true;
-      return Detainees.destroy();
-    });
-
-    after(function () {
-      Events.destroy();
-      return Detainees.destroy();
-    });
-
-    Given('a detainee with the person id `abc_xx` does not already exist', () => {
-      // check that no detainee model with person_id `xx` exists
-      return Detainees.find({id: 'abc_123'}).then(models => {
-        models.should.have.length(0);
-      });
-    });
-
-    When('a valid check in event from centre `abc` with person id `xx` occurs', () => {
-      // trigger a check in event with a payload
+    var createEvent = function () {
       return request(sails.hooks.http.app)
         .post('/irc_entry/event')
         .send(payload)
         .expect(201);
-    });
+    }
 
-    Then('a detainee with person id `abc_xx` is created from the check in event received', () => {
-      // check that a detainee exists and that the detainee properties are as expected
-      return Detainees.find({id: 'abc_123'}).then((models) => {
-        models.should.have.length(1);
-        models.should.include.an.item.with.property('id', 'abc_123');
-        models.should.include.an.item.with.property('cid_id', 100);
-      });
+    Given('a check in event with timestamp "' + dateString + '" has already occurred', (done) =>
 
-    });
+      global.initializeBarrelsFixtures(function () {
+        return createEvent()
+          .then(() => {
+            return DetaineeEvent.find({
+              where: {
+                timestamp: dateString,
+                operation: 'check in'
+              }
+            }).then((models) =>
+              expect(models.length).to.equal(1)
+            ).then(() => done());
+          });
+        })
+
+    );
+
+    When('a valid check in event with timestamp "' + dateString + '" occurs', createEvent);
+
+    Then('a check in event with timestamp "' + dateString + '" should be created from the check in received', () =>
+
+      DetaineeEvent.find({
+        where: {
+          timestamp: dateString,
+          operation: 'check in'
+        }
+      }).then((models) =>
+        expect(models.length).to.equal(2)
+      )
+    );
 
   });
 
-  Scenario('Existing Detainee Should Be Updated', () => {
 
-    Given('a detainee with the person id `abc_xx` already exists', () => {
-      // Create a detainee model with person_id `abc_xx`
+  Scenario('Existing DetaineeEvent Should Be Updated From Check In Operation That Occurred After The DetaineeEvent Creation', () => {
+
+    before(function () {
+      global.testConfig.initializeBarrelsFixtures = false;
     });
-    And('the time of the event timestamp is later than the existing detainee update timestamp', () => {
-      // Update the detainee model person_id `abc_xx` to ensure the timestamp is < event timestamp
+
+    after(function () {
+      global.testConfig.initializeBarrelsFixtures = true;
     });
-    When('a valid check in event from centre `abc` with person id `xx` occurs', () => {
-      // trigger a check in event with a payload
+
+    var eventUpdateDateString = (new Date(20000)).toISOString();
+    var detaineeUpdateDateString = (new Date(10000)).toISOString();
+
+    var payload = {
+      person_id: 123,
+      cid_id: 4321,
+      operation: 'check in',
+      timestamp: eventUpdateDateString,
+      gender: 'f',
+      nationality: 'gbr',
+      centre: 'aftercentre'
+    };
+
+    var expectedPersonId = payload.centre + '_' + payload.person_id;
+
+    var detaineeEventAttrs = {
+      person_id: 123,
+      cid_id: 1234,
+      centre: 'aftercentre',
+      gender: 'male',
+      operation: 'check in',
+      timestamp: detaineeUpdateDateString
+    }
+
+    var getSearchResult = () => DetaineeEvent.find({
+      id: expectedPersonId
     });
-    Then('the existing detainee with person id `abc_xx` is updated from the check in event received', () => {
-      // check that the existing detainee properties now match the check in event detainee properties
-    });
+
+    Given('a DetaineeEvent with the person id `' + expectedPersonId + '` already exists', (done) =>
+
+      global.initializeBarrelsFixtures(() =>
+        DetaineeEvent.create(detaineeEventAttrs)
+          .then(() =>
+            getSearchResult()
+              .then((models) => {
+                expect(models[0].gender).to.equal(detaineeEventAttrs.gender);
+                expect(models[0].cid_id).to.equal(detaineeEventAttrs.cid_id);
+              })
+              .then(() => done())
+          )
+      )
+
+    );
+
+    And('the time of the event timestamp (' + payload.timestamp + ') is later than the existing DetaineeEvent creation timestamp (' + detaineeEventAttrs.timestamp + ')', () =>
+      expect(payload.timestamp).to.be.above(detaineeEventAttrs.timestamp)
+    );
+
+    When('a valid check in event from centre `' + payload.centre + '` with person id `' + payload.person_id + '` occurs', () =>
+      request(sails.hooks.http.app)
+        .post('/irc_entry/event')
+        .send(payload)
+        .expect(201)
+    );
+
+    Then('the existing detainee with person id `' + expectedPersonId + '` is updated from the check in event received', () =>
+      getSearchResult().then((models) => {
+        expect(models[0].gender).to.equal('female');
+        expect(models[0].cid_id).to.equal(payload.cid_id);
+        expect(models).to.have.length(2);
+      })
+    );
 
   });
 
-  Scenario('Existing Detainee Should Not Be Updated', () => {
+  Scenario('Existing DetaineeEvent Should Not Be Updated From Check In Operation That Occurred Before The DetaineeEvent Creation', () => {
 
-    Given('a detainee with the person id `abc_xx` already exists', () => {
-      // Create a detainee model with person_id `abc_xx`
+    before(function () {
+      global.testConfig.initializeBarrelsFixtures = false;
     });
-    And('the time of the existing detainee update timestamp is later than the event timestamp', () => {
-      // Update the detainee model person_id `abc_xx` to ensure the timestamp is > event timestamp
+
+    after(function () {
+      global.testConfig.initializeBarrelsFixtures = true;
     });
-    When('a valid check in event with from centre `abc` and person id `xx` occurs', () => {
-      // trigger a check in event with a payload
+
+    var eventUpdateDateString = (new Date(10000)).toISOString();
+    var detaineeUpdateDateString = (new Date(20000)).toISOString();
+
+    var payload = {
+      person_id: 123,
+      cid_id: 4321,
+      operation: 'check in',
+      timestamp: eventUpdateDateString,
+      gender: 'f',
+      nationality: 'gbr',
+      centre: 'anothercentre'
+    };
+
+    var expectedPersonId = payload.centre + '_' + payload.person_id;
+
+    var detaineeEventAttrs = {
+      person_id: 123,
+      cid_id: 1234,
+      centre: 'anothercentre',
+      gender: 'male',
+      operation: 'update',
+      timestamp: detaineeUpdateDateString
+    }
+
+    var getSearchResult = () => DetaineeEvent.find({
+      id: expectedPersonId
     });
-    Then('the existing detainee with person id `abc_xx` should not be updated from the event received', () => {
-      // check that the existing detainee properties remain the same
-    });
+
+    Given('a DetaineeEvent with the person id `' + expectedPersonId + '` already exists', (done) =>
+
+      global.initializeBarrelsFixtures(function () {
+        return DetaineeEvent.create(detaineeEventAttrs)
+          .then(() =>
+            getSearchResult()
+              .then((models) => {
+                expect(models[0].gender).to.equal(detaineeEventAttrs.gender);
+                expect(models[0].cid_id).to.equal(detaineeEventAttrs.cid_id);
+              })
+              .then(() => done())
+          );
+      })
+
+    );
+
+    And('the time of the existing DetaineeEvent timestamp (' + detaineeEventAttrs.timestamp + ') is later than the time of the operation timestamp (' + payload.timestamp + ')', () =>
+      expect(detaineeEventAttrs.timestamp).to.be.above(payload.timestamp)
+    );
+
+    When('a valid check in operation from centre `' + payload.centre + '` with person id `' + payload.person_id + '` occurs', () =>
+
+      request(sails.hooks.http.app)
+        .post('/irc_entry/event')
+        .send(payload)
+        .expect(201)
+
+    );
+
+    Then('the existing DetaineeEvent with person id `' + expectedPersonId + '` should not be updated from the operation received', () =>
+
+      getSearchResult().then((models) => {
+        expect(models.length).to.equal(2);
+        expect(models[0].gender).to.equal('male');
+        expect(models[0].cid_id).to.equal(1234);
+      })
+
+    );
 
   });
 });

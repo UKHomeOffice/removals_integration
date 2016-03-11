@@ -1,6 +1,8 @@
-/* global IrcEntryEventValidatorService Events Detainees */
+/* global IrcEntryEventValidatorService DetaineeEvent */
 
 'use strict';
+
+var moment = require('moment')
 
 /**
  * IrcPostController
@@ -64,36 +66,68 @@ module.exports = {
 
   process_event: function (request_body) {
     if (request_body.operation === 'check in') {
-      return this.saveDetainee(request_body).then(this.saveEvent.bind(this, request_body));
+      return this.saveEvent(request_body);
     }
     throw new ValidationError('Unknown');
   },
 
-  getPID: (entity) => `${entity.centre}_${entity.person_id}`,
-
-  saveEvent: (request_body, detainee) => {
-    return Events.create({
-      operation: request_body.operation,
-      timestamp: request_body.timestamp,
-      detainee: detainee
-    });
-  },
-
-  saveDetainee: function (request_body) {
-    var person_id = this.getPID(request_body);
-    return Detainees.findOrCreate({
-      id: person_id
-    }, {
-      id: person_id,
+  saveEvent: function (request_body) {
+    var event = {
+      person_id: request_body.person_id,
       cid_id: request_body.cid_id,
       gender: request_body.gender === 'm' ? 'male' : 'female',
-      centre: request_body.centre
-    });
+      nationality: request_body.nationality,
+      centre: request_body.centre,
+      operation: request_body.operation,
+      timestamp: request_body.timestamp
+    };
+    var id = event.centre + '_' + event.person_id;
+
+
+    return DetaineeEvent.create(event).then(() => {
+      return DetaineeEvent.find({id: id}).then((detainees) => {
+        return detainees.map((existing) => {
+          if (moment(event.timestamp).isAfter(existing.lastTimestamp)) {
+            return DetaineeEvent.update({id: id}, {
+              cid_id: event.cid_id,
+              gender: event.gender,
+              nationality: event.nationality
+            }).exec(() => {})
+          }
+        })
+      });
+    })
   },
+
+  // resolveMovements: (eventAttrs) =>
+  //   Subjects.find()
+  //     .then(subjectsModels =>
+  //       subjectsModels.find(subject =>
+  //         subject.cid_id === eventAttrs.cid_id
+  //       )
+  //     )
+  //     .then(foundSubject => {
+  //       Movement.findOne({
+  //         where: {
+  //           subjects: foundSubject ? foundSubject.id : null
+  //         }
+  //       }).then(movement => {
+  //         if (movement && moment(movement.createdAt).isSame(eventAttrs.timestamp, 'day')) {
+  //           return movement;
+  //         }
+  //       }).then(movement => {
+  //         if (movement) {
+  //           // console.log('movement --> \n', movement, '\n', eventAttrs)
+  //           // return Movement.destroy(movement)
+  //           return movement;
+  //         }
+  //       })
+  //     }),
 
   eventPost: function (req, res) {
     return IrcEntryEventValidatorService.validate(req.body)
       .then(this.process_event)
+      .then(this.resolveMovements)
       .then(res.ok)
       .catch(ValidationError, (error) => {
         res.badRequest(error.message);
