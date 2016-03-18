@@ -2,7 +2,8 @@
 
 'use strict';
 
-var moment = require('moment')
+var moment = require('moment');
+var ModelHelpers = require('../lib/ModelHelpers');
 
 /**
  * IrcPostController
@@ -71,7 +72,7 @@ module.exports = {
     throw new ValidationError('Unknown');
   },
 
-  saveEvent: function (request_body) {
+  saveEvent: request_body => {
     var event = {
       person_id: request_body.person_id,
       cid_id: request_body.cid_id,
@@ -81,53 +82,26 @@ module.exports = {
       operation: request_body.operation,
       timestamp: request_body.timestamp
     };
-    var id = event.centre + '_' + event.person_id;
+    var id = ModelHelpers.getPid.call(event);
 
-
-    return DetaineeEvent.create(event).then(() => {
-      return DetaineeEvent.find({id: id}).then((detainees) => {
-        return detainees.map((existing) => {
+    return DetaineeEvent.create(event).then(() =>
+      DetaineeEvent.find({id: id}).then((detainees) =>
+        detainees.map(existing => {
           if (moment(event.timestamp).isAfter(existing.lastTimestamp)) {
             return DetaineeEvent.update({id: id}, {
               cid_id: event.cid_id,
               gender: event.gender,
               nationality: event.nationality
-            }).exec(() => {})
+            }).exec(() => {});
           }
         })
-      });
-    })
+      )
+    );
   },
-
-  // resolveMovements: (eventAttrs) =>
-  //   Subjects.find()
-  //     .then(subjectsModels =>
-  //       subjectsModels.find(subject =>
-  //         subject.cid_id === eventAttrs.cid_id
-  //       )
-  //     )
-  //     .then(foundSubject => {
-  //       Movement.findOne({
-  //         where: {
-  //           subjects: foundSubject ? foundSubject.id : null
-  //         }
-  //       }).then(movement => {
-  //         if (movement && moment(movement.createdAt).isSame(eventAttrs.timestamp, 'day')) {
-  //           return movement;
-  //         }
-  //       }).then(movement => {
-  //         if (movement) {
-  //           // console.log('movement --> \n', movement, '\n', eventAttrs)
-  //           // return Movement.destroy(movement)
-  //           return movement;
-  //         }
-  //       })
-  //     }),
 
   eventPost: function (req, res) {
     return IrcEntryEventValidatorService.validate(req.body)
       .then(this.process_event)
-      .then(this.resolveMovements)
       .then(res.ok)
       .catch(ValidationError, (error) => {
         res.badRequest(error.message);

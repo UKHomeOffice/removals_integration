@@ -15,8 +15,8 @@ module.exports = {
 
   movementOptions: (req, res) => res.ok(CidEntryMovementValidatorService.schema),
 
-  movementProcess: movement => {
-    return Movement.findAndUpdateOrCreate(movement['MO Ref'],
+  movementProcess: movement =>
+    Movement.findAndUpdateOrCreate(movement['MO Ref'],
       {
         centre: movement.centre,
         subjects: movement.subjects,
@@ -24,10 +24,9 @@ module.exports = {
         direction: movement['MO In/MO Out'],
         active: true
       }
-    )
-  },
+    ),
 
-  subjectsProcess: movement => {
+  subjectsProcess: movement =>
     Subjects.findAndUpdateOrCreate(
       {cid_id: movement['CID Person ID']},
       {
@@ -35,8 +34,7 @@ module.exports = {
         gender: movement.gender
       }
       )
-      .then(subjects => _.merge(movement, {subjects: subjects.id}))
-  },
+      .then(subjects => _.merge(movement, {subjects: subjects.id})),
 
   formatMovement: movement => {
     movement['MO Ref'] = parseInt(movement['MO Ref']);
@@ -47,15 +45,9 @@ module.exports = {
   removeNonOccupancy: movement =>
     Centres.removeNonOccupancy().then(() => movement),
 
-  populateMovementWithCentreAndGender: movement => {
-    return _.memoize(Centres.getGenderAndCentreByCIDLocation)(movement.Location)
-      .then(result => {
-        console.log('----');
-        console.log(result);
-        console.log('----')
-        return  _.merge(movement, result)
-      })
-  },
+  populateMovementWithCentreAndGender: movement =>
+    _.memoize(Centres.getGenderAndCentreByCIDLocation)(movement.Location)
+      .then(result => _.merge(movement, result)),
 
   filterNonEmptyMovements: movement => movement.centre && movement['MO Ref'] > 1,
 

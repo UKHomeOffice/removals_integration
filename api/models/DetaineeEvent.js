@@ -11,9 +11,7 @@ const model = {
     id: {
       type: 'string',
       required: true,
-      defaultsTo: function () {
-        return `${this.centre}_${this.person_id}`
-      }
+      defaultsTo: ModelHelpers.getPid
     },
     operation: {
       type: 'string',

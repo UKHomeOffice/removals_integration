@@ -30,7 +30,7 @@ describe('INTEGRATION Cid_EntryController', () => {
           .expect(400)
       );
     });
-    describe.only('good payload', () => {
+    describe('good payload', () => {
       beforeEach(() => {
         sinon.stub(Centres, 'update');
         return request_auth(sails.hooks.http.app)

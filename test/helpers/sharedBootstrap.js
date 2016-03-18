@@ -80,6 +80,6 @@ module.exports = {
     }
   },
   after: done => {
-    sails.lower(done);
+    Sails.lower(done);
   }
 };
