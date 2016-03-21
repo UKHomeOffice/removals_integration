@@ -2,7 +2,7 @@
 
 'use strict';
 
-var moment = require('moment');
+const moment = require('moment');
 var ModelHelpers = require('../lib/ModelHelpers');
 
 /**
@@ -69,7 +69,7 @@ module.exports = {
     if (request_body.operation === 'check in') {
       return this.saveEvent(request_body);
     }
-    throw new ValidationError('Unknown');
+    throw new ValidationError('Invalid operation');
   },
 
   saveEvent: request_body => {
@@ -84,19 +84,19 @@ module.exports = {
     };
     var id = ModelHelpers.getPid.call(event);
 
-    return DetaineeEvent.create(event).then(() =>
-      DetaineeEvent.find({id: id}).then((detainees) =>
-        detainees.map(existing => {
-          if (moment(event.timestamp).isAfter(existing.lastTimestamp)) {
-            return DetaineeEvent.update({id: id}, {
-              cid_id: event.cid_id,
-              gender: event.gender,
-              nationality: event.nationality
-            }).exec(() => {});
-          }
-        })
-      )
-    );
+    var updateIfAfter = (existing) => {
+      if (moment(event.timestamp).isAfter(existing.lastTimestamp)) {
+        return DetaineeEvent.update({id: id}, {
+          cid_id: event.cid_id,
+          gender: event.gender,
+          nationality: event.nationality
+        }).exec(() => {});
+      }
+    };
+    var mapDetainees = (detainees) => detainees.map(updateIfAfter);
+    var findById = () => DetaineeEvent.find({id: id}).then(mapDetainees);
+
+    return DetaineeEvent.create(event).then(findById);
   },
 
   eventPost: function (req, res) {
