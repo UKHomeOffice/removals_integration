@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ "start test run" =~ $1 ]]; then
+if [[ "start test run migrations" =~ $1 ]]; then
     CMD=( $( which npm ) )
     CMD+=( "${@:1}" )
 else
