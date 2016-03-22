@@ -4,11 +4,11 @@ Feature('Check In Event', () => {
 
   Scenario('Non-Existent DetaineeEvent should be Created', () => {
 
-    var date = new Date();
+    var date = new Date(923423234);
     var dateString = date.toISOString();
     var payload = {
       person_id: 123,
-      cid_id: 100,
+      cid_id: 999,
       operation: 'check in',
       timestamp: dateString,
       gender: 'm',
@@ -55,7 +55,7 @@ Feature('Check In Event', () => {
         where: {
           timestamp: dateString,
           operation: 'check in',
-          cid_id: 100,
+          cid_id: 999,
           gender: 'male',
           id: 'abc_123',
           centre: 'abc'
@@ -232,7 +232,7 @@ Feature('Check In Event', () => {
       cid_id: 1234,
       centre: 'anothercentre',
       gender: 'male',
-      operation: 'update',
+      operation: 'check in',
       timestamp: detaineeUpdateDateString
     }
 

@@ -76,11 +76,12 @@ module.exports = {
     };
     var id = DetaineeEvent.getPid(event);
     var updateIfAfter = (existing) => {
-      if (moment(event.timestamp).isAfter(existing.lastTimestamp)) {
+      if (moment(event.timestamp).isAfter(existing.timestamp)) {
         return DetaineeEvent.update({id: id}, {
           cid_id: event.cid_id,
           gender: event.gender,
-          nationality: event.nationality
+          nationality: event.nationality,
+          timestamp: event.timestamp
         }).exec(() => {});
       }
     };

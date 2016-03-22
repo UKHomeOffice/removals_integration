@@ -18,7 +18,9 @@ global.initializeBarrelsFixtures = function () {
       'centres',
       'subjects',
       'movement',
+      'detaineeevent'
     ], resolve);
+
   });
 };
 require('mocha-cakes-2');
@@ -74,11 +76,9 @@ module.exports = {
     });
 
   },
-  beforeEach: done => {
+  beforeEach: () => {
     if (global.testConfig.initializeBarrelsFixtures) {
-      initializeBarrelsFixtures().then(done);
-    } else {
-      done();
+      return initializeBarrelsFixtures();
     }
   },
   after: done => {

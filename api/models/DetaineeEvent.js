@@ -25,7 +25,7 @@ const model = {
     operation: {
       type: 'string',
       required: true,
-      enum: ['check in', 'update']
+      enum: ['check in']
     },
     cid_id: {
       type: 'integer',
@@ -47,7 +47,7 @@ const model = {
       type: 'datetime',
       required: true
     },
-    lastTimestamp: {
+    originalTimestamp: {
       type: 'datetime',
       required: true,
       defaultsTo: function () {
