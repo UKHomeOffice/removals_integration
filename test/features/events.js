@@ -1,6 +1,6 @@
 'use strict';
 
-Feature('Check In Event', () => {
+Feature('Detainee Event', () => {
 
   Scenario('Non-Existent DetaineeEvent should be Created', () => {
 
@@ -24,7 +24,7 @@ Feature('Check In Event', () => {
       global.testConfig.initializeBarrelsFixtures = true;
     });
 
-    Given('a check in event with timestamp "' + dateString + '" has not already occurred', () =>
+    Given('a detainee event with timestamp "' + dateString + '" has not already occurred', () =>
 
       global.initializeBarrelsFixtures()
         .then(() =>
@@ -40,7 +40,7 @@ Feature('Check In Event', () => {
 
     );
 
-    When('a valid check in event with timestamp "' + dateString + '" occurs', () =>
+    When('a valid detainee event with timestamp "' + dateString + '" occurs', () =>
 
       request(sails.hooks.http.app)
         .post('/irc_entry/event')
@@ -49,7 +49,7 @@ Feature('Check In Event', () => {
 
     );
 
-    Then('an event with specific timestamp "' + dateString + '" is created from the check in event received', () =>
+    Then('an event with specific timestamp "' + dateString + '" is created from the detainee event received', () =>
 
       DetaineeEvent.find({
         where: {
@@ -95,7 +95,7 @@ Feature('Check In Event', () => {
         .expect(201);
     }
 
-    Given('a check in event with timestamp "' + dateString + '" has already occurred', () =>
+    Given('a detainee event with timestamp "' + dateString + '" has already occurred', () =>
 
       global.initializeBarrelsFixtures().then(() =>
         createEvent().then(() =>
@@ -110,9 +110,9 @@ Feature('Check In Event', () => {
 
     );
 
-    When('a valid check in event with timestamp "' + dateString + '" occurs', createEvent);
+    When('a valid detainee event with timestamp "' + dateString + '" occurs', createEvent);
 
-    Then('a check in event with timestamp "' + dateString + '" should be created from the check in received', () =>
+    Then('a detainee event with timestamp "' + dateString + '" should be created from the check in received', () =>
 
       DetaineeEvent.find({
         where: {
@@ -125,7 +125,6 @@ Feature('Check In Event', () => {
     );
 
   });
-
 
   Scenario('Existing DetaineeEvent Should Be Updated From Check In Operation That Occurred After The DetaineeEvent Creation', () => {
 
@@ -185,14 +184,14 @@ Feature('Check In Event', () => {
       expect(payload.timestamp).to.be.above(detaineeEventAttrs.timestamp)
     );
 
-    When('a valid check in event from centre `' + payload.centre + '` with person id `' + payload.person_id + '` occurs', () =>
+    When('a valid detainee event from centre `' + payload.centre + '` with person id `' + payload.person_id + '` occurs', () =>
       request(sails.hooks.http.app)
         .post('/irc_entry/event')
         .send(payload)
         .expect(201)
     );
 
-    Then('the existing detainee with person id `' + expectedPersonId + '` is updated from the check in event received', () =>
+    Then('the existing detainee with person id `' + expectedPersonId + '` is updated from the detainee event received', () =>
       getSearchResult().then((models) => {
         expect(models[0].gender).to.equal('female');
         expect(models[0].cid_id).to.equal(payload.cid_id);
