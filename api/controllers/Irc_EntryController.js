@@ -3,14 +3,6 @@
 'use strict';
 
 const moment = require('moment');
-var ModelHelpers = require('../lib/ModelHelpers');
-
-/**
- * IrcPostController
- *
- * @description :: Server-side logic for managing ircposts
- * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
- */
 var ValidationError = require('../lib/exceptions/ValidationError');
 
 module.exports = {
@@ -82,8 +74,7 @@ module.exports = {
       operation: request_body.operation,
       timestamp: request_body.timestamp
     };
-    var id = ModelHelpers.getPid.call(event);
-
+    var id = DetaineeEvent.getPid(event);
     var updateIfAfter = (existing) => {
       if (moment(event.timestamp).isAfter(existing.lastTimestamp)) {
         return DetaineeEvent.update({id: id}, {

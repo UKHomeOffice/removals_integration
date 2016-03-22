@@ -12,12 +12,14 @@ global.expect = chai.expect;
 global.should = chai.should();
 global._ = require('lodash');
 global.sinon = require('sinon');
-global.initializeBarrelsFixtures = function (done) {
-  return barrels.populate([
-        'centres',
-        'subjects',
-        'movement',
-      ], done);
+global.initializeBarrelsFixtures = function () {
+  return new Promise(function (resolve) {
+    barrels.populate([
+      'centres',
+      'subjects',
+      'movement',
+    ], resolve);
+  });
 };
 require('mocha-cakes-2');
 require('sinon-as-promised')(require('bluebird'));
@@ -74,7 +76,7 @@ module.exports = {
   },
   beforeEach: done => {
     if (global.testConfig.initializeBarrelsFixtures) {
-      initializeBarrelsFixtures(done);
+      initializeBarrelsFixtures().then(done);
     } else {
       done();
     }

@@ -24,18 +24,19 @@ Feature('Check In Event', () => {
       global.testConfig.initializeBarrelsFixtures = true;
     });
 
-    Given('a check in event with timestamp "' + dateString + '" has not already occurred', (done) =>
+    Given('a check in event with timestamp "' + dateString + '" has not already occurred', () =>
 
-      global.initializeBarrelsFixtures(function () {
-        DetaineeEvent.find({
-          where: {
-            timestamp: dateString,
-            operation: 'check in'
-          }
-        }).then((models) => {
-          expect(models.length).to.equal(0);
-        }).then(() => done());
-      })
+      global.initializeBarrelsFixtures()
+        .then(() =>
+          DetaineeEvent.find({
+            where: {
+              timestamp: dateString,
+              operation: 'check in'
+            }
+          }).then((models) =>
+            expect(models.length).to.equal(0)
+          )
+        )
 
     );
 
@@ -94,21 +95,18 @@ Feature('Check In Event', () => {
         .expect(201);
     }
 
-    Given('a check in event with timestamp "' + dateString + '" has already occurred', (done) =>
+    Given('a check in event with timestamp "' + dateString + '" has already occurred', () =>
 
-      global.initializeBarrelsFixtures(function () {
-        return createEvent()
-          .then(() => {
-            return DetaineeEvent.find({
+      global.initializeBarrelsFixtures().then(() =>
+        createEvent().then(() =>
+            DetaineeEvent.find({
               where: {
                 timestamp: dateString,
                 operation: 'check in'
               }
-            }).then((models) =>
-              expect(models.length).to.equal(1)
-            ).then(() => done());
-          });
-        })
+            }).then((models) => expect(models.length).to.equal(1))
+          )
+        )
 
     );
 
@@ -167,19 +165,19 @@ Feature('Check In Event', () => {
       id: expectedPersonId
     });
 
-    Given('a DetaineeEvent with the person id `' + expectedPersonId + '` already exists', (done) =>
+    Given('a DetaineeEvent with the person id `' + expectedPersonId + '` already exists', () =>
 
-      global.initializeBarrelsFixtures(() =>
-        DetaineeEvent.create(detaineeEventAttrs)
-          .then(() =>
-            getSearchResult()
-              .then((models) => {
-                expect(models[0].gender).to.equal(detaineeEventAttrs.gender);
-                expect(models[0].cid_id).to.equal(detaineeEventAttrs.cid_id);
-              })
-              .then(() => done())
-          )
-      )
+      global.initializeBarrelsFixtures()
+        .then(() =>
+          DetaineeEvent.create(detaineeEventAttrs)
+            .then(() =>
+              getSearchResult()
+                .then((models) => {
+                  expect(models[0].gender).to.equal(detaineeEventAttrs.gender);
+                  expect(models[0].cid_id).to.equal(detaineeEventAttrs.cid_id);
+                })
+            )
+        )
 
     );
 
@@ -242,19 +240,16 @@ Feature('Check In Event', () => {
       id: expectedPersonId
     });
 
-    Given('a DetaineeEvent with the person id `' + expectedPersonId + '` already exists', (done) =>
+    Given('a DetaineeEvent with the person id `' + expectedPersonId + '` already exists', () =>
 
-      global.initializeBarrelsFixtures(function () {
-        return DetaineeEvent.create(detaineeEventAttrs)
-          .then(() =>
-            getSearchResult()
-              .then((models) => {
-                expect(models[0].gender).to.equal(detaineeEventAttrs.gender);
-                expect(models[0].cid_id).to.equal(detaineeEventAttrs.cid_id);
-              })
-              .then(() => done())
-          );
-      })
+      global.initializeBarrelsFixtures().then(() =>
+        DetaineeEvent.create(detaineeEventAttrs).then(() =>
+          getSearchResult().then((models) => {
+            expect(models[0].gender).to.equal(detaineeEventAttrs.gender);
+            expect(models[0].cid_id).to.equal(detaineeEventAttrs.cid_id);
+          })
+        )
+      )
 
     );
 

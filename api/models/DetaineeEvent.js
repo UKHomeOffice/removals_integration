@@ -3,15 +3,24 @@
 var LinkingModels = require('sails-linking-models');
 var ModelHelpers = require('../lib/ModelHelpers');
 
+var getPid = function (entity) {
+  entity = entity || this;
+  return `${entity.centre}_${entity.person_id}`;
+};
+
 const model = {
   schema: true,
-  autoCreatedAt: true,
-  autoUpdatedAt: true,
   attributes: {
     id: {
       type: 'string',
       required: true,
-      defaultsTo: ModelHelpers.getPid
+      defaultsTo: function () {
+        return getPid(this);
+      }
+    },
+    person_id: {
+      type: 'string',
+      required: true
     },
     operation: {
       type: 'string',
@@ -45,8 +54,8 @@ const model = {
         return this.timestamp;
       }
     }
-  }
+  },
+  getPid: getPid
 };
 
-module.exports = ModelHelpers.mixin(model);
-module.exports = LinkingModels.mixin(model);
+module.exports = LinkingModels.mixin(ModelHelpers.mixin(model));

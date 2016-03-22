@@ -7,10 +7,6 @@ module.exports = {
   },
   mixin: function (model) {
     model.findAndUpdateOrCreate = this.findAndUpdateOrCreate;
-    model.getPid = this.getPid;
     return model;
-  },
-  getPid: function getPid () {
-    return `${this.centre}_${this.person_id}`;
   }
 };
