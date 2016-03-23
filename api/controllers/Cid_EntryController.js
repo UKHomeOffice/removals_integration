@@ -1,4 +1,4 @@
-/* global Movement CidEntryMovementValidatorService Detainee */
+/* global Movement CidEntryMovementValidatorService Detainee Prebooking */
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');
@@ -25,6 +25,11 @@ module.exports = {
         active: true
       }
     ),
+
+  removePrebookingWithRelatedMovement: movements =>
+    Prebooking.destroy({
+      cid_id: movements.map(movement => movement['CID Person ID'])
+    }),
 
   detaineeProcess: movement =>
     Detainee.findAndUpdateOrCreate(
@@ -69,6 +74,8 @@ module.exports = {
 
   publishCentreUpdates: movements =>
     Centres.find()
+      .populate('male_prebooking')
+      .populate('female_prebooking')
       .populate('male_active_movements_in')
       .populate('male_active_movements_out')
       .populate('female_active_movements_in')
@@ -87,6 +94,7 @@ module.exports = {
 
       .filter(this.filterNonEmptyMovements)
 
+      .tap(this.removePrebookingWithRelatedMovement)
       .map(this.detaineeProcess)
       .map(this.movementProcess)
 
@@ -96,7 +104,7 @@ module.exports = {
 
       .then(res.ok)
       .catch(ValidationError, error => {
-        res.badRequest(error.message);
+        res.badRequest(error.result.errors[0].message);
       })
       .catch(error => {
         res.serverError(error.message);

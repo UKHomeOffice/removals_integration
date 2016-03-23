@@ -130,6 +130,31 @@ describe('UNIT Cid_EntryController', () => {
     );
   });
 
+  describe('removePrebookingWithRelatedMovement', () => {
+    beforeEach(() => {
+      sinon.stub(Prebooking, 'destroy').returns(true);
+    });
+    afterEach(() => {
+      Prebooking.destroy.restore();
+    });
+
+    var dummyMovements = [{
+      "gender": "male",
+      "CID Person ID": 4
+    },{
+      "gender": "female",
+      "CID Person ID": 5
+    },
+      ];
+    it('should pass the correct mapping to destroy', () => {
+      controller.removePrebookingWithRelatedMovement(dummyMovements);
+      return expect(Prebooking.destroy).to.be.calledWith(
+        {
+          cid_id: [4,5]
+        });
+    });
+  });
+
   describe('detaineeProcess', () => {
     var dummyMovement = {
       "gender": "male",
@@ -239,6 +264,22 @@ describe('UNIT Cid_EntryController', () => {
     afterEach(() => Centres.find.restore());
 
     var dummyMovement = [{id: 1}, {id: 2}, {id: 3}];
+    var dummyPrebooking = [{id: 1}, {id: 2}, {id: 3}];
+
+    it('should eventually resolve with the prebookings', () =>
+      expect(controller.publishCentreUpdates(dummyPrebooking)).to.eventually.eql(dummyPrebooking)
+    );
+
+    it('Should populate female_prebooking', () =>
+      controller.publishCentreUpdates()
+        .then(() => expect(populate).to.be.calledWith('female_prebooking'))
+    );
+
+    it('Should populate male_prebooking', () =>
+      controller.publishCentreUpdates()
+        .then(() => expect(populate).to.be.calledWith('male_prebooking'))
+    );
+
     it('should eventually resolve with the movements', () =>
       expect(controller.publishCentreUpdates(dummyMovement)).to.eventually.eql(dummyMovement)
     );
