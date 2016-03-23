@@ -43,6 +43,8 @@ module.exports = {
 
   publishCentreUpdates: centres =>
     Centres.find()
+      .populate('male_prebooking')
+      .populate('female_prebooking')
       .populate('male_active_movements_in')
       .populate('male_active_movements_out')
       .populate('female_active_movements_in')
