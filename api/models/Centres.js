@@ -110,8 +110,8 @@ const model = {
           femaleInUse: this.female_in_use,
           maleOutOfCommission: this.male_out_of_commission,
           femaleOutOfCommission: this.female_out_of_commission,
-          maleAvailability: this.maleCapacity - this.male_out_of_commission - this.male_in_use - this.male_prebooking.length,
-          femaleAvailability: this.femaleCapacity - this.female_out_of_commission - this.female_in_use - this.female_prebooking.length,
+          maleAvailability: this.male_capacity - this.male_out_of_commission - this.male_in_use - this.male_prebooking.length,
+          femaleAvailability: this.female_capacity - this.female_out_of_commission - this.female_in_use - this.female_prebooking.length,
           malePrebooking: this.male_prebooking.length,
           femalePrebooking: this.female_prebooking.length,
           maleActiveMovementsIn: this.male_active_movements_in.length,
@@ -167,7 +167,18 @@ const model = {
         }
         return centre[0];
       });
-  }
+  },
+
+  publishCentreUpdates: collection =>
+    Centres.find()
+      .populate('male_prebooking')
+      .populate('female_prebooking')
+      .populate('male_active_movements_in')
+      .populate('male_active_movements_out')
+      .populate('female_active_movements_in')
+      .populate('female_active_movements_out')
+      .then(centres => _.map(centres, centre => Centres.publishUpdate(centre.id, centre.toJSON())))
+      .then(() => collection)
 };
 
 module.exports = LinkingModels.mixin(model);

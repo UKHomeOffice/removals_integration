@@ -132,7 +132,7 @@ describe('UNIT Cid_EntryController', () => {
 
   describe('removePrebookingWithRelatedMovement', () => {
     beforeEach(() => {
-      sinon.stub(Prebooking, 'destroy').returns(true);
+      sinon.stub(Prebooking, 'destroy').resolves(true);
     });
     afterEach(() => {
       Prebooking.destroy.restore();
@@ -141,16 +141,16 @@ describe('UNIT Cid_EntryController', () => {
     var dummyMovements = [{
       "gender": "male",
       "CID Person ID": 4
-    },{
+    }, {
       "gender": "female",
       "CID Person ID": 5
     },
-      ];
+    ];
     it('should pass the correct mapping to destroy', () => {
       controller.removePrebookingWithRelatedMovement(dummyMovements);
       return expect(Prebooking.destroy).to.be.calledWith(
         {
-          cid_id: [4,5]
+          cid_id: [4, 5]
         });
     });
   });
@@ -253,58 +253,6 @@ describe('UNIT Cid_EntryController', () => {
       expect(controller.updateReceivedDate(dummyMovement)).to.eventually.eql(dummyMovement)
     );
   });
-
-  describe('publishCentreUpdates', () => {
-    var populate;
-    beforeEach(() => {
-      populate = sinon.stub().returnsThis();
-      sinon.stub(Centres, 'find').returns({populate: populate, then: sinon.stub().resolves(true)});
-    });
-
-    afterEach(() => Centres.find.restore());
-
-    var dummyMovement = [{id: 1}, {id: 2}, {id: 3}];
-    var dummyPrebooking = [{id: 1}, {id: 2}, {id: 3}];
-
-    it('should eventually resolve with the prebookings', () =>
-      expect(controller.publishCentreUpdates(dummyPrebooking)).to.eventually.eql(dummyPrebooking)
-    );
-
-    it('Should populate female_prebooking', () =>
-      controller.publishCentreUpdates()
-        .then(() => expect(populate).to.be.calledWith('female_prebooking'))
-    );
-
-    it('Should populate male_prebooking', () =>
-      controller.publishCentreUpdates()
-        .then(() => expect(populate).to.be.calledWith('male_prebooking'))
-    );
-
-    it('should eventually resolve with the movements', () =>
-      expect(controller.publishCentreUpdates(dummyMovement)).to.eventually.eql(dummyMovement)
-    );
-
-    it('Should populate male_active_movements_in', () =>
-      controller.publishCentreUpdates()
-        .then(() => expect(populate).to.be.calledWith('male_active_movements_in'))
-    );
-
-    it('Should populate male_active_movements_out', () =>
-      controller.publishCentreUpdates()
-        .then(() => expect(populate).to.be.calledWith('male_active_movements_out'))
-    );
-
-    it('Should populate female_active_movements_in', () =>
-      controller.publishCentreUpdates()
-        .then(() => expect(populate).to.be.calledWith('female_active_movements_in'))
-    );
-
-    it('Should populate female_active_movements_out', () =>
-      controller.publishCentreUpdates()
-        .then(() => expect(populate).to.be.calledWith('female_active_movements_out'))
-    );
-  });
-
 });
 
 var validdummydata = {

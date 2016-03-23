@@ -72,17 +72,6 @@ module.exports = {
     Centres.update({}, {cid_received_date: new Date()})
       .then(() => movements),
 
-  publishCentreUpdates: movements =>
-    Centres.find()
-      .populate('male_prebooking')
-      .populate('female_prebooking')
-      .populate('male_active_movements_in')
-      .populate('male_active_movements_out')
-      .populate('female_active_movements_in')
-      .populate('female_active_movements_out')
-      .then(centres => _.map(centres, centre => Centres.publishUpdate(centre.id, centre.toJSON())))
-      .then(() => movements),
-
   movementPost: function (req, res) {
     return CidEntryMovementValidatorService.validate(req.body)
       .then(body => body.Output)
@@ -100,7 +89,7 @@ module.exports = {
 
       .then(this.markNonMatchingMovementsAsInactive)
       .then(this.updateReceivedDate)
-      .then(this.publishCentreUpdates)
+      .then(Centres.publishCentreUpdates)
 
       .then(res.ok)
       .catch(ValidationError, error => {

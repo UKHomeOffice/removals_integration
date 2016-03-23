@@ -113,6 +113,57 @@ describe('UNIT CentreModel', () => {
       expect(Centres.destroy).to.have.been.calledWith({'mo-type': 'non-occupancy'})
     );
   });
+
+  describe('publishCentreUpdates', () => {
+    var populate;
+    var dummyMovement = [{id: 1}, {id: 2}, {id: 3}];
+    var dummyPrebooking = [{id: 4}, {id: 5}, {id: 6}];
+
+    beforeEach(() => {
+      populate = sinon.stub().returnsThis();
+      sinon.stub(Centres, 'find').returns({populate: populate, then: sinon.stub().resolves(true)});
+    });
+
+    afterEach(() => Centres.find.restore());
+
+    it('should eventually resolve with the prebookings', () =>
+      expect(model.publishCentreUpdates(dummyPrebooking)).to.eventually.eql(dummyPrebooking)
+    );
+
+    it('Should populate female_prebooking', () =>
+      model.publishCentreUpdates()
+        .then(() => expect(populate).to.be.calledWith('female_prebooking'))
+    );
+
+    it('Should populate male_prebooking', () =>
+      model.publishCentreUpdates()
+        .then(() => expect(populate).to.be.calledWith('male_prebooking'))
+    );
+
+    it('should eventually resolve with the movements', () =>
+      expect(model.publishCentreUpdates(dummyMovement)).to.eventually.eql(dummyMovement)
+    );
+
+    it('Should populate male_active_movements_in', () =>
+      model.publishCentreUpdates()
+        .then(() => expect(populate).to.be.calledWith('male_active_movements_in'))
+    );
+
+    it('Should populate male_active_movements_out', () =>
+      model.publishCentreUpdates()
+        .then(() => expect(populate).to.be.calledWith('male_active_movements_out'))
+    );
+
+    it('Should populate female_active_movements_in', () =>
+      model.publishCentreUpdates()
+        .then(() => expect(populate).to.be.calledWith('female_active_movements_in'))
+    );
+
+    it('Should populate female_active_movements_out', () =>
+      model.publishCentreUpdates()
+        .then(() => expect(populate).to.be.calledWith('female_active_movements_out'))
+    );
+  });
 });
 
 describe('INTEGRATION CentreModel', () => {
