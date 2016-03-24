@@ -81,6 +81,14 @@ const model = {
       required: true,
       defaultsTo: 0
     },
+    events: {
+      collection: 'event',
+      via: 'centre'
+    },
+    detainees: {
+      collection: 'detainee',
+      via: 'centre'
+    },
     toJSON: function () {
       const maleCapacity = this.male_capacity - this.male_in_use;
       const femaleCapacity = this.female_capacity - this.female_in_use;

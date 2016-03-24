@@ -104,11 +104,11 @@ describe('INTEGRATION Irc_EntryController', () => {
       });
       beforeEach(() => {
         sinon.stub(IrcEntryEventValidatorService, 'validate').resolves(payload)
-        sinon.stub(DetaineeEvent, 'create').resolves(true);
+        sinon.stub(Event, 'create').resolves(true);
       });
       afterEach(() => {
         IrcEntryEventValidatorService.validate.restore();
-        DetaineeEvent.create.restore();
+        Event.create.restore();
       });
 
       it('should return a 201 if all is good', () => {
@@ -326,11 +326,10 @@ describe('UNIT Irc_EntryController', () => {
 
   describe('saveEvent', () => {
     var payload;
-    var detainee;
 
     beforeEach(() => {
       payload = {
-        timestamp: new Date().toString(),
+        timestamp: new Date().toISOString(),
         operation: 'check in',
         nationality: 'gbr',
         centre: 'bigone',
@@ -338,26 +337,22 @@ describe('UNIT Irc_EntryController', () => {
         gender: 'f',
         person_id: 999
       };
-      sinon.stub(DetaineeEvent, 'create').resolves(true);
-    });
 
-    afterEach(() => {
-      DetaineeEvent.create.restore();
     });
 
     it('check in should be captured', () =>
-      expect(controller.saveEvent(payload, detainee)).to.be.eventually.ok
+      expect(controller.saveEvent(payload)).to.be.eventually.ok
     );
-    it('should create a DetaineeEvent with the event payload', () => {
-      controller.saveEvent(payload, detainee);
-      expect(DetaineeEvent.create).to.be.calledWith({
-        operation: payload.operation,
-        timestamp: payload.timestamp,
-        centre: payload.centre,
-        cid_id: payload.cid_id,
-        gender: 'female',
-        nationality: payload.nationality,
-        person_id: payload.person_id,
+
+    it('should create a Event with the event payload', () => {
+      var mockEventObject = { 'hello': 'there'};
+      sinon.stub(controller, 'buildEventObject').resolves(mockEventObject);
+      sinon.stub(Event, 'create');
+
+      return controller.saveEvent(payload).then(() => {
+        expect(Event.create).to.be.calledWith(mockEventObject)
+        controller.buildEventObject.restore();
+        Event.create.restore();
       });
     });
   });

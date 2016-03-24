@@ -4,27 +4,19 @@ var LinkingModels = require('sails-linking-models');
 var ModelHelpers = require('../lib/ModelHelpers');
 
 var getPid = function (entity) {
-  return `${entity.centre}_${entity.person_id}`;
+  return `entity.centre.id_${entity.person_id}`;
 };
 
 const model = {
   schema: true,
   attributes: {
-    id: {
-      type: 'string',
-      required: true,
-      defaultsTo: function () {
-        return getPid(this);
-      }
-    },
     person_id: {
       type: 'string',
       required: true
     },
-    operation: {
-      type: 'string',
-      required: true,
-      enum: ['check in']
+    centre: {
+      model: "centres",
+      required: true
     },
     cid_id: {
       type: 'integer',
@@ -38,10 +30,6 @@ const model = {
     nationality: {
       type: 'string'
     },
-    centre: {
-      type: 'string',
-      required: true
-    },
     timestamp: {
       type: 'datetime',
       required: true
@@ -52,9 +40,25 @@ const model = {
       defaultsTo: function () {
         return this.timestamp;
       }
+    },
+    events: {
+      collection: 'event',
+      via: 'detainee'
     }
   },
-  getPid: getPid
+  getPid: getPid,
+  normalizeGender: function (gender) {
+    switch (gender) {
+    case 'f':
+    case 'female':
+      return 'female';
+
+    case 'm':
+    case 'male':
+      return 'male';
+    }
+    throw new Error('Unknown Gender');
+  }
 };
 
 module.exports = LinkingModels.mixin(ModelHelpers.mixin(model));

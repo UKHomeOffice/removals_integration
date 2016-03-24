@@ -18,8 +18,12 @@ global.initializeBarrelsFixtures = function () {
       'centres',
       'subjects',
       'movement',
-      'detaineeevent'
-    ], resolve);
+      'detainee',
+      'event'
+    ], function (err) {
+      if (err) throw err;
+      resolve();
+    });
 
   });
 };

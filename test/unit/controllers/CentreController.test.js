@@ -3,7 +3,7 @@
 var Validator = require('jsonapi-validator').Validator;
 var validator = new Validator();
 
-describe('INTEGRATION CentreController', () => {
+Scenario('INTEGRATION CentreController', () => {
     var centre;
 
     beforeEach(() => Centres.create({name: _.uniqueId("test")})
@@ -21,7 +21,7 @@ describe('INTEGRATION CentreController', () => {
             .to.have.length.at.least(3)
 
           expect(res.body.data)
-            .to.contain.a.thing.with.property('id', '1')
+            .to.contain.a.thing.with.property('id', centre.id.toString())
             .and.to.contain.a.thing.with.property('attributes')
 
         }
@@ -40,10 +40,10 @@ describe('INTEGRATION CentreController', () => {
     it('should be able to update an existing centre', () =>
         request_auth(sails.hooks.http.app)
           .put('/centres/' + centre.id)
-          .send({name: "renamed"})
+          .send({male_capacity: 10})
           .expect(200)
           .then(() => Centres.findOne(centre.id))
-          .then(centre => expect(centre).to.have.property('name', 'renamed'))
+          .then(centre => expect(centre).to.have.property('male_capacity', 10))
     );
 
     it('should be able to delete an existing centre', () =>
@@ -57,11 +57,13 @@ describe('INTEGRATION CentreController', () => {
 );
 
 describe('INTEGRATION CentreController Schema checks', () => {
+
   it('should provide valid output for a centre', () =>
       request(sails.hooks.http.app)
         .get('/centres/1')
         .expect(200)
-        .then(response => expect(validator.isValid(response.body)).to.be.true
+        .then(response =>
+          expect(validator.isValid(response.body)).to.be.true
       )
   );
 
