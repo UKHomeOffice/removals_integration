@@ -1,31 +1,36 @@
 [
   {
     "centre": 1,
-    "subjects": 1,
+    "gender": "male",
+    "cid_id": 123,
     "id": 1,
     "active": true
   },
   {
     "centre": 2,
-    "subjects": 1,
+    "gender": "male",
+    "cid_id": 123,
     "id": 2,
     "active": true
   },
   {
     "centre": 1,
-    "subjects": 2,
+    "gender": "female",
+    "cid_id": 456,
     "id": 3,
     "active": true
   },
   {
     "centre": 1,
-    "subjects": 2,
+    "gender": "female",
+    "cid_id": 321,
     "id": 316512,
     "active": false
   },
   {
     "centre": 1,
-    "subjects": 3,
+    "gender": "male",
+    "cid_id": 312,
     "id": 132023,
     "active": true
   }

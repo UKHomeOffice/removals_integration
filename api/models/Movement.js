@@ -1,26 +1,7 @@
-/* global Subjects */
 "use strict";
 
 var LinkingModels = require('sails-linking-models');
 var ModelHelpers = require('../lib/ModelHelpers');
-
-var setNormalisedRelationships = (record, done) => {
-  // this is a workaround until waterline supports conditional
-  // joins see balderdashy/waterline#988 and balderdashy/waterline#645
-  delete record.active_male_centre_in;
-  delete record.active_male_centre_out;
-  delete record.active_female_centre_in;
-  delete record.active_female_centre_out;
-  if (record.active) {
-    Subjects.findOne(record.subjects)
-      .then(subjects => {
-        record[`active_${subjects.gender}_centre_${record.direction}`] = record.centre;
-      })
-      .finally(() => done());
-  } else {
-    done();
-  }
-};
 
 const model = {
   schema: true,
@@ -29,10 +10,6 @@ const model = {
   attributes: {
     centre: {
       model: "centres",
-      required: true
-    },
-    subjects: {
-      model: "subjects",
       required: true
     },
     active: {
@@ -44,22 +21,16 @@ const model = {
       required: true,
       defaultsTo: 0
     },
-    active_male_centre_in: {
-      model: "centres"
+    gender: {
+      type: 'string',
+      enum: ['male', 'female'],
+      required: true
     },
-    active_male_centre_out: {
-      model: "centres"
-    },
-    active_female_centre_in: {
-      model: "centres"
-    },
-    active_female_centre_out: {
-      model: "centres"
+    cid_id: {
+      type: 'integer',
+      required: true
     }
   },
-  beforeUpdate: setNormalisedRelationships,
-
-  beforeCreate: setNormalisedRelationships,
 
   afterCreate: function (record, done) {
     this.publishCreate(record);

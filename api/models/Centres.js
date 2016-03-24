@@ -56,26 +56,6 @@ const model = {
     female_cid_name: {
       type: 'array'
     },
-    male_active_movements_in: {
-      collection: 'movement',
-      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
-      via: 'active_male_centre_in'
-    },
-    male_active_movements_out: {
-      collection: 'movement',
-      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
-      via: 'active_male_centre_out'
-    },
-    female_active_movements_in: {
-      collection: 'movement',
-      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
-      via: 'active_female_centre_in'
-    },
-    female_active_movements_out: {
-      collection: 'movement',
-      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
-      via: 'active_female_centre_out'
-    },
     mo_type: {
       type: 'string',
       required: true,
@@ -87,6 +67,10 @@ const model = {
     },
     detainees: {
       collection: 'detainee',
+      via: 'centre'
+    },
+    movements: {
+      collection: 'movement',
       via: 'centre'
     },
     toJSON: function () {
