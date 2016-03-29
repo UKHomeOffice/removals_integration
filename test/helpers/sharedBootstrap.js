@@ -40,6 +40,7 @@ module.exports = {
           cors: false,
           csrf: false,
           views: false,
+          "sails-bunyan-request-logging": false,
           skipper: false
         },
         log: {
