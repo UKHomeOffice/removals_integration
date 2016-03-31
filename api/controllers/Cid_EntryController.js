@@ -19,9 +19,11 @@ module.exports = {
     Movement.findAndUpdateOrCreate(movement['MO Ref'],
       {
         centre: movement.centre,
-        subjects: movement.subjects,
         id: movement['MO Ref'],
+        cid_id: movement['CID Person ID'],
+        timestamp: movement["MO Date"],
         direction: movement['MO In/MO Out'],
+        gender: movement.gender,
         active: true
       }
     ),
@@ -39,6 +41,7 @@ module.exports = {
   formatMovement: movement => {
     movement['MO Ref'] = parseInt(movement['MO Ref']);
     movement['MO In/MO Out'] = movement['MO In/MO Out'].toLowerCase().trim();
+    movement['MO Date'] = new Date(movement['MO Date']);
     return movement;
   },
 
@@ -65,10 +68,6 @@ module.exports = {
 
   publishCentreUpdates: movements =>
     Centres.find()
-      .populate('male_active_movements_in')
-      .populate('male_active_movements_out')
-      .populate('female_active_movements_in')
-      .populate('female_active_movements_out')
       .then(centres => _.map(centres, centre => Centres.publishUpdate(centre.id, centre)))
       .then(() => Centres.update({cid_received_date: new Date()}))
       .then(() => movements),

@@ -40,10 +40,6 @@ describe('UNIT CentreModel', () => {
       female_in_use: 4,
       male_out_of_commission: 3,
       female_out_of_commission: 9,
-      male_active_movements_in: [{centres: 123, subjects: 1, id: 1}, {centres: 123, subjects: 2, id: 2}],
-      male_active_movements_out: [{centres: 123, subjects: 1, id: 1}, {centres: 123, subjects: 2, id: 2}],
-      female_active_movements_in: [{centres: 123, subjects: 3, id: 1}],
-      female_active_movements_out: [{centres: 123, subjects: 3, id: 1}],
       modelLinks: sinon.stub().returns(['links'])
     };
 
@@ -63,10 +59,6 @@ describe('UNIT CentreModel', () => {
           femaleOutOfCommission: that.female_out_of_commission,
           maleAvailability: 2,
           femaleAvailability: -1,
-          maleActiveMovementsIn: that.male_active_movements_in.length,
-          maleActiveMovementsOut: that.male_active_movements_out.length,
-          femaleActiveMovementsIn: that.female_active_movements_in.length,
-          femaleActiveMovementsOut: that.female_active_movements_out.length
         },
         id: that.id.toString(),
         type: "centre",
@@ -85,10 +77,6 @@ describe('UNIT CentreModel', () => {
       expect(subject).to.have.a.property('femaleCapacity', 12);
       expect(subject).to.have.a.property('maleInUse', 4);
       expect(subject).to.have.a.property('femaleInUse', 4);
-      expect(subject).to.have.a.property('maleActiveMovementsIn', 2);
-      expect(subject).to.have.a.property('maleActiveMovementsOut', 2);
-      expect(subject).to.have.a.property('femaleActiveMovementsIn', 1);
-      expect(subject).to.have.a.property('femaleActiveMovementsOut', 1);
     });
 
   });

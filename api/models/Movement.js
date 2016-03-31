@@ -19,7 +19,7 @@ const model = {
     direction: {
       type: 'string',
       required: true,
-      defaultsTo: 0
+      enum: ['in', 'out']
     },
     gender: {
       type: 'string',
@@ -28,6 +28,10 @@ const model = {
     },
     cid_id: {
       type: 'integer',
+      required: true
+    },
+    timestamp: {
+      type: 'date',
       required: true
     }
   },

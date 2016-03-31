@@ -2,35 +2,30 @@
   {
     "centre": 1,
     "detainee": 1,
-    "person_id": 1244234,
     "operation": "check in",
     "timestamp": "Fri Feb 26 2016 09:24:20 GMT+0000 (GMT)"
   },
   {
     "centre": 1,
     "detainee": 1,
-    "cid_id": 1244234,
     "operation": "check out",
     "timestamp": "Sat Feb 27 2016 10:31:18 GMT+0000 (GMT)"
   },
   {
     "centre": 1,
     "detainee": 2,
-    "cid_id": 4534533,
     "operation": "reinstatement",
     "timestamp": "Fri Feb 26 2016 09:24:20 GMT+0000 (GMT)"
   },
   {
     "centre": 2,
     "detainee": 3,
-    "cid_id": 56434534,
     "operation": "inter site transfer",
     "timestamp": "Fri Feb 26 2016 03:51:27 GMT+0000 (GMT)"
   },
   {
     "centre": 2,
     "detainee": 4,
-    "cid_id": 234234534,
     "operation": "check out",
     "timestamp": "Fri Feb 26 2016 12:51:22 GMT+0000 (GMT)"
   }

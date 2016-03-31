@@ -91,11 +91,7 @@ const model = {
           maleOutOfCommission: this.male_out_of_commission,
           femaleOutOfCommission: this.female_out_of_commission,
           maleAvailability: maleCapacity - this.male_out_of_commission,
-          femaleAvailability: femaleCapacity - this.female_out_of_commission,
-          maleActiveMovementsIn: this.male_active_movements_in.length,
-          maleActiveMovementsOut: this.male_active_movements_out.length,
-          femaleActiveMovementsIn: this.female_active_movements_in.length,
-          femaleActiveMovementsOut: this.female_active_movements_out.length
+          femaleAvailability: femaleCapacity - this.female_out_of_commission
         },
         links: this.modelLinks('centres', reverseRouteService)
       };
