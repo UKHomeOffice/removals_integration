@@ -1,7 +1,7 @@
 /* global Centres BedcountService */
 'use strict';
 
-describe('BedCountService', () => {
+describe.only('BedCountService', () => {
   describe('getSummary', () => {
 
     it('new calc', () => {

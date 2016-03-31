@@ -1,19 +1,40 @@
-/* global Centres BedCountService doSomethingWithASummary */
+/* global Centres Detainee Movement BedCountService doSomethingWithASummary */
 'use strict';
+
+var debugEnabled = 0;
+var debugThis = function () {
+  debugEnabled && console.log.apply(null, ['RECONCILIATION DEBUG:'].concat(arguments));
+};
+var not = function (fn) {
+  return function () {
+    return !fn.apply(null, arguments || []);
+  };
+};
+
+var dateSort = function (a, b) {
+  return (a.timestamp > b.timestamp) - (a.timestamp < b.timestamp);
+};
+
+var populateEventDetainees = function (centre) {
+  return new Promise((resolve) => {
+    Promise.all(centre.events.map((event, eventKey) => {
+      return Detainee.findOne({ id: event.detainee })
+        .then((detainee) => {
+          centre.events[eventKey].detainee = detainee;
+        });
+    })).then(() => resolve(centre));
+  });
+};
 
 module.exports = {
   calculateCentreState: function (centre, visibilityScope, eventReconciliationScopeFactory, movementReconciliationScopeFactory) {
-    var debugEnabled = 0;
-    var debugThis = function () {
-      debugEnabled && console.log.apply(null, ['RECONCILIATION DEBUG:'].concat(arguments));
-    };
     const visibleRange = { '>=': visibilityScope.from, '<=': visibilityScope.to };
     debugThis('Starting Reconciliation for centre', centre.id, centre.name);
     debugThis('Visibility', visibleRange);
     return Centres.findOne({ name: centre.name })
       .populate('events', { timestamp: visibleRange })
       .populate('movements', { timestamp: visibleRange })
-      .then((centre) => this.populateEventDetainees(centre))
+      .then((centre) => populateEventDetainees(centre))
       .then((centre) => {
         debugThis('Centre', centre.id, centre.name, 'has', centre.movements.length, 'movements and', centre.events.length, 'events in this visibility range');
         var unreconciledMovements = [];
@@ -33,14 +54,7 @@ module.exports = {
           result && debugThis('✔', 'Skipping Reconciliation of Event', event.id, 'because it was already reconciled');
           return result;
         };
-        var not = function (fn) {
-          return function () {
-            return !fn.apply(null, arguments || []);
-          }
-        }
-        var dateSort = function (a, b) {
-          return (a.timestamp > b.timestamp) - (a.timestamp < b.timestamp);
-        }
+
 
         var promiseChain = Promise.all(centre.movements.filter(not(isReconciledMovement)).sort(dateSort).map(function (movement) {
           var reconciliationScope = movementReconciliationScopeFactory(movement.timestamp);
@@ -122,16 +136,6 @@ module.exports = {
             return result;
           });
       });
-  },
-  populateEventDetainees: function (centre) {
-    return new Promise((resolve) => {
-      Promise.all(centre.events.map((event, eventKey) => {
-        return Detainee.findOne({ id: event.detainee })
-          .then((detainee) => {
-            centre.events[eventKey].detainee = detainee;
-          });
-      })).then(() => resolve(centre));
-    });
   }
 }
 ;
