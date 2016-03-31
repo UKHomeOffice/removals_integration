@@ -5,7 +5,7 @@ module.exports = {
   calculateCentreState: function (centre, visibilityScope, eventReconciliationScopeFactory, movementReconciliationScopeFactory) {
     var debugEnabled = 0;
     var debugThis = function () {
-      debugEnabled && console.log('RECONCILIATION DEBUG:', ...arguments);
+      debugEnabled && console.log.apply(null, ['RECONCILIATION DEBUG:'].concat(arguments));
     };
     const visibleRange = { '>=': visibilityScope.from, '<=': visibilityScope.to };
     debugThis('Starting Reconciliation for centre', centre.id, centre.name);
