@@ -43,8 +43,7 @@ module.exports = {
     return movement;
   },
 
-  removeNonOccupancy: movement =>
-    Centres.removeNonOccupancy().then(() => movement),
+  filterNonOccupancyMovements: movement => movement['MO Type'] !== "Non-Occupancy",
 
   populateMovementWithCentreAndGender: movement =>
     _.memoize(Centres.getGenderAndCentreByCIDLocation)(movement.Location)
@@ -82,7 +81,7 @@ module.exports = {
       .then(body => body.Output)
       .map(this.formatMovement)
 
-      .then(this.removeNonOccupancy)
+      .filter(this.filterNonOccupancyMovements)
 
       .map(this.populateMovementWithCentreAndGender)
 
