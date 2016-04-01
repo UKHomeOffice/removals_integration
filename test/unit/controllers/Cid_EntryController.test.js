@@ -39,13 +39,13 @@ describe('INTEGRATION Cid_EntryController', () => {
       });
       afterEach(() => Centres.update.restore());
       it('should create new active movements found in the payload', () =>
-        expect(Movement.find({active: true})).to.eventually.have.length(24)
+        expect(Movement.find({active: true})).to.eventually.have.length(19)
       );
       it('should mark existing all movements in the payload as active that were previously inactive', () =>
         expect(Movement.findOne(316512)).to.eventually.include({'active': true})
       );
       it('should mark existing all movements not in the payload as inactive', () =>
-        expect(Movement.find({active: false})).to.eventually.have.length(3)
+        expect(Movement.find({active: false})).to.eventually.have.length(4)
       );
     })
     it('should return the schema for an options request', () =>
@@ -168,21 +168,6 @@ describe('UNIT Cid_EntryController', () => {
     );
   });
 
-  describe('removeNonOccupancy', () => {
-    var dummyMovement = {
-      "foo": "bar"
-    };
-    beforeEach(() => sinon.spy(Centres, 'removeNonOccupancy'));
-    afterEach(() => Centres.removeNonOccupancy.restore());
-
-    it('should call Centres.removeNonOccupancy', () => {
-      controller.removeNonOccupancy(dummyMovement);
-      expect(Centres.removeNonOccupancy).to.have.been.called;
-    });
-    it('should return the movement', () =>
-      expect(controller.removeNonOccupancy(dummyMovement)).to.eventually.eql(dummyMovement)
-    );
-  });
 
   describe('populateMovementWithCentreAndGender', () => {
     var dummyMovement = {
@@ -211,7 +196,19 @@ describe('UNIT Cid_EntryController', () => {
     it('should remove any movement that does not have a valid movement order reference', () =>
       expect(controller.filterNonEmptyMovements({"centre": 1})).to.not.be.ok
     );
-  })
+  });
+
+  describe('filterNonOccupancyMovements', () => {
+    it('should leave in occupancy movements', () =>
+      expect(controller.filterNonOccupancyMovements({"MO Type": "Occupancy"})).to.be.ok
+    );
+    it('should leave in removal movements', () =>
+      expect(controller.filterNonOccupancyMovements({"MO Type": "Removal"})).to.be.ok
+    );
+    it('should remove non-occupancy movements', () =>
+      expect(controller.filterNonOccupancyMovements({"MO Type": "Non-Occupancy"})).to.not.be.ok
+    );
+  });
 
   describe('markNonMatchingMovementsAsInactive', () => {
     it('should pass correct mapping to Movement.update', () => {
