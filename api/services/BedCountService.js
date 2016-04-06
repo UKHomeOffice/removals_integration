@@ -1,8 +1,11 @@
 /* global Centres Detainee Movement BedCountService doSomethingWithASummary */
 'use strict';
 
-var debugEnabled = 0;
-var debugThis = () => debugEnabled && console.log.apply(null, ['RECONCILIATION DEBUG:'].concat(arguments));
+var debugEnabled = 1;
+var debugThis = function () {
+  var args = Array.prototype.slice.call(arguments);
+  debugEnabled && console.log.apply(null, ['RECONCILIATION DEBUG:'].concat(args));
+};
 var not = function (fn) {
   return function () {
     return !fn.apply(null, arguments || []);

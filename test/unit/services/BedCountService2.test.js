@@ -1,7 +1,7 @@
 /* global Centres BedcountService */
 'use strict';
 
-const days = (days) => 1000*60*60*24*days;
+const days = (days) => 1000 * 60 * 60 * 24 * days;
 const dayAdjusted = (date, dayAdjust) => new Date(dayAdjust ? date.getTime() + days(dayAdjust) : date.getTime());
 const startOfDay = (date, dayAdjust) => {
   const start = dayAdjusted(date, dayAdjust);
@@ -28,7 +28,11 @@ const vScopeFactory = (date) => new Scope(startOfDay(date, -2), endOfDay(date));
 const erScopeFactory = (date) => new Scope(startOfDay(date, -2), endOfDay(date));
 const mrScopeFactory = (date) => new Scope(startOfDay(date), endOfDay(date, 2));
 
-const test = (data, date, checks) => Centres.create(data.centres)
+const test = (data, date, checks) => Centres.destroy()
+  .then(() => Movement.destroy())
+  .then(() => Detainee.destroy())
+  .then(() => Event.destroy())
+  .then(() => Centres.create(data.centres))
   .then(() => Movement.create(data.movements))
   .then(() => Detainee.create(data.detainees))
   .then(() => Event.create(data.events))
@@ -37,6 +41,7 @@ const test = (data, date, checks) => Centres.create(data.centres)
   .then(checks);
 
 describe('BedCountService', () => {
+  
   describe('getSummary', () => {
 
     it('new calc', () => {
@@ -96,14 +101,14 @@ describe('BedCountService', () => {
         ]
       };
 
-     return test(data, new Date('01/03/2016'), (result) => {
+      return test(data, new Date('01/03/2016'), (result) => {
         expect(result.reconciled).to.have.length(1);
         expect(result.unreconciledEvents).to.have.length(1);
         expect(result.unreconciledMovements).to.have.length(1);
       });
     });
 
-    it('should flag an event without a movement', () => {
+    it('?should flag an event without a movement', () => {
       var data = {
         centres: [
           {
@@ -111,7 +116,7 @@ describe('BedCountService', () => {
             name: 'BedCountServiceTestCentre'
           }
         ],
-        movements: [ ],
+        movements: [],
         detainees: [
           {
             "id": 1,
@@ -134,14 +139,14 @@ describe('BedCountService', () => {
         ]
       };
 
-     return test(data, new Date('01/03/2016'), (result) => {
+      return test(data, new Date('01/03/2016'), (result) => {
         expect(result.reconciled).to.have.length(0);
         expect(result.unreconciledEvents).to.have.length(1);
         expect(result.unreconciledMovements).to.have.length(0);
       });
     });
 
-    it('should flag a movement without an event', () => {
+    it('?should flag a movement without an event', () => {
       var data = {
         centres: [
           {
@@ -171,17 +176,17 @@ describe('BedCountService', () => {
             "timestamp": new Date('01/01/2016')
           }
         ],
-        events: [ ]
+        events: []
       };
 
-     return test(data, new Date('01/03/2016'), (result) => {
+      return test(data, new Date('01/03/2016'), (result) => {
         expect(result.reconciled).to.have.length(0);
         expect(result.unreconciledEvents).to.have.length(0);
         expect(result.unreconciledMovements).to.have.length(1);
       });
     });
 
-    it('should reconcile an event with a movement', () => {
+    it('?should reconcile a visible event with a visible movement', () => {
       var data = {
         centres: [
           {
@@ -229,7 +234,7 @@ describe('BedCountService', () => {
       });
     });
 
-    it('should reconcile an event today with a movement from yesterday', () => {
+    it('should reconcile a visible movement with an event which falls inside the movement reconciliation scope', () => {
       const data = {
         centres: [
           {
@@ -265,7 +270,7 @@ describe('BedCountService', () => {
             "centre": { id: 1 },
             "detainee": 1,
             "operation": "check in",
-            "timestamp": new Date('01/02/2016')
+            "timestamp": new Date('01/03/2016')
           }
         ]
       };
@@ -277,7 +282,7 @@ describe('BedCountService', () => {
       });
     });
 
-    it('should reconcile an event from yesterday with a movement received today', () => {
+    it('should not reconcile a visible movement with an event which falls before the movement reconciliation scope', () => {
       const data = {
         centres: [
           {
@@ -318,9 +323,201 @@ describe('BedCountService', () => {
         ]
       };
 
-      return test(data, new Date('01/01/2016'), (result) => {
+      return test(data, new Date('01/04/2016'), (result) => {
+        expect(result.reconciled).to.have.length(0);
+        expect(result.unreconciledEvents).to.have.length(0);
+        expect(result.unreconciledMovements).to.have.length(1);
+      });
+    });
+
+    it('should not reconcile a visible movement with an event which falls after of the movement reconciliation scope', () => {
+      const data = {
+        centres: [
+          {
+            id: 1,
+            name: 'BedCountServiceTestCentre'
+          }
+        ],
+        movements: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 12345,
+            "active": true,
+            "direction": "in",
+            "timestamp": new Date('01/02/2016')
+          }
+        ],
+        detainees: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "cid_id": 12345,
+            "person_id": 222222,
+            "gender": "male",
+            "nationality": "swe",
+            "timestamp": new Date('01/02/2016')
+          }
+        ],
+        events: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "detainee": 1,
+            "operation": "check in",
+            "timestamp": new Date('01/05/2016')
+          }
+        ]
+      };
+
+      return test(data, new Date('01/03/2016'), (result) => {
+        expect(result.reconciled).to.have.length(0);
+        expect(result.unreconciledEvents).to.have.length(0);
+        expect(result.unreconciledMovements).to.have.length(1);
+      });
+    });
+
+    it('should reconcile a visible event with a movement which falls inside the event reconciliation scope', () => {
+      const data = {
+        centres: [
+          {
+            id: 1,
+            name: 'BedCountServiceTestCentre'
+          }
+        ],
+        movements: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 12345,
+            "active": true,
+            "direction": "in",
+            "timestamp": new Date('01/02/2016')
+          }
+        ],
+        detainees: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "cid_id": 12345,
+            "person_id": 222222,
+            "gender": "male",
+            "nationality": "swe",
+            "timestamp": new Date('01/02/2016')
+          }
+        ],
+        events: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "detainee": 1,
+            "operation": "check in",
+            "timestamp": new Date('01/03/2016')
+          }
+        ]
+      };
+
+      return test(data, new Date('01/05/2016'), (result) => {
         expect(result.reconciled).to.have.length(1);
         expect(result.unreconciledEvents).to.have.length(0);
+        expect(result.unreconciledMovements).to.have.length(0);
+      });
+    });
+
+    it('should not reconcile a visible event with a movement which falls before the event reconciliation scope', () => {
+      const data = {
+        centres: [
+          {
+            id: 1,
+            name: 'BedCountServiceTestCentre'
+          }
+        ],
+        movements: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 12345,
+            "active": true,
+            "direction": "in",
+            "timestamp": new Date('01/01/2016')
+          }
+        ],
+        detainees: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "cid_id": 12345,
+            "person_id": 222222,
+            "gender": "male",
+            "nationality": "swe",
+            "timestamp": new Date('01/01/2016')
+          }
+        ],
+        events: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "detainee": 1,
+            "operation": "check in",
+            "timestamp": new Date('01/04/2016')
+          }
+        ]
+      };
+
+      return test(data, new Date('01/05/2016'), (result) => {
+        expect(result.reconciled).to.have.length(0);
+        expect(result.unreconciledEvents).to.have.length(1);
+        expect(result.unreconciledMovements).to.have.length(0);
+      });
+    });
+
+    it('should not reconcile a visible event with a movement which falls after of the event reconciliation scope', () => {
+      const data = {
+        centres: [
+          {
+            id: 1,
+            name: 'BedCountServiceTestCentre'
+          }
+        ],
+        movements: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 12345,
+            "active": true,
+            "direction": "in",
+            "timestamp": new Date('01/04/2016')
+          }
+        ],
+        detainees: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "cid_id": 12345,
+            "person_id": 222222,
+            "gender": "male",
+            "nationality": "swe",
+            "timestamp": new Date('01/02/2016')
+          }
+        ],
+        events: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "detainee": 1,
+            "operation": "check in",
+            "timestamp": new Date('01/03/2016')
+          }
+        ]
+      };
+
+      return test(data, new Date('01/03/2016'), (result) => {
+        expect(result.reconciled).to.have.length(0);
+        expect(result.unreconciledEvents).to.have.length(1);
         expect(result.unreconciledMovements).to.have.length(0);
       });
     });
