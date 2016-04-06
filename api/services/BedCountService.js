@@ -16,7 +16,7 @@ var populateEventDetainees = centre => Promise.all(centre.events.map(
 
 module.exports = {
   calculateCentreState: function (centre, visibilityScope, eventReconciliationScopeFactory, movementReconciliationScopeFactory) {
-    const visibleRange = { '>=': visibilityScope.from, '<': visibilityScope.to };
+    const visibleRange = { '>=': visibilityScope.from, '<=': visibilityScope.to };
     debugThis('Starting Reconciliation for centre', centre.id, centre.name);
     debugThis('Visibility', visibleRange);
     return Centres.findOne({ name: centre.name })
@@ -46,7 +46,7 @@ module.exports = {
           var eventQuery = {
             where: {
               operation: movement.direction === 'in' ? ['check in', 'reinstatement'] : ['check out'],
-              timestamp: { '>=': reconciliationScope.from, '<': reconciliationScope.to }
+              timestamp: { '>=': reconciliationScope.from, '<=': reconciliationScope.to }
             },
             sort: 'timestamp ASC'
           };
@@ -81,7 +81,7 @@ module.exports = {
                 centre: event.centre,
                 cid_id: event.detainee.cid_id,
                 direction: ['check in', 'reinstatement'].indexOf(event.operation) > -1 ? 'in' : 'out',
-                timestamp: { '>=': reconciliationScope.from, '<': reconciliationScope.to }
+                timestamp: { '>=': reconciliationScope.from, '<=': reconciliationScope.to }
               },
               sort: 'timestamp ASC'
             };

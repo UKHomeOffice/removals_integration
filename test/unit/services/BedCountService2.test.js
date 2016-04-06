@@ -8,16 +8,25 @@ const startOfDay = (date, dayAdjust) => {
   start.setHours(0);
   start.setMinutes(0);
   start.setSeconds(0);
+  start.setMilliseconds(0);
   return start;
+};
+const endOfDay = (date, dayAdjust) => {
+  const end = dayAdjusted(date, dayAdjust);
+  end.setHours(23);
+  end.setMinutes(59);
+  end.setSeconds(59);
+  end.setMilliseconds(999);
+  return end;
 };
 function Scope(from, to) {
   this.from = from;
   this.to = to;
 }
 
-const vScopeFactory = (date) => new Scope(startOfDay(date, -2), startOfDay(date, 1));
-const erScopeFactory = (date) => new Scope(startOfDay(date, -2), startOfDay(date, 1));
-const mrScopeFactory = (date) => new Scope(startOfDay(date), startOfDay(date, 3));
+const vScopeFactory = (date) => new Scope(startOfDay(date, -2), endOfDay(date));
+const erScopeFactory = (date) => new Scope(startOfDay(date, -2), endOfDay(date));
+const mrScopeFactory = (date) => new Scope(startOfDay(date), endOfDay(date, 2));
 
 const test = (data, date, checks) => Centres.create(data.centres)
   .then(() => Movement.create(data.movements))
