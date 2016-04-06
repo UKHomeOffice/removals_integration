@@ -10,21 +10,14 @@ const startOfDay = (date, dayAdjust) => {
   start.setSeconds(0);
   return start;
 };
-const endOfDay = (date, dayAdjust) => {
-  const end = dayAdjusted(date, dayAdjust);
-  end.setHours(23);
-  end.setMinutes(59);
-  end.setSeconds(59);
-  return end;
-};
 function Scope(from, to) {
   this.from = from;
   this.to = to;
 }
 
-const vScopeFactory = (date) => new Scope(startOfDay(date, -2), endOfDay(date));
-const erScopeFactory = (date) => new Scope(startOfDay(date, -2), endOfDay(date));
-const mrScopeFactory = (date) => new Scope(startOfDay(date), endOfDay(date, 2));
+const vScopeFactory = (date) => new Scope(startOfDay(date, -2), startOfDay(date, 1));
+const erScopeFactory = (date) => new Scope(startOfDay(date, -2), startOfDay(date, 1));
+const mrScopeFactory = (date) => new Scope(startOfDay(date), startOfDay(date, 3));
 
 const test = (data, date, checks) => Centres.create(data.centres)
   .then(() => Movement.create(data.movements))
@@ -381,10 +374,10 @@ describe('BedCountService', () => {
       };
 
       return test(data, new Date('01/02/2016'), (result) => {
-        // expect(result.reconciled).to.have.length(0);
-        // expect(result.unreconciledEvents).to.have.length(0);
-        // expect(result.unreconciledMovements).to.have.length(0);
-        expect(result).to.have.deep.property('reconciled[0]').that.contains
+        expect(result.reconciled).to.have.length(2);
+        expect(result.unreconciledEvents).to.have.length(0);
+        expect(result.unreconciledMovements).to.have.length(0);
+        // expect(result).to.have.deep.property('reconciled[0]').that.contains
         // expect(result).to.deep.equal({
         //   reconciled: [],
         //   unreconciledEvents: [],
