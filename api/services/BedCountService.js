@@ -2,29 +2,17 @@
 'use strict';
 
 var debugEnabled = 0;
-var debugThis = function () {
-  debugEnabled && console.log.apply(null, ['RECONCILIATION DEBUG:'].concat(arguments));
-};
+var debugThis = () => debugEnabled && console.log.apply(null, ['RECONCILIATION DEBUG:'].concat(arguments));
 var not = function (fn) {
   return function () {
     return !fn.apply(null, arguments || []);
   };
 };
 
-var dateSort = function (a, b) {
-  return (a.timestamp > b.timestamp) - (a.timestamp < b.timestamp);
-};
-
-var populateEventDetainees = function (centre) {
-  return new Promise((resolve) => {
-    Promise.all(centre.events.map((event, eventKey) => {
-      return Detainee.findOne({ id: event.detainee })
-        .then((detainee) => {
-          centre.events[eventKey].detainee = detainee;
-        });
-    })).then(() => resolve(centre));
-  });
-};
+var dateSort = (a, b) => a.timestamp - b.timestamp;
+var populateEventDetainees = centre => Promise.all(centre.events.map(
+    (event, eventKey) => Detainee.findOne({ id: event.detainee }).then(detainee => centre.events[eventKey].detainee = detainee)
+  )).then(() => centre);
 
 module.exports = {
   calculateCentreState: function (centre, visibilityScope, eventReconciliationScopeFactory, movementReconciliationScopeFactory) {
@@ -41,16 +29,12 @@ module.exports = {
         var unreconciledEvents = [];
         var reconciled = [];
         var isReconciledMovement = (movement) => {
-          var result = movement && reconciled.some((reconciliation) => {
-              return movement.id === reconciliation.movement.id;
-            });
+          var result = movement && reconciled.some((reconciliation) => movement.id === reconciliation.movement.id);
           result && debugThis('✔', 'Skipping Reconciliation of Movement', movement.id, 'because it was already reconciled');
           return result;
         };
         var isReconciledEvent = (event) => {
-          var result = event && reconciled.some((reconciliation) => {
-              return event.id === reconciliation.event.id;
-            });
+          var result = event && reconciled.some((reconciliation) => event.id === reconciliation.event.id);
           result && debugThis('✔', 'Skipping Reconciliation of Event', event.id, 'because it was already reconciled');
           return result;
         };
@@ -74,9 +58,7 @@ module.exports = {
               detainee && debugThis('|', 'Found', detainee.events.length, 'matching events with query', JSON.stringify(eventQuery).replace(/(\r\n|\n|\r)/gm, ""));
               if (detainee && detainee.events.length) {
                 var events = detainee.events.filter((event) => {
-                  var isReconciled = reconciled.some((reconciliation) => {
-                    return event.id === reconciliation.event.id;
-                  });
+                  var isReconciled = reconciled.some((reconciliation) => event.id === reconciliation.event.id);
                   isReconciled && debugThis('|', 'Skipping reconciled event', event.id);
                   return !isReconciled;
                 });
@@ -110,9 +92,7 @@ module.exports = {
                 movements ? debugThis('|', 'Found', movements.length, 'matching movements') : debugThis('|', 'No matching movements found');
                 if (movements && movements.length) {
                   movements = movements.filter((movement) => {
-                    var isReconciled = reconciled.some((reconciliation) => {
-                      return movement.id === reconciliation.movement.id;
-                    });
+                    var isReconciled = reconciled.some((reconciliation) => movement.id === reconciliation.movement.id);
                     isReconciled && debugThis('|', 'Skipping reconciled movement', movement.id);
                     return !isReconciled;
                   });

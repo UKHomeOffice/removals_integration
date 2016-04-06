@@ -1,7 +1,7 @@
 /* global Centres BedcountService */
 'use strict';
 
-describe.only('BedCountService', () => {
+describe('BedCountService', () => {
   describe('getSummary', () => {
 
     it('new calc', () => {
@@ -68,15 +68,15 @@ describe.only('BedCountService', () => {
           return Centres.findOne({ name: 'BedCountServiceTestCentre' })
             .then((centre) => {
               var days = (days) => 1000*60*60*24*days;
-              
+
               var vScopeFactory = (date) => {
                 var fromDate, toDate;
-                
+
                 fromDate = new Date(date.getTime() - days(2));
                 fromDate.setHours(0);
                 fromDate.setMinutes(0);
                 fromDate.setSeconds(0);
-                
+
                 toDate = new Date(date.getTime());
                 toDate.setHours(23);
                 toDate.setMinutes(59);
@@ -86,39 +86,39 @@ describe.only('BedCountService', () => {
                   to: toDate
                 }
               };
-              
+
               var erScopeFactory = (date) => {
                 var fromDate, toDate;
-                
+
                 fromDate = new Date(date.getTime() - days(2));
                 fromDate.setHours(0);
                 fromDate.setMinutes(0);
                 fromDate.setSeconds(0);
-                
+
                 toDate = new Date(date.getTime());
                 toDate.setHours(23);
                 toDate.setMinutes(59);
                 toDate.setSeconds(59);
-                
+
                 return {
                   from: fromDate,
                     to: toDate
                 };
               };
- 
+
               var mrScopeFactory = (date) => {
                 var fromDate, toDate;
-                
+
                 fromDate = new Date(date.getTime());
                 fromDate.setHours(0);
                 fromDate.setMinutes(0);
                 fromDate.setSeconds(0);
-                
+
                 toDate = new Date(date.getTime() + days(2));
                 toDate.setHours(23);
                 toDate.setMinutes(59);
                 toDate.setSeconds(59);
-                
+
                 return {
                   from: fromDate,
                     to: toDate

@@ -139,7 +139,7 @@ describe('BedCountService', () => {
       });
     });
 
-    it('should flag an movement without an event', () => {
+    it('should flag a movement without an event', () => {
       var data = {
         centres: [
           {
@@ -179,7 +179,7 @@ describe('BedCountService', () => {
       });
     });
 
-    it('should flag an movement without an event', () => {
+    it('should reconcile an event with a movement', () => {
       var data = {
         centres: [
           {
@@ -226,5 +226,172 @@ describe('BedCountService', () => {
         expect(result.unreconciledMovements).to.have.length(0);
       });
     });
+
+    it('should reconcile an event today with a movement from yesterday', () => {
+      const data = {
+        centres: [
+          {
+            id: 1,
+            name: 'BedCountServiceTestCentre'
+          }
+        ],
+        movements: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 12345,
+            "active": true,
+            "direction": "in",
+            "timestamp": new Date('01/01/2016')
+          }
+        ],
+        detainees: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "cid_id": 12345,
+            "person_id": 222222,
+            "gender": "male",
+            "nationality": "swe",
+            "timestamp": new Date('01/02/2016')
+          }
+        ],
+        events: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "detainee": 1,
+            "operation": "check in",
+            "timestamp": new Date('01/02/2016')
+          }
+        ]
+      };
+
+      return test(data, new Date('01/02/2016'), (result) => {
+        expect(result.reconciled).to.have.length(1);
+        expect(result.unreconciledEvents).to.have.length(0);
+        expect(result.unreconciledMovements).to.have.length(0);
+      });
+    });
+
+    it('should reconcile an event from yesterday with a movement received today', () => {
+      const data = {
+        centres: [
+          {
+            id: 1,
+            name: 'BedCountServiceTestCentre'
+          }
+        ],
+        movements: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 12345,
+            "active": true,
+            "direction": "in",
+            "timestamp": new Date('01/02/2016')
+          }
+        ],
+        detainees: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "cid_id": 12345,
+            "person_id": 222222,
+            "gender": "male",
+            "nationality": "swe",
+            "timestamp": new Date('01/01/2016')
+          }
+        ],
+        events: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "detainee": 1,
+            "operation": "check in",
+            "timestamp": new Date('01/01/2016')
+          }
+        ]
+      };
+
+      return test(data, new Date('01/01/2016'), (result) => {
+        expect(result.reconciled).to.have.length(1);
+        expect(result.unreconciledEvents).to.have.length(0);
+        expect(result.unreconciledMovements).to.have.length(0);
+      });
+    });
+
+    it('should correctly reconcile multiple events and movements, even if they are received out of their natural order', () => {
+      var data = {
+        centres: [
+          {
+            id: 1,
+            name: 'BedCountServiceTestCentre'
+          }
+        ],
+        movements: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 12345,
+            "active": true,
+            "direction": "out",
+            "timestamp": new Date('01/02/2016')
+          },
+          {
+            "id": 2,
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 123415,
+            "active": true,
+            "direction": "in",
+            "timestamp": new Date('01/01/2016')
+          }
+        ],
+        detainees: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "cid_id": 12345,
+            "person_id": 222222,
+            "gender": "male",
+            "nationality": "swe",
+            "timestamp": new Date('01/01/2016')
+          }
+        ],
+        events: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "detainee": 1,
+            "operation": "check in",
+            "timestamp": new Date('01/01/2016')
+          },
+          {
+            "id": 2,
+            "centre": { id: 1 },
+            "detainee": 1,
+            "operation": "check out",
+            "timestamp": new Date('01/02/2016')
+          }
+        ]
+      };
+
+      return test(data, new Date('01/02/2016'), (result) => {
+        // expect(result.reconciled).to.have.length(0);
+        // expect(result.unreconciledEvents).to.have.length(0);
+        // expect(result.unreconciledMovements).to.have.length(0);
+        expect(result).to.have.deep.property('reconciled[0]').that.contains
+        // expect(result).to.deep.equal({
+        //   reconciled: [],
+        //   unreconciledEvents: [],
+        //   unreconciledMovements: []
+        // })
+      });
+    });
+
   });
 });
