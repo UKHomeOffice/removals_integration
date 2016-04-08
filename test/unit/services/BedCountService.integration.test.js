@@ -1,32 +1,22 @@
 /* global Centres BedcountService */
 'use strict';
 
-const days = (days) => 1000 * 60 * 60 * 24 * days;
-const dayAdjusted = (date, dayAdjust) => new Date(dayAdjust ? date.getTime() + days(dayAdjust) : date.getTime());
-const startOfDay = (date, dayAdjust) => {
-  const start = dayAdjusted(date, dayAdjust);
-  start.setHours(0);
-  start.setMinutes(0);
-  start.setSeconds(0);
-  start.setMilliseconds(0);
-  return start;
-};
-const endOfDay = (date, dayAdjust) => {
-  const end = dayAdjusted(date, dayAdjust);
-  end.setHours(23);
-  end.setMinutes(59);
-  end.setSeconds(59);
-  end.setMilliseconds(999);
-  return end;
-};
-function Scope(from, to) {
-  this.from = from;
-  this.to = to;
-}
+var moment = require('moment');
 
-const vScopeFactory = (date) => new Scope(startOfDay(date, -2), endOfDay(date));
-const erScopeFactory = (date) => new Scope(startOfDay(date, -2), endOfDay(date));
-const mrScopeFactory = (date) => new Scope(startOfDay(date), endOfDay(date, 2));
+var DateRange = require('../../../api/services/BedCountService').DateRange;
+
+const vDateRangeFactory = (date) => new DateRange(
+  moment(date).subtract(2, 'days').startOf('day').toDate(),
+  moment(date).endOf('day').toDate()
+);
+const erDateRangeFactory = (date) => new DateRange(
+  moment(date).subtract(2, 'days').startOf('day').toDate(),
+  moment(date).endOf('day').toDate()
+);
+const mrDateRangeFactory = (date) => new DateRange(
+  moment(date).startOf('day').toDate(),
+  moment(date).add(2, 'days').endOf('day').toDate()
+);
 
 const test = (data, date, checks) => Centres.destroy()
   .then(() => Movement.destroy())
@@ -37,11 +27,11 @@ const test = (data, date, checks) => Centres.destroy()
   .then(() => Detainee.create(data.detainees))
   .then(() => Event.create(data.events))
   .then(() => Centres.findOne({ name: 'BedCountServiceTestCentre' }))
-  .then((centre) => BedCountService.calculateCentreState(centre, vScopeFactory(date), erScopeFactory, mrScopeFactory))
+  .then((centre) => BedCountService.calculateCentreState(centre, vDateRangeFactory(date), erDateRangeFactory, mrDateRangeFactory))
   .then(checks);
 
-describe('BedCountService', () => {
-  
+describe.only('BedCountService', () => {
+
   describe('getSummary', () => {
 
     it('new calc', () => {
@@ -108,45 +98,7 @@ describe('BedCountService', () => {
       });
     });
 
-    it('?should flag an event without a movement', () => {
-      var data = {
-        centres: [
-          {
-            id: 1,
-            name: 'BedCountServiceTestCentre'
-          }
-        ],
-        movements: [],
-        detainees: [
-          {
-            "id": 1,
-            "centre": { id: 1 },
-            "cid_id": 12345,
-            "person_id": 222222,
-            "gender": "male",
-            "nationality": "swe",
-            "timestamp": new Date('01/01/2016')
-          }
-        ],
-        events: [
-          {
-            "id": 1,
-            "centre": { id: 1 },
-            "detainee": 1,
-            "operation": "check in",
-            "timestamp": new Date('01/02/2016')
-          }
-        ]
-      };
-
-      return test(data, new Date('01/03/2016'), (result) => {
-        expect(result.reconciled).to.have.length(0);
-        expect(result.unreconciledEvents).to.have.length(1);
-        expect(result.unreconciledMovements).to.have.length(0);
-      });
-    });
-
-    it('?should flag a movement without an event', () => {
+    it('should not see movements and events outside of the visible scope', () => {
       var data = {
         centres: [
           {
@@ -162,47 +114,7 @@ describe('BedCountService', () => {
             "cid_id": 12345,
             "active": true,
             "direction": "in",
-            "timestamp": new Date('01/01/2016')
-          }
-        ],
-        detainees: [
-          {
-            "id": 1,
-            "centre": { id: 1 },
-            "cid_id": 12345,
-            "person_id": 222222,
-            "gender": "male",
-            "nationality": "swe",
-            "timestamp": new Date('01/01/2016')
-          }
-        ],
-        events: []
-      };
-
-      return test(data, new Date('01/03/2016'), (result) => {
-        expect(result.reconciled).to.have.length(0);
-        expect(result.unreconciledEvents).to.have.length(0);
-        expect(result.unreconciledMovements).to.have.length(1);
-      });
-    });
-
-    it('?should reconcile a visible event with a visible movement', () => {
-      var data = {
-        centres: [
-          {
-            id: 1,
-            name: 'BedCountServiceTestCentre'
-          }
-        ],
-        movements: [
-          {
-            "id": 1,
-            "centre": { id: 1 },
-            "gender": "male",
-            "cid_id": 12345,
-            "active": true,
-            "direction": "in",
-            "timestamp": new Date('01/01/2016')
+            "timestamp": new Date('01/05/2016')
           }
         ],
         detainees: [
@@ -222,13 +134,13 @@ describe('BedCountService', () => {
             "centre": { id: 1 },
             "detainee": 1,
             "operation": "check in",
-            "timestamp": new Date('01/02/2016')
+            "timestamp": new Date('01/01/2016')
           }
         ]
       };
 
-      return test(data, new Date('01/03/2016'), (result) => {
-        expect(result.reconciled).to.have.length(1);
+      return test(data, new Date('01/04/2016'), (result) => {
+        expect(result.reconciled).to.have.length(0);
         expect(result.unreconciledEvents).to.have.length(0);
         expect(result.unreconciledMovements).to.have.length(0);
       });
@@ -522,8 +434,8 @@ describe('BedCountService', () => {
       });
     });
 
-    it('should correctly reconcile multiple events and movements, even if they are received out of their natural order', () => {
-      var data = {
+    it('should resolve all of these as expected', () => {
+      const data = {
         centres: [
           {
             id: 1,
@@ -532,63 +444,164 @@ describe('BedCountService', () => {
         ],
         movements: [
           {
-            "id": 1,
+            "id": 50,
             "centre": { id: 1 },
             "gender": "male",
-            "cid_id": 12345,
-            "active": true,
-            "direction": "out",
-            "timestamp": new Date('01/02/2016')
-          },
-          {
-            "id": 2,
-            "centre": { id: 1 },
-            "gender": "male",
-            "cid_id": 123415,
+            "cid_id": 999111,
             "active": true,
             "direction": "in",
-            "timestamp": new Date('01/01/2016')
+            "timestamp": new Date('01/04/2016') // Date doesn't fit with Event:50
+          },
+          {
+            "id": 51,
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 999111,
+            "active": true,
+            "direction": "out",
+            "timestamp": new Date('01/04/2016')
+          },
+          {
+            "id": 52,
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 999111,
+            "active": true,
+            "direction": "in",
+            "timestamp": new Date('01/05/2016')
+          },
+          {
+            "id": 53,
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 11111, // No matching event for cid
+            "active": true,
+            "direction": "in",
+            "timestamp": new Date('01/05/2016')
+          },
+          {
+            "id": 54,
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 999111,
+            "active": true,
+            "direction": "in",
+            "timestamp": new Date('01/06/2016') // future movement no matching event yet
+          },
+          {
+            "id": 55,
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 999111,
+            "active": true,
+            "direction": "in",
+            "timestamp": new Date('12/31/2015') // past movement no matching event in range
+          },
+          {
+            "id": 56, // matches Event:54
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 777888,
+            "active": true,
+            "direction": "out",
+            "timestamp": new Date('01/05/2016')
+          },
+          {
+            "id": 57, // matches Event:55
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 999111,
+            "active": true,
+            "direction": "out",
+            "timestamp": new Date('01/05/2016')
+          },
+          {
+            "id": 58, // matches Event:56
+            "centre": { id: 1 },
+            "gender": "male",
+            "cid_id": 999111,
+            "active": true,
+            "direction": "in",
+            "timestamp": new Date('01/05/2016')
           }
         ],
         detainees: [
           {
-            "id": 1,
+            "id": 50,
             "centre": { id: 1 },
-            "cid_id": 12345,
+            "cid_id": 999111,
+            "person_id": 222222,
+            "gender": "male",
+            "nationality": "swe",
+            "timestamp": new Date('01/02/2016')
+          },
+          {
+            "id": 51,
+            "centre": { id: 1 },
+            "cid_id": 777888,
             "person_id": 222222,
             "gender": "male",
             "nationality": "swe",
             "timestamp": new Date('01/01/2016')
-          }
+          },
         ],
         events: [
           {
-            "id": 1,
+            "id": 50,
             "centre": { id: 1 },
-            "detainee": 1,
+            "detainee": 50,
             "operation": "check in",
-            "timestamp": new Date('01/01/2016')
+            "timestamp": new Date('01/03/2016') // Date doesn't fit with Movement:50
           },
           {
-            "id": 2,
+            "id": 51,
             "centre": { id: 1 },
-            "detainee": 1,
+            "detainee": 50,
             "operation": "check out",
-            "timestamp": new Date('01/02/2016')
-          }
+            "timestamp": new Date('01/04/2016')
+          },
+          {
+            "id": 52,
+            "centre": { id: 1 },
+            "detainee": 50,
+            "operation": "check in",
+            "timestamp": new Date('01/05/2016')
+          },
+          {
+            "id": 53,
+            "centre": { id: 1 },
+            "detainee": 51, // Doesn't match with any movement
+            "operation": "check in",
+            "timestamp": new Date('01/05/2016')
+          },
+          {
+            "id": 54,
+            "centre": { id: 1 },
+            "detainee": 51,
+            "operation": "check out",
+            "timestamp": new Date('01/05/2016')
+          },
+          {
+            "id": 55,
+            "centre": { id: 1 },
+            "detainee": 50,
+            "operation": "check out",
+            "timestamp": new Date('01/05/2016')
+          },
+          {
+            "id": 56,
+            "centre": { id: 1 },
+            "detainee": 50,
+            "operation": "check in",
+            "timestamp": new Date('01/05/2016')
+          },
         ]
       };
 
-      return test(data, new Date('01/02/2016'), (result) => {
-        expect(result.reconciled).to.have.length(2);
-        expect(result.unreconciledEvents).to.have.length(0);
-        expect(result.unreconciledMovements).to.have.length(0);
-        // expect(result).to.have.deep.property('reconciled[0]').that.contains
-        // expect(result).to.deep.equal({
-        //   reconciled: [],
-        //   unreconciledEvents: [],
-        //   unreconciledMovements: []
-        // })
+      return test(data, new Date('01/05/2016'), (result) => {
+        expect(result.reconciled).to.have.length(5);
+        expect(result.unreconciledMovements).to.have.length(2);
+        expect(result.unreconciledEvents).to.have.length(2);
       });
     });
 

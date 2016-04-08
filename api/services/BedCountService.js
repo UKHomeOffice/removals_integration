@@ -1,124 +1,116 @@
 /* global Centres Detainee Movement BedCountService doSomethingWithASummary */
 'use strict';
 
-var debugEnabled = 1;
-var debugThis = function () {
-  var args = Array.prototype.slice.call(arguments);
-  debugEnabled && console.log.apply(null, ['RECONCILIATION DEBUG:'].concat(args));
-};
-var not = function (fn) {
-  return function () {
-    return !fn.apply(null, arguments || []);
+function DateRange(from, to) {
+  this.contains = function (date) {
+    return date >= this.from && date <= this.to
   };
+
+  this.from = from;
+  this.to = to;
 };
 
-var dateSort = (a, b) => a.timestamp - b.timestamp;
-var populateEventDetainees = centre => Promise.all(centre.events.map(
-    (event, eventKey) => Detainee.findOne({ id: event.detainee }).then(detainee => centre.events[eventKey].detainee = detainee)
-  )).then(() => centre);
+DateRange.widen = function () {
+  var args = Array.prototype.slice.call(arguments);
+  var from = args.map((range) => range.from);
+  var resultingFrom = from.reduce((a, b) => a < b ? a : b);
+
+  var to = args.map((range) => range.to);
+  var resultingTo = to.reduce((a, b) => a > b ? a : b);
+
+  return new DateRange(resultingFrom, resultingTo);
+};
 
 module.exports = {
-  calculateCentreState: function (centre, visibilityScope, eventReconciliationScopeFactory, movementReconciliationScopeFactory) {
-    const visibleRange = { '>=': visibilityScope.from, '<=': visibilityScope.to };
-    debugThis('Starting Reconciliation for centre', centre.id, centre.name);
-    debugThis('Visibility', visibleRange);
-    return Centres.findOne({ name: centre.name })
-      .populate('events', { timestamp: visibleRange })
-      .populate('movements', { timestamp: visibleRange })
-      .then((centre) => populateEventDetainees(centre))
+  DateRange,
+
+  calculateCentreState: function (centre, visibilityRange, movementsFromEventRangeFactory, eventsFromMovementRangeFactory) {
+    var rangeOfMovements = DateRange.widen.apply([visibilityRange],
+      [visibilityRange.from, visibilityRange.to].map((date) => movementsFromEventRangeFactory(date))
+    );
+    var rangeOfEvents = DateRange.widen.apply([visibilityRange],
+      [visibilityRange.from, visibilityRange.to].map((date) => eventsFromMovementRangeFactory(date))
+    );
+
+    return new Promise((resolve) => {
+      centre.unreconciledEvents = [];
+      centre.unreconciledMovements = [];
+      centre.reconciled = [];
+      resolve(centre)
+    })
+      .then(this.populateEvents(rangeOfEvents))
+      .then(this.populateMovements(rangeOfMovements))
+      .then(this.reconcileEvents(this.getReconciliationTester(movementsFromEventRangeFactory, eventsFromMovementRangeFactory)))
+      .then(this.filterUnreconciled(visibilityRange))
+      .then(this.filterReconciled(visibilityRange))
       .then((centre) => {
-        debugThis('Centre', centre.id, centre.name, 'has', centre.movements.length, 'movements and', centre.events.length, 'events in this visibility range');
-        var unreconciledMovements = [];
-        var unreconciledEvents = [];
-        var reconciled = [];
-        var isReconciledMovement = (movement) => {
-          var result = movement && reconciled.some((reconciliation) => movement.id === reconciliation.movement.id);
-          result && debugThis('✔', 'Skipping Reconciliation of Movement', movement.id, 'because it was already reconciled');
-          return result;
-        };
-        var isReconciledEvent = (event) => {
-          var result = event && reconciled.some((reconciliation) => event.id === reconciliation.event.id);
-          result && debugThis('✔', 'Skipping Reconciliation of Event', event.id, 'because it was already reconciled');
-          return result;
-        };
-
-
-        var promiseChain = Promise.all(centre.movements.filter(not(isReconciledMovement)).sort(dateSort).map(function (movement) {
-          var reconciliationScope = movementReconciliationScopeFactory(movement.timestamp);
-          var detaineeQuery = { centre: movement.centre, cid_id: movement.cid_id };
-          var eventQuery = {
-            where: {
-              operation: movement.direction === 'in' ? ['check in', 'reinstatement'] : ['check out'],
-              timestamp: { '>=': reconciliationScope.from, '<=': reconciliationScope.to }
-            },
-            sort: 'timestamp ASC'
-          };
-          return Detainee.findOne(detaineeQuery)
-            .populate('events', eventQuery)
-            .then((detainee) => {
-              debugThis('Beginning Reconciliation of movement', movement.id, movement.direction, movement.timestamp, 'cid', movement.cid_id);
-              detainee ? debugThis('|', 'Found Detainee', detainee.id, 'with query', JSON.stringify(detaineeQuery).replace(/(\r\n|\n|\r)/gm, "")) : debugThis('|', 'No matching detainee found with query', JSON.stringify(detaineeQuery).replace(/(\r\n|\n|\r)/gm, ""));
-              detainee && debugThis('|', 'Found', detainee.events.length, 'matching events with query', JSON.stringify(eventQuery).replace(/(\r\n|\n|\r)/gm, ""));
-              if (detainee && detainee.events.length) {
-                var events = detainee.events.filter((event) => {
-                  var isReconciled = reconciled.some((reconciliation) => event.id === reconciliation.event.id);
-                  isReconciled && debugThis('|', 'Skipping reconciled event', event.id);
-                  return !isReconciled;
-                });
-                var event = events[0];
-                if (event) {
-                  event.detainee = Object.assign({}, detainee, { events: [] });
-                  debugThis('✔', 'Reconciling movement', movement.id, movement.direction, movement.timestamp, 'cid', movement.cid_id, 'with event', event.id, event.operation, event.timestamp, 'cid', detainee.cid_id);
-                  reconciled.push({ event, movement });
-                  return true;
-                }
-              }
-              debugThis('✗', 'Could not reconcile movement', movement.id, movement.direction, movement.timestamp, 'cid', movement.cid_id);
-              unreconciledMovements.push(movement);
-            });
-        })).then(() => {
-          return Promise.all(centre.events.filter(not(isReconciledEvent)).sort(dateSort).map(function (event) {
-            var reconciliationScope = eventReconciliationScopeFactory(event.timestamp);
-            var query = {
-              where: {
-                centre: event.centre,
-                cid_id: event.detainee.cid_id,
-                direction: ['check in', 'reinstatement'].indexOf(event.operation) > -1 ? 'in' : 'out',
-                timestamp: { '>=': reconciliationScope.from, '<=': reconciliationScope.to }
-              },
-              sort: 'timestamp ASC'
-            };
-            return Movement.find(query)
-              .then((movements) => {
-                debugThis('Beginning reconciliaton of event', event.id, event.operation, event.timestamp, 'cid', event.detainee.cid_id);
-                debugThis('|', 'Queried movements on ', JSON.stringify(query).replace(/(\r\n|\n|\r)/gm, ""));
-                movements ? debugThis('|', 'Found', movements.length, 'matching movements') : debugThis('|', 'No matching movements found');
-                if (movements && movements.length) {
-                  movements = movements.filter((movement) => {
-                    var isReconciled = reconciled.some((reconciliation) => movement.id === reconciliation.movement.id);
-                    isReconciled && debugThis('|', 'Skipping reconciled movement', movement.id);
-                    return !isReconciled;
-                  });
-                  var movement = movements[0];
-                  if (movement) {
-                    debugThis('✔', 'Reconciling event', event.id, event.operation, event.timestamp, 'cid', event.detainee.cid_id, 'with movement', movement.id, movement.direction, movement.timestamp, 'cid', movement.cid_id);
-                    reconciled.push({ event, movement });
-                    return true;
-                  }
-                }
-                debugThis('✗', 'Could not reconcile event', event.id, event.operation, event.timestamp, 'cid', event.detainee.cid_id);
-                unreconciledEvents.push(event);
-              });
-          }));
-        });
-
-        return promiseChain
-          .then(() => {
-            var result = { unreconciledMovements, unreconciledEvents, reconciled };
-            debugThis('Reconciliation completed', result);
-            return result;
-          });
+        return centre;
       });
-  }
-}
-;
+  },
+  filterUnreconciled: (range) =>
+    (centre) => {
+      centre.unreconciledEvents = centre.unreconciledEvents.filter(event => range.contains(event.timestamp));
+      centre.unreconciledMovements = centre.unreconciledMovements.filter(movement => range.contains(movement.timestamp));
+      return centre;
+    },
+  filterReconciled: (range) =>
+    (centre) => {
+      centre.reconciled = centre.reconciled.filter(reconciled =>
+        range.contains(reconciled.event.timestamp)
+        || range.contains(reconciled.movement.timestamp)
+      );
+      return centre;
+    },
+  reconcileEvents: function (reconiciliationTester) {
+    return (centre) => {
+      centre.unreconciledEvents = centre.unreconciledEvents.filter((event) => {
+        return !centre.unreconciledMovements.some(this.reconcile(centre, event, reconiciliationTester));
+      });
+      centre.unreconciledMovements = centre.unreconciledMovements.filter((movement) => movement !== null);
+      return centre;
+    };
+  },
+  reconcile: (centre, event, reconciler) =>
+    (movement, movementKey) => {
+      if (reconciler(event, movement)) {
+        centre.reconciled.push({
+          event,
+          movement
+        });
+        delete centre.unreconciledMovements[movementKey];
+        return true;
+      }
+      return false;
+    },
+
+  getReconciliationTester: (movementsFromEventRangeFactory, eventsFromMovementRangeFactory) =>
+    (event, movement) => {
+      return movement.cid_id === event.detainee.cid_id
+        && (movementsFromEventRangeFactory(event.timestamp).contains(movement.timestamp) || eventsFromMovementRangeFactory(movement.timestamp).contains(event.timestamp))
+    },
+  populateEvents: (range) =>
+    (centre) => Event.find({
+        centre: centre.id,
+        timestamp: {
+          '>=': range.from,
+          '<=': range.to
+        }
+      })
+      .populate('detainee')
+      .then((events) => {
+        centre.unreconciledEvents = events;
+        return centre;
+      }),
+  populateMovements: (range) =>
+    (centre) => Movement.find({
+        centre: centre.id,
+        timestamp: {
+          '>=': range.from,
+          '<=': range.to
+        }
+      })
+      .then((movements) => {
+        centre.unreconciledMovements = movements;
+        return centre;
+      })
+};
