@@ -1,402 +1,311 @@
-//'use strict';
-//
-//Feature('Pre-bookings: ', () => {
-//
-//  var today = (function (d) {
-//    return d.toISOString()
-//  })(new Date);
-//
-//var today5am = (function (d) {
-//  d.setDate(d.getDate() - 1);
-//  d.setMinutes(59);
-//  return d.toISOString()
-//})(new Date);
-//
-//var tomorrow7am = (function (d) {
-//  d.setDate(d.getDate() + 1);
-//  d.setMinutes(30);
-//  return d.toISOString()
-//})(new Date);
-//
-//  var centreEventAttrs = {
-//    "name": 'bigone',
-//    "male_capacity": 999,
-//    "female_capacity": 750,
-//    "id": 1,
-//    "mo_type": 'occupancy',
-//    "male_cid_name": ['bigone male holding', 'smallone male holding'],
-//    "female_cid_name": ['bigone female office', 'smallone female holding']
-//  };
-//
-//  var movementEventAttrs = {
-//    "centre": 1,
-//    "detainee": 2,
-//    "id": 3,
-//    "active": true
-//  };
-//
-//  var movementPayload = [{
-//    Location: 'bigone male holding',
-//    'MO In/MO Out': 'In',
-//    'MO Ref.': '215641',
-//    'MO Date': today,
-//    'MO Type': 'Occupancy',
-//    'CID Person ID': '123'
-//  }];
-//
-//  var prebookingEventAttrs = {
-//    "id": 1,
-//    "task_force": "ops1",
-//    "cid_id": "123",
-//    "gender": "male",
-//    "centre": "bigone"
-//  };
-//
-//  var prebookingPayload = [{
-//    "timestamp": today,
-//    "location": 'bigone male holding',
-//    "task_force": 'ops1',
-//    "cid_id": '123'
-//  }];
-//
-//  Scenario.skip('Remove Existing Pre-bookings', () => {
-//
-//    before(function () {
-//      global.testConfig.initializeBarrelsFixtures = false;
-//    });
-//
-//    after(function () {
-//      global.testConfig.initializeBarrelsFixtures = true;
-//    });
-//
-//    Given('centre `' + centreEventAttrs.name + '` Pre-booking count exist', () => {
-//
-//      global.initializeBarrelsFixtures()
-//        .then(() =>
-//          CentreEvent.create(centreEventAttrs)
-//            .then(() =>
-//              getSearchResult()
-//                .then((models) => {
-//                  expect(models[0].name).to.equal(centreEventAttrs.name);
-//                })
-//            )
-//        )
-//        .then(() =>
-//          PrebookingEvent.create(prebookingEventAttrs)
-//            .then(() =>
-//              getSearchResult()
-//                .then((models) => {
-//                  expect(models[0].centre).to.equal(centreEventAttrs.name);
-//                })
-//            )
-//        )
-//
-//    });
-//
-//    When('a Pre-booking event occurs', () => {
-//
-//      var newPrebookingPayload = [{
-//        "timestamp": today,
-//        "location": 'bigone female holding',
-//        "task_force": 'ops1'
-//      }]
-//
-//      request(sails.hooks.http.app)
-//        .post('/depmu_entry/prebooking')
-//        .send(newPrebookingPayload)
-//        .expect(201)
-//
-//    });
-//
-//    Then('centre `' + centreEventAttrs.name + '` existing Pre-booking counts are overridden', () => {
-//
-//      getSearchResult().then((models) => {
-//        expect(models[0].gender).to.equal('female');
-//      })
-//
-//    });
-//  });
-//
-//  Scenario.skip('Ignore Future Pre-bookings: Pre 6:59am Tomorrow', () => {
-//
-//    before(function () {
-//      global.testConfig.initializeBarrelsFixtures = false;
-//    });
-//
-//    after(function () {
-//      global.testConfig.initializeBarrelsFixtures = true;
-//    });
-//
-//    Given('centre `' + centreEventAttrs.name + '` Pre-booking count exist', () => {
-//
-//      global.initializeBarrelsFixtures()
-//        .then(() =>
-//          CentreEvent.create(centreEventAttrs)
-//            .then(() =>
-//              getSearchResult()
-//                .then((models) => {
-//                  expect(models[0].name).to.equal(centreEventAttrs.name);
-//                })
-//            )
-//        )
-//        .then(() =>
-//          PrebookingEvent.create(prebookingEventAttrs)
-//            .then(() =>
-//              getSearchResult()
-//                .then((models) => {
-//                  expect(models[0].centre).to.equal(prebookingEventAttrs.name);
-//                })
-//            )
-//        )
-//
-//    });
-//
-//    When('a Pre-booking event for centre `' + centreEventAttrs.name + '` with timestamp `' + tomorrow + '` occurs', () => {
-//      var futurePrebookingPayload = [{
-//        "timestamp": tomorrow,
-//        "location": 'bigone female holding',
-//        "task_force": 'ops1',
-//        "cid_id": '444'
-//      }];
-//
-//      request(sails.hooks.http.app)
-//        .post('/depmu_entry/prebooking')
-//        .send(futurePrebookingPayload)
-//        .expect(201)
-//
-//    });
-//
-//    Then('centre `' + centreEventAttrs.name + '` Pre-booking counts remain the same', () => {
-//
-//      getSearchResult().then((models) => {
-//        expect(models.length).to.equal(1);
-//        expect(models[0].cid_id).to.equal(prebookingEventAttrs.cid_id);
-//      })
-//
-//    });
-//
-//  });
-//
-//  Scenario.skip('Ignore Past Pre-bookings: Pre 7am Today', () => {
-//    before(function () {
-//      global.testConfig.initializeBarrelsFixtures = false;
-//    });
-//
-//    after(function () {
-//      global.testConfig.initializeBarrelsFixtures = true;
-//    });
-//
-//    Given('centre `' + centreEventAttrs.name + '` Pre-booking counts exist', () => {
-//
-//      global.initializeBarrelsFixtures()
-//        .then(() =>
-//          CentreEvent.create(centreEventAttrs)
-//            .then(() =>
-//              getSearchResult()
-//                .then((models) => {
-//                  expect(models[0].name).to.equal(centreEventAttrs.name);
-//                })
-//            )
-//        )
-//        .then(() =>
-//          PrebookingEvent.create(prebookingEventAttrs)
-//            .then(() =>
-//              getSearchResult()
-//                .then((models) => {
-//                  expect(models[0].centre).to.equal(prebookingEventAttrs.name);
-//                })
-//            )
-//        )
-//
-//    });
-//
-//    When('a Pre-booking event for centre `' + centreEventAttrs.name + '` with timestamp `' + yesterday + '` occurs', () => {
-//      prebookingPayload.timestamp = yesterday;
-//
-//      request(sails.hooks.http.app)
-//        .post('/depmu_entry/prebooking')
-//        .send(prebookingPayload)
-//        .expect(201)
-//
-//    });
-//
-//    Then('centre `' + centreEventAttrs.name + '` Pre-booking counts remain the same', () => {
-//
-//      getSearchResult().then((models) => {
-//        expect(models.length).to.equal(1);
-//      })
-//
-//    });
-//
-//  });
-//
-//  Scenario.skip('Consider Todays Pre-bookings: 7am - 6:59am', () => {
-//
-//    Scenario('New Pre-bookings replace existing pre-bookings', () => {
-//
-//      before(function () {
-//        global.testConfig.initializeBarrelsFixtures = false;
-//      });
-//
-//      after(function () {
-//        global.testConfig.initializeBarrelsFixtures = true;
-//      });
-//
-//      Given('centre `' + centreEventAttrs.name + '` Pre-booking counts exist', () => {
-//
-//        global.initializeBarrelsFixtures()
-//          .then(() =>
-//            CentreEvent.create(centreEventAttrs)
-//              .then(() =>
-//                getSearchResult()
-//                  .then((models) => {
-//                    expect(models[0].name).to.equal(centreEventAttrs.name);
-//                  })
-//              )
-//          )
-//          .then(() =>
-//            PrebookingEvent.create(prebookingEventAttrs)
-//              .then(() =>
-//                getSearchResult()
-//                  .then((models) => {
-//                    expect(models[0].centre).to.equal(centreEventAttrs.name);
-//                  })
-//              )
-//          )
-//
-//      });
-//
-//      When('a valid pre-booking event for centre `' + centreEventAttrs.name + '` occurs', () => {
-//
-//        request(sails.hooks.http.app)
-//          .post('/depmu_entry/prebooking')
-//          .send(prebookingPayload)
-//          .expect(201)
-//
-//      });
-//
-//      Then('centre `' + centreEventAttrs.name + '` existing Pre-booking count is overwritten', () => {
-//
-//        getSearchResult().then((models) => {
-//          expect(models.length).to.equal(1);
-//          expect(models[0].gender).to.equal('female');
-//        })
-//
-//      });
-//
-//    });
-//
-//    Scenario.skip('Remove Existing Pre-booking when Movement In Order occurs', () => {
-//
-//      before(function () {
-//        global.testConfig.initializeBarrelsFixtures = false;
-//      });
-//
-//      after(function () {
-//        global.testConfig.initializeBarrelsFixtures = true;
-//      });
-//
-//      Given('centre `' + centreEventAttrs.name + '` has an existing ' + centreEventAttrs.gender + ' Pre-booking with cid id `' + cid_id + '`', () => {
-//
-//        global.initializeBarrelsFixtures()
-//          .then(() =>
-//            CentreEvent.create(centreEventAttrs)
-//              .then(() =>
-//                getSearchResult()
-//                  .then((models) => {
-//                    expect(models[0].name).to.equal(centreEventAttrs.name);
-//                  })
-//              )
-//          )
-//          .then(() =>
-//            PrebookingEvent.create(prebookingEventAttrs)
-//              .then(() =>
-//                getSearchResult()
-//                  .then((models) => {
-//                    expect(models[0].centre).to.equal(centreEventAttrs.name);
-//                    expect(models[0].cid_id).to.equal(prebookingEventAttrs.cid_id);
-//                  })
-//              )
-//          )
-//
-//      });
-//
-//      When('a valid movement-in order event with cid id `' + movementPayload.cid_id + '` occurs', () => {
-//
-//        request(sails.hooks.http.app)
-//          .post('/cid_entry/movement')
-//          .send(movementPayload)
-//          .expect(201)
-//
-//      });
-//
-//      Then('centre `' + centreEventAttrs.name + '` ' + centreEventAttrs.gender + ' Pre-booking count decreases by 1', () => {
-//
-//        getSearchResult().then((models) => {
-//          expect(models.length).to.equal(0);
-//        })
-//
-//      });
-//
-//    });
-//
-//    Scenario.skip('Ignore Pre-bookings with existing Movement In Order', () => {
-//      before(function () {
-//        global.testConfig.initializeBarrelsFixtures = false;
-//      });
-//
-//      after(function () {
-//        global.testConfig.initializeBarrelsFixtures = true;
-//      });
-//
-//      Given('centre `' + centreEventAttrs.name + '` exists', () => {
-//
-//        global.initializeBarrelsFixtures()
-//          .then(() =>
-//            CentreEvent.create(centreEventAttrs)
-//              .then(() =>
-//                getSearchResult()
-//                  .then((models) => {
-//                    expect(models[0].name).to.equal(centreEventAttrs.name);
-//                  })
-//              )
-//          )
-//
-//      });
-//      And('a movement-in order with cid id `' + movementEventAttrs.cid_id + '` exists ', () => {
-//
-//        global.initializeBarrelsFixtures()
-//          .then(() =>
-//            MovementOrderEvent.create(movementEventAttrs)
-//              .then(() =>
-//                getSearchResult()
-//                  .then((models) => {
-//                    expect(models[0].cid_id).to.equal(movementEventAttrs.cid_id);
-//                  })
-//              )
-//          )
-//
-//      });
-//
-//      When('a valid pre-booking event for centre `' + centreEventAttrs.name + '` with cid id `' + movementEventAttrs.cid_id + '` occurs', () => {
-//
-//        request(sails.hooks.http.app)
-//          .post('/depmu_entry/prebooking')
-//          .send(prebookingPayload)
-//          .expect(201)
-//
-//      });
-//
-//      Then('centre `' + centreEventAttrs.name + '` Pre-booking count remains unchanged', () => {
-//
-//        getSearchResult().then((models) => {
-//          expect(models.length).to.equal(0);
-//        })
-//
-//      });
-//
-//    });
-//  });
-//});
-//
-//
+'use strict';
+
+moment.tz.setDefault("Europe/London");
+
+var findPrebookingByCID = (cid_id) =>
+  Prebooking.find({
+    where: {
+      cid_id: cid_id
+    }
+  });
+
+var findMovementByCID = (cid_id) =>
+  Movement.find({active: true, direction: 'in'})
+    .populate('detainee', {cid_id: cid_id})
+    .toPromise()
+    .filter(movement => Boolean(movement.detainee));
+
+Feature('Prebooking', () => {
+  var validTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format();
+  var pastTimestamp = moment(validTimestamp).subtract(1, 'millisecond').format();
+  var futureTimestamp = moment(validTimestamp).add(1, 'day').format();
+
+  var payload = {
+    Output: [{
+      timestamp: validTimestamp,
+      location: 'smallone male holding',
+      task_force: 'ops1',
+      cid_id: '456'
+    }]
+  };
+
+  Scenario('Consider Today: 7am - 6:59am', () => {
+    Scenario('New Valid Pre-bookings replace existing pre-bookings', () => {
+
+      var followingPayload = {
+        Output: [{
+          timestamp: validTimestamp,
+          location: 'smallone female holding',
+          task_force: 'ops1',
+          cid_id: '111'
+        }, {
+          timestamp: validTimestamp,
+          location: 'smallone female holding',
+          task_force: 'ops1',
+          cid_id: '444'
+        }, {
+          timestamp: validTimestamp,
+          location: 'bigone male holding',
+          task_force: 'ops1',
+          cid_id: '222'
+        }, {
+          timestamp: validTimestamp,
+          location: 'bigone male holding',
+          task_force: 'ops1',
+          cid_id: '333'
+        }]
+      };
+      var expectedFemaleCentre = 'smallone';
+      var expectedMaleCentre = 'bigone';
+
+      before(function () {
+        global.testConfig.initializeBarrelsFixtures = false;
+        return global.initializeBarrelsFixtures();
+      });
+
+      after(function () {
+        global.testConfig.initializeBarrelsFixtures = true;
+      });
+
+      Given(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+        createRequest(payload, '/depmu_entry/prebooking', 201)
+          .then(() => findPrebookingByCID(payload.Output[0].cid_id))
+          .then((models) => {
+            expect(models.length).to.equal(1);
+            expect(models[0].cid_id).to.equal(parseInt(payload.Output[0].cid_id));
+          })
+      );
+
+      When(`new valid prebookings occur`, () =>
+        createRequest(followingPayload, '/depmu_entry/prebooking', 201));
+
+      Then('previous prebookings recorded are removed',
+        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+      );
+
+      And(`new female prebookings are created`, () =>
+        Prebooking.find({where: {gender: 'female'}}).then((models) => expect(models.length).to.equal(2))
+      );
+      And(`new male prebookings are created`, () =>
+        Prebooking.find({where: {gender: 'male'}}).then((models) => expect(models.length).to.equal(2))
+      );
+
+    });
+
+    Scenario('New Invalid Pre-bookings are ignored', () => {
+      var followingPayload = {
+        Output: [{
+          timestamp: validTimestamp,
+          location: 'smallone female holding',
+          cid_id: '111'
+        }]
+      };
+
+      before(function () {
+        global.testConfig.initializeBarrelsFixtures = false;
+        return global.initializeBarrelsFixtures();
+      });
+
+      after(function () {
+        global.testConfig.initializeBarrelsFixtures = true;
+      });
+
+      Given(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+        createRequest(payload, '/depmu_entry/prebooking', 201)
+          .then(() => findPrebookingByCID(payload.Output[0].cid_id))
+          .then((models) => {
+            expect(models.length).to.equal(1);
+            expect(models[0].cid_id).to.equal(parseInt(payload.Output[0].cid_id));
+          })
+      );
+
+      When(`a new invalid prebooking occurs`, () =>
+        createRequest(followingPayload, '/depmu_entry/prebooking', 400));
+
+      Then('previous prebookings recorded are retained',
+        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(1))
+      );
+
+      And(`new invalid prebooking is not created`,
+        () => findPrebookingByCID(followingPayload.cid_id).then((models) => expect(models.length).to.equal(0))
+      );
+
+    });
+
+    Scenario('Remove Existing Pre-booking when Movement In Order occurs', () => {
+      var validTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format("DD/MM/YYYY H:mm:ss");
+      var movementOrderPayload = {
+        Output: [{
+          "Location": "bigone male holding",
+          "MO In/MO Out": "In",
+          "MO Ref.": "1718293935",
+          "MO Date": validTimestamp,
+          "MO Type": "Occupancy",
+          "CID Person ID": payload.Output[0].cid_id
+        }]
+      };
+
+      before(function () {
+        global.testConfig.initializeBarrelsFixtures = false;
+        return global.initializeBarrelsFixtures();
+      });
+
+      after(function () {
+        global.testConfig.initializeBarrelsFixtures = true;
+      });
+
+      Given(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+        createRequest(payload, '/depmu_entry/prebooking', 201)
+          .then(() => findPrebookingByCID(payload.Output[0].cid_id))
+          .then((models) => {
+            expect(models.length).to.equal(1);
+            expect(models[0].cid_id).to.equal(parseInt(payload.Output[0].cid_id));
+          })
+      );
+
+      When(`a valid movement-in order event with cid id "${movementOrderPayload.Output[0].cid_id}" occurs`, () =>
+        createRequest(movementOrderPayload, '/cid_entry/movement', 201));
+
+      Then(`the prebooking with cid id "${payload.Output[0].cid_id}" is removed`,
+        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+      );
+
+    });
+
+    Scenario('Ignore Pre-bookings with existing Movement In Order', () => {
+      var validTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format("DD/MM/YYYY H:mm:ss");
+      var movementOrderPayload = {
+        Output: [{
+          "Location": "smallone male holding",
+          "MO In/MO Out": "In",
+          "MO Ref.": "1718293935",
+          "MO Date": validTimestamp,
+          "MO Type": "Occupancy",
+          "CID Person ID": payload.Output[0].cid_id
+        }]
+      };
+
+      before(function () {
+        global.testConfig.initializeBarrelsFixtures = false;
+        return global.initializeBarrelsFixtures();
+      });
+
+      after(function () {
+        global.testConfig.initializeBarrelsFixtures = true;
+      });
+
+      Given(`a Movement-In order with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+        createRequest(movementOrderPayload, '/cid_entry/movement', 201)
+          .then(() => findMovementByCID(payload.Output[0].cid_id))
+          .then((models) => expect(models.length).to.equal(1))
+      );
+
+      When(`a valid prebooking with cid id "${payload.Output[0].cid_id}" occurs`, () =>
+        createRequest(payload, '/depmu_entry/prebooking', 400, 201));
+
+      Then(`the prebooking with cid id "${payload.Output[0].cid_id}" is ignored`,
+        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+      );
+
+    });
+  });
+
+  Scenario('Ignore Future Prebookings: Post 6:59:59am Tomorrow', () => {
+    Scenario('All items in payload refer to past and future only', () => {
+      var followingPayload = {
+        Output: [{
+          timestamp: futureTimestamp,
+          location: 'smallone female holding',
+          task_force: 'ops1',
+          cid_id: '444'
+        }, {
+          timestamp: pastTimestamp,
+          location: 'smallone female holding',
+          task_force: 'ops1',
+          cid_id: '555'
+        }]
+      };
+
+      before(function () {
+        global.testConfig.initializeBarrelsFixtures = false;
+        return global.initializeBarrelsFixtures();
+      });
+
+      after(function () {
+        global.testConfig.initializeBarrelsFixtures = true;
+      });
+
+      Given(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+
+        createRequest(payload, '/depmu_entry/prebooking', 201)
+          .then(() => findPrebookingByCID(payload.Output[0].cid_id))
+          .then((models) => {
+            expect(models.length).to.equal(1);
+            expect(models[0].cid_id).to.equal(parseInt(payload.Output[0].cid_id));
+          })
+      );
+
+      When(`new prebookings with timestamps not for today occur`, () =>
+        createRequest(followingPayload, '/depmu_entry/prebooking', 400));
+
+      Then(`the new prebooking will not be considered and old prebookings are retained`,
+        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(1))
+      );
+    });
+
+
+    Scenario('Not all items in payload refer to past and future', () => {
+      var followingPayload = {
+        Output: [{
+          timestamp: futureTimestamp,
+          location: 'smallone female holding',
+          task_force: 'ops1',
+          cid_id: '444'
+        }, {
+          timestamp: pastTimestamp,
+          location: 'smallone female holding',
+          task_force: 'ops1',
+          cid_id: '444'
+        }, {
+          timestamp: validTimestamp,
+          location: 'smallone female holding',
+          task_force: 'ops1',
+          cid_id: '555'
+        }]
+      };
+
+      before(function () {
+        global.testConfig.initializeBarrelsFixtures = false;
+        return global.initializeBarrelsFixtures();
+      });
+
+      after(function () {
+        global.testConfig.initializeBarrelsFixtures = true;
+      });
+
+      Given(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+        createRequest(payload, '/depmu_entry/prebooking', 201)
+          .then(() => findPrebookingByCID(payload.Output[0].cid_id))
+          .then((models) => {
+            expect(models.length).to.equal(1);
+            expect(models[0].cid_id).to.equal(parseInt(payload.Output[0].cid_id));
+          })
+      );
+
+      When(`new prebookings with past, future and present timestamps occur`, () =>
+        createRequest(followingPayload, '/depmu_entry/prebooking', 201));
+
+      Then(`the new prebooking with timestamp "${followingPayload.Output[0].timestamp}" is not considered`,
+        () => findPrebookingByCID(followingPayload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+      );
+
+      And(`the new prebooking with timestamp "${followingPayload.Output[1].timestamp}" is not considered`,
+        () => findPrebookingByCID(followingPayload.Output[1].cid_id).then((models) => expect(models.length).to.equal(0))
+      );
+
+      And(`the new prebooking with timestamp "${followingPayload.Output[2].timestamp}" is considered`,
+        () => findPrebookingByCID(followingPayload.Output[2].cid_id).then((models) => expect(models.length).to.equal(1))
+      );
+    });
+  });
+});

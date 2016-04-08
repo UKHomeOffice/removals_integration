@@ -4,7 +4,6 @@ global.Barrels = require('barrels');
 global.freeport = require('freeport');
 global.barrels = new Barrels();
 global.moment = require('moment-timezone');
-moment.tz.setDefault("Europe/London");
 global.chai = require('chai')
   .use(require('chai-as-promised'))
   .use(require('chai-things'))
