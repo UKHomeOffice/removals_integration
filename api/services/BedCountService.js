@@ -8,7 +8,7 @@ function DateRange(from, to) {
 
   this.from = from;
   this.to = to;
-};
+}
 
 DateRange.widen = function () {
   var args = Array.prototype.slice.call(arguments);
@@ -21,96 +21,68 @@ DateRange.widen = function () {
   return new DateRange(resultingFrom, resultingTo);
 };
 
+const fullRange = (visibilityRange, rangeFactory) =>
+  DateRange.widen.apply([visibilityRange], [visibilityRange.from, visibilityRange.to].map((date) => rangeFactory(date)));
+
+const populate = (barrel, centreId, range) =>
+  barrel.find({
+    centre: centreId,
+    timestamp: {
+      '>=': range.from,
+      '<=': range.to
+    }
+  });
+const populateEvents = (centre, range) =>
+  populate(Event, centre.id, range)
+    .populate('detainee')
+    .then(events => centre.unreconciledEvents = events);
+const populateMovements = (centre, range) =>
+  populate(Movement, centre.id, range)
+    .then(movements => centre.unreconciledMovements = movements);
+
+const reconcileEvents = (centre, reconciler) => {
+  centre.unreconciledEvents = centre.unreconciledEvents.filter((event) =>
+    !centre.unreconciledMovements.some((movement, movementKey) => reconcile(movement, movementKey, centre, event, reconciler))
+  );
+  centre.unreconciledMovements = centre.unreconciledMovements.filter((movement) => movement !== null);
+};
+const reconcile = (movement, movementKey, centre, event, reconciler) => {
+  if (reconciler(event, movement)) {
+    centre.reconciled.push({ event, movement });
+    delete centre.unreconciledMovements[movementKey];
+    return true;
+  }
+  return false;
+};
+const reconciliationTester = (movementsRangeFactory, eventsRangeFactory) => (event, movement) =>
+  movement.cid_id === event.detainee.cid_id && (movementsRangeFactory(event.timestamp).contains(movement.timestamp)
+    || eventsRangeFactory(movement.timestamp).contains(event.timestamp));
+
+const filterUnreconciled = (centre, range) => {
+  centre.unreconciledEvents = centre.unreconciledEvents.filter(event => range.contains(event.timestamp));
+  centre.unreconciledMovements = centre.unreconciledMovements.filter(movement => range.contains(movement.timestamp));
+};
+// const filterReconciled = (centre, range) => // FIXME: pretty sure we don't need to do this!!!
+//   centre.reconciled = centre.reconciled.filter(reconciled =>
+//     range.contains(reconciled.event.timestamp) || range.contains(reconciled.movement.timestamp)
+//   );
+
 module.exports = {
   DateRange,
 
-  calculateCentreState: function (centre, visibilityRange, movementsFromEventRangeFactory, eventsFromMovementRangeFactory) {
-    var rangeOfMovements = DateRange.widen.apply([visibilityRange],
-      [visibilityRange.from, visibilityRange.to].map((date) => movementsFromEventRangeFactory(date))
-    );
-    var rangeOfEvents = DateRange.widen.apply([visibilityRange],
-      [visibilityRange.from, visibilityRange.to].map((date) => eventsFromMovementRangeFactory(date))
-    );
+  calculateCentreState: (centre, visibilityRange, movementsRangeFactory, eventsRangeFactory) => {
+    const rangeOfMovements = fullRange(visibilityRange, movementsRangeFactory);
+    const rangeOfEvents = fullRange(visibilityRange, eventsRangeFactory);
+    const reconciler = reconciliationTester(movementsRangeFactory, eventsRangeFactory);
 
-    return new Promise((resolve) => {
-      centre.unreconciledEvents = [];
-      centre.unreconciledMovements = [];
-      centre.reconciled = [];
-      resolve(centre)
-    })
-      .then(this.populateEvents(rangeOfEvents))
-      .then(this.populateMovements(rangeOfMovements))
-      .then(this.reconcileEvents(this.getReconciliationTester(movementsFromEventRangeFactory, eventsFromMovementRangeFactory)))
-      .then(this.filterUnreconciled(visibilityRange))
-      .then(this.filterReconciled(visibilityRange))
-      .then((centre) => {
-        return centre;
-      });
-  },
-  filterUnreconciled: (range) =>
-    (centre) => {
-      centre.unreconciledEvents = centre.unreconciledEvents.filter(event => range.contains(event.timestamp));
-      centre.unreconciledMovements = centre.unreconciledMovements.filter(movement => range.contains(movement.timestamp));
-      return centre;
-    },
-  filterReconciled: (range) =>
-    (centre) => {
-      centre.reconciled = centre.reconciled.filter(reconciled =>
-        range.contains(reconciled.event.timestamp)
-        || range.contains(reconciled.movement.timestamp)
-      );
-      return centre;
-    },
-  reconcileEvents: function (reconiciliationTester) {
-    return (centre) => {
-      centre.unreconciledEvents = centre.unreconciledEvents.filter((event) => {
-        return !centre.unreconciledMovements.some(this.reconcile(centre, event, reconiciliationTester));
-      });
-      centre.unreconciledMovements = centre.unreconciledMovements.filter((movement) => movement !== null);
-      return centre;
-    };
-  },
-  reconcile: (centre, event, reconciler) =>
-    (movement, movementKey) => {
-      if (reconciler(event, movement)) {
-        centre.reconciled.push({
-          event,
-          movement
-        });
-        delete centre.unreconciledMovements[movementKey];
-        return true;
-      }
-      return false;
-    },
+    centre.unreconciledEvents = [];
+    centre.unreconciledMovements = [];
+    centre.reconciled = [];
 
-  getReconciliationTester: (movementsFromEventRangeFactory, eventsFromMovementRangeFactory) =>
-    (event, movement) => {
-      return movement.cid_id === event.detainee.cid_id
-        && (movementsFromEventRangeFactory(event.timestamp).contains(movement.timestamp) || eventsFromMovementRangeFactory(movement.timestamp).contains(event.timestamp))
-    },
-  populateEvents: (range) =>
-    (centre) => Event.find({
-        centre: centre.id,
-        timestamp: {
-          '>=': range.from,
-          '<=': range.to
-        }
-      })
-      .populate('detainee')
-      .then((events) => {
-        centre.unreconciledEvents = events;
-        return centre;
-      }),
-  populateMovements: (range) =>
-    (centre) => Movement.find({
-        centre: centre.id,
-        timestamp: {
-          '>=': range.from,
-          '<=': range.to
-        }
-      })
-      .then((movements) => {
-        centre.unreconciledMovements = movements;
-        return centre;
-      })
+    return populateEvents(centre, rangeOfEvents).tap(() => populateMovements(centre, rangeOfMovements))
+      .tap(() => reconcileEvents(centre, reconciler))
+      .tap(() => filterUnreconciled(centre, visibilityRange))
+      // .tap(() => filterReconciled(centre, visibilityRange)) // FIXME: pretty sure we don't need to do this!!!
+      .return(centre);
+  }
 };
