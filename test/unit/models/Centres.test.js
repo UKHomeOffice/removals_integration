@@ -101,19 +101,6 @@ describe('UNIT CentreModel', () => {
 
   });
 
-  describe('removeNonOccupancy', () => {
-    beforeEach(() => {
-      sinon.spy(Centres, 'destroy');
-      Centres.removeNonOccupancy();
-    });
-
-    afterEach(() => Centres.destroy.restore())
-
-    it('should destroy centres with "non-occupancy" as mo-type', () =>
-      expect(Centres.destroy).to.have.been.calledWith({'mo-type': 'non-occupancy'})
-    );
-  });
-
   describe('publishCentreUpdates', () => {
     var populate;
     var dummyMovement = [{id: 1}, {id: 2}, {id: 3}];
