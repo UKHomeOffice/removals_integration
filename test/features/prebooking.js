@@ -103,10 +103,12 @@ Feature('Prebooking', () => {
 
       before(function () {
         global.testConfig.initializeBarrelsFixtures = false;
+        sinon.stub(global.sails.log, 'verbose');
         return global.initializeBarrelsFixtures();
       });
 
       after(function () {
+        global.sails.log.verbose.restore()
         global.testConfig.initializeBarrelsFixtures = true;
       });
 
@@ -187,10 +189,12 @@ Feature('Prebooking', () => {
 
       before(function () {
         global.testConfig.initializeBarrelsFixtures = false;
+        sinon.stub(global.sails.log, 'verbose');
         return global.initializeBarrelsFixtures();
       });
 
       after(function () {
+        global.sails.log.verbose.restore()
         global.testConfig.initializeBarrelsFixtures = true;
       });
 
@@ -228,10 +232,12 @@ Feature('Prebooking', () => {
 
       before(function () {
         global.testConfig.initializeBarrelsFixtures = false;
+        sinon.stub(global.sails.log, 'verbose');
         return global.initializeBarrelsFixtures();
       });
 
       after(function () {
+        global.sails.log.verbose.restore()
         global.testConfig.initializeBarrelsFixtures = true;
       });
 
@@ -252,7 +258,6 @@ Feature('Prebooking', () => {
         () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(1))
       );
     });
-
 
     Scenario('Not all items in payload refer to past and future', () => {
       var followingPayload = {
