@@ -30,7 +30,7 @@ const test = (data, date, checks) => Centres.destroy()
   .then((centre) => BedCountService.calculateCentreState(centre, vDateRangeFactory(date), erDateRangeFactory, mrDateRangeFactory))
   .then(checks);
 
-describe.only('BedCountService', () => {
+describe('BedCountService', () => {
 
   describe('getSummary', () => {
 

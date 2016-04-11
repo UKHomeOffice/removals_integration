@@ -1,14 +1,7 @@
 /* global Centres Detainee Movement BedCountService doSomethingWithASummary */
 'use strict';
 
-function DateRange(from, to) {
-  this.contains = function (date) {
-    return date >= this.from && date <= this.to
-  };
-
-  this.from = from;
-  this.to = to;
-}
+var DateRange = require('../lib/DateRange');
 
 const fullRange = (visibilityRange, rangeFactory) =>
   new DateRange(rangeFactory(visibilityRange.from).from, rangeFactory(visibilityRange.to).to);
