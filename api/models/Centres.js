@@ -55,7 +55,7 @@ const model = {
         id: this.id.toString(),
         attributes: {
           updated: this.updatedAt,
-          heartbeatRecieved: this.heartbeat_recieved ? this.heartbeat_recieved.toString() : null,
+          heartbeatReceived: this.heartbeat_recieved ? this.heartbeat_recieved.toString() : null,
           name: this.name,
           maleCapacity: this.male_capacity,
           femaleCapacity: this.female_capacity,
