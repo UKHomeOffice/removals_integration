@@ -4,21 +4,31 @@ var Promise = require('bluebird');
 var request = require('supertest-as-promised');
 var _ = require('lodash');
 var moment = require('moment-timezone');
-var centres = ['bigone', 'smallone', 'anotherone'];
-var taskForces = ['ops1', 'ops2', 'htc'];
-var locations = ['bigone male holding', 'smallone male holding', 'bigone female office', 'smallone female holding', 'smale one male unit', 'medium one male unit', 'large one male unit', 'small one unit', 'other one unit', 'anotherone unit', 'other female unit', 'anotherone female unit', 'last one female unit'];
 var jhg = require('../test/helpers/JsonHelperGenerator');
 var heartbeatschema = require('removals_schema').heartbeat;
 var cidschema = require('../api/services/CidEntryMovementValidatorService').schema;
 var depmuschema = require('../api/services/DepmuEntryPrebookingValidatorService').schema;
+
 var properties_to_change = ['female_occupied', 'male_occupied', 'male_outofcommission', 'female_outofcommission'];
-var directions = ['In', 'Out'];
+
+var centres = ['bigone', 'smallone', 'anotherone'];
+var taskForces = ['ops1', 'ops2', 'htc'];
+var locations = ['bigone male holding', 'smallone male holding', 'bigone female office', 'smallone female holding', 'smale one male unit', 'medium one male unit', 'large one male unit', 'small one unit', 'other one unit', 'anotherone unit', 'other female unit', 'anotherone female unit', 'last one female unit'];
+
 moment.tz.setDefault("Europe/London");
-heartbeatschema.properties.centre.faker = 'custom.centre';
-cidschema.definitions.Location.faker = 'custom.location';
-cidschema.definitions.InOut.faker = 'custom.direction';
+
+heartbeatschema.properties.centre.enum = centres;
+
+cidschema.definitions.Location.enum = locations;
+cidschema.properties.Output.minItems = 50;
+cidschema.properties.Output.maxItems = 50;
+cidschema.definitions.InOut.enum = ["In", "Out"];
 cidschema.definitions.MORef.faker = 'custom.integer';
-depmuschema.definitions.location.faker = 'custom.location';
+
+depmuschema.definitions.timestamp.faker = 'custom.timestamp';
+depmuschema.definitions.location.enum = locations;
+depmuschema.properties.Output.minItems = 50;
+depmuschema.properties.Output.maxItems = 50;
 
 Sails.lift(
   {
@@ -33,18 +43,18 @@ Sails.lift(
   },
   function (err, sails) {
     var barrels = new Barrels();
-    barrels.populate(function (err) {
+    barrels.populate([
+      'centres',
+      'detainee',
+      'movement',
+      'prebooking'
+    ], function (err) {
       sails.log("database is now in sync");
       var last_heartbeat_data = {};
       var loop = function () {
         var custom_fakes = {
-          centre: centres[_.random(0, centres.length - 1)],
-          location: locations[_.random(0, locations.length - 1)],
-          direction: directions[_.random(0, directions.length - 1)],
           integer: _.random(0, 1000000).toString(),
-          cid_id: _.random(0, 1000000).toString(),
-          timestamp: moment().set({hour: 7, minute: 0, second: 0}).format(),
-          task_force: taskForces[_.random(0, centres.length - 1)],
+          timestamp: moment().set({hour: 7, minute: 0, second: 0}).format()
         };
 
         /**
@@ -82,7 +92,7 @@ Sails.lift(
             .send(heartbeat_data)
         ];
 
-        return Promise.all(requests).delay(500).finally(loop);
+        return Promise.all(requests).delay(200).finally(loop);
       };
       return loop();
     });
