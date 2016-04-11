@@ -108,7 +108,13 @@ describe('UNIT CentreModel', () => {
 
     beforeEach(() => {
       populate = sinon.stub().returnsThis();
-      sinon.stub(Centres, 'find').returns({populate: populate, then: sinon.stub().resolves(true)});
+      let toPromise = sinon.stub().returnsThis();
+      sinon.stub(Centres, 'find').returns({
+        populate: populate,
+        then: sinon.stub().resolves(true),
+        map: sinon.stub().resolves(true),
+        toPromise: toPromise
+      });
     });
 
     afterEach(() => Centres.find.restore());
