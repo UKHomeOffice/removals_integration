@@ -2,12 +2,13 @@ global.rewire = require('rewire');
 global.Sails = require('sails');
 global.Barrels = require('barrels');
 global.freeport = require('freeport');
-global.barrels = new Barrels
+global.barrels = new Barrels();
 
 global.chai = require('chai')
   .use(require('chai-as-promised'))
   .use(require('chai-things'))
-  .use(require('sinon-chai'));
+  .use(require('sinon-chai'))
+  .use(require('chai-datetime'));
 global.expect = chai.expect;
 global.should = chai.should();
 global._ = require('lodash');

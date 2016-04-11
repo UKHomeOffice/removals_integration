@@ -47,6 +47,7 @@
     "barrels": "^1.5.0",
     "chai": "^3.3.0",
     "chai-as-promised": "^5.1.0",
+    "chai-datetime": "^1.4.1",
     "chai-things": "^0.2.0",
     "eslint": "^1.5.1",
     "freeport": "^1.0.5",
