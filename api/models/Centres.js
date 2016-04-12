@@ -14,6 +14,9 @@ const model = {
     cid_received_date: {
       type: 'datetime'
     },
+    prebooking_received: {
+      type: 'datetime'
+    },
     name: {
       type: 'string',
       defaultsTo: 0,
@@ -56,6 +59,16 @@ const model = {
     female_cid_name: {
       type: 'array'
     },
+    male_prebooking: {
+      collection: 'prebooking',
+      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
+      via: 'male_prebooking'
+    },
+    female_prebooking: {
+      collection: 'prebooking',
+      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
+      via: 'female_prebooking'
+    },
     male_active_movements_in: {
       collection: 'movement',
       note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
@@ -82,15 +95,14 @@ const model = {
       defaultsTo: 0
     },
     toJSON: function () {
-      const maleCapacity = this.male_capacity - this.male_in_use;
-      const femaleCapacity = this.female_capacity - this.female_in_use;
       const response = {
         type: 'centre',
         id: this.id.toString(),
         attributes: {
-          cidReceivedDate: this.cid_received_date ? this.cid_received_date.toString(): null,
+          cidReceivedDate: this.cid_received_date ? this.cid_received_date.toString() : null,
           updated: this.updatedAt,
-          heartbeatReceived: this.heartbeat_received ? this.heartbeat_received.toString(): null,
+          heartbeatReceived: this.heartbeat_received ? this.heartbeat_received.toString() : null,
+          prebookingReceived: this.prebooking_received ? this.prebooking_received.toString() : null,
           name: this.name,
           maleCapacity: this.male_capacity,
           femaleCapacity: this.female_capacity,
@@ -98,8 +110,10 @@ const model = {
           femaleInUse: this.female_in_use,
           maleOutOfCommission: this.male_out_of_commission,
           femaleOutOfCommission: this.female_out_of_commission,
-          maleAvailability: maleCapacity - this.male_out_of_commission,
-          femaleAvailability: femaleCapacity - this.female_out_of_commission,
+          maleAvailability: this.male_capacity - this.male_out_of_commission - this.male_in_use - this.male_prebooking.length,
+          femaleAvailability: this.female_capacity - this.female_out_of_commission - this.female_in_use - this.female_prebooking.length,
+          malePrebooking: this.male_prebooking.length,
+          femalePrebooking: this.female_prebooking.length,
           maleActiveMovementsIn: this.male_active_movements_in.length,
           maleActiveMovementsOut: this.male_active_movements_out.length,
           femaleActiveMovementsIn: this.female_active_movements_in.length,
@@ -153,7 +167,19 @@ const model = {
         }
         return centre[0];
       });
-  }
+  },
+
+  publishCentreUpdates: collection =>
+    Centres.find()
+      .populate('male_prebooking')
+      .populate('female_prebooking')
+      .populate('male_active_movements_in')
+      .populate('male_active_movements_out')
+      .populate('female_active_movements_in')
+      .populate('female_active_movements_out')
+      .toPromise()
+      .map(centre => Centres.publishUpdate(centre.id, centre.toJSON()))
+      .then(() => collection)
 };
 
 module.exports = LinkingModels.mixin(model);

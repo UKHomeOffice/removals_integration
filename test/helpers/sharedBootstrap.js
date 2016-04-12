@@ -2,7 +2,8 @@ global.rewire = require('rewire');
 global.Sails = require('sails');
 global.Barrels = require('barrels');
 global.freeport = require('freeport');
-global.barrels = new Barrels;
+global.barrels = new Barrels();
+global.moment = require('moment-timezone');
 global.chai = require('chai')
   .use(require('chai-as-promised'))
   .use(require('chai-things'))
@@ -10,6 +11,22 @@ global.chai = require('chai')
 global.expect = chai.expect;
 global._ = require('lodash');
 global.sinon = require('sinon');
+global.initializeBarrelsFixtures = function () {
+  return new Promise(function (resolve) {
+    barrels.populate([
+      'centres',
+      'detainee',
+      'movement',
+      'prebooking'
+    ], function (err) {
+      if (err) throw err;
+      resolve();
+    });
+
+  });
+};
+
+require('mocha-cakes-2');
 require('sinon-as-promised')(require('bluebird'));
 global.request = require('supertest-as-promised');
 var date = new Date();
@@ -28,6 +45,17 @@ global.request_auth = app =>
     .set('x-forwarded-proto', 'https')
     .set('x-forwarded-proto$', 'https')
     .set('x-real-ip', '127.0.0.1');
+
+global.testConfig = {
+  initializeBarrelsFixtures: true
+};
+
+global.createRequest = function (payload, path, res) {
+  return request_auth(sails.hooks.http.app)
+    .post(path)
+    .send(payload)
+    .expect(res);
+}
 
 module.exports = {
   before: done => {
@@ -56,14 +84,14 @@ module.exports = {
         done();
       });
     });
+
   },
-  beforeEach: done =>
-    barrels.populate([
-      'centres',
-      'detainee',
-      'movement',
-    ], done),
+  beforeEach: () => {
+    if (global.testConfig.initializeBarrelsFixtures) {
+      return initializeBarrelsFixtures();
+    }
+  },
   after: done => {
-    sails.lower(done);
+    Sails.lower(done);
   }
 };

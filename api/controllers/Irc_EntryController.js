@@ -53,7 +53,7 @@ module.exports = {
   heartbeatPost: function (req, res) {
     return IrcEntryHeartbeatValidatorService.validate(req.body)
       .then(this.process_heartbeat)
-      .then(this.publishCentreUpdates)
+      .tap(Centres.publishCentreUpdates)
       .then(res.ok)
       .catch(ValidationError, (error) => {
         res.badRequest(error.message);
