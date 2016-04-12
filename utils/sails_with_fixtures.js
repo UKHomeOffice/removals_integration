@@ -6,6 +6,7 @@ var _ = require('lodash');
 
 Sails.lift(
   {
+    port: 8080,
     models: {
       connection: 'test',
       migrate: 'drop'
@@ -13,7 +14,12 @@ Sails.lift(
   },
   function (err, sails) {
     var barrels = new Barrels();
-    barrels.populate(function (err) {
+    barrels.populate([
+      'centres',
+      'detainee',
+      'movement',
+      'prebooking'
+    ], function (err) {
       sails.log('up');
     });
   }

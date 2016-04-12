@@ -3,18 +3,27 @@
     "name": "bigone",
     "male_capacity": 999,
     "female_capacity": 750,
-    "id": 1
+    "id": 1,
+    "mo_type": "removal",
+    "male_cid_name": ["bigone male holding", "smallone male holding"],
+    "female_cid_name": ["bigone female office", "smallone female holding"]
   },
   {
     "name": "smallone",
     "male_capacity": 500,
     "female_capacity": 300,
-    "id": 2
+    "id": 2,
+    "mo_type": "occupancy",
+    "male_cid_name": ["smale one male unit", "medium one male unit", "large one male unit"],
+    "female_cid_name": ["small one unit"]
   },
   {
     "name": "anotherone",
     "male_capacity": 800,
     "female_capacity": 573,
-    "id": 3
+    "id": 3,
+    "mo_type": "non-occupancy",
+    "male_cid_name": ["other one unit", "anotherone unit"],
+    "female_cid_name": ["other female unit", "anotherone female unit", "last one female unit"]
   }
 ]

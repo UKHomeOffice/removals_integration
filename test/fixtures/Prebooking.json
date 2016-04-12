@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "task_force": "ops1",
+    "cid_id": null,
+    "gender": "male",
+    "centre": 1
+  },
+  {
+    "id": 2,
+    "task_force": "ops1",
+    "cid_id": "123",
+    "gender": "female",
+    "centre": 1
+  },
+  {
+    "id": 3,
+    "task_force": "htu",
+    "cid_id": null,
+    "gender": "male",
+    "centre": 1
+  }
+]

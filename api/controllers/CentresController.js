@@ -7,4 +7,9 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-module.exports = {};
+module.exports = {
+  _config: {
+    populate: true
+  }
+};
+

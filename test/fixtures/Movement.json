@@ -1,0 +1,37 @@
+[
+  {
+    "centre": 1,
+    "detainee": 1,
+    "id": 1,
+    "direction": "in",
+    "active": true
+  },
+  {
+    "centre": 2,
+    "detainee": 1,
+    "id": 2,
+    "direction": "in",
+    "active": true
+  },
+  {
+    "centre": 1,
+    "detainee": 2,
+    "id": 3,
+    "direction": "in",
+    "active": true
+  },
+  {
+    "centre": 1,
+    "detainee": 2,
+    "id": 316512,
+    "direction": "in",
+    "active": false
+  },
+  {
+    "centre": 1,
+    "detainee": 3,
+    "id": 132023,
+    "direction": "in",
+    "active": true
+  }
+]
