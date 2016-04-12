@@ -122,7 +122,6 @@ describe('UNIT Depmu_EntryController', () => {
   });
 
   describe('filterPrebookingsWithNoMovementOrder', () => {
-    var populate, filter, toPromise;
     var dummyPrebooking = {cid_id: 4, centre: 'abc'};
     var dummyMovement = {
       centre: 2,
@@ -135,27 +134,6 @@ describe('UNIT Depmu_EntryController', () => {
       "gender": "male",
       "cid_id": 312
     };
-
-
-    beforeEach(() => {
-      populate = sinon.stub().returnsThis();
-      toPromise = sinon.stub().returnsThis();
-      filter = sinon.stub().returnsThis();
-
-      sinon.stub(Movement, 'find').returns({
-        populate: populate,
-        filter: filter,
-        toPromise: toPromise,
-        then: sinon.stub().resolves(true)
-      });
-    });
-
-    afterEach(() => Movement.find.restore());
-
-    it('Should populate detainee', () =>
-      controller.filterPrebookingsWithNoMovementOrder(dummyPrebooking)
-        .then(() => expect(populate).to.be.calledWith('detainee', {cid_id: 4}))
-    );
 
     it('should filter movements without a populated detainee', () =>
       Movement.create(dummyMovement)
@@ -170,10 +148,11 @@ describe('UNIT Depmu_EntryController', () => {
         .then(result => expect(result).to.be.true)
     );
 
-    it.skip('should not filter movements with a populated detainee and a matching cid_id', () => {
+    it('should not filter movements with a populated detainee and a matching cid_id', () => {
       dummyDetainee.cid_id = 4;
       return Movement.create(dummyMovement)
         .then(() => Detainee.create(dummyDetainee))
+        .tap(console.log)
         .then(() => controller.filterPrebookingsWithNoMovementOrder(dummyPrebooking))
         .then(result => expect(result).to.be.false)
 
