@@ -41,6 +41,15 @@ module.exports = {
         return centres;
       }),
 
+  publishCentreUpdates: centres =>
+    Centres.find()
+      .populate('male_active_movements_in')
+      .populate('male_active_movements_out')
+      .populate('female_active_movements_in')
+      .populate('female_active_movements_out')
+      .then(centres => _.map(centres, centre => Centres.publishUpdate(centre.id, centre.toJSON())))
+      .then(() => centres),
+
   heartbeatPost: function (req, res) {
     return IrcEntryHeartbeatValidatorService.validate(req.body)
       .then(this.process_heartbeat)
