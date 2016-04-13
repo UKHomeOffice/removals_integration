@@ -3,19 +3,19 @@
 
 var moment = require('moment');
 
-var DateRange = require('../../../api/services/BedCountService').DateRange;
+var DateRange = require('../../../api/lib/DateRange');
 
 const vDateRangeFactory = (date) => new DateRange(
   moment(date).subtract(2, 'days').startOf('day').toDate(),
   moment(date).endOf('day').toDate()
 );
-const erDateRangeFactory = (date) => new DateRange(
-  moment(date).subtract(2, 'days').startOf('day').toDate(),
-  moment(date).endOf('day').toDate()
-);
-const mrDateRangeFactory = (date) => new DateRange(
+const eventsFromMovementDateRangeFactory = (date) => new DateRange(
   moment(date).startOf('day').toDate(),
   moment(date).add(2, 'days').endOf('day').toDate()
+);
+const movementsFromEventDateRangeFactory = (date) => new DateRange(
+  moment(date).subtract(2, 'days').startOf('day').toDate(),
+  moment(date).endOf('day').toDate()
 );
 
 const test = (data, date, checks) => Centres.destroy()
@@ -27,7 +27,7 @@ const test = (data, date, checks) => Centres.destroy()
   .then(() => Detainee.create(data.detainees))
   .then(() => Event.create(data.events))
   .then(() => Centres.findOne({ name: 'BedCountServiceTestCentre' }))
-  .then((centre) => BedCountService.calculateCentreState(centre, vDateRangeFactory(date), erDateRangeFactory, mrDateRangeFactory))
+  .then((centre) => BedCountService.calculateCentreState(centre, vDateRangeFactory(date), eventsFromMovementDateRangeFactory, movementsFromEventDateRangeFactory))
   .then(checks);
 
 describe('BedCountService', () => {
