@@ -53,6 +53,26 @@ Feature('Prebooking', () => {
           location: 'bigone male holding',
           task_force: 'ops1',
           cid_id: '333'
+        }, {
+          timestamp: validTimestamp,
+          location: 'bigone male holding',
+          task_force: 'HTU',
+          cid_id: '444'
+        }, {
+          timestamp: validTimestamp,
+          location: 'bigone male holding',
+          task_force: "HTU Failed RD's",
+          cid_id: '555'
+        }, {
+          timestamp: validTimestamp,
+          location: 'smallone female holding',
+          task_force: 'HTU Borderforce',
+          cid_id: '666'
+        }, {
+          timestamp: validTimestamp,
+          location: 'smallone female holding',
+          task_force: 'Depmu',
+          cid_id: '777'
         }]
       };
       var expectedFemaleCentre = 'smallone';
@@ -84,10 +104,26 @@ Feature('Prebooking', () => {
       );
 
       And(`new female prebookings are created`, () =>
-        Prebooking.find({where: {gender: 'female'}}).then((models) => expect(models.length).to.equal(2))
+        Prebooking.find({where: {gender: 'female'}}).then((models) => expect(models.length).to.equal(4))
       );
       And(`new male prebookings are created`, () =>
-        Prebooking.find({where: {gender: 'male'}}).then((models) => expect(models.length).to.equal(2))
+        Prebooking.find({where: {gender: 'male'}}).then((models) => expect(models.length).to.equal(4))
+      );
+      And(`new female contingency bookings are created`, () =>
+        Prebooking.find({
+          where: {
+            gender: 'female',
+            contingency: true
+          }
+        }).then((models) => expect(models.length).to.equal(2))
+      );
+      And(`new male contingency bookings are created`, () =>
+        Prebooking.find({
+          where: {
+            gender: 'male',
+            contingency: true
+          }
+        }).then((models) => expect(models.length).to.equal(2))
       );
 
     });
