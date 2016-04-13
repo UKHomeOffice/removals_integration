@@ -48,6 +48,6 @@ describe('UNIT PrebookingModel', () => {
 
 describe('INTEGRATION PrebookingModel', () => {
   it('should get the fixtures', () =>
-    expect(Prebooking.find()).to.eventually.have.length(3)
+    expect(Prebooking.find()).to.eventually.have.length(6)
   );
 });
