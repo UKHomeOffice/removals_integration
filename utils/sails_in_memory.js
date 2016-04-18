@@ -12,7 +12,7 @@ var depmuschema = require('../api/services/DepmuEntryPrebookingValidatorService'
 var properties_to_change = ['female_occupied', 'male_occupied', 'male_outofcommission', 'female_outofcommission'];
 
 var centres = ['bigone', 'smallone', 'anotherone'];
-var taskForces = ['ops1', 'ops2', 'htc'];
+var taskForces = ['ops1', 'ops2', 'htu', 'depmu', 'htu boarderforce', 'depmu boarderforce'];
 var locations = ['bigone male holding', 'smallone male holding', 'bigone female office', 'smallone female holding', 'smale one male unit', 'medium one male unit', 'large one male unit', 'small one unit', 'other one unit', 'anotherone unit', 'other female unit', 'anotherone female unit', 'last one female unit'];
 
 moment.tz.setDefault("Europe/London");
@@ -27,6 +27,7 @@ cidschema.definitions.MORef.faker = 'custom.integer';
 
 depmuschema.definitions.timestamp.faker = 'custom.timestamp';
 depmuschema.definitions.location.enum = locations;
+depmuschema.definitions.task_force.enum = taskForces;
 depmuschema.properties.Output.minItems = 50;
 depmuschema.properties.Output.maxItems = 50;
 
