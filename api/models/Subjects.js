@@ -20,5 +20,7 @@ const model = {
   }
 };
 
-module.exports = ModelHelpers.mixin(model);
-module.exports = LinkingModels.mixin(model);
+ModelHelpers.mixin(model);
+LinkingModels.mixin(model);
+
+module.exports = model;
