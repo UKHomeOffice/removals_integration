@@ -274,7 +274,7 @@ describe('UNIT BedCountService', () => {
 
       return Centres.findOne({ id: 1 })
         .then((centre) => {
-          return BedCountService.calculateCentreState(
+          return BedCountService.performReconciliation(
             centre,
             vDateRangeFactory(new Date('01/01/2016')),
             eventSearchDateRangeFactory,

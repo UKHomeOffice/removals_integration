@@ -2,6 +2,7 @@
 'use strict';
 
 var DateRange = require('../lib/DateRange');
+var moment = require('moment');
 
 // const fullRange = (visibilityRange, rangeFactory) =>
 //   new DateRange(rangeFactory(visibilityRange.from).from, rangeFactory(visibilityRange.to).to);
@@ -76,19 +77,35 @@ const filterUnreconciled = (centre, range) => {
 };
 
 module.exports = {
-  calculateCentreState: (centre, visibilityRange, eventSearchDateRangeFactory, movementSearchDateRangeFactory) => {
+  performReconciliation: (centre, visibilityRange, eventSearchDateRangeFactory, movementSearchDateRangeFactory) => {
     const rangeOfEvents = fullRange(visibilityRange, eventSearchDateRangeFactory);
     const rangeOfMovements = fullRange(visibilityRange, movementSearchDateRangeFactory);
     const reconciler = reconciliationTester(movementSearchDateRangeFactory, eventSearchDateRangeFactory);
+    // const reinstatementReconciler = reinstatementTester(reinstatementCheckoutSearchDateRangeFactory);
 
     centre.unreconciledEvents = [];
     centre.unreconciledMovements = [];
     centre.reconciled = [];
+    // centre.reinstatements = [];
 
     return populateEvents(centre, rangeOfEvents)
       .then(() => populateMovements(centre, rangeOfMovements))
+      // .then(() => handleReinstatements(centre, reinstatementReconciler))
       .then(() => reconcileEvents(centre, reconciler))
       .then(() => filterUnreconciled(centre, visibilityRange))
       .return(centre);
+  },
+  performConfiguredReconciliation: function (centre) {
+    const visibilityRange = new DateRange(moment().subtract(2, 'days').toDate(), moment().toDate());
+    const eventsFromMovementDateRangeFactory = (date) => new DateRange(
+      moment(date).startOf('day').toDate(),
+      moment(date).add(2, 'days').endOf('day').toDate()
+    );
+    const movementsFromEventDateRangeFactory = (date) => new DateRange(
+      moment(date).subtract(2, 'days').startOf('day').toDate(),
+      moment(date).endOf('day').toDate()
+    );
+
+    return this.performReconciliation(centre, visibilityRange, eventsFromMovementDateRangeFactory, movementsFromEventDateRangeFactory);
   }
 };

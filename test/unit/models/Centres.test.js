@@ -69,6 +69,45 @@ describe('UNIT CentreModel', () => {
       return expect(model.attributes.toJSON.call(that)).to.eql(expected);
     });
 
+    it('should match the expected output when reconciled is set', () => {
+      let that = dummy_model;
+      that = Object.assign({}, dummy_model, {
+        reconciled: [],
+        unreconciledMovements: [],
+        unreconciledEvents: []
+      });
+      var expected = {
+        attributes: {
+          name: that.name,
+          cidReceivedDate: that.cid_received_date,
+          heartbeatRecieved: null,
+          updated: that.updatedAt,
+          maleCapacity: that.male_capacity,
+          maleInUse: that.male_in_use,
+          maleOutOfCommission: that.male_out_of_commission,
+          femaleCapacity: that.female_capacity,
+          femaleInUse: that.female_in_use,
+          femaleOutOfCommission: that.female_out_of_commission,
+          maleAvailability: 2,
+          femaleAvailability: -1,
+          femaleUnexpectedIn: 0,
+          femaleUnexpectedOut: 0,
+          femaleScheduledIn: 0,
+          femaleScheduledOut: 0,
+          maleUnexpectedIn: 0,
+          maleUnexpectedOut: 0,
+          maleScheduledIn: 0,
+          maleScheduledOut: 0
+        },
+        id: that.id.toString(),
+        type: "centre",
+        links: [
+          'links'
+        ]
+      };
+      return expect(model.attributes.toJSON.call(that)).to.eql(expected);
+    });
+
     it('Should have properties set for male and female capacity and occupancy', () => {
       const that = _.clone(dummy_model);
       const subject = model.attributes.toJSON.call(that).attributes;

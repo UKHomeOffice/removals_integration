@@ -74,8 +74,19 @@ const model = {
       via: 'centre'
     },
     toJSON: function () {
-      const maleCapacity = this.male_capacity - this.male_in_use;
-      const femaleCapacity = this.female_capacity - this.female_in_use;
+      const unreconciledEventCounter = (gender, operations) => this.unreconciledEvents.reduce((count, event) => {
+        if (event.detainee.gender === gender && operations.indexOf(event.operation) > 0-1) {
+          return count + 1;
+        }
+        return count;
+      }, 0);
+      const unreconciledMovementCounter = (gender, direction) => this.unreconciledMovements.reduce((count, movement) => {
+        if (movement.gender === gender && movement.direction === direction) {
+          return count + 1;
+        }
+        return count;
+      }, 0);
+
       const response = {
         type: 'centre',
         id: this.id.toString(),
@@ -83,22 +94,25 @@ const model = {
           cidReceivedDate: this.cid_received_date,
           updated: this.updatedAt,
           heartbeatRecieved: this.heartbeat_recieved ? this.heartbeat_recieved.toString() : null,
-          name: this.name,
-          maleCapacity: this.male_capacity,
-          femaleCapacity: this.female_capacity,
-          maleInUse: this.male_in_use,
-          femaleInUse: this.female_in_use,
-          maleOutOfCommission: this.male_out_of_commission,
-          femaleOutOfCommission: this.female_out_of_commission,
-          maleAvailability: maleCapacity - this.male_out_of_commission,
-          femaleAvailability: femaleCapacity - this.female_out_of_commission
+          name: this.name
         },
         links: this.modelLinks('centres', reverseRouteService)
       };
+      ['male', 'female'].forEach((gender) => {
+        response.attributes[gender + 'Capacity'] = this[gender + '_capacity'];
+        response.attributes[gender + 'InUse'] = this[gender + '_in_use'];
+        response.attributes[gender + 'OutOfCommission'] = this[gender + '_out_of_commission'];
+        response.attributes[gender + 'Availability'] = this[gender + '_capacity'] - this[gender + '_in_use'] - this[gender + '_out_of_commission'];
+        if (this.reconciled) {
+          response.attributes[gender + 'UnexpectedIn'] = unreconciledEventCounter(gender, ['check in']);
+          response.attributes[gender + 'UnexpectedOut'] = unreconciledEventCounter(gender, ['check out']);
+          response.attributes[gender + 'ScheduledIn'] = unreconciledMovementCounter(gender, 'in');
+          response.attributes[gender + 'ScheduledOut'] = unreconciledMovementCounter(gender, 'out');
+        }
+      });
       return response;
     }
   },
-
   getGenderAndCentreByCIDLocation: function (location) {
     return this.find().then(centres =>
       _.compact(_.map(centres, centre => {
@@ -119,7 +133,7 @@ const model = {
   },
 
   removeNonOccupancy: function () {
-    return this.destroy({'mo-type': 'non-occupancy'});
+    return this.destroy({ 'mo-type': 'non-occupancy' });
   },
 
   afterCreate: function (record, done) {

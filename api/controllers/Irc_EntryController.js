@@ -4,6 +4,74 @@
 
 var ValidationError = require('../lib/exceptions/ValidationError');
 
+const updateDetaineeModel = (detainee, newDetaineeProperties) => {
+  detainee.timestamp = newDetaineeProperties.timestamp;
+
+  if (newDetaineeProperties.gender) {
+    detainee.gender = newDetaineeProperties.gender;
+  }
+  if (newDetaineeProperties.nationality) {
+    detainee.nationality = newDetaineeProperties.nationality;
+  }
+  if (newDetaineeProperties.cid_id) {
+    detainee.cid_id = newDetaineeProperties.cid_id;
+  }
+};
+
+let generateStandardEvent = (detainee, request_body) => {
+  return {
+    centre: detainee.centre,
+    detainee: detainee,
+    operation: request_body.operation,
+    timestamp: request_body.timestamp
+  };
+};
+
+let generateDetainee = (centre, request_body) => {
+  return {
+    centre: centre,
+    person_id: request_body.person_id,
+    timestamp: request_body.timestamp,
+    nationality: request_body.nationality,
+    gender: Detainee.normalizeGender(request_body.gender),
+    cid_id: request_body.cid_id
+  };
+};
+
+let createOrUpdateDetainee = (detaineeProperties) => {
+  return new Promise((resolve) => {
+    Detainee.findOne({
+      person_id: detaineeProperties.person_id,
+      centre: detaineeProperties.centre.id
+    }).then((detainee) => {
+      if (!detainee) {
+        return Detainee.create(detaineeProperties, (err, detainee) => {
+          if (err) {
+            throw err;
+          }
+          resolve(detainee);
+        });
+      } else if (detainee.timestamp.toISOString() < detaineeProperties.timestamp) {
+        updateDetaineeModel(detainee, detaineeProperties);
+
+        detainee.save((err, detainee) => {
+          if (err) {
+            throw err;
+          }
+          resolve(detainee);
+        });
+      } else {
+        resolve(detainee);
+      }
+    });
+  });
+};
+
+let processEventDetainee = (request_body) => {
+  return Centres.findOne({ name: request_body.centre })
+      .then((centre) => createOrUpdateDetainee(generateDetainee(centre, request_body)));
+};
+
 module.exports = {
   _config: {
     actions: false,
@@ -58,73 +126,38 @@ module.exports = {
 
   process_event: function (request_body) {
     switch (request_body.operation) {
+    case Event.OPERATION_INTER_SITE_TRANSFER:
+      return this.handleInterSiteTransfer(request_body);
+    case Event.OPERATION_UPDATE:
+      return processEventDetainee(request_body);
     case Event.OPERATION_CHECK_IN:
     case Event.OPERATION_CHECK_OUT:
-    case Event.OPERATION_INTER_SITE_TRANSFER:
     case Event.OPERATION_REINSTATEMENT:
-      return this.saveEvent(request_body);
+      return processEventDetainee(request_body)
+        .then((detainee) => Event.create(generateStandardEvent(detainee, request_body)));
     default:
-      throw new ValidationError('Invalid operation');
+      throw new ValidationError('Unknown operation');
     }
   },
 
-  createOrUpdateDetainee: function (request_body) {
-    return Centres.findOne({ name: request_body.centre })
-      .populate('detainees', { person_id: request_body.person_id })
-      .then(function (centre) {
-        if (!centre) {
-          throw new Error('Centre could not be found');
-        }
-        if (centre.detainees.length === 1) {
-          var detainee = centre.detainees[0];
-          if (!detainee) {
-            throw new Error('Detainee could not be found');
-          }
-          if (detainee.timestamp.toISOString() < request_body.timestamp) {
-            detainee.timestamp = request_body.timestamp;
-
-            if (request_body.gender) {
-              detainee.gender = Detainee.normalizeGender(request_body.gender);
-            }
-            if (request_body.nationality) {
-              detainee.nationality = request_body.nationality;
-            }
-            if (request_body.cid_id) {
-              detainee.cid_id = request_body.cid_id;
-            }
-          }
-          return detainee.save();
-        }
-        return Detainee.create({
-          centre: centre,
-          person_id: request_body.person_id,
-          timestamp: request_body.timestamp,
-          nationality: request_body.nationality,
-          gender: request_body.gender === "m" ? 'male' : 'female',
-          cid_id: request_body.cid_id
-        });
-      });
-  },
-  saveEvent: function (request_body) {
-    return this.createOrUpdateDetainee(request_body)
-      .then(() => this.buildEventObject(request_body))
-      .then((event) => Event.create(event));
-  },
-
-  buildEventObject: function (request_body) {
-    return Centres.findOne({ name: request_body.centre })
-      .populate('detainees', { person_id: request_body.person_id })
-      .then(function (centre) {
-        if (!centre) {
-          throw new Error('Centre could not be found');
-        }
-        return {
-          centre: centre,
-          detainee: centre.detainees[0],
-          operation: request_body.operation,
-          timestamp: request_body.timestamp
-        };
-      });
+  handleInterSiteTransfer: function (request_body) {
+    return this.process_event({
+      centre: request_body.centre,
+      person_id: request_body.person_id,
+      timestamp: request_body.timestamp,
+      nationality: request_body.nationality,
+      gender: request_body.gender,
+      cid_id: request_body.cid_id,
+      operation: Event.OPERATION_CHECK_OUT
+    }).then(() => this.process_event({
+      centre: request_body.centre_to,
+      person_id: request_body.person_id,
+      timestamp: request_body.timestamp,
+      nationality: request_body.nationality,
+      gender: request_body.gender,
+      cid_id: request_body.cid_id,
+      operation: Event.OPERATION_CHECK_IN
+    }));
   },
 
   eventPost: function (req, res) {

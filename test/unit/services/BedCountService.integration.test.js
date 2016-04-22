@@ -27,7 +27,7 @@ const test = (data, date, checks) => Centres.destroy()
   .then(() => Detainee.create(data.detainees))
   .then(() => Event.create(data.events))
   .then(() => Centres.findOne({ name: 'BedCountServiceTestCentre' }))
-  .then((centre) => BedCountService.calculateCentreState(centre, vDateRangeFactory(date), eventsFromMovementDateRangeFactory, movementsFromEventDateRangeFactory))
+  .then((centre) => BedCountService.performReconciliation(centre, vDateRangeFactory(date), eventsFromMovementDateRangeFactory, movementsFromEventDateRangeFactory))
   .then(checks);
 
 describe('BedCountService', () => {

@@ -2,7 +2,7 @@
 
 var Event2 = require('../../api/models/Event');
 
-Feature('Check In Event', () => {
+describe('Check In Event', () => {
 
   Scenario('Non-Existent Event should be Created', () => {
 
