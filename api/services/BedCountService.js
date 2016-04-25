@@ -36,8 +36,8 @@ const populateMovements = (centre, range) =>
   populate(Movement, centre.id, range)
     .then(movements => centre.unreconciledMovements = movements);
 
-const resolveEventOperationWithMovementDirection = (eventType) => {
-  switch (eventType) {
+const resolveEventOperationWithMovementDirection = (operation) => {
+  switch (operation) {
   case 'check in':
     return 'in';
   case 'check out':
