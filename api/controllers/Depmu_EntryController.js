@@ -28,6 +28,11 @@ module.exports = {
     return prebooking;
   },
 
+  populatePrebookingWithContingency: prebooking => {
+    prebooking.contingency = (prebooking.task_force.startsWith('depmu') || prebooking.task_force.startsWith('htu'));
+    return prebooking;
+  },
+
   populatePrebookingWithCentreAndGender: prebooking =>
     _.memoize(Centres.getGenderAndCentreByCIDLocation)(prebooking.location)
       .then(result =>
@@ -66,6 +71,7 @@ module.exports = {
         centre: prebooking.centre,
         gender: prebooking.gender,
         task_force: prebooking.task_force,
+        contingency: prebooking.contingency,
         cid_id: prebooking.cid_id
       })
       .then(() => prebooking),
@@ -77,6 +83,7 @@ module.exports = {
     return DepmuEntryPrebookingValidatorService.validate(req.body)
       .then(body => body.Output)
       .map(this.formatPrebooking)
+      .map(this.populatePrebookingWithContingency)
       .map(this.populatePrebookingWithCentreAndGender)
       .filter(this.filterNonEmptyPrebookings)
       .filter(this.filterCurrentRangePrebookings)

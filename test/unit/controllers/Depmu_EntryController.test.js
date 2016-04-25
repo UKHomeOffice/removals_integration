@@ -19,13 +19,11 @@ describe('UNIT Depmu_EntryController', () => {
 
     sinon.stub(Prebooking, 'create').resolves({foo: 'bar'});
     sinon.stub(Centres, 'getGenderAndCentreByCIDLocation').resolves({bar: 'raa'});
-    sinon.stub(Centres, 'update').resolves({bar: 'raa'});
   });
 
   afterEach(() => {
     Prebooking.create.restore();
     Centres.getGenderAndCentreByCIDLocation.restore();
-    Centres.update.restore();
   });
 
   describe('prebookingOptions', () => {
@@ -81,7 +79,48 @@ describe('UNIT Depmu_EntryController', () => {
         "location": "example",
         "bar": "raa"
       })
-    )
+    );
+  });
+
+  describe('populatePrebookingWithContingency', () => {
+    var dummyPrebooking;
+
+    it('should merge the result into the response', () => {
+      dummyPrebooking = {
+        "cid_id": 123,
+        "task_force": "htu"
+      };
+      expect(controller.populatePrebookingWithContingency(dummyPrebooking)).to.eql({
+        "cid_id": 123,
+        "task_force": "htu",
+        "contingency": true
+      })
+    });
+
+    it('should set contingency as false for a prebooking Task Force', () => {
+      dummyPrebooking.task_force = 'ops1';
+      expect(controller.populatePrebookingWithContingency(dummyPrebooking)["contingency"]).to.eql(false)
+    });
+
+    it('should set contingency as true for htu Task Force', () => {
+      dummyPrebooking.task_force = 'htu';
+      expect(controller.populatePrebookingWithContingency(dummyPrebooking)["contingency"]).to.eql(true)
+    });
+
+    it('should set contingency as true for depmu Task Force', () => {
+      dummyPrebooking.task_force = 'depmu';
+      expect(controller.populatePrebookingWithContingency(dummyPrebooking)["contingency"]).to.eql(true)
+    });
+
+    it('should set contingency as true for htu as the prefix for a Task Force', () => {
+      dummyPrebooking.task_force = 'htu other';
+      expect(controller.populatePrebookingWithContingency(dummyPrebooking)["contingency"]).to.eql(true)
+    });
+
+    it('should set contingency as true for depmu as the prefix for a Task Force', () => {
+      dummyPrebooking.task_force = 'depmu other';
+      expect(controller.populatePrebookingWithContingency(dummyPrebooking)["contingency"]).to.eql(true)
+    });
   });
 
   describe('filterNonEmptyPrebookings', () => {
@@ -152,7 +191,6 @@ describe('UNIT Depmu_EntryController', () => {
       dummyDetainee.cid_id = 4;
       return Movement.create(dummyMovement)
         .then(() => Detainee.create(dummyDetainee))
-        .tap(console.log)
         .then(() => controller.filterPrebookingsWithNoMovementOrder(dummyPrebooking))
         .then(result => expect(result).to.be.false)
 
@@ -199,6 +237,7 @@ describe('UNIT Depmu_EntryController', () => {
 
       context = {
         formatPrebooking: sinon.spy(controller, 'formatPrebooking'),
+        populatePrebookingWithContingency: sinon.spy(controller, 'populatePrebookingWithContingency'),
         populatePrebookingWithCentreAndGender: sinon.spy(controller, 'populatePrebookingWithCentreAndGender'),
         filterNonEmptyPrebookings: sinon.spy(controller, 'filterNonEmptyPrebookings'),
         filterCurrentRangePrebookings: sinon.spy(controller, 'filterCurrentRangePrebookings'),
@@ -214,6 +253,7 @@ describe('UNIT Depmu_EntryController', () => {
       global.DepmuEntryPrebookingValidatorService = validationservice;
       Centres.publishCentreUpdates.restore();
       context.formatPrebooking.restore();
+      context.populatePrebookingWithContingency.restore();
       context.populatePrebookingWithCentreAndGender.restore();
       context.filterNonEmptyPrebookings.restore();
       context.filterCurrentRangePrebookings.restore();
@@ -233,6 +273,7 @@ describe('UNIT Depmu_EntryController', () => {
         .then(() => expect(res.ok).to.be.calledOnce)
         .catch((e) => {
           expect(context.formatPrebooking).to.have.been.calledOnce.with(req.body.Output);
+          expect(context.populatePrebookingWithContingency).to.have.been.calledOnce;
           expect(context.populatePrebookingWithCentreAndGender).to.have.been.calledOnce;
           expect(context.filterNonEmptyPrebookings).to.have.been.calledOnce;
           expect(context.filterCurrentRangePrebookings).to.have.been.calledOnce;
@@ -281,27 +322,30 @@ describe('UNIT Depmu_EntryController', () => {
     var dummyPrebooking = {
       "centre": 1,
       "gender": 'female',
-      "task_force": 'ops1',
+      "task_force": 'htu',
+      "contingency": true,
       "cid_id": 4
     };
-    it('should pass the correct mapping to findAndUpdateOrCreate', () => {
+    it('should pass the correct mapping to create', () => {
       controller.prebookingProcess(dummyPrebooking);
       return expect(Prebooking.create).to.be.calledWith(
         {
           "centre": 1,
           "gender": 'female',
-          "task_force": 'ops1',
+          "task_force": 'htu',
+          "contingency": true,
           "cid_id": 4
         });
     });
 
-    it('should return findAndUpdateOrCreate', () =>
+    it('should return create', () =>
       expect(controller.prebookingProcess(dummyPrebooking)).to.eventually.eql(
         {
           "centre": 1,
           "cid_id": 4,
-          "gender": "female",
-          "task_force": "ops1"
+          "gender": 'female',
+          "contingency": true,
+          "task_force": 'htu'
         })
     );
   });
