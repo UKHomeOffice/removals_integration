@@ -22,33 +22,19 @@ let populate = (barrel, centreId, range) =>
 const populateEvents = (centre, range) =>
   populate(Event, centre.id, range)
     .populate('detainee')
-    .then(events => centre.unreconciledEvents = events);
+    .then(events => {
+      events.forEach((event) => {
+        if (event.operation === Event.OPERATION_REINSTATEMENT) {
+          centre.unreconciledReinstatements.push(event);
+        } else {
+          centre.unreconciledEvents.push(event);
+        }
+      });
+    });
 
 const populateMovements = (centre, range) =>
   populate(Movement, centre.id, range)
     .then(movements => centre.unreconciledMovements = movements);
-
-let reconcile = (eventKey, movementKey, centre, reconciler) => {
-  const event = centre.unreconciledEvents[eventKey];
-  const movement = centre.unreconciledMovements[movementKey];
-  if (reconciler(event, movement)) {
-    centre.reconciled.push({ event, movement });
-    delete centre.unreconciledEvents[eventKey];
-    delete centre.unreconciledMovements[movementKey];
-    return true;
-  }
-  return false;
-};
-
-const reconcileEvents = (centre, reconciler) => {
-  centre.unreconciledEvents.forEach((event, eventKey) =>
-    centre.unreconciledMovements.some((movement, movementKey) => {
-      return reconcile(eventKey, movementKey, centre, reconciler);
-    })
-  );
-  centre.unreconciledMovements = centre.unreconciledMovements.filter((movement) => movement !== null);
-  centre.unreconciledEvents = centre.unreconciledEvents.filter((event) => event !== null);
-};
 
 const resolveEventOperationWithMovementDirection = (eventType) => {
   switch (eventType) {
@@ -66,9 +52,7 @@ const reconciliationTester = (movementsRangeFactory, eventsRangeFactory) => (eve
   const directionMatches = resolveEventOperationWithMovementDirection(event.operation) === movement.direction;
   const timestampMatches = movementsRangeFactory(event.timestamp).contains(movement.timestamp) || eventsRangeFactory(movement.timestamp).contains(event.timestamp);
 
-  // console.log(cidMatches, directionMatches, timestampMatches);
-
-  return cidMatches && directionMatches && timestampMatches;
+  return cidMatches && directionMatches && timestampMatches && { event, movement };
 };
 
 const filterUnreconciled = (centre, range) => {
@@ -76,21 +60,67 @@ const filterUnreconciled = (centre, range) => {
   centre.unreconciledMovements = centre.unreconciledMovements.filter(movement => range.contains(movement.timestamp));
 };
 
+/* TODO needs test */
+const getReinstatementTester = (checkoutEventsRangeFactory) => (reinstatement, event) => {
+  const operationMatches = event.operation === Event.OPERATION_CHECK_OUT;
+  const personIdMatches = reinstatement.person_id === event.person_id;
+  const timestampMatches = checkoutEventsRangeFactory(reinstatement.timestamp).contains(event.timestamp);
+
+  return operationMatches && personIdMatches && timestampMatches && { reinstatement, event };
+};
+
+/* TODO needs test */
+const untersect = (left, right, mapper) => {
+  const matches = [];
+  const rightExclusive = right.slice(0);
+
+  const leftExclusive = left.filter((leftThing) =>
+    !rightExclusive.some((rightThing, rightKey) => {
+      const result = mapper(leftThing, rightThing);
+      if (result) {
+        matches.push(result);
+        rightExclusive.splice(rightKey, 1);
+        return true;
+      }
+      return false;
+    })
+  );
+  return [leftExclusive, matches, rightExclusive];
+};
+
+const reconcileEvents = (centre, tester) => {
+  const result = untersect(centre.unreconciledEvents, centre.unreconciledMovements, tester);
+  centre.unreconciledEvents = result[0];
+  centre.reconciled = result[1];
+  centre.unreconciledMovements = result[2];
+  return centre;
+};
+
+const handleReinstatements = (centre, tester) => {
+  const result = untersect(centre.unreconciledReinstatements, centre.unreconciledEvents, tester);
+  centre.unreconciledReinstatements = result[0];
+  centre.reinstatements = result[1];
+  centre.unreconciledEvents = result[2];
+  return centre;
+};
+
 module.exports = {
-  performReconciliation: (centre, visibilityRange, eventSearchDateRangeFactory, movementSearchDateRangeFactory) => {
+  performReconciliation: (centre, visibilityRange, eventSearchDateRangeFactory, movementSearchDateRangeFactory, checkOutSearchDateRangeFactory) => {
     const rangeOfEvents = fullRange(visibilityRange, eventSearchDateRangeFactory);
     const rangeOfMovements = fullRange(visibilityRange, movementSearchDateRangeFactory);
     const reconciler = reconciliationTester(movementSearchDateRangeFactory, eventSearchDateRangeFactory);
-    // const reinstatementReconciler = reinstatementTester(reinstatementCheckoutSearchDateRangeFactory);
+    checkOutSearchDateRangeFactory = () => true; // TODO also needs integration tests covering reinstatements
+    const reinstatementReconciler = getReinstatementTester(checkOutSearchDateRangeFactory);
 
     centre.unreconciledEvents = [];
     centre.unreconciledMovements = [];
+    centre.unreconciledReinstatements = [];
     centre.reconciled = [];
-    // centre.reinstatements = [];
+    centre.reinstatements = [];
 
     return populateEvents(centre, rangeOfEvents)
       .then(() => populateMovements(centre, rangeOfMovements))
-      // .then(() => handleReinstatements(centre, reinstatementReconciler))
+      .then(() => handleReinstatements(centre, reinstatementReconciler))
       .then(() => reconcileEvents(centre, reconciler))
       .then(() => filterUnreconciled(centre, visibilityRange))
       .return(centre);

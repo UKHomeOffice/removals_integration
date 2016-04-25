@@ -39,37 +39,23 @@ let generateDetainee = (centre, request_body) => {
 };
 
 let createOrUpdateDetainee = (detaineeProperties) => {
-  return new Promise((resolve) => {
-    Detainee.findOne({
-      person_id: detaineeProperties.person_id,
-      centre: detaineeProperties.centre.id
-    }).then((detainee) => {
-      if (!detainee) {
-        return Detainee.create(detaineeProperties, (err, detainee) => {
-          if (err) {
-            throw err;
-          }
-          resolve(detainee);
-        });
-      } else if (detainee.timestamp.toISOString() < detaineeProperties.timestamp) {
-        updateDetaineeModel(detainee, detaineeProperties);
-
-        detainee.save((err, detainee) => {
-          if (err) {
-            throw err;
-          }
-          resolve(detainee);
-        });
-      } else {
-        resolve(detainee);
-      }
-    });
+  return Detainee.findOne({
+    person_id: detaineeProperties.person_id,
+    centre: detaineeProperties.centre.id
+  }).then((detainee) => {
+    if (!detainee) {
+      return Detainee.create(detaineeProperties);
+    } else if (detainee.timestamp.toISOString() < detaineeProperties.timestamp) {
+      updateDetaineeModel(detainee, detaineeProperties);
+      return detainee.save();
+    }
+    return detainee;
   });
 };
 
 let processEventDetainee = (request_body) => {
   return Centres.findOne({ name: request_body.centre })
-      .then((centre) => createOrUpdateDetainee(generateDetainee(centre, request_body)));
+    .then((centre) => createOrUpdateDetainee(generateDetainee(centre, request_body)));
 };
 
 module.exports = {

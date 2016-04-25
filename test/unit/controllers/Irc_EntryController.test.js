@@ -21,7 +21,7 @@ describe('INTEGRATION Irc_EntryController', () => {
       };
       const result = controller.process_event(request_body);
 
-      expect(handleInterSiteTransferStub.calledWith(request_body)).to.be.true;
+      expect(handleInterSiteTransferStub.calledWith(request_body)).to.equal(true);
       expect(result).to.be.equal(stubReturnValue);
 
       controller.handleInterSiteTransfer = originalHandleInterSiteTransferStub;
@@ -37,14 +37,12 @@ describe('INTEGRATION Irc_EntryController', () => {
       };
       const result = controller.process_event(request_body);
 
-      expect(stub.calledWith(request_body)).to.be.true;
+      expect(stub.calledWith(request_body)).to.equal(true);
       expect(result).to.be.equal(stubReturnValue);
 
       restoreMethod();
     });
-    // case Event.OPERATION_CHECK_IN:
-    // case Event.OPERATION_CHECK_OUT:
-    // case Event.OPERATION_REINSTATEMENT:
+
     it('should handle CHECK_IN operation', () => {
       const processDetaineeStubReturnValue = {
         centre: {}
@@ -66,13 +64,13 @@ describe('INTEGRATION Irc_EntryController', () => {
 
 
       return result.then((result) => {
-        expect(processDetaineeStub.calledWith(request_body)).to.be.true;
+        expect(processDetaineeStub.calledWith(request_body)).to.equal(true);
         expect(EventCreateStub.calledWith({
           centre: processDetaineeStubReturnValue.centre,
           detainee: processDetaineeStubReturnValue,
           timestamp: request_body.timestamp,
           operation: request_body.operation
-        })).to.be.true;
+        })).to.equal(true);
         expect(result).to.be.equal(eventStubReturnValue);
 
         restores.forEach((restoreMethod) => {
@@ -102,13 +100,13 @@ describe('INTEGRATION Irc_EntryController', () => {
 
 
       return result.then((result) => {
-        expect(processDetaineeStub.calledWith(request_body)).to.be.true;
+        expect(processDetaineeStub.calledWith(request_body)).to.equal(true);
         expect(EventCreateStub.calledWith({
           centre: processDetaineeStubReturnValue.centre,
           detainee: processDetaineeStubReturnValue,
           timestamp: request_body.timestamp,
           operation: request_body.operation
-        })).to.be.true;
+        })).to.equal(true);
         expect(result).to.be.equal(eventStubReturnValue);
 
         restores.forEach((restoreMethod) => {
@@ -138,13 +136,13 @@ describe('INTEGRATION Irc_EntryController', () => {
 
 
       return result.then((result) => {
-        expect(processDetaineeStub.calledWith(request_body)).to.be.true;
+        expect(processDetaineeStub.calledWith(request_body)).to.equal(true);
         expect(EventCreateStub.calledWith({
           centre: processDetaineeStubReturnValue.centre,
           detainee: processDetaineeStubReturnValue,
           timestamp: request_body.timestamp,
           operation: request_body.operation
-        })).to.be.true;
+        })).to.equal(true);
         expect(result).to.be.equal(eventStubReturnValue);
 
         restores.forEach((restoreMethod) => {
@@ -256,8 +254,14 @@ describe('INTEGRATION Irc_EntryController', () => {
       };
       const process_eventReturnValue = {};
 
-      const expectedCheckOut = Object.assign({}, base_request_body, { centre: centres.to, operation: Event.OPERATION_CHECK_OUT });
-      const expectedCheckIn = Object.assign({}, base_request_body, { centre: centres.from, operation: Event.OPERATION_CHECK_IN });
+      const expectedCheckOut = Object.assign({}, base_request_body, {
+        centre: centres.to,
+        operation: Event.OPERATION_CHECK_OUT
+      });
+      const expectedCheckIn = Object.assign({}, base_request_body, {
+        centre: centres.from,
+        operation: Event.OPERATION_CHECK_IN
+      });
       const request_body = Object.assign({}, base_request_body, { centre_to: centres.to, centre: centres.from });
 
       const process_eventStub = sinon.stub().resolves(process_eventReturnValue);
@@ -284,15 +288,15 @@ describe('INTEGRATION Irc_EntryController', () => {
         nationality: {},
         cid_id: {}
       };
-      
+
       controller.__get__('updateDetaineeModel')(detainee, newProperties);
-      
+
       expect(detainee.timestamp).to.equal(newProperties.timestamp);
       expect(detainee.gender).to.equal(newProperties.gender);
       expect(detainee.nationality).to.equal(newProperties.nationality);
       expect(detainee.cid_id).to.equal(newProperties.cid_id);
     });
-    
+
     it('should only set gender, nationality and cid_id if truthy', () => {
       const detainee = {
         timestamp: {},
@@ -313,6 +317,87 @@ describe('INTEGRATION Irc_EntryController', () => {
       expect(detainee.gender).to.not.equal(newProperties.gender);
       expect(detainee.nationality).to.not.equal(newProperties.nationality);
       expect(detainee.cid_id).to.not.equal(newProperties.cid_id);
+    });
+  });
+
+  describe('createOrUpdateDetainee ', () => {
+    describe('when no matching detainee', () => {
+      const restores = [];
+      const createReturnValue = {};
+      const findOneStub = sinon.stub().resolves(undefined);
+      const createStub = sinon.stub().returns(createReturnValue);
+      beforeEach(() => {
+        restores.push(controller.__set__('Detainee.findOne', findOneStub));
+        restores.push(controller.__set__('Detainee.create', createStub));
+      });
+      it('should create a new detainee', () => {
+        const detaineeProperties = {
+          centre: { id: {} },
+          person_id: {},
+          somethingElse: {}
+        };
+        const result = controller.__get__('createOrUpdateDetainee')(detaineeProperties);
+        
+        expect(findOneStub).to.have.been.calledWith({
+          centre: detaineeProperties.centre.id,
+          person_id: detaineeProperties.person_id
+        });
+
+        return expect(result).to.eventually.equal(createReturnValue);
+      });
+      afterEach(() => {
+        restores.forEach((restore) => {
+          restore();
+        });
+      });
+    });
+
+    describe('when new timestamp is later than old timestamp', () => {
+      const restores = [];
+      const saveReturnValue = {};
+      const dummyDetaineeRecord = {
+        timestamp: new Date('2016-05-01'),
+        save: () => saveReturnValue
+      };
+      const findOneStub = sinon.stub().resolves(dummyDetaineeRecord);
+      beforeEach(() => {
+        restores.push(controller.__set__('Detainee.findOne', findOneStub));
+      });
+      it('should update the detainee', () => {
+        const detaineeProperties = {
+          centre: { id: {} },
+          timestamp: (new Date('2016-05-02')).toISOString()
+        };
+        return expect(controller.__get__('createOrUpdateDetainee')(detaineeProperties)).to.eventually.equal(saveReturnValue);
+      });
+      afterEach(() => {
+        restores.forEach((restore) => {
+          restore();
+        });
+      });
+    });
+
+    describe('when new timestamp is earlier than old timestamp', () => {
+      const restores = [];
+      const dummyDetaineeRecord = {
+        timestamp: new Date('2016-05-02')
+      };
+      const findOneStub = sinon.stub().resolves(dummyDetaineeRecord);
+      beforeEach(() => {
+        restores.push(controller.__set__('Detainee.findOne', findOneStub));
+      });
+      it('should return the found detainee', () => {
+        const detaineeProperties = {
+          centre: { id: {} },
+          timestamp: (new Date('2016-05-01')).toISOString()
+        };
+        return expect(controller.__get__('createOrUpdateDetainee')(detaineeProperties)).to.eventually.equal(dummyDetaineeRecord);
+      });
+      afterEach(() => {
+        restores.forEach((restore) => {
+          restore();
+        });
+      });
     });
   });
 });

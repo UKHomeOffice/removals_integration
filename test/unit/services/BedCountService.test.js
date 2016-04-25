@@ -65,13 +65,17 @@ describe('UNIT BedCountService', () => {
       const originalPopulate = BedCountService.__get__('populate');
 
       it('should populate a centres unreconciledEvents', () => {
-        const dummyEvents = [];
-        const centre = {};
+        const dummyEvents = [{ operation: Event.OPERATION_CHECK_IN }, { operation: Event.OPERATION_REINSTATEMENT }];
+        const centre = {
+          unreconciledEvents: [],
+          unreconciledReinstatements: []
+        };
         const populateStubReturn = { populate: sinon.stub().resolves(dummyEvents) };
         BedCountService.__set__('populate', sinon.stub().returns(populateStubReturn));
         return populateEvents(centre, {}).then(() => {
           BedCountService.__set__('populate', originalPopulate);
-          expect(centre.unreconciledEvents).to.equal(dummyEvents);
+          expect(centre.unreconciledEvents).to.deep.equal([ dummyEvents[0] ]);
+          expect(centre.unreconciledReinstatements).to.deep.equal([ dummyEvents[1] ]);
         });
       });
     });
@@ -101,14 +105,14 @@ describe('UNIT BedCountService', () => {
           const tester = reconciliationTester(() => new DateRange(), movementReconciliationRangeFactory);
           const event = { detainee: { cid_id: 1234 }, timestamp: new Date('2016/01/15'), operation: 'check in' };
           const movement = { cid_id: 1234, timestamp: new Date('2017/01/01'), direction: 'in' };
-          expect(tester(event, movement)).to.equal(true);
+          expect(tester(event, movement)).to.deep.equal({ event, movement});
         });
         it('should return true when event & movement cid_id match and movement timestamp is within the event reconiciliation range', () => {
           const eventReconciliationRangeFactory = () => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
           const tester = reconciliationTester(eventReconciliationRangeFactory, () => new DateRange());
           const event = { detainee: { cid_id: 1234 }, timestamp: new Date('2017/01/15'), operation: 'check in' };
           const movement = { cid_id: 1234, timestamp: new Date('2016/01/01'), direction: 'in' };
-          expect(tester(event, movement)).to.equal(true);
+          expect(tester(event, movement)).to.deep.equal({ event, movement});
         });
         it('should return true when event & movement cid_id match and movement timestamp is within the event reconiciliation range and the event timestamp is within the movement reconciliation range', () => {
           const eventReconciliationRangeFactory = () => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
@@ -116,7 +120,7 @@ describe('UNIT BedCountService', () => {
           const tester = reconciliationTester(eventReconciliationRangeFactory, movementReconciliationRangeFactory);
           const event = { detainee: { cid_id: 1234 }, timestamp: new Date('2016/01/15'), operation: 'check in' };
           const movement = { cid_id: 1234, timestamp: new Date('2016/01/01'), direction: 'in' };
-          expect(tester(event, movement)).to.equal(true);
+          expect(tester(event, movement)).to.deep.equal({ event, movement});
         });
         it('should return false when event type does not resolve with the movement direction', () => {
           const eventReconciliationRangeFactory = () => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
@@ -204,57 +208,7 @@ describe('UNIT BedCountService', () => {
         expect(resolveEventOperationWithMovementDirection('anUnknownEventType')).to.equal('unknown');
       });
     });
-    describe('#reconcileEvents', () => {
-      const reconcileEvents = BedCountService.__get__('reconcileEvents');
-      const originalReconcile = BedCountService.__get__('reconcile');
-      it('should call the reconcile for event*movement with the appropriate arguments until reconcile returns true', () => {
-        const reconcileStub = sinon.stub();
-        BedCountService.__set__('reconcile', reconcileStub);
 
-        reconcileStub.returns(false);
-        reconcileStub.onSecondCall().returns(true);
-        const reconciler = {};
-        const centre = {
-          unreconciledEvents: [0, 1, 2],
-          unreconciledMovements: [0, 1, 2]
-        };
-        reconcileEvents(centre, reconciler);
-        expect(reconcileStub.calledWith(0, 0, centre, reconciler)).to.be.equal(true);
-        expect(reconcileStub.calledWith(0, 1, centre, reconciler)).to.be.equal(true);
-        // not called with 0, 2 because the reconciler returns true
-        expect(reconcileStub.calledWith(0, 2, centre, reconciler)).to.be.equal(false);
-        expect(reconcileStub.calledWith(1, 0, centre, reconciler)).to.be.equal(true);
-        expect(reconcileStub.calledWith(1, 1, centre, reconciler)).to.be.equal(true);
-        expect(reconcileStub.calledWith(1, 2, centre, reconciler)).to.be.equal(true);
-        expect(reconcileStub.calledWith(2, 0, centre, reconciler)).to.be.equal(true);
-        expect(reconcileStub.calledWith(2, 1, centre, reconciler)).to.be.equal(true);
-        expect(reconcileStub.calledWith(2, 2, centre, reconciler)).to.be.equal(true);
-        BedCountService.__set__('reconcile', originalReconcile);
-      });
-    });
-    describe('#reconcile', () => {
-      const reconcile = BedCountService.__get__('reconcile');
-      it('should remove from unreconciled and move to reconciled if reconciler returns true', () => {
-        const reconciler = () => true;
-        const event = {
-          id: 'reconciled'
-        };
-        const movement = {
-          id: 'reconciled'
-        };
-        const centre = {
-          reconciled: [],
-          unreconciledEvents: [event],
-          unreconciledMovements: [movement]
-        };
-
-        reconcile(0, 0, centre, reconciler);
-        expect(centre.unreconciledEvents).to.not.include(event);
-        expect(centre.unreconciledMovements).to.not.include(movement);
-        expect(centre.reconciled[0].event).to.equal(event);
-        expect(centre.reconciled[0].movement).to.equal(movement);
-      });
-    });
   });
 
   describe('calculateCentreState', () => {
