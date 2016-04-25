@@ -47,7 +47,7 @@ const resolveEventOperationWithMovementDirection = (eventType) => {
   }
 };
 
-const reconciliationTester = (movementsRangeFactory, eventsRangeFactory) => (event, movement) => {
+const getReconciliationTester = (movementsRangeFactory, eventsRangeFactory) => (event, movement) => {
   const cidMatches = movement.cid_id === event.detainee.cid_id;
   const directionMatches = resolveEventOperationWithMovementDirection(event.operation) === movement.direction;
   const timestampMatches = movementsRangeFactory(event.timestamp).contains(movement.timestamp) || eventsRangeFactory(movement.timestamp).contains(event.timestamp);
@@ -60,7 +60,6 @@ const filterUnreconciled = (centre, range) => {
   centre.unreconciledMovements = centre.unreconciledMovements.filter(movement => range.contains(movement.timestamp));
 };
 
-/* TODO needs test */
 const getReinstatementTester = (checkoutEventsRangeFactory) => (reinstatement, event) => {
   const operationMatches = event.operation === Event.OPERATION_CHECK_OUT;
   const personIdMatches = reinstatement.person_id === event.person_id;
@@ -69,7 +68,6 @@ const getReinstatementTester = (checkoutEventsRangeFactory) => (reinstatement, e
   return operationMatches && personIdMatches && timestampMatches && { reinstatement, event };
 };
 
-/* TODO needs test */
 const untersect = (left, right, mapper) => {
   const matches = [];
   const rightExclusive = right.slice(0);
@@ -108,7 +106,7 @@ module.exports = {
   performReconciliation: (centre, visibilityRange, eventSearchDateRangeFactory, movementSearchDateRangeFactory, checkOutSearchDateRangeFactory) => {
     const rangeOfEvents = fullRange(visibilityRange, eventSearchDateRangeFactory);
     const rangeOfMovements = fullRange(visibilityRange, movementSearchDateRangeFactory);
-    const reconciler = reconciliationTester(movementSearchDateRangeFactory, eventSearchDateRangeFactory);
+    const reconciler = getReconciliationTester(movementSearchDateRangeFactory, eventSearchDateRangeFactory);
     checkOutSearchDateRangeFactory = () => true; // TODO also needs integration tests covering reinstatements
     const reinstatementReconciler = getReinstatementTester(checkOutSearchDateRangeFactory);
 

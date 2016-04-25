@@ -74,8 +74,8 @@ describe('UNIT BedCountService', () => {
         BedCountService.__set__('populate', sinon.stub().returns(populateStubReturn));
         return populateEvents(centre, {}).then(() => {
           BedCountService.__set__('populate', originalPopulate);
-          expect(centre.unreconciledEvents).to.deep.equal([ dummyEvents[0] ]);
-          expect(centre.unreconciledReinstatements).to.deep.equal([ dummyEvents[1] ]);
+          expect(centre.unreconciledEvents).to.deep.equal([dummyEvents[0]]);
+          expect(centre.unreconciledReinstatements).to.deep.equal([dummyEvents[1]]);
         });
       });
     });
@@ -94,38 +94,38 @@ describe('UNIT BedCountService', () => {
         });
       });
     });
-    describe('#reconciliationTester', () => {
-      const reconciliationTester = BedCountService.__get__('reconciliationTester');
+    describe('#getReconciliationTester', () => {
+      const getReconciliationTester = BedCountService.__get__('getReconciliationTester');
       it('should return a function', () => {
-        expect(reconciliationTester()).to.be.a('function');
+        expect(getReconciliationTester()).to.be.a('function');
       });
       describe('returned function', () => {
-        it('should return true when event & movement cid_id match and event timestamp is within the movement reconiciliation range', () => {
+        it('should return reconciliation couple when event & movement cid_id match and event timestamp is within the movement reconiciliation range', () => {
           const movementReconciliationRangeFactory = () => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
-          const tester = reconciliationTester(() => new DateRange(), movementReconciliationRangeFactory);
+          const tester = getReconciliationTester(() => new DateRange(), movementReconciliationRangeFactory);
           const event = { detainee: { cid_id: 1234 }, timestamp: new Date('2016/01/15'), operation: 'check in' };
           const movement = { cid_id: 1234, timestamp: new Date('2017/01/01'), direction: 'in' };
-          expect(tester(event, movement)).to.deep.equal({ event, movement});
+          expect(tester(event, movement)).to.deep.equal({ event, movement });
         });
-        it('should return true when event & movement cid_id match and movement timestamp is within the event reconiciliation range', () => {
+        it('should return reconciliation couple when event & movement cid_id match and movement timestamp is within the event reconiciliation range', () => {
           const eventReconciliationRangeFactory = () => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
-          const tester = reconciliationTester(eventReconciliationRangeFactory, () => new DateRange());
+          const tester = getReconciliationTester(eventReconciliationRangeFactory, () => new DateRange());
           const event = { detainee: { cid_id: 1234 }, timestamp: new Date('2017/01/15'), operation: 'check in' };
           const movement = { cid_id: 1234, timestamp: new Date('2016/01/01'), direction: 'in' };
-          expect(tester(event, movement)).to.deep.equal({ event, movement});
+          expect(tester(event, movement)).to.deep.equal({ event, movement });
         });
-        it('should return true when event & movement cid_id match and movement timestamp is within the event reconiciliation range and the event timestamp is within the movement reconciliation range', () => {
+        it('should return reconciliation couple when event & movement cid_id match and movement timestamp is within the event reconiciliation range and the event timestamp is within the movement reconciliation range', () => {
           const eventReconciliationRangeFactory = () => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
           const movementReconciliationRangeFactory = () => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
-          const tester = reconciliationTester(eventReconciliationRangeFactory, movementReconciliationRangeFactory);
+          const tester = getReconciliationTester(eventReconciliationRangeFactory, movementReconciliationRangeFactory);
           const event = { detainee: { cid_id: 1234 }, timestamp: new Date('2016/01/15'), operation: 'check in' };
           const movement = { cid_id: 1234, timestamp: new Date('2016/01/01'), direction: 'in' };
-          expect(tester(event, movement)).to.deep.equal({ event, movement});
+          expect(tester(event, movement)).to.deep.equal({ event, movement });
         });
         it('should return false when event type does not resolve with the movement direction', () => {
           const eventReconciliationRangeFactory = () => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
           const movementReconciliationRangeFactory = () => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
-          const tester = reconciliationTester(eventReconciliationRangeFactory, movementReconciliationRangeFactory);
+          const tester = getReconciliationTester(eventReconciliationRangeFactory, movementReconciliationRangeFactory);
           const event = { detainee: { cid_id: 1234 }, timestamp: new Date('2016/01/15'), operation: 'check in' };
           const movement = { cid_id: 1234, timestamp: new Date('2016/01/01'), direction: 'out' };
           expect(tester(event, movement)).to.equal(false);
@@ -133,7 +133,7 @@ describe('UNIT BedCountService', () => {
         it('should return false when event & movement cid_id do not match', () => {
           const eventReconciliationRangeFactory = () => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
           const movementReconciliationRangeFactory = () => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
-          const tester = reconciliationTester(eventReconciliationRangeFactory, movementReconciliationRangeFactory);
+          const tester = getReconciliationTester(eventReconciliationRangeFactory, movementReconciliationRangeFactory);
           const event = { detainee: { cid_id: 1111 }, timestamp: new Date('2016/01/15'), operation: 'check in' };
           const movement = { cid_id: 2222, timestamp: new Date('2016/01/01'), direction: 'in' };
           expect(tester(event, movement)).to.equal(false);
@@ -141,7 +141,7 @@ describe('UNIT BedCountService', () => {
         it('should return false when movement timestamp isnt within the event reconiciliation range and the event timestamp isnt within the movement reconciliation range', () => {
           const eventReconciliationRangeFactory = () => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
           const movementReconciliationRangeFactory = () => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
-          const tester = reconciliationTester(eventReconciliationRangeFactory, movementReconciliationRangeFactory);
+          const tester = getReconciliationTester(eventReconciliationRangeFactory, movementReconciliationRangeFactory);
           const event = { detainee: { cid_id: 1234 }, timestamp: new Date('2016/02/01'), operation: 'check in' };
           const movement = { cid_id: 1234, timestamp: new Date('2016/02/01'), direction: 'in' };
           expect(tester(event, movement)).to.equal(false);
@@ -208,10 +208,79 @@ describe('UNIT BedCountService', () => {
         expect(resolveEventOperationWithMovementDirection('anUnknownEventType')).to.equal('unknown');
       });
     });
+    describe('#untersect', () => {
+      it('should untersect the correct values', () => {
+        const array1 = [
+          { matching: 1, unique: 'a1m1' }, // no match
+          { matching: 2, unique: 'a1m2' },
+          { matching: 3, unique: 'a1m3' },
+          { matching: 4, unique: 'a1m4' },
+          { matching: 5, unique: 'a1m5' }
+        ];
+        const array2 = [
+          { matching: 0, unique: 'a2m2' }, // no match
+          { matching: 2, unique: 'a2m2' },
+          { matching: 3, unique: 'a2m3' },
+          { matching: 4, unique: 'a2m4' },
+          { matching: 5, unique: 'a2m5' },
+          { matching: 6, unique: 'a2m6' } // no match
+        ];
+        const expectedResult = [
+          [array1[0]],
+          [
+            { a: array1[1], b: array2[1] },
+            { a: array1[2], b: array2[2] },
+            { a: array1[3], b: array2[3] },
+            { a: array1[4], b: array2[4] }
+          ],
+          [array2[0], array2[5]]
+        ];
+        const reducer = (a, b) => a.matching === b.matching && { a, b };
 
+        const result = BedCountService.__get__('untersect')(array1, array2, reducer);
+
+        expect(result).to.deep.equal(expectedResult);
+      });
+    });
+    describe('#getReinstatementTester', () => {
+      const getReinstatementTester = BedCountService.__get__('getReinstatementTester');
+      it('should return a function', () => {
+        expect(getReinstatementTester()).to.be.a('function');
+      });
+      describe('returned function', () => {
+        it('should return reinstatment couple when person_id, operation type and timestamp match', () => {
+          const rangeFactory = (timestamp) => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
+          const tester = getReinstatementTester(rangeFactory);
+          const reinstatement = { person_id: 1234, timestamp: new Date('2016/01/15') };
+          const event = { person_id: 1234, timestamp: new Date('2016/01/15'), operation: Event.OPERATION_CHECK_OUT };
+          expect(tester(reinstatement, event)).to.deep.equal({ reinstatement, event });
+        });
+        it('should return false when person_id does not match', () => {
+          const rangeFactory = (timestamp) => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
+          const tester = getReinstatementTester(rangeFactory);
+          const reinstatement = { person_id: 1234, timestamp: new Date('2016/01/15') };
+          const event = { person_id: 5555, timestamp: new Date('2016/01/15'), operation: Event.OPERATION_CHECK_OUT };
+          expect(tester(reinstatement, event)).to.equal(false);
+        });
+        it('should return false when operation type is not check out', () => {
+          const rangeFactory = (timestamp) => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
+          const tester = getReinstatementTester(rangeFactory);
+          const reinstatement = { person_id: 1234, timestamp: new Date('2016/01/15') };
+          const event = { person_id: 1234, timestamp: new Date('2016/01/15'), operation: Event.OPERATION_CHECK_IN };
+          expect(tester(reinstatement, event)).to.equal(false);
+        });
+        it('should return false when the timestamp falls outside of the result of the range factory', () => {
+          const rangeFactory = (timestamp) => new DateRange(new Date('2016/01/01'), new Date('2016/01/31'));
+          const tester = getReinstatementTester(rangeFactory);
+          const reinstatement = { person_id: 1234, timestamp: new Date('2016/01/15') };
+          const event = { person_id: 1234, timestamp: new Date('2016/02/15'), operation: Event.OPERATION_CHECK_OUT };
+          expect(tester(reinstatement, event)).to.equal(false);
+        });
+      });
+    });
   });
 
-  describe('calculateCentreState', () => {
+  describe('performReconciliation', () => {
     it('should return the centre', () => {
       const vDateRangeFactory = (date) => new DateRange(
         moment(date).subtract(2, 'days').startOf('day').toDate(),
@@ -225,6 +294,10 @@ describe('UNIT BedCountService', () => {
         moment(date).startOf('day').toDate(),
         moment(date).add(2, 'days').endOf('day').toDate()
       );
+      const checkOutSearchDateRangeFactory = (date) => new DateRange(
+        moment(date).subtract(1, 'days').toDate(),
+        moment(date).toDate()
+      );
 
       return Centres.findOne({ id: 1 })
         .then((centre) => {
@@ -232,12 +305,15 @@ describe('UNIT BedCountService', () => {
             centre,
             vDateRangeFactory(new Date('01/01/2016')),
             eventSearchDateRangeFactory,
-            movementSearchDateRangeFactory
+            movementSearchDateRangeFactory,
+            checkOutSearchDateRangeFactory
           ).then((result) => {
             expect(result).to.be.equal(centre);
             expect(result).to.have.property('reconciled');
+            expect(result).to.have.property('reinstatements');
             expect(result).to.have.property('unreconciledEvents');
             expect(result).to.have.property('unreconciledMovements');
+            expect(result).to.have.property('unreconciledReinstatements');
           });
         });
     });
