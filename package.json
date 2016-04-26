@@ -73,8 +73,8 @@
   },
   "precommit": {
     "tasks": [
-      "npm test",
-      "npm run lint"
+      "npm run lint",
+      "npm test"
     ],
     "onDirtyState": "ask",
     "coloredOutput": true
