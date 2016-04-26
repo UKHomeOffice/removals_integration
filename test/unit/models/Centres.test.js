@@ -42,7 +42,9 @@ describe('UNIT CentreModel', () => {
       male_out_of_commission: 3,
       female_out_of_commission: 9,
       male_prebooking: [{centres: 123, task_force: 'ops1', id: 1}],
-      female_prebooking: [{centres: 123, task_force: 'htu', id: 2}, {centres: 123, task_force: 'ops1', id: 3}],
+      female_prebooking: [{centres: 123, task_force: 'ops2', id: 2}, {centres: 123, task_force: 'ops1', id: 3}],
+      male_contingency: [{centres: 123, task_force: 'depmu', id: 1}],
+      female_contingency: [{centres: 123, task_force: 'htu', id: 2}, {centres: 123, task_force: 'depmu other', id: 3}],
       male_active_movements_in: [{centres: 123, detainee: 1, id: 1}, {centres: 123, detainee: 2, id: 2}],
       male_active_movements_out: [{centres: 123, detainee: 1, id: 1}, {centres: 123, detainee: 2, id: 2}],
       female_active_movements_in: [{centres: 123, detainee: 3, id: 1}],
@@ -65,10 +67,12 @@ describe('UNIT CentreModel', () => {
           femaleCapacity: that.female_capacity,
           femaleInUse: that.female_in_use,
           femaleOutOfCommission: that.female_out_of_commission,
-          maleAvailability: 1,
-          femaleAvailability: -3,
+          maleAvailability: 0,
+          femaleAvailability: -5,
           malePrebooking: that.male_prebooking.length,
           femalePrebooking: that.female_prebooking.length,
+          maleContingency: that.male_contingency.length,
+          femaleContingency: that.female_contingency.length,
           maleActiveMovementsIn: that.male_active_movements_in.length,
           maleActiveMovementsOut: that.male_active_movements_out.length,
           femaleActiveMovementsIn: that.female_active_movements_in.length,
@@ -93,6 +97,8 @@ describe('UNIT CentreModel', () => {
       expect(subject).to.have.a.property('femaleInUse', 4);
       expect(subject).to.have.a.property('malePrebooking', 1);
       expect(subject).to.have.a.property('femalePrebooking', 2);
+      expect(subject).to.have.a.property('maleContingency', 1);
+      expect(subject).to.have.a.property('femaleContingency', 2);
       expect(subject).to.have.a.property('maleActiveMovementsIn', 2);
       expect(subject).to.have.a.property('maleActiveMovementsOut', 2);
       expect(subject).to.have.a.property('femaleActiveMovementsIn', 1);
@@ -105,6 +111,7 @@ describe('UNIT CentreModel', () => {
     var populate;
     var dummyMovement = [{id: 1}, {id: 2}, {id: 3}];
     var dummyPrebooking = [{id: 4}, {id: 5}, {id: 6}];
+    var dummyContingency = [{id: 7}, {id: 8}, {id: 9}];
 
     beforeEach(() => {
       populate = sinon.stub().returnsThis();
@@ -131,6 +138,16 @@ describe('UNIT CentreModel', () => {
     it('Should populate male_prebooking', () =>
       model.publishCentreUpdates()
         .then(() => expect(populate).to.be.calledWith('male_prebooking'))
+    );
+
+    it('Should populate female_contingency', () =>
+      model.publishCentreUpdates()
+        .then(() => expect(populate).to.be.calledWith('female_contingency'))
+    );
+
+    it('Should populate male_contingency', () =>
+      model.publishCentreUpdates()
+        .then(() => expect(populate).to.be.calledWith('male_contingency'))
     );
 
     it('should eventually resolve with the movements', () =>

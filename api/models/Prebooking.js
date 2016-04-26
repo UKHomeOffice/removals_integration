@@ -10,8 +10,15 @@ var ModelHelpers = require('../lib/ModelHelpers');
 var setNormalisedRelationships = (record, done) => {
   delete record.male_prebooking;
   delete record.female_prebooking;
+  delete record.male_contingency;
+  delete record.female_contingency;
 
-  record[`${record.gender}_prebooking`] = record.centre;
+  if (record.contingency) {
+    record[`${record.gender}_contingency`] = record.centre;
+  } else {
+    record[`${record.gender}_prebooking`] = record.centre;
+  }
+
   done();
 };
 
@@ -36,10 +43,20 @@ const model = {
     cid_id: {
       type: "integer"
     },
+    contingency: {
+      type: "boolean",
+      defaultsTo: false
+    },
     male_prebooking: {
       model: "centres"
     },
     female_prebooking: {
+      model: "centres"
+    },
+    male_contingency: {
+      model: "centres"
+    },
+    female_contingency: {
       model: "centres"
     }
   },

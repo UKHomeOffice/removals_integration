@@ -69,6 +69,16 @@ const model = {
       note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
       via: 'female_prebooking'
     },
+    male_contingency: {
+      collection: 'prebooking',
+      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
+      via: 'male_contingency'
+    },
+    female_contingency: {
+      collection: 'prebooking',
+      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
+      via: 'female_contingency'
+    },
     male_active_movements_in: {
       collection: 'movement',
       note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
@@ -105,10 +115,12 @@ const model = {
           femaleInUse: this.female_in_use,
           maleOutOfCommission: this.male_out_of_commission,
           femaleOutOfCommission: this.female_out_of_commission,
-          maleAvailability: this.male_capacity - this.male_out_of_commission - this.male_in_use - this.male_prebooking.length,
-          femaleAvailability: this.female_capacity - this.female_out_of_commission - this.female_in_use - this.female_prebooking.length,
+          maleAvailability: this.male_capacity - this.male_out_of_commission - this.male_in_use - this.male_prebooking.length - this.male_contingency.length,
+          femaleAvailability: this.female_capacity - this.female_out_of_commission - this.female_in_use - this.female_prebooking.length - this.female_contingency.length,
           malePrebooking: this.male_prebooking.length,
           femalePrebooking: this.female_prebooking.length,
+          maleContingency: this.male_contingency.length,
+          femaleContingency: this.female_contingency.length,
           maleActiveMovementsIn: this.male_active_movements_in.length,
           maleActiveMovementsOut: this.male_active_movements_out.length,
           femaleActiveMovementsIn: this.female_active_movements_in.length,
@@ -168,6 +180,8 @@ const model = {
     Centres.find()
       .populate('male_prebooking')
       .populate('female_prebooking')
+      .populate('male_contingency')
+      .populate('female_contingency')
       .populate('male_active_movements_in')
       .populate('male_active_movements_out')
       .populate('female_active_movements_in')
