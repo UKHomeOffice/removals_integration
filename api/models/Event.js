@@ -3,11 +3,13 @@
 var LinkingModels = require('sails-linking-models');
 var ModelHelpers = require('../lib/ModelHelpers');
 
-const OPERATION_CHECK_IN = 'check in';
-const OPERATION_CHECK_OUT = 'check out';
-const OPERATION_REINSTATEMENT = 'reinstatement';
-const OPERATION_INTER_SITE_TRANSFER = 'inter site transfer';
-const OPERATION_UPDATE = 'update individual';
+const operations = {
+  OPERATION_CHECK_IN: 'check in',
+  OPERATION_CHECK_OUT: 'check out',
+  OPERATION_REINSTATEMENT: 'reinstatement',
+  OPERATION_INTER_SITE_TRANSFER: 'inter site transfer',
+  OPERATION_UPDATE: 'update individual'
+};
 
 const model = {
   schema: true,
@@ -23,24 +25,14 @@ const model = {
     operation: {
       type: 'string',
       required: true,
-      enum: [
-        OPERATION_CHECK_IN,
-        OPERATION_CHECK_OUT,
-        OPERATION_REINSTATEMENT,
-        OPERATION_INTER_SITE_TRANSFER,
-        OPERATION_REINSTATEMENT
-      ]
+      enum: Object.keys(operations).map((k) => operations[k])
     },
     timestamp: {
       type: 'datetime',
       required: true
     }
-  },
-  OPERATION_CHECK_IN: OPERATION_CHECK_IN,
-  OPERATION_REINSTATEMENT: OPERATION_REINSTATEMENT,
-  OPERATION_CHECK_OUT: OPERATION_CHECK_OUT,
-  OPERATION_INTER_SITE_TRANSFER: OPERATION_INTER_SITE_TRANSFER,
-  OPERATION_UPDATE: OPERATION_UPDATE
+  }
 };
 
+Object.assign(model, operations);
 module.exports = LinkingModels.mixin(ModelHelpers.mixin(model));
