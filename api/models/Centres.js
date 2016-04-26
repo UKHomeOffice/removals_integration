@@ -75,7 +75,7 @@ const model = {
     },
     toJSON: function () {
       const unreconciledEventCounter = (gender, operations) => this.unreconciledEvents.reduce((count, event) => {
-        if (event.detainee.gender === gender && operations.indexOf(event.operation) > 0-1) {
+        if (event.detainee.gender === gender && operations.indexOf(event.operation) >= 0) {
           return count + 1;
         }
         return count;
