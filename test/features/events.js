@@ -93,16 +93,15 @@ describe('Check In Event', () => {
 
     Given('a detainee event with timestamp `' + dateString + '` has already occurred', () =>
 
-      global.initializeBarrelsFixtures().then(() =>
-        createEvent().then(() =>
-          Event.find({
+      global.initializeBarrelsFixtures()
+        .then(() => createEvent())
+        .then(() => Event.find({
             where: {
               timestamp: dateString,
               operation: 'check in'
             }
           }).then((models) => expect(models.length).to.equal(1))
         )
-      )
     );
 
     When('a valid detainee event with timestamp `' + dateString + '` occurs', createEvent);
@@ -160,16 +159,14 @@ describe('Check In Event', () => {
 
     Given('a Detainee already exists with person id `' + detaineeAttrs.person_id + '` from centre `' + detaineeAttrs.centre + '`', () =>
 
-      global.initializeBarrelsFixtures().then(() =>
-          Detainee.create(detaineeAttrs).then(() =>
-              getSearchResult()
-                .then((models) => {
-                  expect(models).to.have.length(1);
-                  expect(models[0].gender).to.equal(detaineeAttrs.gender);
-                  return expect(models[0].cid_id).to.equal(detaineeAttrs.cid_id);
-                })
-            )
-        )
+      global.initializeBarrelsFixtures()
+        .then(() => Detainee.create(detaineeAttrs))
+        .then(() => getSearchResult())
+        .then((models) => {
+          expect(models).to.have.length(1);
+          expect(models[0].gender).to.equal(detaineeAttrs.gender);
+          return expect(models[0].cid_id).to.equal(detaineeAttrs.cid_id);
+        })
     );
 
     And('the time of the event timestamp `' + payload.timestamp + '` is later than the existing Detainee creation timestamp `' + detaineeAttrs.timestamp + '`', () =>
@@ -232,15 +229,14 @@ describe('Check In Event', () => {
 
     Given('a Detainee with person id `' + detaineeAttrs.person_id + '` from centre `' + detaineeAttrs.centre + '` already exists', () =>
 
-      global.initializeBarrelsFixtures().then(() =>
-        Detainee.create(detaineeAttrs).then(() =>
-          getSearchResult().then((models) => {
-            expect(models).to.be.length(1);
-            expect(models[0].gender).to.equal(detaineeAttrs.gender);
-            expect(models[0].cid_id).to.equal(detaineeAttrs.cid_id);
-          })
-        )
-      )
+      global.initializeBarrelsFixtures()
+        .then(() => Detainee.create(detaineeAttrs))
+        .then(() => getSearchResult())
+        .then((models) => {
+          expect(models).to.be.length(1);
+          expect(models[0].gender).to.equal(detaineeAttrs.gender);
+          expect(models[0].cid_id).to.equal(detaineeAttrs.cid_id);
+        })
     );
 
     And('the time of the existing Detainee timestamp `' + detaineeAttrs.timestamp + '` is later than the time of the operation timestamp `' + payload.timestamp + '`', () =>
