@@ -4,9 +4,6 @@
 var DateRange = require('../lib/DateRange');
 var moment = require('moment');
 
-// const fullRange = (visibilityRange, rangeFactory) =>
-//   new DateRange(rangeFactory(visibilityRange.from).from, rangeFactory(visibilityRange.to).to);
-
 const fullRange = (visibilityRange, rangeFactory) =>
   DateRange.widen.apply(null, [visibilityRange, rangeFactory(visibilityRange.from), rangeFactory(visibilityRange.to)]);
 
