@@ -3,6 +3,7 @@
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');
+var BedCountService = require('../services/BedCountService');
 
 const updateDetaineeModel = (detainee, newDetaineeProperties) => {
   detainee.timestamp = newDetaineeProperties.timestamp;
@@ -77,7 +78,7 @@ module.exports = {
       {
         name: request_body.centre
       }, {
-        heartbeat_recieved: new Date(),
+        heartbeat_received: new Date(),
         male_in_use: request_body.male_occupied,
         female_in_use: request_body.female_occupied,
         male_out_of_commission: request_body.male_outofcommission,
@@ -141,6 +142,14 @@ module.exports = {
       operation: Event.OPERATION_CHECK_IN
     }));
   },
+
+  publishCentreUpdates: centres =>
+    Centres.find()
+      .then(centres => centres.map((centre) =>
+        BedCountService.performConfiguredReconciliation(centre)
+          .then(() => Centres.publishUpdate(centre.id, centre.toJSON()))
+      ))
+      .then(() => centres),
 
   eventPost: function (req, res) {
     return IrcEntryEventValidatorService.validate(req.body)

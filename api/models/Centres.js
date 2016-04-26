@@ -8,7 +8,7 @@ const model = {
   autoCreatedAt: true,
   autoUpdatedAt: true,
   attributes: {
-    heartbeat_recieved: {
+    heartbeat_received: {
       type: 'datetime'
     },
     cid_received_date: {
@@ -93,7 +93,7 @@ const model = {
         attributes: {
           cidReceivedDate: this.cid_received_date,
           updated: this.updatedAt,
-          heartbeatRecieved: this.heartbeat_recieved ? this.heartbeat_recieved.toString() : null,
+          heartbeatRecieved: this.heartbeat_received ? this.heartbeat_received.toString() : null,
           name: this.name
         },
         links: this.modelLinks('centres', reverseRouteService)
