@@ -17,7 +17,10 @@ const movementsFromEventDateRangeFactory = (date) => new DateRange(
   moment(date).subtract(2, 'days').startOf('day').toDate(),
   moment(date).endOf('day').toDate()
 );
-
+const checkOutFromReinstatementDateRangeFactory = (date) => new DateRange(
+  moment(date).subtract(1, 'days').toDate(),
+  moment(date).toDate()
+);
 const test = (data, date, checks) => Centres.destroy()
   .then(() => Movement.destroy())
   .then(() => Detainee.destroy())
@@ -27,7 +30,7 @@ const test = (data, date, checks) => Centres.destroy()
   .then(() => Detainee.create(data.detainees))
   .then(() => Event.create(data.events))
   .then(() => Centres.findOne({ name: 'BedCountServiceTestCentre' }))
-  .then((centre) => BedCountService.performReconciliation(centre, vDateRangeFactory(date), eventsFromMovementDateRangeFactory, movementsFromEventDateRangeFactory))
+  .then((centre) => BedCountService.performReconciliation(centre, vDateRangeFactory(date), eventsFromMovementDateRangeFactory, movementsFromEventDateRangeFactory, checkOutFromReinstatementDateRangeFactory))
   .then(checks);
 
 describe('BedCountService', () => {
@@ -146,6 +149,94 @@ describe('BedCountService', () => {
       });
     });
 
+    it('should reconcile reinstatements when checkout falls within reinstatement date range', () => {
+      const data = {
+        centres: [
+          {
+            id: 1,
+            name: 'BedCountServiceTestCentre'
+          }
+        ],
+        movements: [ ],
+        detainees: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "cid_id": 12345,
+            "person_id": 222222,
+            "gender": "male",
+            "nationality": "swe",
+            "timestamp": new Date('01/02/2016')
+          }
+        ],
+        events: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "detainee": 1,
+            "operation": "check out",
+            "timestamp": new Date('01/03/2016')
+          },
+          {
+            "id": 2,
+            "centre": { id: 1 },
+            "detainee": 1,
+            "operation": "reinstatement",
+            "timestamp": new Date('01/03/2016')
+          }
+        ]
+      };
+
+      return test(data, new Date('01/04/2016'), (result) => {
+        expect(result.reinstatements).to.have.length(1);
+        expect(result.unreconciledEvents).to.have.length(0);
+        expect(result.unreconciledMovements).to.have.length(0);
+      });
+    });
+    it('should not reconcile reinstatements when checkout falls outside reinstatement date range', () => {
+      const data = {
+        centres: [
+          {
+            id: 1,
+            name: 'BedCountServiceTestCentre'
+          }
+        ],
+        movements: [ ],
+        detainees: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "cid_id": 12345,
+            "person_id": 222222,
+            "gender": "male",
+            "nationality": "swe",
+            "timestamp": new Date('01/02/2016')
+          }
+        ],
+        events: [
+          {
+            "id": 1,
+            "centre": { id: 1 },
+            "detainee": 1,
+            "operation": "check out",
+            "timestamp": new Date('01/03/2016')
+          },
+          {
+            "id": 2,
+            "centre": { id: 1 },
+            "detainee": 1,
+            "operation": "reinstatement",
+            "timestamp": new Date('01/05/2016')
+          }
+        ]
+      };
+
+      return test(data, new Date('01/04/2016'), (result) => {
+        expect(result.reinstatements).to.have.length(0);
+        expect(result.unreconciledEvents).to.have.length(1);
+        expect(result.unreconciledMovements).to.have.length(0);
+      });
+    })
     it('should reconcile a visible movement with an event which falls inside the movement reconciliation scope', () => {
       const data = {
         centres: [
@@ -582,6 +673,13 @@ describe('BedCountService', () => {
             "timestamp": new Date('01/05/2016')
           },
           {
+            "id": 99,
+            "centre": { id: 1 },
+            "detainee": 51,
+            "operation": "reinstatement",
+            "timestamp": new Date('01/05/2016')
+          },
+          {
             "id": 55,
             "centre": { id: 1 },
             "detainee": 50,
@@ -599,8 +697,9 @@ describe('BedCountService', () => {
       };
 
       return test(data, new Date('01/05/2016'), (result) => {
-        expect(result.reconciled).to.have.length(5);
-        expect(result.unreconciledMovements).to.have.length(2);
+        expect(result.reconciled).to.have.length(4);
+        expect(result.reinstatements).to.have.length(1);
+        expect(result.unreconciledMovements).to.have.length(3);
         expect(result.unreconciledEvents).to.have.length(2);
       });
     });

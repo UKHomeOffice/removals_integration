@@ -107,7 +107,6 @@ module.exports = {
     const rangeOfEvents = fullRange(visibilityRange, eventSearchDateRangeFactory);
     const rangeOfMovements = fullRange(visibilityRange, movementSearchDateRangeFactory);
     const reconciler = getReconciliationTester(movementSearchDateRangeFactory, eventSearchDateRangeFactory);
-    checkOutSearchDateRangeFactory = () => true; // TODO also needs integration tests covering reinstatements
     const reinstatementReconciler = getReinstatementTester(checkOutSearchDateRangeFactory);
 
     centre.unreconciledEvents = [];
