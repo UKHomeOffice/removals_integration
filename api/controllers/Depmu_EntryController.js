@@ -29,7 +29,7 @@ module.exports = {
   },
 
   populatePrebookingWithContingency: prebooking => {
-    prebooking.contingency = (prebooking.task_force.startsWith('depmu') || prebooking.task_force.startsWith('htu'));
+    prebooking.contingency = prebooking.task_force.startsWith('depmu') || prebooking.task_force.startsWith('htu');
     return prebooking;
   },
 
@@ -95,7 +95,7 @@ module.exports = {
       .tap(Centres.publishCentreUpdates)
       .then(res.ok)
       .catch(ValidationError, error => res.badRequest(error.result.errors[0].message))
-      .catch(RangeError, error => res.badRequest(error))
+      .catch(RangeError, error => res.unprocessableEntity(error))
       .catch(error => res.serverError(error.message));
   }
 };
