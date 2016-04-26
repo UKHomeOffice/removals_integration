@@ -241,7 +241,7 @@ Feature('Prebooking', () => {
       );
 
       When(`a valid prebooking with cid id "${payload.Output[0].cid_id}" occurs`, () =>
-        createRequest(payload, '/depmu_entry/prebooking', 400, 201));
+        createRequest(payload, '/depmu_entry/prebooking', 422));
 
       Then(`the prebooking with cid id "${payload.Output[0].cid_id}" is ignored`,
         () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
@@ -288,7 +288,7 @@ Feature('Prebooking', () => {
       );
 
       When(`new prebookings with timestamps not for today occur`, () =>
-        createRequest(followingPayload, '/depmu_entry/prebooking', 400));
+        createRequest(followingPayload, '/depmu_entry/prebooking', 422));
 
       Then(`the new prebooking will not be considered and old prebookings are retained`,
         () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(1))
