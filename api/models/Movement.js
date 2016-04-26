@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var LinkingModels = require('sails-linking-models');
 var ModelHelpers = require('../lib/ModelHelpers');

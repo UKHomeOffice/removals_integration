@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const validation_schema = {
   $schema: "http://json-schema.org/draft-04/schema#",
