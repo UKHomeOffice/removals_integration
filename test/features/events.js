@@ -26,7 +26,7 @@ describe('Check In Event', () => {
       global.testConfig.initializeBarrelsFixtures = true;
     });
 
-    Given('a detainee event with timestamp "' + dateString + '" has not already occurred', () =>
+    Given('a detainee event with timestamp `' + dateString + '` has not already occurred', () =>
 
       global.initializeBarrelsFixtures()
         .then(() =>
@@ -41,7 +41,7 @@ describe('Check In Event', () => {
         )
     );
 
-    When('a valid detainee event with timestamp "' + dateString + '" occurs', () =>
+    When('a valid detainee event with timestamp `' + dateString + '` occurs', () =>
 
       request(sails.hooks.http.app)
         .post('/irc_entry/event')
@@ -49,7 +49,7 @@ describe('Check In Event', () => {
         .expect(201)
     );
 
-    Then('an event with specific timestamp "' + dateString + '" is created from the detainee event received', () =>
+    Then('an event with specific timestamp `' + dateString + '` is created from the detainee event received', () =>
 
       Event.find({
         where: {
@@ -91,7 +91,7 @@ describe('Check In Event', () => {
         .expect(201);
     }
 
-    Given('a detainee event with timestamp "' + dateString + '" has already occurred', () =>
+    Given('a detainee event with timestamp `' + dateString + '` has already occurred', () =>
 
       global.initializeBarrelsFixtures().then(() =>
         createEvent().then(() =>
@@ -105,9 +105,9 @@ describe('Check In Event', () => {
       )
     );
 
-    When('a valid detainee event with timestamp "' + dateString + '" occurs', createEvent);
+    When('a valid detainee event with timestamp `' + dateString + '` occurs', createEvent);
 
-    Then('a detainee event with timestamp "' + dateString + '" should be created from the check in received', () =>
+    Then('a detainee event with timestamp `' + dateString + '` should be created from the check in received', () =>
 
       Event.find({
         where: {
@@ -172,7 +172,7 @@ describe('Check In Event', () => {
         )
     );
 
-    And('the time of the event timestamp (' + payload.timestamp + ') is later than the existing Detainee creation timestamp (' + detaineeAttrs.timestamp + ')', () =>
+    And('the time of the event timestamp `' + payload.timestamp + '` is later than the existing Detainee creation timestamp `' + detaineeAttrs.timestamp + '`', () =>
       expect(payload.timestamp).to.be.above(detaineeAttrs.timestamp)
     );
 
@@ -243,7 +243,7 @@ describe('Check In Event', () => {
       )
     );
 
-    And('the time of the existing Detainee timestamp (' + detaineeAttrs.timestamp + ') is later than the time of the operation timestamp (' + payload.timestamp + ')', () =>
+    And('the time of the existing Detainee timestamp `' + detaineeAttrs.timestamp + '` is later than the time of the operation timestamp `' + payload.timestamp + '`', () =>
       expect(detaineeAttrs.timestamp).to.be.above(payload.timestamp)
     );
 

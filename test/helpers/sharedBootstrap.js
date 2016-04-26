@@ -10,7 +10,6 @@ global.chai = require('chai')
   .use(require('sinon-chai'))
   .use(require('chai-datetime'));
 global.expect = chai.expect;
-global.should = chai.should();
 global._ = require('lodash');
 global.sinon = require('sinon');
 global.initializeBarrelsFixtures = function () {

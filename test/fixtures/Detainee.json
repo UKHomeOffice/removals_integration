@@ -14,15 +14,15 @@
      "person_id": 111111,
     "gender": "female",
     "nationality": "fra",
-     "timestamp": "Fri Feb 26 2016 09:24:20 GMT+0000 (GMT)"
+    "timestamp": "Fri Feb 26 2016 09:24:20 GMT+0000 (GMT)"
   },
    {
     "centre": 2,
     "cid_id": 56434534,
-     "person_id": 222222,
+    "person_id": 222222,
     "gender": "male",
     "nationality": "swe",
-     "timestamp": "Fri Feb 26 2016 09:24:20 GMT+0000 (GMT)"
+    "timestamp": "Fri Feb 26 2016 09:24:20 GMT+0000 (GMT)"
   },
   {
     "centre": 2,
