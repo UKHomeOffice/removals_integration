@@ -3,9 +3,7 @@
 var LinkingModels = require('sails-linking-models');
 var ModelHelpers = require('../lib/ModelHelpers');
 
-var getPid = function (entity) {
-  return `entity.centre.id_${entity.person_id}`;
-};
+var getPid = (entity) => `${entity.centre.id}_${entity.person_id}`;
 
 const model = {
   schema: true,
@@ -49,13 +47,13 @@ const model = {
   getPid: getPid,
   normalizeGender: function (gender) {
     switch (gender) {
-    case 'f':
-    case 'female':
-      return 'female';
+      case 'f':
+      case 'female':
+        return 'female';
 
-    case 'm':
-    case 'male':
-      return 'male';
+      case 'm':
+      case 'male':
+        return 'male';
     }
     throw new Error('Unknown Gender');
   }
