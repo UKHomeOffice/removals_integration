@@ -129,7 +129,16 @@ module.exports = {
       moment(date).subtract(2, 'days').startOf('day').toDate(),
       moment(date).endOf('day').toDate()
     );
-
-    return this.performReconciliation(centre, visibilityRange, eventsFromMovementDateRangeFactory, movementsFromEventDateRangeFactory);
+    const checkOutFromReinstatementDateRangeFactory = (date) => new DateRange(
+      moment(date).subtract(1, 'days').toDate(),
+      moment(date).toDate()
+    );
+    return this.performReconciliation(
+      centre,
+      visibilityRange,
+      eventsFromMovementDateRangeFactory,
+      movementsFromEventDateRangeFactory,
+      checkOutFromReinstatementDateRangeFactory
+    );
   }
 };
