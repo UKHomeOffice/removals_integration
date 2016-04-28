@@ -554,7 +554,6 @@ describe('UNIT Irc_EntryController', () => {
     it('should eventually resolve with the movements', () =>
       expect(controller.publishCentreUpdates(dummyMovement)).to.eventually.eql(dummyMovement)
     );
-
   });
 
   describe('heartbeatOptions', () => {

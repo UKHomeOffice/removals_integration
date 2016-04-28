@@ -20,17 +20,13 @@ const validation_schema = {
       type: "string"
     },
     CIDPersonID: {
-      oneOf: [
-        {
-          type: "integer"
-        }, {
-          type: "null"
-        }]
+      type: "string",
+      pattern: "^[0-9]+$"
     }
   },
   properties: {
     additionalProperties: false,
-    cDataSet: {
+    Output: {
       type: "array",
       additionalItems: true,
       items: {
@@ -39,7 +35,7 @@ const validation_schema = {
         required: [
           "Location",
           "MO In/MO Out",
-          "MO Ref",
+          "MO Ref.",
           "MO Date",
           "MO Type",
           "CID Person ID"
@@ -47,7 +43,7 @@ const validation_schema = {
         properties: {
           Location: {$ref: "#/definitions/Location"},
           "MO In/MO Out": {$ref: "#/definitions/InOut"},
-          "MO Ref": {$ref: "#/definitions/MORef"},
+          "MO Ref.": {$ref: "#/definitions/MORef"},
           "MO Date": {$ref: "#/definitions/MODate"},
           "MO Type": {$ref: "#/definitions/MOType"},
           "CID Person ID": {$ref: "#/definitions/CIDPersonID"}
@@ -56,7 +52,7 @@ const validation_schema = {
     }
   },
   required: [
-    "cDataSet"
+    "Output"
   ]
 };
 

@@ -14,6 +14,9 @@ const model = {
     cid_received_date: {
       type: 'datetime'
     },
+    prebooking_received: {
+      type: 'datetime'
+    },
     name: {
       type: 'string',
       defaultsTo: 0,
@@ -56,6 +59,26 @@ const model = {
     female_cid_name: {
       type: 'array'
     },
+    male_prebooking: {
+      collection: 'prebooking',
+      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
+      via: 'male_prebooking'
+    },
+    female_prebooking: {
+      collection: 'prebooking',
+      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
+      via: 'female_prebooking'
+    },
+    male_contingency: {
+      collection: 'prebooking',
+      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
+      via: 'male_contingency'
+    },
+    female_contingency: {
+      collection: 'prebooking',
+      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
+      via: 'female_contingency'
+    },
     mo_type: {
       type: 'string',
       required: true,
@@ -91,9 +114,10 @@ const model = {
         type: 'centre',
         id: this.id.toString(),
         attributes: {
-          cidReceivedDate: this.cid_received_date,
+          cidReceivedDate: this.cid_received_date ? this.cid_received_date.toString() : null,
           updated: this.updatedAt,
-          heartbeatRecieved: this.heartbeat_received ? this.heartbeat_received.toString() : null,
+          heartbeatReceived: this.heartbeat_received ? this.heartbeat_received.toString() : null,
+          prebookingReceived: this.prebooking_received ? this.prebooking_received.toString() : null,
           name: this.name
         },
         links: this.modelLinks('centres', reverseRouteService)
@@ -103,6 +127,8 @@ const model = {
         response.attributes[gender + 'InUse'] = this[gender + '_in_use'];
         response.attributes[gender + 'OutOfCommission'] = this[gender + '_out_of_commission'];
         response.attributes[gender + 'Availability'] = this[gender + '_capacity'] - this[gender + '_in_use'] - this[gender + '_out_of_commission'];
+        response.attributes[gender + 'Prebooking'] = this[gender + '_prebooking'].length;
+        response.attributes[gender + 'Contingency'] = this[gender + '_contingency'].length;
         if (this.reconciled) {
           response.attributes[gender + 'UnexpectedIn'] = unreconciledEventCounter(gender, ['check in']);
           response.attributes[gender + 'UnexpectedOut'] = unreconciledEventCounter(gender, ['check out']);
@@ -142,7 +168,7 @@ const model = {
   },
 
   afterUpdate: function (record, done) {
-    this.publishUpdate(record.id, record);
+    this.publishUpdate(record.id, record, null);
     done();
   },
 
@@ -159,7 +185,17 @@ const model = {
         }
         return centre[0];
       });
-  }
+  },
+
+  publishCentreUpdates: collection =>
+    Centres.find()
+      .populate('male_prebooking')
+      .populate('female_prebooking')
+      .populate('male_contingency')
+      .populate('female_contingency')
+      .toPromise()
+      .map(centre => Centres.publishUpdate(centre.id, centre.toJSON()))
+      .then(() => collection)
 };
 
 module.exports = LinkingModels.mixin(model);

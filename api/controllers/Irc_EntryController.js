@@ -89,15 +89,12 @@ module.exports = {
           throw new ValidationError("Invalid centre");
         }
         return centres;
-      })
-      .each(centre => {
-        Centres.publishUpdate(centre.id, centre.toJSON());
-        return centre;
       }),
 
   heartbeatPost: function (req, res) {
     return IrcEntryHeartbeatValidatorService.validate(req.body)
       .then(this.process_heartbeat)
+      .tap(Centres.publishCentreUpdates)
       .then(res.ok)
       .catch(ValidationError, (error) => {
         res.badRequest(error.message);

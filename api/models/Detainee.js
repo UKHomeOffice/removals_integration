@@ -47,13 +47,13 @@ const model = {
   getPid: getPid,
   normalizeGender: function (gender) {
     switch (gender) {
-      case 'f':
-      case 'female':
-        return 'female';
+    case 'f':
+    case 'female':
+      return 'female';
 
-      case 'm':
-      case 'male':
-        return 'male';
+    case 'm':
+    case 'male':
+      return 'male';
     }
     throw new Error('Unknown Gender');
   }

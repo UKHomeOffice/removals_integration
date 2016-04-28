@@ -3,7 +3,7 @@ global.Sails = require('sails');
 global.Barrels = require('barrels');
 global.freeport = require('freeport');
 global.barrels = new Barrels();
-
+global.moment = require('moment-timezone');
 global.chai = require('chai')
   .use(require('chai-as-promised'))
   .use(require('chai-things'))
@@ -19,7 +19,8 @@ global.initializeBarrelsFixtures = function () {
       'subjects',
       'movement',
       'detainee',
-      'event'
+      'event',
+      'prebooking'
     ], function (err) {
       if (err) throw err;
       resolve();
@@ -27,6 +28,7 @@ global.initializeBarrelsFixtures = function () {
 
   });
 };
+
 require('mocha-cakes-2');
 require('sinon-as-promised')(require('bluebird'));
 global.request = require('supertest-as-promised');
@@ -51,6 +53,13 @@ global.testConfig = {
   initializeBarrelsFixtures: true
 };
 
+global.createRequest = function (payload, path, res) {
+  return request_auth(sails.hooks.http.app)
+    .post(path)
+    .send(payload)
+    .expect(res);
+};
+
 module.exports = {
   before: done => {
     freeport((err, port) => {
@@ -63,6 +72,7 @@ module.exports = {
           cors: false,
           csrf: false,
           views: false,
+          "sails-bunyan-request-logging": false,
           skipper: false
         },
         log: {
