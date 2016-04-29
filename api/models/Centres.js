@@ -79,11 +79,6 @@ const model = {
       note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
       via: 'female_contingency'
     },
-    mo_type: {
-      type: 'string',
-      required: true,
-      defaultsTo: 0
-    },
     events: {
       collection: 'event',
       via: 'centre'
