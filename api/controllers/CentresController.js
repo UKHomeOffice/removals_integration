@@ -1,7 +1,7 @@
 'use strict';
-var findOneAction = require('sails/lib/hooks/blueprints/actions/findOne');
-var findAction = require('sails/lib/hooks/blueprints/actions/find');
-var BedCountService = require('../services/BedCountService');
+const findOneAction = require('sails/lib/hooks/blueprints/actions/findOne');
+const findAction = require('sails/lib/hooks/blueprints/actions/find');
+const BedCountService = require('../services/BedCountService');
 
 /**
  * CentreController
@@ -14,13 +14,13 @@ module.exports = {
   _config: {
     populate: true
   },
-  find: function (req, res) {
-    let oldOk = res.ok;
+  find: (req, res) => {
+    const oldOk = res.ok;
     res.ok = (matchingRecords) => {
       Promise.all(
-        matchingRecords.map((matchingRecord) => {
-          return BedCountService.performConfiguredReconciliation(matchingRecord);
-        })
+        matchingRecords.map((matchingRecord) =>
+          BedCountService.performConfiguredReconciliation(matchingRecord)
+        )
       ).then(() => {
         oldOk(matchingRecords);
       });
@@ -28,8 +28,8 @@ module.exports = {
 
     return findAction(req, res);
   },
-  findOne: function (req, res) {
-    let oldOk = res.ok;
+  findOne: (req, res) => {
+    const oldOk = res.ok;
     res.ok = (matchingRecord) => {
       BedCountService.performConfiguredReconciliation(matchingRecord)
         .then(() => {

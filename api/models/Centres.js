@@ -118,17 +118,17 @@ const model = {
         links: this.modelLinks('centres', reverseRouteService)
       };
       ['male', 'female'].forEach((gender) => {
-        response.attributes[gender + 'Capacity'] = this[gender + '_capacity'];
-        response.attributes[gender + 'InUse'] = this[gender + '_in_use'];
-        response.attributes[gender + 'OutOfCommission'] = this[gender + '_out_of_commission'];
-        response.attributes[gender + 'Availability'] = this[gender + '_capacity'] - this[gender + '_in_use'] - this[gender + '_out_of_commission'];
-        response.attributes[gender + 'Prebooking'] = this[gender + '_prebooking'].length;
-        response.attributes[gender + 'Contingency'] = this[gender + '_contingency'].length;
+        response.attributes[`${gender}Capacity`] = this[`${gender}_capacity`];
+        response.attributes[`${gender}InUse`] = this[`${gender}_in_use`];
+        response.attributes[`${gender}OutOfCommission`] = this[`${gender}_out_of_commission`];
+        response.attributes[`${gender}Availability`] = this[`${gender}_capacity`] - this[`${gender}_in_use`] - this[`${gender}_out_of_commission`];
+        response.attributes[`${gender}Prebooking`] = this[`${gender}_prebooking`].length;
+        response.attributes[`${gender}Contingency`] = this[`${gender}_contingency`].length;
         if (this.reconciled) {
-          response.attributes[gender + 'UnexpectedIn'] = unreconciledEventCounter(gender, ['check in']);
-          response.attributes[gender + 'UnexpectedOut'] = unreconciledEventCounter(gender, ['check out']);
-          response.attributes[gender + 'ScheduledIn'] = unreconciledMovementCounter(gender, 'in');
-          response.attributes[gender + 'ScheduledOut'] = unreconciledMovementCounter(gender, 'out');
+          response.attributes[`${gender}UnexpectedIn`] = unreconciledEventCounter(gender, ['check in']);
+          response.attributes[`${gender}UnexpectedOut`] = unreconciledEventCounter(gender, ['check out']);
+          response.attributes[`${gender}ScheduledIn`] = unreconciledMovementCounter(gender, 'in');
+          response.attributes[`${gender}ScheduledOut`] = unreconciledMovementCounter(gender, 'out');
         }
       });
       return response;
@@ -154,7 +154,7 @@ const model = {
   },
 
   removeNonOccupancy: function () {
-    return this.destroy({ 'mo-type': 'non-occupancy' });
+    return this.destroy({'mo-type': 'non-occupancy'});
   },
 
   afterCreate: function (record, done) {

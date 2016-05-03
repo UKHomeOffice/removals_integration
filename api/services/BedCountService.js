@@ -7,7 +7,7 @@ var moment = require('moment');
 const fullRange = (visibilityRange, rangeFactory) =>
   DateRange.widen.apply(null, [visibilityRange, rangeFactory(visibilityRange.from), rangeFactory(visibilityRange.to)]);
 
-let populate = (model, centreId, range) =>
+const populate = (model, centreId, range) =>
   model.find({
     where: {
       centre: centreId,

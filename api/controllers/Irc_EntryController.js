@@ -19,7 +19,7 @@ const updateDetaineeModel = (detainee, newDetaineeProperties) => {
   }
 };
 
-let generateStandardEvent = (detainee, request_body) =>
+const generateStandardEvent = (detainee, request_body) =>
   ({
     centre: detainee.centre,
     detainee: detainee,
@@ -27,7 +27,7 @@ let generateStandardEvent = (detainee, request_body) =>
     timestamp: request_body.timestamp
   });
 
-let generateDetainee = (centre, request_body) =>
+const generateDetainee = (centre, request_body) =>
   ({
     centre: centre,
     person_id: request_body.person_id,
@@ -37,7 +37,7 @@ let generateDetainee = (centre, request_body) =>
     cid_id: request_body.cid_id
   });
 
-let createOrUpdateDetainee = (detaineeProperties) =>
+const createOrUpdateDetainee = (detaineeProperties) =>
   Detainee.findOne({
     person_id: detaineeProperties.person_id,
     centre: detaineeProperties.centre.id
@@ -52,7 +52,7 @@ let createOrUpdateDetainee = (detaineeProperties) =>
       return detainee;
     });
 
-let processEventDetainee = (request_body) =>
+const processEventDetainee = (request_body) =>
   Centres.findOne({name: request_body.centre})
     .then((centre) => createOrUpdateDetainee(generateDetainee(centre, request_body)));
 
