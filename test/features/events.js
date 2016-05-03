@@ -26,7 +26,7 @@ describe('Check In Event', () => {
       global.testConfig.initializeBarrelsFixtures = true;
     });
 
-    Given('a detainee event with timestamp `' + dateString + '` has not already occurred', () =>
+    Given(`a detainee event with timestamp ${dateString} has not already occurred`, () =>
 
       global.initializeBarrelsFixtures()
         .then(() =>
@@ -35,13 +35,13 @@ describe('Check In Event', () => {
               timestamp: dateString,
               operation: 'check in'
             }
-          }).then((models) =>
-            expect(models.length).to.equal(0)
-          )
+          }))
+        .then((models) =>
+          expect(models.length).to.equal(0)
         )
     );
 
-    When('a valid detainee event with timestamp `' + dateString + '` occurs', () =>
+    When(`a valid detainee event with timestamp ${dateString} occurs`, () =>
 
       request(sails.hooks.http.app)
         .post('/irc_entry/event')
@@ -49,15 +49,16 @@ describe('Check In Event', () => {
         .expect(201)
     );
 
-    Then('an event with specific timestamp `' + dateString + '` is created from the detainee event received', () =>
+    Then(`an event with specific timestamp ${dateString} is created from the detainee event received`, () =>
 
       Event.find({
-        where: {
-          timestamp: dateString,
-          operation: 'check in',
-          centre: 1
-        }
-      }).then((models) => expect(models.length).to.equal(1))
+          where: {
+            timestamp: dateString,
+            operation: 'check in',
+            centre: 1
+          }
+        })
+        .then((models) => expect(models.length).to.equal(1))
     );
 
   });
@@ -91,31 +92,32 @@ describe('Check In Event', () => {
         .expect(201);
     }
 
-    Given('a detainee event with timestamp `' + dateString + '` has already occurred', () =>
+    Given(`a detainee event with timestamp ${dateString} has already occurred`, () =>
 
       global.initializeBarrelsFixtures()
         .then(() => createEvent())
         .then(() => Event.find({
-            where: {
-              timestamp: dateString,
-              operation: 'check in'
-            }
-          }).then((models) => expect(models.length).to.equal(1))
-        )
+          where: {
+            timestamp: dateString,
+            operation: 'check in'
+          }
+        }))
+        .then((models) => expect(models.length).to.equal(1))
     );
 
-    When('a valid detainee event with timestamp `' + dateString + '` occurs', createEvent);
+    When(`a valid detainee event with timestamp ${dateString} occurs`, createEvent);
 
-    Then('a detainee event with timestamp `' + dateString + '` should be created from the check in received', () =>
+    Then(`a detainee event with timestamp ${dateString} should be created from the check in received`, () =>
 
       Event.find({
-        where: {
-          timestamp: dateString,
-          operation: 'check in'
-        }
-      }).then((models) =>
-        expect(models.length).to.equal(2)
-      )
+          where: {
+            timestamp: dateString,
+            operation: 'check in'
+          }
+        })
+        .then((models) =>
+          expect(models.length).to.equal(2)
+        )
     );
 
   });
@@ -157,7 +159,7 @@ describe('Check In Event', () => {
       person_id: detaineeAttrs.person_id
     });
 
-    Given('a Detainee already exists with person id `' + detaineeAttrs.person_id + '` from centre `' + detaineeAttrs.centre + '`', () =>
+    Given(`a Detainee already exists with person id ${detaineeAttrs.person_id} from centre ${detaineeAttrs.centre$}`, () =>
 
       global.initializeBarrelsFixtures()
         .then(() => Detainee.create(detaineeAttrs))
@@ -169,11 +171,11 @@ describe('Check In Event', () => {
         })
     );
 
-    And('the time of the event timestamp `' + payload.timestamp + '` is later than the existing Detainee creation timestamp `' + detaineeAttrs.timestamp + '`', () =>
+    And(`the time of the event timestamp ${payload.timestamp} is later than the existing Detainee creation timestamp ${detaineeAttrs.timestamp}`, () =>
       expect(payload.timestamp).to.be.above(detaineeAttrs.timestamp)
     );
 
-    When('a valid detainee event from centre `' + payload.centre + '` with person id `' + payload.person_id + '` occurs', () =>
+    When(`a valid detainee event from centre ${payload.centre} with person id ${payload.person_id} occurs`, () =>
       request(sails.hooks.http.app)
         .post('/irc_entry/event')
         .send(payload)
@@ -181,11 +183,12 @@ describe('Check In Event', () => {
     );
 
     Then('the existing detainee is updated from the check in event received', () =>
-      getSearchResult().then((models) => {
-        expect(models).to.have.length(1);
-        expect(models[0].gender).to.equal(Detainee.normalizeGender(payload.gender));
-        expect(models[0].cid_id).to.equal(payload.cid_id);
-      })
+      getSearchResult()
+        .then((models) => {
+          expect(models).to.have.length(1);
+          expect(models[0].gender).to.equal(Detainee.normalizeGender(payload.gender));
+          expect(models[0].cid_id).to.equal(payload.cid_id);
+        })
     );
 
   });
@@ -227,7 +230,7 @@ describe('Check In Event', () => {
       person_id: detaineeAttrs.person_id
     });
 
-    Given('a Detainee with person id `' + detaineeAttrs.person_id + '` from centre `' + detaineeAttrs.centre + '` already exists', () =>
+    Given(`a Detainee with person id ${detaineeAttrs.person_id} from centre ${detaineeAttrs.centre} already exists`, () =>
 
       global.initializeBarrelsFixtures()
         .then(() => Detainee.create(detaineeAttrs))
@@ -239,11 +242,11 @@ describe('Check In Event', () => {
         })
     );
 
-    And('the time of the existing Detainee timestamp `' + detaineeAttrs.timestamp + '` is later than the time of the operation timestamp `' + payload.timestamp + '`', () =>
+    And(`the time of the existing Detainee timestamp ${detaineeAttrs.timestamp} is later than the time of the operation timestamp ${payload.timestamp}`, () =>
       expect(detaineeAttrs.timestamp).to.be.above(payload.timestamp)
     );
 
-    When('a valid check in operation from centre `' + payload.centre + '` with person id `' + payload.person_id + '` occurs', () =>
+    When(`a valid check in operation from centre ${payload.centre} with person id ${payload.person_id} occurs`, () =>
 
       request(sails.hooks.http.app)
         .post('/irc_entry/event')
@@ -251,13 +254,14 @@ describe('Check In Event', () => {
         .expect(201)
     );
 
-    Then('the existing Detainee with person id `' + detaineeAttrs.person_id + '` from centre `' + detaineeAttrs.centre + '` should not be updated from the operation received', () =>
+    Then(`the existing Detainee with person id ${detaineeAttrs.person_id} from centre ${detaineeAttrs.centre} should not be updated from the operation received`, () =>
 
-      getSearchResult().then((models) => {
-        expect(models).to.be.length(1);
-        expect(models[0].gender).to.equal(detaineeAttrs.gender);
-        expect(models[0].cid_id).to.equal(detaineeAttrs.cid_id);
-      })
+      getSearchResult()
+        .then((models) => {
+          expect(models).to.be.length(1);
+          expect(models[0].gender).to.equal(detaineeAttrs.gender);
+          expect(models[0].cid_id).to.equal(detaineeAttrs.cid_id);
+        })
     );
 
   });
@@ -296,12 +300,12 @@ describe('Check In Event', () => {
   }
 
   describe('Check in', () => {
-    it('should be able to be created', () => {
-      return request(sails.hooks.http.app)
+    it('should be able to be created', () =>
+      request(sails.hooks.http.app)
         .post('/irc_entry/event')
         .send(exampleEvents.OPERATION_CHECK_IN)
         .expect(201)
-    });
+    );
   });
 
 });
