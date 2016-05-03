@@ -4,9 +4,7 @@ moment.tz.setDefault("Europe/London");
 
 var findPrebookingByCID = (cid_id) =>
   Prebooking.find({
-    where: {
-      cid_id: cid_id
-    }
+    cid_id: cid_id
   });
 
 var findMovementByCID = (cid_id) =>
@@ -99,30 +97,31 @@ Feature('Prebooking', () => {
         createRequest(followingPayload, '/depmu_entry/prebooking', 201));
 
       Then('previous prebookings recorded are removed',
-        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+        () => findPrebookingByCID(payload.Output[0].cid_id)
+          .then((models) => expect(models.length).to.equal(0))
       );
 
       And(`new female prebookings are created`, () =>
-        Prebooking.find({where: {gender: 'female'}}).then((models) => expect(models.length).to.equal(4))
+        Prebooking.find({gender: 'female'})
+          .then((models) => expect(models.length).to.equal(4))
       );
       And(`new male prebookings are created`, () =>
-        Prebooking.find({where: {gender: 'male'}}).then((models) => expect(models.length).to.equal(4))
+        Prebooking.find({gender: 'male'})
+          .then((models) => expect(models.length).to.equal(4))
       );
       And(`new female contingency bookings are created`, () =>
         Prebooking.find({
-          where: {
             gender: 'female',
             contingency: true
-          }
-        }).then((models) => expect(models.length).to.equal(2))
+          })
+          .then((models) => expect(models.length).to.equal(2))
       );
       And(`new male contingency bookings are created`, () =>
         Prebooking.find({
-          where: {
             gender: 'male',
             contingency: true
-          }
-        }).then((models) => expect(models.length).to.equal(2))
+          })
+          .then((models) => expect(models.length).to.equal(2))
       );
 
     });
@@ -160,11 +159,13 @@ Feature('Prebooking', () => {
         createRequest(followingPayload, '/depmu_entry/prebooking', 400));
 
       Then('previous prebookings recorded are retained',
-        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(1))
+        () => findPrebookingByCID(payload.Output[0].cid_id)
+          .then((models) => expect(models.length).to.equal(1))
       );
 
       And(`new invalid prebooking is not created`,
-        () => findPrebookingByCID(followingPayload.cid_id).then((models) => expect(models.length).to.equal(0))
+        () => findPrebookingByCID(followingPayload.cid_id)
+          .then((models) => expect(models.length).to.equal(0))
       );
 
     });
@@ -204,7 +205,8 @@ Feature('Prebooking', () => {
         createRequest(movementOrderPayload, '/cid_entry/movement', 201));
 
       Then(`the prebooking with cid id "${payload.Output[0].cid_id}" is removed`,
-        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+        () => findPrebookingByCID(payload.Output[0].cid_id)
+          .then((models) => expect(models.length).to.equal(0))
       );
 
     });
@@ -243,7 +245,8 @@ Feature('Prebooking', () => {
         createRequest(payload, '/depmu_entry/prebooking', 422));
 
       Then(`the prebooking with cid id "${payload.Output[0].cid_id}" is ignored`,
-        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+        () => findPrebookingByCID(payload.Output[0].cid_id)
+          .then((models) => expect(models.length).to.equal(0))
       );
 
     });
@@ -290,7 +293,8 @@ Feature('Prebooking', () => {
         createRequest(followingPayload, '/depmu_entry/prebooking', 422));
 
       Then(`the new prebooking will not be considered and old prebookings are retained`,
-        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(1))
+        () => findPrebookingByCID(payload.Output[0].cid_id)
+          .then((models) => expect(models.length).to.equal(1))
       );
     });
 
@@ -336,15 +340,18 @@ Feature('Prebooking', () => {
         createRequest(followingPayload, '/depmu_entry/prebooking', 201));
 
       Then(`the new prebooking with timestamp "${followingPayload.Output[0].timestamp}" is not considered`,
-        () => findPrebookingByCID(followingPayload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+        () => findPrebookingByCID(followingPayload.Output[0].cid_id)
+          .then((models) => expect(models.length).to.equal(0))
       );
 
       And(`the new prebooking with timestamp "${followingPayload.Output[1].timestamp}" is not considered`,
-        () => findPrebookingByCID(followingPayload.Output[1].cid_id).then((models) => expect(models.length).to.equal(0))
+        () => findPrebookingByCID(followingPayload.Output[1].cid_id)
+          .then((models) => expect(models.length).to.equal(0))
       );
 
       And(`the new prebooking with timestamp "${followingPayload.Output[2].timestamp}" is considered`,
-        () => findPrebookingByCID(followingPayload.Output[2].cid_id).then((models) => expect(models.length).to.equal(1))
+        () => findPrebookingByCID(followingPayload.Output[2].cid_id)
+          .then((models) => expect(models.length).to.equal(1))
       );
     });
   });
