@@ -39,13 +39,14 @@ describe('INTEGRATION Cid_EntryController', () => {
       });
       afterEach(() => Centres.update.restore());
       it('should create new active movements found in the payload', () =>
-        expect(Movement.find({active: true})).to.eventually.have.length(19)
+        expect(Movement.find({ active: true })).to.eventually.have.length(19)
       );
-      it('should mark existing all movements in the payload as active that were previously inactive', () =>
-        expect(Movement.findOne(316512)).to.eventually.include({'active': true})
+      it('should mark existing all movements in the payload as active that were previously inactive', () => {
+        expect(Movement.findOne(316512)).to.eventually.include({ 'active': true })
+      }
       );
       it('should mark existing all movements not in the payload as inactive', () =>
-        expect(Movement.find({active: false})).to.eventually.have.length(4)
+        expect(Movement.find({ active: false })).to.eventually.have.length(4)
       );
     })
     it('should return the schema for an options request', () =>
@@ -84,17 +85,17 @@ describe('UNIT Cid_EntryController', () => {
     res = {
       ok: sinon.stub()
     };
-    sinon.stub(Detainee, 'findAndUpdateOrCreate').resolves({id: 'bar'});
-    sinon.stub(Movement, 'findAndUpdateOrCreate').resolves({bar: 'foo'});
-    sinon.stub(Movement, 'update').resolves({bar: 'foo'});
-    sinon.stub(Centres, 'getGenderAndCentreByCIDLocation').resolves({bar: 'raa'});
-    sinon.stub(Centres, 'update').resolves({bar: 'raa'});
+    sinon.stub(Subjects, 'findAndUpdateOrCreate').resolves({ id: 'bar' });
+    sinon.stub(Movement, 'findAndUpdateOrCreate').resolves({ bar: 'foo' });
+    sinon.stub(Movement, 'update').resolves({ bar: 'foo' });
+    sinon.stub(Centres, 'getGenderAndCentreByCIDLocation').resolves({ bar: 'raa' });
+    sinon.stub(Centres, 'update').resolves({ bar: 'raa' });
   });
 
   after(() => {
     Movement.findAndUpdateOrCreate.restore();
     Movement.update.restore();
-    Detainee.findAndUpdateOrCreate.restore();
+    Subjects.findAndUpdateOrCreate.restore();
     Centres.getGenderAndCentreByCIDLocation.restore();
     Centres.update.restore();
   });
@@ -107,26 +108,30 @@ describe('UNIT Cid_EntryController', () => {
   });
 
   describe('movementProcess', () => {
+    var date = new Date("01/01/2016 00:00:00");
     var dummyMovement = {
       "centre": 1,
-      "detainee": 2,
       "MO Ref.": 3,
       "CID Person ID": 4,
-      "MO In/MO Out": "in"
+      "MO In/MO Out": "in",
+      "gender": "male",
+      "MO Date": date
     };
     it('should pass the correct mapping to findAndUpdateOrCreate', () => {
       controller.movementProcess(dummyMovement);
       return expect(Movement.findAndUpdateOrCreate).to.be.calledWith(dummyMovement['MO Ref.'],
         {
           centre: 1,
-          detainee: 2,
           id: 3,
+          gender: 'male',
+          cid_id: 4,
           active: true,
-          direction: 'in'
+          direction: 'in',
+          timestamp: date
         });
     });
     it('should return findAndUpdateOrCreate', () =>
-      expect(controller.movementProcess(dummyMovement)).to.eventually.eql({bar: 'foo'})
+      expect(controller.movementProcess(dummyMovement)).to.eventually.eql({ bar: 'foo' })
     );
   });
 
@@ -155,42 +160,23 @@ describe('UNIT Cid_EntryController', () => {
     });
   });
 
-  describe('detaineeProcess', () => {
-    var dummyMovement = {
-      "gender": "male",
-      "CID Person ID": 4
-    };
-    it('should pass the correct mapping to findAndUpdateOrCreate', () => {
-      controller.detaineeProcess(dummyMovement);
-      return expect(Detainee.findAndUpdateOrCreate).to.be.calledWith(
-        {
-          cid_id: dummyMovement['CID Person ID']
-        },
-        {
-          cid_id: 4,
-          gender: "male"
-        });
-    });
-    it('should return the movement with the detainee added to it', () =>
-      expect(controller.detaineeProcess(dummyMovement)).to.eventually.eql({
-        "gender": "male",
-        "CID Person ID": 4,
-        "detainee": "bar"
-      })
-    );
-  });
-
   describe('formatMovement', () => {
+    var dummyDate = new Date("2016-12-25 13:45:56");
     var dummyMovement = {
       "MO Ref.": "134",
-      "MO In/MO Out": " IN "
+      "MO In/MO Out": " IN ",
+      "MO Date": "25/12/2016 13:45:56"
     };
     it('should make the movement order ref an integer', () =>
-      expect(controller.formatMovement(dummyMovement)["MO Ref."]).to.eql(134)
+      expect(controller.formatMovement(Object.assign({}, dummyMovement))["MO Ref."]).to.eql(134)
     );
     it('should trim and lower case the direction of the movement', () =>
-      expect(controller.formatMovement(dummyMovement)["MO In/MO Out"]).to.eql("in")
+      expect(controller.formatMovement(Object.assign({}, dummyMovement))["MO In/MO Out"]).to.eql("in")
     );
+    it('should create date object for date of the movement', () => {
+      expect(controller.formatMovement(Object.assign({}, dummyMovement))["MO Date"]).to.be.instanceOf(Date);
+      expect(controller.formatMovement(Object.assign({}, dummyMovement))["MO Date"].getTime()).to.equal(dummyDate.getTime());
+    });
   });
 
 
@@ -213,13 +199,13 @@ describe('UNIT Cid_EntryController', () => {
 
   describe('filterNonEmptyMovements', () => {
     it('should leave in non-empty movements', () =>
-      expect(controller.filterNonEmptyMovements({centre: 1, "MO Ref.": 2})).to.be.ok
+      expect(controller.filterNonEmptyMovements({ centre: 1, "MO Ref.": 2 })).to.be.ok
     );
     it('should remove any movement that does not have a valid centre', () =>
-      expect(controller.filterNonEmptyMovements({"MO Ref.": 2})).to.not.be.ok
+      expect(controller.filterNonEmptyMovements({ "MO Ref.": 2 })).to.not.be.ok
     );
     it('should remove any movement that does not have a valid movement order reference', () =>
-      expect(controller.filterNonEmptyMovements({"centre": 1})).to.not.be.ok
+      expect(controller.filterNonEmptyMovements({ "centre": 1 })).to.not.be.ok
     );
   });
 
@@ -237,8 +223,8 @@ describe('UNIT Cid_EntryController', () => {
 
   describe('markNonMatchingMovementsAsInactive', () => {
     it('should pass correct mapping to Movement.update', () => {
-      controller.markNonMatchingMovementsAsInactive([{id: 1}, {id: 2}, {id: 3}]);
-      expect(Movement.update).to.be.calledWith({id: {'not': [1, 2, 3]}}, {active: false});
+      controller.markNonMatchingMovementsAsInactive([{ id: 1 }, { id: 2 }, { id: 3 }]);
+      expect(Movement.update).to.be.calledWith({ id: { 'not': [1, 2, 3] } }, { active: false });
     });
   });
 

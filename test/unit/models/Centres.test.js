@@ -45,10 +45,6 @@ describe('UNIT CentreModel', () => {
       female_prebooking: [{centres: 123, task_force: 'ops2', id: 2}, {centres: 123, task_force: 'ops1', id: 3}],
       male_contingency: [{centres: 123, task_force: 'depmu', id: 1}],
       female_contingency: [{centres: 123, task_force: 'htu', id: 2}, {centres: 123, task_force: 'depmu other', id: 3}],
-      male_active_movements_in: [{centres: 123, detainee: 1, id: 1}, {centres: 123, detainee: 2, id: 2}],
-      male_active_movements_out: [{centres: 123, detainee: 1, id: 1}, {centres: 123, detainee: 2, id: 2}],
-      female_active_movements_in: [{centres: 123, detainee: 3, id: 1}],
-      female_active_movements_out: [{centres: 123, detainee: 3, id: 1}],
       modelLinks: sinon.stub().returns(['links'])
     };
 
@@ -67,16 +63,56 @@ describe('UNIT CentreModel', () => {
           femaleCapacity: that.female_capacity,
           femaleInUse: that.female_in_use,
           femaleOutOfCommission: that.female_out_of_commission,
-          maleAvailability: 0,
-          femaleAvailability: -5,
           malePrebooking: that.male_prebooking.length,
           femalePrebooking: that.female_prebooking.length,
           maleContingency: that.male_contingency.length,
           femaleContingency: that.female_contingency.length,
-          maleActiveMovementsIn: that.male_active_movements_in.length,
-          maleActiveMovementsOut: that.male_active_movements_out.length,
-          femaleActiveMovementsIn: that.female_active_movements_in.length,
-          femaleActiveMovementsOut: that.female_active_movements_out.length
+          maleAvailability: 2,
+          femaleAvailability: -1,
+        },
+        id: that.id.toString(),
+        type: "centre",
+        links: [
+          'links'
+        ]
+      };
+      return expect(model.attributes.toJSON.call(that)).to.eql(expected);
+    });
+
+    it('should match the expected output when reconciled is set', () => {
+      let that = dummy_model;
+      that = Object.assign({}, dummy_model, {
+        reconciled: [],
+        unreconciledMovements: [],
+        unreconciledEvents: []
+      });
+      var expected = {
+        attributes: {
+          name: that.name,
+          cidReceivedDate: that.cid_received_date,
+          prebookingReceived: that.prebooking_received,
+          heartbeatReceived: null,
+          updated: that.updatedAt,
+          maleCapacity: that.male_capacity,
+          maleInUse: that.male_in_use,
+          maleOutOfCommission: that.male_out_of_commission,
+          femaleCapacity: that.female_capacity,
+          femaleInUse: that.female_in_use,
+          femaleOutOfCommission: that.female_out_of_commission,
+          maleAvailability: 2,
+          femaleAvailability: -1,
+          femaleUnexpectedIn: 0,
+          femaleUnexpectedOut: 0,
+          femaleScheduledIn: 0,
+          femaleScheduledOut: 0,
+          maleUnexpectedIn: 0,
+          maleUnexpectedOut: 0,
+          maleScheduledIn: 0,
+          maleScheduledOut: 0,
+          malePrebooking: that.male_prebooking.length,
+          femalePrebooking: that.female_prebooking.length,
+          maleContingency: that.male_contingency.length,
+          femaleContingency: that.female_contingency.length
         },
         id: that.id.toString(),
         type: "centre",
@@ -99,10 +135,6 @@ describe('UNIT CentreModel', () => {
       expect(subject).to.have.a.property('femalePrebooking', 2);
       expect(subject).to.have.a.property('maleContingency', 1);
       expect(subject).to.have.a.property('femaleContingency', 2);
-      expect(subject).to.have.a.property('maleActiveMovementsIn', 2);
-      expect(subject).to.have.a.property('maleActiveMovementsOut', 2);
-      expect(subject).to.have.a.property('femaleActiveMovementsIn', 1);
-      expect(subject).to.have.a.property('femaleActiveMovementsOut', 1);
     });
 
   });
@@ -152,26 +184,6 @@ describe('UNIT CentreModel', () => {
 
     it('should eventually resolve with the movements', () =>
       expect(model.publishCentreUpdates(dummyMovement)).to.eventually.eql(dummyMovement)
-    );
-
-    it('Should populate male_active_movements_in', () =>
-      model.publishCentreUpdates()
-        .then(() => expect(populate).to.be.calledWith('male_active_movements_in'))
-    );
-
-    it('Should populate male_active_movements_out', () =>
-      model.publishCentreUpdates()
-        .then(() => expect(populate).to.be.calledWith('male_active_movements_out'))
-    );
-
-    it('Should populate female_active_movements_in', () =>
-      model.publishCentreUpdates()
-        .then(() => expect(populate).to.be.calledWith('female_active_movements_in'))
-    );
-
-    it('Should populate female_active_movements_out', () =>
-      model.publishCentreUpdates()
-        .then(() => expect(populate).to.be.calledWith('female_active_movements_out'))
     );
   });
 });

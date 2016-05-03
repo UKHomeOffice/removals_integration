@@ -164,16 +164,14 @@ describe('UNIT Depmu_EntryController', () => {
     var dummyPrebooking = {cid_id: 4, centre: 'abc'};
     var dummyMovement = {
       centre: 2,
-      detainee: 3,
       id: 2,
+      cid_id: 312,
+      direction: 'in',
+      timestamp: new Date(),
+      gender: 'male',
       active: true
     };
-    var dummyDetainee = {
-      "id": 3,
-      "gender": "male",
-      "cid_id": 312
-    };
-
+    
     it('should filter movements without a populated detainee', () =>
       Movement.create(dummyMovement)
         .then(() => controller.filterPrebookingsWithNoMovementOrder(dummyPrebooking))
@@ -182,15 +180,13 @@ describe('UNIT Depmu_EntryController', () => {
 
     it('should filter movements with a populated detainee and a non-matching cid_id', () =>
       Movement.create(dummyMovement)
-        .then(() => Detainee.create(dummyDetainee))
         .then(() => controller.filterPrebookingsWithNoMovementOrder(dummyPrebooking))
         .then(result => expect(result).to.be.true)
     );
 
     it('should not filter movements with a populated detainee and a matching cid_id', () => {
-      dummyDetainee.cid_id = 4;
+      dummyMovement.cid_id = 4;
       return Movement.create(dummyMovement)
-        .then(() => Detainee.create(dummyDetainee))
         .then(() => controller.filterPrebookingsWithNoMovementOrder(dummyPrebooking))
         .then(result => expect(result).to.be.false)
 

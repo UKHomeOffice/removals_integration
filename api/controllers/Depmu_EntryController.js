@@ -50,10 +50,8 @@ module.exports = {
 
   filterPrebookingsWithNoMovementOrder: prebooking => {
     if (prebooking.cid_id !== null) {
-      return Movement.find({active: true, direction: 'in'})
-        .populate('detainee', {cid_id: prebooking.cid_id})
+      return Movement.find({active: true, direction: 'in', cid_id: prebooking.cid_id })
         .toPromise()
-        .filter(movement => Boolean(movement.detainee))
         .then(movements => movements.length < 1);
     }
     return true;

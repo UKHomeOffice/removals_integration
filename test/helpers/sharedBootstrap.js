@@ -7,7 +7,8 @@ global.moment = require('moment-timezone');
 global.chai = require('chai')
   .use(require('chai-as-promised'))
   .use(require('chai-things'))
-  .use(require('sinon-chai'));
+  .use(require('sinon-chai'))
+  .use(require('chai-datetime'));
 global.expect = chai.expect;
 global._ = require('lodash');
 global.sinon = require('sinon');
@@ -15,8 +16,10 @@ global.initializeBarrelsFixtures = function () {
   return new Promise(function (resolve) {
     barrels.populate([
       'centres',
-      'detainee',
+      'subjects',
       'movement',
+      'detainee',
+      'event',
       'prebooking'
     ], function (err) {
       if (err) throw err;
@@ -55,7 +58,7 @@ global.createRequest = function (payload, path, res) {
     .post(path)
     .send(payload)
     .expect(res);
-}
+};
 
 module.exports = {
   before: done => {

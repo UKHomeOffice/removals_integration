@@ -10,10 +10,9 @@ var findPrebookingByCID = (cid_id) =>
   });
 
 var findMovementByCID = (cid_id) =>
-  Movement.find({active: true, direction: 'in'})
-    .populate('detainee', {cid_id: cid_id})
+  Movement.find({active: true, direction: 'in', cid_id: cid_id})
     .toPromise()
-    .filter(movement => Boolean(movement.detainee));
+    .filter(movement => Boolean(movement));
 
 Feature('Prebooking', () => {
   var validTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format();
@@ -171,7 +170,7 @@ Feature('Prebooking', () => {
     });
 
     Scenario('Remove Existing Pre-booking when Movement In Order occurs', () => {
-      var validTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format("DD/MM/YYYY H:mm:ss");
+      var validTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format("DD/MM/YYYY HH:mm:ss");
       var movementOrderPayload = {
         Output: [{
           "Location": "bigone male holding",
@@ -201,7 +200,7 @@ Feature('Prebooking', () => {
           })
       );
 
-      When(`a valid movement-in order event with cid id "${movementOrderPayload.Output[0].cid_id}" occurs`, () =>
+      When(`a valid movement-in order event with cid id "${movementOrderPayload.Output[0]['CID Person ID']}" occurs`, () =>
         createRequest(movementOrderPayload, '/cid_entry/movement', 201));
 
       Then(`the prebooking with cid id "${payload.Output[0].cid_id}" is removed`,
@@ -211,7 +210,7 @@ Feature('Prebooking', () => {
     });
 
     Scenario('Ignore Pre-bookings with existing Movement In Order', () => {
-      var validTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format("DD/MM/YYYY H:mm:ss");
+      var validTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format("DD/MM/YYYY HH:mm:ss");
       var movementOrderPayload = {
         Output: [{
           "Location": "smallone male holding",
