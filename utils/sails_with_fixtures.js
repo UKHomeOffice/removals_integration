@@ -17,6 +17,7 @@ Sails.lift(
     barrels.populate([
       'centres',
       'detainee',
+      'event',
       'movement',
       'prebooking'
     ], function (err) {

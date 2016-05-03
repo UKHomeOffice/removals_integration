@@ -89,7 +89,7 @@ describe('Check In Event', () => {
         .post('/irc_entry/event')
         .send(payload)
         .expect(201);
-    }
+    };
 
     Given('a detainee event with timestamp `' + dateString + '` has already occurred', () =>
 

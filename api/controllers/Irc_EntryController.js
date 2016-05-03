@@ -44,7 +44,7 @@ let createOrUpdateDetainee = (detaineeProperties) =>
   }).then((detainee) => {
     if (!detainee) {
       return Detainee.create(detaineeProperties);
-    } else if (detainee.timestamp.toISOString() < detaineeProperties.timestamp) {
+    } else if (detainee.timestamp.toISOString() <= detaineeProperties.timestamp) {
       updateDetaineeModel(detainee, detaineeProperties);
       return detainee.save();
     }
@@ -151,10 +151,9 @@ module.exports = {
   eventPost: function (req, res) {
     return IrcEntryEventValidatorService.validate(req.body)
       .then(this.process_event)
+      .then(this.publishCentreUpdates)
       .then(res.ok)
-      .catch(ValidationError, (error) => {
-        res.badRequest(error.message);
-      })
+      .catch(ValidationError, error => res.badRequest(error.result.errors[0].message))
       .catch((error) => {
         res.serverError(error.message);
       });
