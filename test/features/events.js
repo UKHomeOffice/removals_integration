@@ -31,10 +31,8 @@ describe('Check In Event', () => {
       global.initializeBarrelsFixtures()
         .then(() =>
           Event.find({
-            where: {
-              timestamp: dateString,
-              operation: 'check in'
-            }
+            timestamp: dateString,
+            operation: 'check in'
           }))
         .then((models) =>
           expect(models.length).to.equal(0)
@@ -52,11 +50,9 @@ describe('Check In Event', () => {
     Then(`an event with specific timestamp ${dateString} is created from the detainee event received`, () =>
 
       Event.find({
-          where: {
-            timestamp: dateString,
-            operation: 'check in',
-            centre: 1
-          }
+          timestamp: dateString,
+          operation: 'check in',
+          centre: 1
         })
         .then((models) => expect(models.length).to.equal(1))
     );
@@ -97,10 +93,8 @@ describe('Check In Event', () => {
       global.initializeBarrelsFixtures()
         .then(() => createEvent())
         .then(() => Event.find({
-          where: {
-            timestamp: dateString,
-            operation: 'check in'
-          }
+          timestamp: dateString,
+          operation: 'check in'
         }))
         .then((models) => expect(models.length).to.equal(1))
     );
@@ -110,10 +104,8 @@ describe('Check In Event', () => {
     Then(`a detainee event with timestamp ${dateString} should be created from the check in received`, () =>
 
       Event.find({
-          where: {
-            timestamp: dateString,
-            operation: 'check in'
-          }
+          timestamp: dateString,
+          operation: 'check in'
         })
         .then((models) =>
           expect(models.length).to.equal(2)
