@@ -41,18 +41,19 @@ let createOrUpdateDetainee = (detaineeProperties) =>
   Detainee.findOne({
     person_id: detaineeProperties.person_id,
     centre: detaineeProperties.centre.id
-  }).then((detainee) => {
-    if (!detainee) {
-      return Detainee.create(detaineeProperties);
-    } else if (detainee.timestamp.toISOString() < detaineeProperties.timestamp) {
-      updateDetaineeModel(detainee, detaineeProperties);
-      return detainee.save();
-    }
-    return detainee;
-  });
+  })
+    .then((detainee) => {
+      if (!detainee) {
+        return Detainee.create(detaineeProperties);
+      } else if (detainee.timestamp.toISOString() < detaineeProperties.timestamp) {
+        updateDetaineeModel(detainee, detaineeProperties);
+        return detainee.save();
+      }
+      return detainee;
+    });
 
 let processEventDetainee = (request_body) =>
-  Centres.findOne({ name: request_body.centre })
+  Centres.findOne({name: request_body.centre})
     .then((centre) => createOrUpdateDetainee(generateDetainee(centre, request_body)));
 
 module.exports = {
@@ -114,7 +115,7 @@ module.exports = {
     case Event.OPERATION_CHECK_OUT:
     case Event.OPERATION_REINSTATEMENT:
       return processEventDetainee(request_body)
-        .then((detainee) => Event.create(generateStandardEvent(detainee, request_body)));
+          .then((detainee) => Event.create(generateStandardEvent(detainee, request_body)));
     default:
       throw new ValidationError('Unknown operation');
     }
@@ -129,15 +130,16 @@ module.exports = {
       gender: request_body.gender,
       cid_id: request_body.cid_id,
       operation: Event.OPERATION_CHECK_OUT
-    }).then(() => this.process_event({
-      centre: request_body.centre_to,
-      person_id: request_body.person_id,
-      timestamp: request_body.timestamp,
-      nationality: request_body.nationality,
-      gender: request_body.gender,
-      cid_id: request_body.cid_id,
-      operation: Event.OPERATION_CHECK_IN
-    }));
+    })
+      .then(() => this.process_event({
+        centre: request_body.centre_to,
+        person_id: request_body.person_id,
+        timestamp: request_body.timestamp,
+        nationality: request_body.nationality,
+        gender: request_body.gender,
+        cid_id: request_body.cid_id,
+        operation: Event.OPERATION_CHECK_IN
+      }));
   },
 
   publishCentreUpdates: centres =>

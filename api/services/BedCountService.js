@@ -11,7 +11,7 @@ let populate = (model, centreId, range) =>
   model.find({
     where: {
       centre: centreId,
-      timestamp: { '>=': range.from, '<=': range.to }
+      timestamp: {'>=': range.from, '<=': range.to}
     },
     sort: 'timestamp'
   });
@@ -49,7 +49,7 @@ const getReconciliationTester = (movementsRangeFactory, eventsRangeFactory) => (
   const directionMatches = resolveEventOperationWithMovementDirection(event.operation) === movement.direction;
   const timestampMatches = movementsRangeFactory(event.timestamp).contains(movement.timestamp) || eventsRangeFactory(movement.timestamp).contains(event.timestamp);
 
-  return cidMatches && directionMatches && timestampMatches && { event, movement };
+  return cidMatches && directionMatches && timestampMatches && {event, movement};
 };
 
 const filterUnreconciled = (centre, range) => {
@@ -62,7 +62,7 @@ const getReinstatementTester = (checkoutEventsRangeFactory) => (reinstatement, e
   const personIdMatches = reinstatement.person_id === event.person_id;
   const timestampMatches = checkoutEventsRangeFactory(reinstatement.timestamp).contains(event.timestamp);
 
-  return operationMatches && personIdMatches && timestampMatches && { reinstatement, event };
+  return operationMatches && personIdMatches && timestampMatches && {reinstatement, event};
 };
 
 const untersect = (left, right, mapper) => {
