@@ -17,13 +17,11 @@ const model = {
       required: true
     },
     cid_id: {
-      type: 'integer',
-      required: true
+      type: 'integer'
     },
     gender: {
       type: 'string',
-      enum: ['male', 'female'],
-      required: true
+      enum: ['male', 'female']
     },
     nationality: {
       type: 'string'
@@ -54,6 +52,9 @@ const model = {
     case 'm':
     case 'male':
       return 'male';
+
+    case undefined:
+      return undefined;
     }
     throw new Error('Unknown Gender');
   }
