@@ -67,7 +67,7 @@ module.exports = {
     Centres.find()
       .then(centres => Promise.all(centres.map((centre) =>
         BedCountService.performConfiguredReconciliation(centre)
-          .then(() => Centres.publishUpdate(centre.id))
+          .then(() => Centres.publishUpdate(centre.id, centre.toJSON()))
       ))),
 
   updateReceivedDate: (movements) =>
