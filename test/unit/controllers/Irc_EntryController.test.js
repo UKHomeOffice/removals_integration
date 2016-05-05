@@ -10,21 +10,32 @@ describe('INTEGRATION Irc_EntryController', () => {
   describe('process_event', () => {
 
     it('should handle INTER_SITE_TRANSFER operation', () => {
+      const processDetaineeStubReturnValue = {
+        centre: {}
+      };
       const stubReturnValue = {};
+      const processDetaineeStub = sinon.stub().resolves(processDetaineeStubReturnValue);
       const handleInterSiteTransferStub = sinon.stub().returns(stubReturnValue);
-      const originalHandleInterSiteTransferStub = controller.handleInterSiteTransfer;
+      const originalHandleInterSiteTransfer = controller.handleInterSiteTransfer;
 
+      const restores = [];
+      restores.push(controller.__set__('processEventDetainee', processDetaineeStub));
       controller.handleInterSiteTransfer = handleInterSiteTransferStub;
 
       const request_body = {
         operation: Event.OPERATION_INTER_SITE_TRANSFER
       };
-      const result = controller.process_event(request_body);
 
-      expect(handleInterSiteTransferStub.calledWith(request_body)).to.equal(true);
-      expect(result).to.be.equal(stubReturnValue);
+      return controller.process_event(request_body)
+        .then((result) => {
+          expect(handleInterSiteTransferStub.calledWith(processDetaineeStubReturnValue, request_body)).to.equal(true);
+          expect(result).to.be.equal(stubReturnValue);
 
-      controller.handleInterSiteTransfer = originalHandleInterSiteTransferStub;
+          controller.handleInterSiteTransfer = originalHandleInterSiteTransfer;
+          restores.forEach((restoreMethod) => {
+            restoreMethod();
+          });
+        })
     });
 
     it('should handle UPDATE operation', () => {
@@ -240,36 +251,41 @@ describe('INTEGRATION Irc_EntryController', () => {
   });
   describe('handleInterSiteTransfer', () => {
     it('should split an event into a CHECK_IN and CHECK_OUT', () => {
-      const centres = {
-        to: {},
-        from: {}
-      };
-      const base_request_body = {
+      const request_body = {
         centre: {},
         person_id: {},
-        timestamp: {},
+        timestamp: {}
+      };
+      const detainee = {
         nationality: {},
         gender: {},
         cid_id: {}
       };
       const process_eventReturnValue = {};
 
-      const expectedCheckOut = Object.assign({}, base_request_body, {
-        centre: centres.to,
-        operation: Event.OPERATION_CHECK_OUT
-      });
-      const expectedCheckIn = Object.assign({}, base_request_body, {
-        centre: centres.from,
-        operation: Event.OPERATION_CHECK_IN
-      });
-      const request_body = Object.assign({}, base_request_body, { centre_to: centres.to, centre: centres.from });
+      const expectedCheckOut = {
+        centre: request_body.centre,
+        person_id: request_body.person_id,
+        operation: Event.OPERATION_CHECK_OUT,
+        timestamp: request_body.timestamp
+      };
+      
+      const expectedCheckIn =  {
+        centre: request_body.centre_to,
+        person_id: request_body.person_id,
+        nationality: detainee.nationality,
+        gender: detainee.gender,
+        cid_id: detainee.cid_id,
+        operation: Event.OPERATION_CHECK_IN,
+        timestamp: request_body.timestamp
+      };
 
       const process_eventStub = sinon.stub().resolves(process_eventReturnValue);
 
       const orig_process_event = controller.process_event;
       controller.process_event = process_eventStub;
 
-      controller.handleInterSiteTransfer(request_body)
+      controller.handleInterSiteTransfer(detainee, request_body)
         .then((result) => {
           expect(process_eventStub.calledWith(expectedCheckIn)).to.equal(true);
           expect(process_eventStub.calledWith(expectedCheckOut)).to.equal(true);

@@ -107,7 +107,8 @@ module.exports = {
   process_event: function (request_body) {
     switch (request_body.operation) {
     case Event.OPERATION_INTER_SITE_TRANSFER:
-      return this.handleInterSiteTransfer(request_body);
+      return processEventDetainee(request_body)
+        .then((detainee) => this.handleInterSiteTransfer(detainee, request_body));
     case Event.OPERATION_UPDATE:
       return processEventDetainee(request_body);
     case Event.OPERATION_CHECK_IN:
@@ -120,22 +121,19 @@ module.exports = {
     }
   },
 
-  handleInterSiteTransfer: function (request_body) {
+  handleInterSiteTransfer: function (detainee, request_body) {
     return this.process_event({
       centre: request_body.centre,
       person_id: request_body.person_id,
       timestamp: request_body.timestamp,
-      nationality: request_body.nationality,
-      gender: request_body.gender,
-      cid_id: request_body.cid_id,
       operation: Event.OPERATION_CHECK_OUT
     }).then(() => this.process_event({
       centre: request_body.centre_to,
       person_id: request_body.person_id,
       timestamp: request_body.timestamp,
-      nationality: request_body.nationality,
-      gender: request_body.gender,
-      cid_id: request_body.cid_id,
+      nationality: detainee.nationality,
+      gender: detainee.gender,
+      cid_id: detainee.cid_id,
       operation: Event.OPERATION_CHECK_IN
     }));
   },
