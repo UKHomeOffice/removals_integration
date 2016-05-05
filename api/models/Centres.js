@@ -1,6 +1,7 @@
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');
+var BedCountService = require('../services/BedCountService');
 var LinkingModels = require('sails-linking-models');
 
 const model = {
@@ -163,13 +164,29 @@ const model = {
   },
 
   afterCreate: function (record, done) {
-    this.publishCreate(record);
-    done();
+    Centres.findOne({ id: record.id })
+      .populate('male_prebooking')
+      .populate('female_prebooking')
+      .populate('male_contingency')
+      .populate('female_contingency')
+      .then(BedCountService.performConfiguredReconciliation)
+      .then((centre) => {
+        this.publishCreate(centre.toJSON());
+        done();
+      });
   },
 
   afterUpdate: function (record, done) {
-    this.publishUpdate(record.id, record, null);
-    done();
+    Centres.findOne({ id: record.id })
+      .populate('male_prebooking')
+      .populate('female_prebooking')
+      .populate('male_contingency')
+      .populate('female_contingency')
+      .then(BedCountService.performConfiguredReconciliation)
+      .then((centre) => {
+        this.publishUpdate(centre.id, centre.toJSON(), null);
+        done();
+      });
   },
 
   afterDestroy: function (records, done) {
