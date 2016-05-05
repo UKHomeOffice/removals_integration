@@ -127,6 +127,8 @@ const model = {
         response.attributes[gender + 'Availability'] = response.attributes[gender + 'Capacity'];
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'InUse'];
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'OutOfCommission'];
+        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Prebooking'];
+        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Contingency'];
         if (this.reconciled) {
           response.attributes[gender + 'UnexpectedIn'] = unreconciledEventCounter(gender, ['check in']);
           response.attributes[gender + 'UnexpectedOut'] = unreconciledEventCounter(gender, ['check out']);
@@ -158,7 +160,7 @@ const model = {
   },
 
   removeNonOccupancy: function () {
-    return this.destroy({ 'mo-type': 'non-occupancy' });
+    return this.destroy({'mo-type': 'non-occupancy'});
   },
 
   afterCreate: function (record, done) {
