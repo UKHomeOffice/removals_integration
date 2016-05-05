@@ -50,8 +50,7 @@ module.exports = {
 
   filterPrebookingsWithNoMovementOrder: prebooking => {
     if (prebooking.cid_id !== null) {
-      return Movement.find({active: true, direction: 'in', cid_id: prebooking.cid_id })
-        .toPromise()
+      return Movement.find({active: true, centre: prebooking.centre, direction: 'in', cid_id: prebooking.cid_id })
         .then(movements => movements.length < 1);
     }
     return true;

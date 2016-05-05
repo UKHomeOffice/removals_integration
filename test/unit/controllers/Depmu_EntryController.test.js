@@ -161,7 +161,7 @@ describe('UNIT Depmu_EntryController', () => {
   });
 
   describe('filterPrebookingsWithNoMovementOrder', () => {
-    var dummyPrebooking = {cid_id: 4, centre: 'abc'};
+    var dummyPrebooking = {cid_id: 4, centre: 2};
     var dummyMovement = {
       centre: 2,
       id: 2,
@@ -171,7 +171,7 @@ describe('UNIT Depmu_EntryController', () => {
       gender: 'male',
       active: true
     };
-    
+
     it('should filter movements without a populated detainee', () =>
       Movement.create(dummyMovement)
         .then(() => controller.filterPrebookingsWithNoMovementOrder(dummyPrebooking))
@@ -184,12 +184,18 @@ describe('UNIT Depmu_EntryController', () => {
         .then(result => expect(result).to.be.true)
     );
 
-    it('should not filter movements with a populated detainee and a matching cid_id', () => {
+    it('should not filter movements with a populated detainee and a matching cid_id at the same centre', () => {
       dummyMovement.cid_id = 4;
       return Movement.create(dummyMovement)
         .then(() => controller.filterPrebookingsWithNoMovementOrder(dummyPrebooking))
         .then(result => expect(result).to.be.false)
+    });
 
+    it('should filter movements with a populated detainee and a matching cid_id at a different centre', () => {
+      dummyMovement.centre = 4;
+      return Movement.create(dummyMovement)
+        .then(() => controller.filterPrebookingsWithNoMovementOrder(dummyPrebooking))
+        .then(result => expect(result).to.be.true)
     });
 
     it('should eventually resolve with the prebookings if prebooking has no cid id', () => {
