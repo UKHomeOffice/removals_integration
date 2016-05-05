@@ -71,7 +71,6 @@ describe('INTEGRATION Cid_EntryController', () => {
       request_auth(sails.hooks.http.app)
         .post('/cid_entry/movement')
         .send(validdummydata)
-        .then(() => expect(Centres.publishAdd).to.be.called)
         .then(() => expect(Centres.publishUpdate).to.be.calledWith(1))
         .then(() => expect(Centres.publishUpdate).to.be.calledWith(2))
         .then(() => expect(Centres.publishUpdate).to.be.calledWith(3))
