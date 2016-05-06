@@ -212,5 +212,8 @@ describe('INTEGRATION CentreModel', () => {
     Centres.destroy()
       .then(() => expect(Event.find()).to.eventually.have.length(0))
   );
-
+  it('should on destroy, destroy orphaned detainee', () =>
+    Centres.destroy()
+      .then(() => expect(Detainee.find()).to.eventually.have.length(0))
+  );
 });

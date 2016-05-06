@@ -194,6 +194,7 @@ const model = {
         Movement.destroy({ centre: record.id })
           .then(() => Prebooking.destroy({ centre: record.id }))
           .then(() => Event.destroy({ centre: record.id }))
+          .then(() => Detainee.destroy({ centre: record.id }))
           .then(() => this.publishDestroy(record.id, record))
       ))
       .then(() => done());
