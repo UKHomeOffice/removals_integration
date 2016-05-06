@@ -59,12 +59,10 @@ describe('INTEGRATION Cid_EntryController', () => {
   describe('pubsub', () => {
     before(() => {
       sinon.stub(Centres, 'publishUpdate');
-      sinon.stub(Centres, 'publishAdd');
       sinon.stub(Centres, 'update').resolves(true);
     });
     after(() => {
       Centres.publishUpdate.restore();
-      Centres.publishAdd.restore();
       Centres.update.restore();
     });
     it('should push out an update to subscribers watching the centres', () =>
