@@ -200,4 +200,17 @@ describe('INTEGRATION CentreModel', () => {
   it('should throw exception when unable to get by name', () =>
     expect(Centres.getByName("invalid centre")).to.be.eventually.rejectedWith(ValidationError)
   );
+  it('should on destroy, destroy orphaned prebookings', () =>
+    Centres.destroy()
+      .then(() => expect(Prebooking.find()).to.eventually.have.length(0))
+  );
+  it('should on destroy, destroy orphaned movements', () =>
+    Centres.destroy()
+      .then(() => expect(Movement.find()).to.eventually.have.length(0))
+  );
+  it('should on destroy, destroy orphaned events', () =>
+    Centres.destroy()
+      .then(() => expect(Event.find()).to.eventually.have.length(0))
+  );
+
 });

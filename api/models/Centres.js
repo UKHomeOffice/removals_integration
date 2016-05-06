@@ -190,8 +190,13 @@ const model = {
   },
 
   afterDestroy: function (records, done) {
-    _.map(records, (record) => this.publishDestroy(record.id, record));
-    done();
+    Promise.all(_.map(records, (record) =>
+        Movement.destroy({ centre: record.id })
+          .then(() => Prebooking.destroy({ centre: record.id }))
+          .then(() => Event.destroy({ centre: record.id }))
+          .then(() => this.publishDestroy(record.id, record))
+      ))
+      .then(() => done());
   },
 
   getByName: function (name) {
