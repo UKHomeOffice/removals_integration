@@ -59,19 +59,16 @@ describe('INTEGRATION Cid_EntryController', () => {
   describe('pubsub', () => {
     before(() => {
       sinon.stub(Centres, 'publishUpdate');
-      sinon.stub(Centres, 'publishAdd');
       sinon.stub(Centres, 'update').resolves(true);
     });
     after(() => {
       Centres.publishUpdate.restore();
-      Centres.publishAdd.restore();
       Centres.update.restore();
     });
     it('should push out an update to subscribers watching the centres', () =>
       request_auth(sails.hooks.http.app)
         .post('/cid_entry/movement')
         .send(validdummydata)
-        .then(() => expect(Centres.publishAdd).to.be.called)
         .then(() => expect(Centres.publishUpdate).to.be.calledWith(1))
         .then(() => expect(Centres.publishUpdate).to.be.calledWith(2))
         .then(() => expect(Centres.publishUpdate).to.be.calledWith(3))
