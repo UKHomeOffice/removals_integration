@@ -120,14 +120,17 @@ module.exports = {
       .return(centre);
   },
   performConfiguredReconciliation: function (centre) {
-    const visibilityRange = new DateRange(moment().subtract(2, 'days').toDate(), moment().toDate());
+    const visibilityRange = new DateRange(
+      moment().subtract(2, 'days').startOf('day').toDate(),
+      moment().endOf('day').toDate()
+    );
     const eventsFromMovementDateRangeFactory = (date) => new DateRange(
-      moment(date).startOf('day').toDate(),
+      moment(date).subtract(2, 'days').startOf('day').toDate(),
       moment(date).add(2, 'days').endOf('day').toDate()
     );
     const movementsFromEventDateRangeFactory = (date) => new DateRange(
       moment(date).subtract(2, 'days').startOf('day').toDate(),
-      moment(date).endOf('day').toDate()
+      moment(date).add(2, 'days').endOf('day').toDate()
     );
     const checkOutFromReinstatementDateRangeFactory = (date) => new DateRange(
       moment(date).subtract(1, 'days').toDate(),
