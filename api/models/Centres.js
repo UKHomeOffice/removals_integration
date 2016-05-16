@@ -1,3 +1,4 @@
+/* global Movement, Detainee, Event, Prebooking */
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');
