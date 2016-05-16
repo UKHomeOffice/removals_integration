@@ -4,6 +4,7 @@ var jhg = require('../../helpers/JsonHelperGenerator');
 var ValidationError = require('../../../api/lib/exceptions/ValidationError');
 var rewire = require('rewire');
 var controller = rewire('../../../api/controllers/Irc_EntryController');
+var BedCountService = require('../../../api/services/BedCountService');
 
 describe('INTEGRATION Irc_EntryController', () => {
 
@@ -39,27 +40,40 @@ describe('INTEGRATION Irc_EntryController', () => {
     });
 
     it('should handle UPDATE operation', () => {
-      const stubReturnValue = {};
-      const stub = sinon.stub().returns(stubReturnValue);
-      const restoreMethod = controller.__set__('processEventDetainee', stub);
+      const detainee = { centre: { id: {} } };
+      const processEventDetaineeStub = sinon.stub().resolves(detainee);
+      const publishCentreUpdatesStub = sinon.stub().resolves(detainee);
+
+      const restores = [];
+      restores.push(controller.__set__('processEventDetainee', processEventDetaineeStub));
+      restores.push(controller.__set__('publishCentreUpdates', publishCentreUpdatesStub));
 
       const request_body = {
         operation: Event.OPERATION_UPDATE
       };
       const result = controller.process_event(request_body);
 
-      expect(stub.calledWith(request_body)).to.equal(true);
-      expect(result).to.be.equal(stubReturnValue);
+      return result.then((result) => {
+        expect(processEventDetaineeStub.calledWith(request_body)).to.equal(true);
+        expect(publishCentreUpdatesStub.called).to.equal(true);
+        expect(result).to.be.equal(detainee);
+      }).finally(() => {
+        restores.forEach((restoreMethod) => {
+          restoreMethod();
+        });
+      });
 
-      restoreMethod();
     });
 
     it('should handle CHECK_IN operation', () => {
-      const processDetaineeStubReturnValue = {
+      const detainee = {
         centre: {}
       };
-      const processDetaineeStub = sinon.stub().resolves(processDetaineeStubReturnValue);
-      const eventStubReturnValue = {};
+      const eventStubReturnValue = {
+        centre: {}
+      };
+      const publishCentreUpdatesStub = sinon.stub().resolves(detainee);
+      const processDetaineeStub = sinon.stub().resolves(detainee);
       const EventCreateStub = sinon.stub().resolves(eventStubReturnValue);
 
       const request_body = {
@@ -70,6 +84,7 @@ describe('INTEGRATION Irc_EntryController', () => {
       const restores = [];
       restores.push(controller.__set__('processEventDetainee', processDetaineeStub));
       restores.push(controller.__set__('Event.create', EventCreateStub));
+      restores.push(controller.__set__('publishCentreUpdates', publishCentreUpdatesStub));
 
       const result = controller.process_event(request_body);
 
@@ -77,12 +92,14 @@ describe('INTEGRATION Irc_EntryController', () => {
       return result.then((result) => {
         expect(processDetaineeStub.calledWith(request_body)).to.equal(true);
         expect(EventCreateStub.calledWith({
-          centre: processDetaineeStubReturnValue.centre,
-          detainee: processDetaineeStubReturnValue,
+          centre: detainee.centre,
+          detainee: detainee,
           timestamp: request_body.timestamp,
           operation: request_body.operation
         })).to.equal(true);
+        expect(publishCentreUpdatesStub.calledWith(eventStubReturnValue.centre)).to.equal(true);
         expect(result).to.be.equal(eventStubReturnValue);
+      }).finally(() => {
 
         restores.forEach((restoreMethod) => {
           restoreMethod();
@@ -92,10 +109,15 @@ describe('INTEGRATION Irc_EntryController', () => {
 
     it('should handle CHECK_OUT operation', () => {
       const processDetaineeStubReturnValue = {
-        centre: {}
+        centre: {
+          id: {}
+        }
       };
       const processDetaineeStub = sinon.stub().resolves(processDetaineeStubReturnValue);
-      const eventStubReturnValue = {};
+      const publishCentreUpdatesStub = sinon.stub().resolves(processDetaineeStubReturnValue);
+      const eventStubReturnValue = {
+        centre: {}
+      };
       const EventCreateStub = sinon.stub().resolves(eventStubReturnValue);
 
       const request_body = {
@@ -105,6 +127,7 @@ describe('INTEGRATION Irc_EntryController', () => {
 
       const restores = [];
       restores.push(controller.__set__('processEventDetainee', processDetaineeStub));
+      restores.push(controller.__set__('publishCentreUpdates', publishCentreUpdatesStub));
       restores.push(controller.__set__('Event.create', EventCreateStub));
 
       const result = controller.process_event(request_body);
@@ -118,8 +141,9 @@ describe('INTEGRATION Irc_EntryController', () => {
           timestamp: request_body.timestamp,
           operation: request_body.operation
         })).to.equal(true);
+        expect(publishCentreUpdatesStub.calledWith(eventStubReturnValue.centre)).to.equal(true);
         expect(result).to.be.equal(eventStubReturnValue);
-
+      }).finally(() => {
         restores.forEach((restoreMethod) => {
           restoreMethod();
         });
@@ -128,11 +152,19 @@ describe('INTEGRATION Irc_EntryController', () => {
 
     it('should handle REINSTATEMENT operation', () => {
       const processDetaineeStubReturnValue = {
+        centre: {
+          id: {}
+        }
+      };
+      const detainee = {
         centre: {}
       };
-      const processDetaineeStub = sinon.stub().resolves(processDetaineeStubReturnValue);
-      const eventStubReturnValue = {};
+      const eventStubReturnValue = {
+        centre: {}
+      };
+      const processDetaineeStub = sinon.stub().resolves(detainee);
       const EventCreateStub = sinon.stub().resolves(eventStubReturnValue);
+      const publishCentreUpdatesStub = sinon.stub().resolves(processDetaineeStubReturnValue);
 
       const request_body = {
         operation: Event.OPERATION_REINSTATEMENT,
@@ -142,6 +174,7 @@ describe('INTEGRATION Irc_EntryController', () => {
       const restores = [];
       restores.push(controller.__set__('processEventDetainee', processDetaineeStub));
       restores.push(controller.__set__('Event.create', EventCreateStub));
+      restores.push(controller.__set__('publishCentreUpdates', publishCentreUpdatesStub));
 
       const result = controller.process_event(request_body);
 
@@ -149,13 +182,14 @@ describe('INTEGRATION Irc_EntryController', () => {
       return result.then((result) => {
         expect(processDetaineeStub.calledWith(request_body)).to.equal(true);
         expect(EventCreateStub.calledWith({
-          centre: processDetaineeStubReturnValue.centre,
-          detainee: processDetaineeStubReturnValue,
+          centre: detainee.centre,
+          detainee: detainee,
           timestamp: request_body.timestamp,
           operation: request_body.operation
         })).to.equal(true);
+        expect(publishCentreUpdatesStub.calledWith(eventStubReturnValue.centre)).to.equal(true);
         expect(result).to.be.equal(eventStubReturnValue);
-
+      }).finally(() => {
         restores.forEach((restoreMethod) => {
           restoreMethod();
         });
@@ -242,11 +276,11 @@ describe('INTEGRATION Irc_EntryController', () => {
           expect(findOneStub.calledWith({ name: request_body.centre })).to.equal(true);
           expect(generateDetaineeStub.calledWith(centre, request_body)).to.equal(true);
           expect(result).to.deep.equal(createReturnValue);
-
-          restores.forEach((restoreMethod) => {
-            restoreMethod();
-          });
+        }).finally(() => {
+        restores.forEach((restoreMethod) => {
+          restoreMethod();
         });
+      });
     });
   });
   describe('handleInterSiteTransfer', () => {
@@ -269,8 +303,8 @@ describe('INTEGRATION Irc_EntryController', () => {
         operation: Event.OPERATION_CHECK_OUT,
         timestamp: request_body.timestamp
       };
-      
-      const expectedCheckIn =  {
+
+      const expectedCheckIn = {
         centre: request_body.centre_to,
         person_id: request_body.person_id,
         nationality: detainee.nationality,
@@ -341,10 +375,12 @@ describe('INTEGRATION Irc_EntryController', () => {
       const restores = [];
       const createReturnValue = {};
       const findOneStub = sinon.stub().resolves(undefined);
-      const createStub = sinon.stub().returns(createReturnValue);
+      const createStub = sinon.stub().resolves(createReturnValue);
+      const getPopulatedDetaineeStub = sinon.stub().resolves(createReturnValue);
       beforeEach(() => {
         restores.push(controller.__set__('Detainee.findOne', findOneStub));
         restores.push(controller.__set__('Detainee.create', createStub));
+        restores.push(controller.__set__('getPopulatedDetainee', getPopulatedDetaineeStub));
       });
       it('should create a new detainee', () => {
         const detaineeProperties = {
@@ -373,11 +409,13 @@ describe('INTEGRATION Irc_EntryController', () => {
       const saveReturnValue = {};
       const dummyDetaineeRecord = {
         timestamp: new Date('2016-05-01'),
-        save: () => saveReturnValue
+        save: sinon.stub().resolves(saveReturnValue)
       };
       const findOneStub = sinon.stub().resolves(dummyDetaineeRecord);
+      const getPopulatedDetaineeStub = sinon.stub().resolves(saveReturnValue);
       beforeEach(() => {
         restores.push(controller.__set__('Detainee.findOne', findOneStub));
+        restores.push(controller.__set__('getPopulatedDetainee', getPopulatedDetaineeStub));
       });
       it('should update the detainee', () => {
         const detaineeProperties = {
@@ -558,17 +596,26 @@ describe('UNIT Irc_EntryController', () => {
   });
 
   describe('publishCentreUpdates', () => {
-    var populate;
     beforeEach(() => {
-      populate = sinon.stub().returnsThis();
-      sinon.stub(Centres, 'find').returns({ populate: populate, then: sinon.stub().resolves(true) });
+      sinon.stub(Centres, 'find').returns(sinon.stub().resolves(true));
+      sinon.stub(BedCountService, 'performConfiguredReconciliation').resolves({
+        id: {},
+        toJSON: () => {}
+      })
+      sinon.stub(Centres, 'publishUpdate').resolves(sinon.stub().resolves(true));
     });
 
-    afterEach(() => Centres.find.restore());
+    afterEach(() => {
+      Centres.find.restore();
+      BedCountService.performConfiguredReconciliation.restore();
+      Centres.publishUpdate.restore();
+    });
 
     var dummyMovement = [{ id: 1 }, { id: 2 }, { id: 3 }];
     it('should eventually resolve with the movements', () =>
-      expect(controller.publishCentreUpdates(dummyMovement)).to.eventually.eql(dummyMovement)
+      controller.__get__('publishCentreUpdates')(dummyMovement).then((result) => {
+        expect(result).to.equal(dummyMovement)
+      })
     );
   });
 
@@ -630,7 +677,7 @@ describe('UNIT Irc_EntryController', () => {
     );
 
     it('should return the amended centre', () =>
-      expect(output).eventually.to.eql([centre])
+      expect(output).eventually.to.eql(centre)
     );
   });
 })
