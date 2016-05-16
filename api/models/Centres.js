@@ -131,7 +131,6 @@ const model = {
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Contingency'];
         if (this.reconciled) {
           response.attributes[gender + 'UnexpectedIn'] = unreconciledEventCounter(gender, ['check in']);
-          response.attributes[gender + 'UnexpectedOut'] = unreconciledEventCounter(gender, ['check out']);
           response.attributes[gender + 'ScheduledIn'] = unreconciledMovementCounter(gender, 'in');
           response.attributes[gender + 'ScheduledOut'] = unreconciledMovementCounter(gender, 'out');
           response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ScheduledIn'];
