@@ -61,7 +61,7 @@ let publishCentreUpdates = (centre) =>
   Centres.findOne(centre)
     .then(BedCountService.performConfiguredReconciliation)
     .then((centre) => Centres.publishUpdate(centre.id, centre.toJSON()))
-    .then(() => centre);
+    .return(centre);
 
 module.exports = {
   _config: {
@@ -119,13 +119,13 @@ module.exports = {
         .then((detainee) => this.handleInterSiteTransfer(detainee, request_body));
     case Event.OPERATION_UPDATE:
       return processEventDetainee(request_body)
-        .then((detainee) => publishCentreUpdates(detainee.centre.id) && detainee);
+        .tap((detainee) => publishCentreUpdates(detainee.centre.id));
     case Event.OPERATION_CHECK_IN:
     case Event.OPERATION_CHECK_OUT:
     case Event.OPERATION_REINSTATEMENT:
       return processEventDetainee(request_body)
         .then((detainee) => Event.create(generateStandardEvent(detainee, request_body)))
-        .then((event) => publishCentreUpdates(event.centre) && event);
+        .tap((event) => publishCentreUpdates(event.centre));
     default:
       throw new ValidationError('Unknown operation');
     }
