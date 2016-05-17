@@ -131,6 +131,7 @@ const model = {
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'OutOfCommission'];
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Prebooking'];
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Contingency'];
+        response.attributes.outOfCommission = this.outOfCommission;
         if (this.reconciled) {
           response.attributes[gender + 'UnexpectedIn'] = unreconciledEventReducer(this.unreconciledEvents, gender, ['check in']);
           response.attributes[gender + 'ExpectedIn'] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'in');

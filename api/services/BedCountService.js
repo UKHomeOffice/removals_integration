@@ -1,8 +1,9 @@
-/* global Event Movement */
+/* global Event Movement BedEvent */
 'use strict';
 
 var DateRange = require('../lib/DateRange');
 var moment = require('moment');
+var _ = require('lodash');
 
 const fullRange = (visibilityRange, rangeFactory) =>
   DateRange.widen.apply(null, [visibilityRange, rangeFactory(visibilityRange.from), rangeFactory(visibilityRange.to)]);
@@ -99,6 +100,58 @@ const handleReinstatements = (centre, tester) => {
   return centre;
 };
 
+const reduceBedEvent = (bedEvent) =>
+  ({
+    timestamp: bedEvent.timestamp,
+    bed_ref: bedEvent.bed_ref,
+    gender: bedEvent.gender,
+    cid_id: bedEvent.detainee ? bedEvent.detainee.cid_id : undefined,
+    reason: bedEvent.reason
+  });
+
+const initObjecWithKeys = (keys, fillValue) =>
+  _.reduce(keys, (result, key) => {
+    result[key] = fillValue;
+    return result;
+  }, {});
+
+const getBedEvents = (centre) =>
+  BedEvent.find({
+    where: {
+      centre: centre.id
+    },
+    sort: 'timestamp DESC'
+  })
+  .populate('detainee');
+
+const filterInCommission = (bedEvents) =>
+  _.chain(bedEvents)
+    .groupBy((e) => e.bed_ref)
+    .filter((events) => events[0].operation === BedEvent.OPERATION_OUT_OF_COMMISSION)
+    .values()
+    .flatten()
+    .value();
+
+const genderize = (bedEvents) => _.groupBy(bedEvents, (e) => e.gender);
+
+const reasonize = (bedEvents) => _.map(bedEvents, (genderedEvents) => _.extend(initObjecWithKeys(BedEvent.reasons, []), _.groupBy(genderedEvents, (e) => e.reason)));
+
+const singleOccupancyize = (bedEvents) => _.map(bedEvents, (genderedEvents) =>
+  _.mapValues(genderedEvents, (events, reason) =>
+    reason === BedEvent.REASON_SINGLE_OCCUPANCY ? _.groupBy(events, (e) => e.cid_id || 'Unknown') : events
+  )
+);
+
+const handleBedEvents = (centre) =>
+  getBedEvents(centre)
+    .then(filterInCommission)
+    .map(reduceBedEvent)
+    .then(genderize)
+    .then(reasonize)
+    .then(singleOccupancyize)
+    .then((bedEvents) => centre.outOfCommission = bedEvents)
+    .return(centre);
+
 module.exports = {
   performReconciliation: (centre, visibilityRange, eventSearchDateRangeFactory, movementSearchDateRangeFactory, checkOutSearchDateRangeFactory) => {
     const rangeOfEvents = fullRange(visibilityRange, eventSearchDateRangeFactory);
@@ -111,12 +164,14 @@ module.exports = {
     centre.unreconciledReinstatements = [];
     centre.reconciled = [];
     centre.reinstatements = [];
+    centre.outOfCommission = {};
 
     return populateEvents(centre, rangeOfEvents)
       .then(() => populateMovements(centre, rangeOfMovements))
       .then(() => handleReinstatements(centre, reinstatementReconciler))
       .then(() => reconcileEvents(centre, reconciler))
       .then(() => filterUnreconciled(centre, visibilityRange))
+      .then(() => handleBedEvents(centre))
       .return(centre);
   },
   performConfiguredReconciliation: function (centre) {

@@ -1,0 +1,19 @@
+[
+  {
+    "centre": 1,
+    "gender": "male",
+    "operation": "out of commission",
+    "timestamp": "Fri Feb 26 2016 09:24:20 GMT+0000 (GMT)",
+    "bed_ref": "bed1",
+    "reason": "Other"
+  },
+  {
+    "centre": 1,
+    "gender": "male",
+    "operation": "out of commission",
+    "timestamp": "Fri Feb 26 2016 09:24:20 GMT+0000 (GMT)",
+    "bed_ref": "bed2",
+    "reason": "Single Occupancy",
+    "detainee": 1
+  }
+]

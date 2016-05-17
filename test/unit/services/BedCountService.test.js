@@ -314,6 +314,7 @@ describe('UNIT BedCountService', () => {
             expect(result).to.have.property('unreconciledEvents');
             expect(result).to.have.property('unreconciledMovements');
             expect(result).to.have.property('unreconciledReinstatements');
+            expect(result).to.have.property('outOfCommission');
           });
         });
     });

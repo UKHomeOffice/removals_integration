@@ -37,6 +37,7 @@ describe('UNIT CentreModel', () => {
       prebooking_received: null,
       cid_received_date: null,
       name: 'fo',
+      outOfCapacity: {},
       id: 123,
       male_capacity: 9,
       female_capacity: 12,
