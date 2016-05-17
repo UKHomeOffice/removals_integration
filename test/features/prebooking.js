@@ -66,12 +66,11 @@ Feature('Prebooking', () => {
           timestamp: validTimestamp,
           location: 'smallone female holding',
           task_force: 'HTU Borderforce',
-          cid_id: '666'
+          cid_id: ''
         }, {
           timestamp: validTimestamp,
           location: 'smallone female holding',
-          task_force: 'Depmu',
-          cid_id: '777'
+          task_force: 'Depmu'
         }]
       };
       var expectedFemaleCentre = 'smallone';
@@ -170,13 +169,13 @@ Feature('Prebooking', () => {
     });
 
     Scenario('Remove Existing Pre-booking when Movement In Order occurs', () => {
-      var validTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format("DD/MM/YYYY HH:mm:ss");
+      var validMovementTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format("DD/MM/YYYY HH:mm:ss");
       var movementOrderPayload = {
         Output: [{
           "Location": "bigone male holding",
           "MO In/MO Out": "In",
           "MO Ref.": "1718293935",
-          "MO Date": validTimestamp,
+          "MO Date": validMovementTimestamp,
           "MO Type": "Occupancy",
           "CID Person ID": payload.Output[0].cid_id
         }]

@@ -19,7 +19,7 @@ const validation_schema = {
     cid_id: {
       type: "string",
       description: "CID ID of the subject",
-      pattern: "^\\d*$"
+      pattern: "^(|[0-9]+)$"
     }
   },
   properties: {
