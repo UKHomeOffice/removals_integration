@@ -163,40 +163,36 @@ const model = {
     return this.destroy({'mo-type': 'non-occupancy'});
   },
 
-  afterCreate: function (record, done) {
-    Centres.findOne({ id: record.id })
-      .populate('male_prebooking')
-      .populate('female_prebooking')
-      .populate('male_contingency')
-      .populate('female_contingency')
-      .then(BedCountService.performConfiguredReconciliation)
-      .then((centre) => {
-        this.publishCreate(centre.toJSON());
-        done();
-      });
-  },
+  afterCreate: (centre, done) =>
+    Centres.findReconciled({id: centre.id})
+      .map((centre) => Centres.publishCreate(centre.toJSON()))
+      .finally(() => done()),
 
-  afterUpdate: function (record, done) {
-    Centres.findOne({ id: record.id })
+  findReconciled: (query) =>
+    Centres.find(query || {})
       .populate('male_prebooking')
       .populate('female_prebooking')
       .populate('male_contingency')
       .populate('female_contingency')
-      .then(BedCountService.performConfiguredReconciliation)
-      .then((centre) => {
-        this.publishUpdate(centre.id, centre.toJSON(), null);
-        done();
-      });
-  },
+      .toPromise()
+      .map(BedCountService.performConfiguredReconciliation),
+
+  publishUpdateOne: (centre) =>
+    Centres.findReconciled({id: centre.id || centre})
+      .map((centre) => Centres.publishUpdate(centre.id, centre.toJSON())),
+
+  publishUpdateAll: () =>
+    Centres.findReconciled()
+      .map((centre) => Centres.publishUpdate(centre.id, centre.toJSON())),
 
   afterDestroy: function (records, done) {
     Promise.all(_.map(records, (record) =>
-        Movement.destroy({ centre: record.id })
-          .then(() => Prebooking.destroy({ centre: record.id }))
-          .then(() => Event.destroy({ centre: record.id }))
-          .then(() => Detainee.destroy({ centre: record.id }))
-          .then(() => this.publishDestroy(record.id, record))
-      ))
+      Movement.destroy({centre: record.id})
+        .then(() => Prebooking.destroy({centre: record.id}))
+        .then(() => Event.destroy({centre: record.id}))
+        .then(() => Detainee.destroy({centre: record.id}))
+        .then(() => this.publishDestroy(record.id))
+    ))
       .then(() => done());
   },
 
@@ -208,17 +204,8 @@ const model = {
         }
         return centre[0];
       });
-  },
+  }
 
-  publishCentreUpdates: collection =>
-    Centres.find()
-      .populate('male_prebooking')
-      .populate('female_prebooking')
-      .populate('male_contingency')
-      .populate('female_contingency')
-      .toPromise()
-      .map(centre => Centres.publishUpdate(centre.id, centre.toJSON()))
-      .then(() => collection)
 };
 
 module.exports = LinkingModels.mixin(model);

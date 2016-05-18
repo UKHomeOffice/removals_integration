@@ -2,7 +2,6 @@
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');
-var BedCountService = require('../services/BedCountService');
 var moment = require('moment');
 
 module.exports = {
@@ -63,13 +62,6 @@ module.exports = {
       }
     ),
 
-  publishCentreUpdates: () =>
-    Centres.find()
-      .then(centres => Promise.all(centres.map((centre) =>
-        BedCountService.performConfiguredReconciliation(centre)
-          .then(() => Centres.publishUpdate(centre.id, centre.toJSON()))
-      ))),
-
   updateReceivedDate: (movements) =>
     Centres.update({}, {cid_received_date: new Date()})
       .then(() => movements),
@@ -87,7 +79,7 @@ module.exports = {
       .map(this.movementProcess)
       .then(this.markNonMatchingMovementsAsInactive)
       .then(this.updateReceivedDate)
-      .then(this.publishCentreUpdates)
+      .tap(Centres.publishUpdateAll)
       .then(res.ok)
       .catch(ValidationError, error => {
         res.badRequest(error.result.errors[0].message);
