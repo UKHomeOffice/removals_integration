@@ -90,7 +90,7 @@ module.exports = {
       .tap(this.truncatePrebookings)
       .map(this.prebookingProcess)
       .tap(this.updateReceivedDate)
-      .tap(Centres.publishCentreUpdates)
+      .tap(Centres.publishUpdateAll)
       .then(res.ok)
       .catch(ValidationError, error => res.badRequest(error.result.errors[0].message))
       .catch(RangeError, error => res.unprocessableEntity(error))

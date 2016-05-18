@@ -1,6 +1,7 @@
 "use strict";
 var ValidationError = require('../../../api/lib/exceptions/ValidationError');
 var model = require('../../../api/models/Centres');
+var Promise = require('bluebird');
 
 describe('UNIT CentreModel', () => {
   describe('getByName', () => {
@@ -137,51 +138,98 @@ describe('UNIT CentreModel', () => {
 
   });
 
-  describe('publishCentreUpdates', () => {
-    var populate;
+  describe('publishUpdateAll / publishUpdateOne', () => {
+    beforeEach(() => {
+      sinon.stub(Centres, 'publishUpdate');
+      sinon.stub(Centres, 'findReconciled').returns(Promise.resolve(
+        [
+          {
+            id: 123,
+            toJSON: () => {
+              return {id: 123}
+            }
+          }
+        ]
+      ));
+    });
+
+    afterEach(() => {
+      Centres.findReconciled.restore();
+      Centres.publishUpdate.restore();
+    });
+
+    describe('publishUpdateAll', () => {
+      it('Should run findReconciled with no args', () => {
+        Centres.publishUpdateAll();
+        return expect(Centres.findReconciled).to.be.calledWith();
+      });
+
+      it('Should publish the update', () => {
+        Centres.publishUpdateAll();
+        return expect(Centres.publishUpdate).to.be.calledWith(123, {id: 123});
+      });
+    });
+
+    describe('publishUpdateOne', () => {
+      it('Should find a centre given an id', () => {
+        Centres.publishUpdateOne(12);
+        return expect(Centres.findReconciled).to.be.calledWith({id: 12});
+      });
+
+      it('Should find a centre given a centre', () => {
+        Centres.publishUpdateOne({id: 12});
+        return expect(Centres.findReconciled).to.be.calledWith({id: 12});
+      });
+
+      it('Should publish the update', () => {
+        Centres.publishUpdateOne(12);
+        return expect(Centres.publishUpdate).to.be.calledWith(123, {id: 123});
+      });
+    });
+  });
+
+  describe('findReconciled', () => {
+    var populate, map;
     var dummyMovement = [{id: 1}, {id: 2}, {id: 3}];
     var dummyPrebooking = [{id: 4}, {id: 5}, {id: 6}];
     var dummyContingency = [{id: 7}, {id: 8}, {id: 9}];
 
     beforeEach(() => {
       populate = sinon.stub().returnsThis();
-      let toPromise = sinon.stub().returnsThis();
+      map = sinon.stub().returnsThis();
       sinon.stub(Centres, 'find').returns({
         populate: populate,
         then: sinon.stub().resolves(true),
-        map: sinon.stub().resolves(true),
-        toPromise: toPromise
+        map: map,
+        toPromise: sinon.stub().returnsThis()
       });
     });
 
     afterEach(() => Centres.find.restore());
 
-    it('should eventually resolve with the prebookings', () =>
-      expect(model.publishCentreUpdates(dummyPrebooking)).to.eventually.eql(dummyPrebooking)
-    );
-
     it('Should populate female_prebooking', () =>
-      model.publishCentreUpdates()
+      model.findReconciled()
         .then(() => expect(populate).to.be.calledWith('female_prebooking'))
     );
 
     it('Should populate male_prebooking', () =>
-      model.publishCentreUpdates()
+      model.findReconciled()
         .then(() => expect(populate).to.be.calledWith('male_prebooking'))
     );
 
     it('Should populate female_contingency', () =>
-      model.publishCentreUpdates()
+      model.findReconciled()
         .then(() => expect(populate).to.be.calledWith('female_contingency'))
     );
 
     it('Should populate male_contingency', () =>
-      model.publishCentreUpdates()
+      model.findReconciled()
         .then(() => expect(populate).to.be.calledWith('male_contingency'))
     );
 
-    it('should eventually resolve with the movements', () =>
-      expect(model.publishCentreUpdates(dummyMovement)).to.eventually.eql(dummyMovement)
+    it('Should perform reconciliation', () =>
+      model.findReconciled()
+        .then(() => expect(map).to.be.calledWith(BedCountService.performConfiguredReconciliation))
     );
   });
 });

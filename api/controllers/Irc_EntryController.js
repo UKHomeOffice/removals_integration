@@ -3,7 +3,6 @@
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');
-var BedCountService = require('../services/BedCountService');
 
 const updateDetaineeModel = (detainee, newDetaineeProperties) => {
   detainee.timestamp = newDetaineeProperties.timestamp;
@@ -54,14 +53,8 @@ let createOrUpdateDetainee = (detaineeProperties) =>
   });
 
 let processEventDetainee = (request_body) =>
-  Centres.findOne({ name: request_body.centre })
+  Centres.findOne({name: request_body.centre})
     .then((centre) => createOrUpdateDetainee(generateDetainee(centre, request_body)));
-
-let publishCentreUpdates = (centre) =>
-  Centres.findOne(centre)
-    .then(BedCountService.performConfiguredReconciliation)
-    .then((centre) => Centres.publishUpdate(centre.id, centre.toJSON()))
-    .return(centre);
 
 module.exports = {
   _config: {
@@ -102,7 +95,7 @@ module.exports = {
   heartbeatPost: function (req, res) {
     return IrcEntryHeartbeatValidatorService.validate(req.body)
       .then(this.process_heartbeat)
-      .tap((centre) => Centres.publishCentreUpdates(centre.id))
+      .tap((centre) => Centres.publishUpdateOne(centre))
       .then(res.ok)
       .catch(ValidationError, (error) => {
         res.badRequest(error.message);
@@ -116,16 +109,16 @@ module.exports = {
     switch (request_body.operation) {
     case Event.OPERATION_INTER_SITE_TRANSFER:
       return processEventDetainee(request_body)
-        .then((detainee) => this.handleInterSiteTransfer(detainee, request_body));
+          .then((detainee) => this.handleInterSiteTransfer(detainee, request_body));
     case Event.OPERATION_UPDATE:
       return processEventDetainee(request_body)
-        .tap((detainee) => publishCentreUpdates(detainee.centre.id));
+          .tap((detainee) => Centres.publishUpdateOne(detainee.centre));
     case Event.OPERATION_CHECK_IN:
     case Event.OPERATION_CHECK_OUT:
     case Event.OPERATION_REINSTATEMENT:
       return processEventDetainee(request_body)
-        .then((detainee) => Event.create(generateStandardEvent(detainee, request_body)))
-        .tap((event) => publishCentreUpdates(event.centre));
+          .then((detainee) => Event.create(generateStandardEvent(detainee, request_body)))
+          .tap((event) => Centres.publishUpdateOne(event.centre));
     default:
       throw new ValidationError('Unknown operation');
     }
@@ -138,17 +131,16 @@ module.exports = {
       timestamp: request_body.timestamp,
       operation: Event.OPERATION_CHECK_OUT
     })
-    .then(() => this.process_event({
-      centre: request_body.centre_to,
-      person_id: request_body.person_id,
-      timestamp: request_body.timestamp,
-      nationality: detainee.nationality,
-      gender: detainee.gender,
-      cid_id: detainee.cid_id,
-      operation: Event.OPERATION_CHECK_IN
-    }));
+      .then(() => this.process_event({
+        centre: request_body.centre_to,
+        person_id: request_body.person_id,
+        timestamp: request_body.timestamp,
+        nationality: detainee.nationality,
+        gender: detainee.gender,
+        cid_id: detainee.cid_id,
+        operation: Event.OPERATION_CHECK_IN
+      }));
   },
-
 
   eventPost: function (req, res) {
     return IrcEntryEventValidatorService.validate(req.body)

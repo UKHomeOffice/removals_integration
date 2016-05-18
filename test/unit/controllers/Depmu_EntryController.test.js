@@ -171,7 +171,7 @@ describe('UNIT Depmu_EntryController', () => {
       gender: 'male',
       active: true
     };
-    
+
     it('should filter movements without a populated detainee', () =>
       Movement.create(dummyMovement)
         .then(() => controller.filterPrebookingsWithNoMovementOrder(dummyPrebooking))
@@ -242,12 +242,12 @@ describe('UNIT Depmu_EntryController', () => {
         prebookingProcess: sinon.spy(controller, 'prebookingProcess'),
         updateReceivedDate: sinon.spy(controller, 'updateReceivedDate')
       };
-      sinon.stub(Centres, 'publishCentreUpdates').resolves();
+      sinon.stub(Centres, 'publishUpdateAll').resolves();
     });
 
     afterEach(() => {
       global.DepmuEntryPrebookingValidatorService = validationservice;
-      Centres.publishCentreUpdates.restore();
+      Centres.publishUpdateAll.restore();
       context.formatPrebooking.restore();
       context.populatePrebookingWithContingency.restore();
       context.populatePrebookingWithCentreAndGender.restore();
