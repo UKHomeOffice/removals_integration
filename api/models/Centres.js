@@ -100,12 +100,15 @@ const model = {
         }
         return count;
       }, 0);
-      const unreconciledMovementCounter = (gender, direction) => this.unreconciledMovements.reduce((count, movement) => {
+      const unreconciledMovementCounter = (gender, direction) => this.unreconciledMovements.reduce((poos, movement) => {
         if (movement.gender === gender && movement.direction === direction) {
-          return count + 1;
+          poos.push({id: movement.id, cid_id:movement.cid_id});
+          return poos;
         }
-        return count;
-      }, 0);
+        return poos;
+      }, []);
+      const slimifyPrebookings = prebookings =>
+        prebookings.map(pb => ({id: pb.id, cid_id: pb.cid_id, requester: pb.task_force}));
 
       const response = {
         type: 'centre',
@@ -123,18 +126,18 @@ const model = {
         response.attributes[gender + 'Capacity'] = this[gender + '_capacity'];
         response.attributes[gender + 'InUse'] = this[gender + '_in_use'];
         response.attributes[gender + 'OutOfCommission'] = this[gender + '_out_of_commission'];
-        response.attributes[gender + 'Prebooking'] = this[gender + '_prebooking'].length;
-        response.attributes[gender + 'Contingency'] = this[gender + '_contingency'].length;
+        response.attributes[gender + 'Prebooking'] = slimifyPrebookings(this[gender + '_prebooking']);
+        response.attributes[gender + 'Contingency'] = slimifyPrebookings(this[gender + '_contingency']);
         response.attributes[gender + 'Availability'] = response.attributes[gender + 'Capacity'];
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'InUse'];
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'OutOfCommission'];
-        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Prebooking'];
-        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Contingency'];
+        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Prebooking'].length;
+        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Contingency'].length;
         if (this.reconciled) {
           response.attributes[gender + 'UnexpectedIn'] = unreconciledEventCounter(gender, ['check in']);
-          response.attributes[gender + 'ScheduledIn'] = unreconciledMovementCounter(gender, 'in');
-          response.attributes[gender + 'ScheduledOut'] = unreconciledMovementCounter(gender, 'out');
-          response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ScheduledIn'];
+          response.attributes[gender + 'ExpectedIn'] = unreconciledMovementCounter(gender, 'in');
+          response.attributes[gender + 'ExpectedOut'] = unreconciledMovementCounter(gender, 'out');
+          response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ExpectedIn'];
         }
       });
       return response;
