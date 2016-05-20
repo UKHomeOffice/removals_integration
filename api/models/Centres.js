@@ -132,9 +132,9 @@ const model = {
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Contingency'];
         if (this.reconciled) {
           response.attributes[gender + 'UnexpectedIn'] = unreconciledEventCounter(gender, ['check in']);
-          response.attributes[gender + 'ScheduledIn'] = unreconciledMovementCounter(gender, 'in');
-          response.attributes[gender + 'ScheduledOut'] = unreconciledMovementCounter(gender, 'out');
-          response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ScheduledIn'];
+          response.attributes[gender + 'ExpectedIn'] = unreconciledMovementCounter(gender, 'in');
+          response.attributes[gender + 'ExpectedOut'] = unreconciledMovementCounter(gender, 'out');
+          response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ExpectedIn'];
         }
       });
       return response;
