@@ -15,7 +15,7 @@ module.exports = {
     populate: true,
     limit: 0
   },
-  summary: function (req, res) {
+  summary: (req, res) => {
     res.ok = _.wrap(res.ok, (func, matchingRecords) =>
       Promise.all(
         _.map(_.groupBy(matchingRecords, 'centre'), (records, centre) =>

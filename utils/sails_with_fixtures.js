@@ -19,6 +19,7 @@ Sails.lift(
       'detainee',
       'event',
       'movement',
+      'heartbeat',
       'prebooking'
     ], function (err) {
       sails.log('up');

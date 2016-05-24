@@ -33,10 +33,6 @@ const model = {
       required: true
     },
     toJSON: function () {
-      this.centre = this.centre.toJSON();
-      this.centre.name = this.centre.attributes.name;
-      delete this.centre.attributes;
-      delete this.centre.type;
       return {
         id: this.id.toString(),
         links: this.modelLinks('heartbeat', reverseRouteService),
