@@ -5,6 +5,9 @@ var ValidationError = require('../lib/exceptions/ValidationError');
 var BedCountService = require('../services/BedCountService');
 var LinkingModels = require('sails-linking-models');
 
+let slimifyPrebookings = prebookings =>
+  prebookings.map(pb => ({id: pb.id, cid_id: pb.cid_id, requester: pb.task_force}));
+
 const model = {
   schema: true,
   autoCreatedAt: true,
@@ -94,21 +97,18 @@ const model = {
       via: 'centre'
     },
     toJSON: function () {
-      const unreconciledEventCounter = (gender, operations) => this.unreconciledEvents.reduce((count, event) => {
-        if (event.detainee.gender === gender && operations.indexOf(event.operation) >= 0) {
-          return count + 1;
+      const unreconciledEventCounter = (gender, operations) => this.unreconciledEvents.reduce((events, e) => {
+        if (e.detainee.gender === gender && operations.indexOf(e.operation) >= 0) {
+          events.push({id: e.id, cid_id: e.cid_id});
         }
-        return count;
-      }, 0);
-      const unreconciledMovementCounter = (gender, direction) => this.unreconciledMovements.reduce((poos, movement) => {
-        if (movement.gender === gender && movement.direction === direction) {
-          poos.push({id: movement.id, cid_id:movement.cid_id});
-          return poos;
-        }
-        return poos;
+        return events;
       }, []);
-      const slimifyPrebookings = prebookings =>
-        prebookings.map(pb => ({id: pb.id, cid_id: pb.cid_id, requester: pb.task_force}));
+      const unreconciledMovementCounter = (gender, direction) => this.unreconciledMovements.reduce((movements, m) => {
+        if (m.gender === gender && m.direction === direction) {
+          movements.push({id: m.id, cid_id: m.cid_id});
+        }
+        return movements;
+      }, []);
 
       const response = {
         type: 'centre',
@@ -137,7 +137,7 @@ const model = {
           response.attributes[gender + 'UnexpectedIn'] = unreconciledEventCounter(gender, ['check in']);
           response.attributes[gender + 'ExpectedIn'] = unreconciledMovementCounter(gender, 'in');
           response.attributes[gender + 'ExpectedOut'] = unreconciledMovementCounter(gender, 'out');
-          response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ExpectedIn'];
+          response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ExpectedIn'].length;
         }
       });
       return response;

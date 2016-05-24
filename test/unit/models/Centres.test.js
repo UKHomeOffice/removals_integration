@@ -2,6 +2,7 @@
 var ValidationError = require('../../../api/lib/exceptions/ValidationError');
 var model = require('../../../api/models/Centres');
 var Promise = require('bluebird');
+var _ = require('lodash');
 
 describe('UNIT CentreModel', () => {
   describe('getByName', () => {
@@ -30,7 +31,14 @@ describe('UNIT CentreModel', () => {
   });
 
   describe('attributes.toJSON', () => {
-    var dummy_model = {
+    const checkAndRemove = (expected, actual) => property => {
+      const prop = _.get(actual, property);
+      expect(expected).to.have.deep.property(property)
+        .that.is.an('array').with.lengthOf(prop.length);
+      _.unset(expected, property);
+      _.unset(actual, property);
+    };
+    const dummy_model = {
       updatedAt: 'f',
       prebooking_received: null,
       cid_received_date: null,
@@ -64,12 +72,12 @@ describe('UNIT CentreModel', () => {
           femaleCapacity: that.female_capacity,
           femaleInUse: that.female_in_use,
           femaleOutOfCommission: that.female_out_of_commission,
-          malePrebooking: that.male_prebooking.length,
-          femalePrebooking: that.female_prebooking.length,
-          maleContingency: that.male_contingency.length,
-          femaleContingency: that.female_contingency.length,
+          malePrebooking: that.male_prebooking,
+          femalePrebooking: that.female_prebooking,
+          maleContingency: that.male_contingency,
+          femaleContingency: that.female_contingency,
           maleAvailability: 0,
-          femaleAvailability: -5,
+          femaleAvailability: -5
         },
         id: that.id.toString(),
         type: "centre",
@@ -77,7 +85,14 @@ describe('UNIT CentreModel', () => {
           'links'
         ]
       };
-      return expect(model.attributes.toJSON.call(that)).to.eql(expected);
+      const actual = model.attributes.toJSON.call(that);
+      [
+        'attributes.malePrebooking',
+        'attributes.maleContingency',
+        'attributes.femalePrebooking',
+        'attributes.femaleContingency'
+      ].forEach(checkAndRemove(expected, actual));
+      expect(actual).to.eql(expected);
     });
 
     it('should match the expected output when reconciled is set', () => {
@@ -102,16 +117,16 @@ describe('UNIT CentreModel', () => {
           femaleOutOfCommission: that.female_out_of_commission,
           maleAvailability: 0,
           femaleAvailability: -5,
-          femaleUnexpectedIn: 0,
-          femaleExpectedIn: 0,
-          femaleExpectedOut: 0,
-          maleUnexpectedIn: 0,
-          maleExpectedIn: 0,
-          maleExpectedOut: 0,
-          malePrebooking: that.male_prebooking.length,
-          femalePrebooking: that.female_prebooking.length,
-          maleContingency: that.male_contingency.length,
-          femaleContingency: that.female_contingency.length
+          femaleUnexpectedIn: [],
+          femaleExpectedIn: [],
+          femaleExpectedOut: [],
+          maleUnexpectedIn: [],
+          maleExpectedIn: [],
+          maleExpectedOut: [],
+          malePrebooking: that.male_prebooking,
+          femalePrebooking: that.female_prebooking,
+          maleContingency: that.male_contingency,
+          femaleContingency: that.female_contingency
         },
         id: that.id.toString(),
         type: "centre",
@@ -119,7 +134,14 @@ describe('UNIT CentreModel', () => {
           'links'
         ]
       };
-      return expect(model.attributes.toJSON.call(that)).to.eql(expected);
+      const actual = model.attributes.toJSON.call(that);
+      [
+        'attributes.malePrebooking',
+        'attributes.maleContingency',
+        'attributes.femalePrebooking',
+        'attributes.femaleContingency'
+      ].forEach(checkAndRemove(expected, actual));
+      expect(actual).to.eql(expected);
     });
 
     it('Should have properties set for male and female capacity and occupancy', () => {
@@ -130,10 +152,10 @@ describe('UNIT CentreModel', () => {
       expect(subject).to.have.a.property('femaleCapacity', 12);
       expect(subject).to.have.a.property('maleInUse', 4);
       expect(subject).to.have.a.property('femaleInUse', 4);
-      expect(subject).to.have.a.property('malePrebooking', 1);
-      expect(subject).to.have.a.property('femalePrebooking', 2);
-      expect(subject).to.have.a.property('maleContingency', 1);
-      expect(subject).to.have.a.property('femaleContingency', 2);
+      expect(subject).to.have.a.property('malePrebooking').that.has.lengthOf(1);
+      expect(subject).to.have.a.property('femalePrebooking').that.has.lengthOf(2);
+      expect(subject).to.have.a.property('maleContingency').that.has.lengthOf(1);
+      expect(subject).to.have.a.property('femaleContingency').that.has.lengthOf(2);
     });
 
   });
