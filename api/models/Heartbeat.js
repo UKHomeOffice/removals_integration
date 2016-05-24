@@ -6,7 +6,7 @@ var ModelHelpers = require('../lib/ModelHelpers');
 const model = {
   schema: true,
   autoCreatedAt: true,
-  autoUpdatedAt: true,
+  autoUpdatedAt: false,
   attributes: {
     centre: {
       model: "centres",
@@ -32,6 +32,24 @@ const model = {
       defaultsTo: 0,
       required: true
     },
+    toJSON: function () {
+      this.centre = this.centre.toJSON();
+      this.centre.name = this.centre.attributes.name;
+      delete this.centre.attributes;
+      delete this.centre.type;
+      return {
+        id: this.id.toString(),
+        links: this.modelLinks('heartbeat', reverseRouteService),
+        attributes: {
+          centre: this.centre,
+          timestamp: this.createdAt,
+          maleInUse: this.male_in_use,
+          femaleInUse: this.female_in_use,
+          maleOutOfCommission: this.male_out_of_commission,
+          femaleOutOfCommission: this.female_out_of_commission,
+        }
+      };
+    }
   }
 };
 
