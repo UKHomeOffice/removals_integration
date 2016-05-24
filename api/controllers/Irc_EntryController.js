@@ -90,7 +90,14 @@ module.exports = {
           throw new ValidationError("Invalid centre");
         }
         return centres[0];
-      }),
+      })
+      .tap(centre => Heartbeat.create({
+        centre: centre.id,
+        male_in_use: request_body.male_occupied,
+        female_in_use: request_body.female_occupied,
+        male_out_of_commission: request_body.male_outofcommission,
+        female_out_of_commission: request_body.female_outofcommission
+      })),
 
   heartbeatPost: function (req, res) {
     return IrcEntryHeartbeatValidatorService.validate(req.body)
@@ -107,20 +114,20 @@ module.exports = {
 
   process_event: function (request_body) {
     switch (request_body.operation) {
-    case Event.OPERATION_INTER_SITE_TRANSFER:
-      return processEventDetainee(request_body)
+      case Event.OPERATION_INTER_SITE_TRANSFER:
+        return processEventDetainee(request_body)
           .then((detainee) => this.handleInterSiteTransfer(detainee, request_body));
-    case Event.OPERATION_UPDATE:
-      return processEventDetainee(request_body)
+      case Event.OPERATION_UPDATE:
+        return processEventDetainee(request_body)
           .tap((detainee) => Centres.publishUpdateOne(detainee.centre));
-    case Event.OPERATION_CHECK_IN:
-    case Event.OPERATION_CHECK_OUT:
-    case Event.OPERATION_REINSTATEMENT:
-      return processEventDetainee(request_body)
+      case Event.OPERATION_CHECK_IN:
+      case Event.OPERATION_CHECK_OUT:
+      case Event.OPERATION_REINSTATEMENT:
+        return processEventDetainee(request_body)
           .then((detainee) => Event.create(generateStandardEvent(detainee, request_body)))
           .tap((event) => Centres.publishUpdateOne(event.centre));
-    default:
-      throw new ValidationError('Unknown operation');
+      default:
+        throw new ValidationError('Unknown operation');
     }
   },
 

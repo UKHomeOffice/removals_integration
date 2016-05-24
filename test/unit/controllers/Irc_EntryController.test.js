@@ -611,15 +611,19 @@ describe('UNIT Irc_EntryController', () => {
   });
 
   describe('process_heartbeat', () => {
-    let centre, fake_request, output, original_centre, clock;
+    let centre, fake_request, output, clock;
     beforeEach(() => {
       clock = sinon.useFakeTimers();
-      original_centre = global.Centres;
       centre = {
         id: 123,
-        toJSON: () => 'json'
+        toJSON: () => 'json',
+        male_occupied: 112,
+        female_occupied: 999,
+        male_outofcommission: 123,
+        female_outofcommission: 99
       };
       sinon.stub(Centres, 'update').resolves([centre]);
+      sinon.stub(Heartbeat, 'create').resolves(true);
       fake_request = {
         centre: 'foobar',
         male_occupied: 112,
@@ -632,8 +636,8 @@ describe('UNIT Irc_EntryController', () => {
 
     afterEach(() => {
       clock.restore();
-      global.Centres = original_centre;
       Centres.update.restore();
+      Heartbeat.create.restore();
     });
 
     it('should update the centre', () =>
@@ -647,6 +651,16 @@ describe('UNIT Irc_EntryController', () => {
           female_out_of_commission: fake_request.female_outofcommission
         }
       )
+    );
+
+    it('should create a heartbeat', () =>
+      output.tap(() => expect(global.Heartbeat.create).to.be.calledWith({
+        centre: 123,
+        male_in_use: fake_request.male_occupied,
+        female_in_use: fake_request.female_occupied,
+        male_out_of_commission: fake_request.male_outofcommission,
+        female_out_of_commission: fake_request.female_outofcommission
+      }))
     );
 
     it('should return the amended centre', () =>
