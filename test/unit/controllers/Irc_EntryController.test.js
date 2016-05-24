@@ -1,4 +1,4 @@
-/* global controller */
+/* global controller Heartbeat */
 "use strict";
 var jhg = require('../../helpers/JsonHelperGenerator');
 var ValidationError = require('../../../api/lib/exceptions/ValidationError');

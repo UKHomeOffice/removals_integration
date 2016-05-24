@@ -1,4 +1,4 @@
-/* global Movement, Detainee, Event, Prebooking */
+/* global Movement, Detainee, Event, Prebooking, Heartbeat */
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');

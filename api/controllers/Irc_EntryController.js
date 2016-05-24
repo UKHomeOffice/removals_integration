@@ -1,4 +1,4 @@
-/* global IrcEntryEventValidatorService Event Detainee */
+/* global IrcEntryEventValidatorService Event Detainee Heartbeat */
 
 'use strict';
 
@@ -114,20 +114,20 @@ module.exports = {
 
   process_event: function (request_body) {
     switch (request_body.operation) {
-      case Event.OPERATION_INTER_SITE_TRANSFER:
-        return processEventDetainee(request_body)
+    case Event.OPERATION_INTER_SITE_TRANSFER:
+      return processEventDetainee(request_body)
           .then((detainee) => this.handleInterSiteTransfer(detainee, request_body));
-      case Event.OPERATION_UPDATE:
-        return processEventDetainee(request_body)
+    case Event.OPERATION_UPDATE:
+      return processEventDetainee(request_body)
           .tap((detainee) => Centres.publishUpdateOne(detainee.centre));
-      case Event.OPERATION_CHECK_IN:
-      case Event.OPERATION_CHECK_OUT:
-      case Event.OPERATION_REINSTATEMENT:
-        return processEventDetainee(request_body)
+    case Event.OPERATION_CHECK_IN:
+    case Event.OPERATION_CHECK_OUT:
+    case Event.OPERATION_REINSTATEMENT:
+      return processEventDetainee(request_body)
           .then((detainee) => Event.create(generateStandardEvent(detainee, request_body)))
           .tap((event) => Centres.publishUpdateOne(event.centre));
-      default:
-        throw new ValidationError('Unknown operation');
+    default:
+      throw new ValidationError('Unknown operation');
     }
   },
 

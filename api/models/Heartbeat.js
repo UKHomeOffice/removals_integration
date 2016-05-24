@@ -46,7 +46,7 @@ const model = {
           maleInUse: this.male_in_use,
           femaleInUse: this.female_in_use,
           maleOutOfCommission: this.male_out_of_commission,
-          femaleOutOfCommission: this.female_out_of_commission,
+          femaleOutOfCommission: this.female_out_of_commission
         }
       };
     }
