@@ -1,4 +1,4 @@
-/* global Movement, Detainee, Event, Prebooking */
+/* global Movement, Detainee, Event, Prebooking, Heartbeat */
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');
@@ -191,6 +191,7 @@ const model = {
         .then(() => Prebooking.destroy({centre: record.id}))
         .then(() => Event.destroy({centre: record.id}))
         .then(() => Detainee.destroy({centre: record.id}))
+        .then(() => Heartbeat.destroy({centre: record.id}))
         .then(() => this.publishDestroy(record.id))
     ))
       .then(() => done());

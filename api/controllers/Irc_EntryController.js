@@ -1,4 +1,4 @@
-/* global IrcEntryEventValidatorService Event Detainee */
+/* global IrcEntryEventValidatorService Event Detainee Heartbeat */
 
 'use strict';
 
@@ -90,7 +90,14 @@ module.exports = {
           throw new ValidationError("Invalid centre");
         }
         return centres[0];
-      }),
+      })
+      .tap(centre => Heartbeat.create({
+        centre: centre.id,
+        male_in_use: request_body.male_occupied,
+        female_in_use: request_body.female_occupied,
+        male_out_of_commission: request_body.male_outofcommission,
+        female_out_of_commission: request_body.female_outofcommission
+      })),
 
   heartbeatPost: function (req, res) {
     return IrcEntryHeartbeatValidatorService.validate(req.body)

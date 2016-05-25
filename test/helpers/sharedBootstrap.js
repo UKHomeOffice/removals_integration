@@ -20,6 +20,7 @@ global.initializeBarrelsFixtures = function () {
       'movement',
       'detainee',
       'event',
+      'heartbeat',
       'prebooking'
     ], function (err) {
       if (err) throw err;

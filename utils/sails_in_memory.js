@@ -48,6 +48,7 @@ Sails.lift(
       'centres',
       'detainee',
       'movement',
+      'heartbeat',
       'prebooking'
     ], function (err) {
       sails.log("database is now in sync");
