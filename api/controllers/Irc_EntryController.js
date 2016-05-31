@@ -3,6 +3,7 @@
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');
+var UnprocessableEntityError = require('../lib/exceptions/UnprocessableEntityError');
 
 const updateDetaineeModel = (detainee, newDetaineeProperties) => {
   detainee.timestamp = newDetaineeProperties.timestamp;
@@ -132,6 +133,9 @@ module.exports = {
   },
 
   handleInterSiteTransfer: function (detainee, request_body) {
+    if (detainee.gender === null) {
+      throw new UnprocessableEntityError('Cannot Inter Site Transfer an unknown Detainee');
+    }
     return this.process_event({
       centre: request_body.centre,
       person_id: request_body.person_id,
@@ -154,6 +158,10 @@ module.exports = {
       .then(this.process_event)
       .then(res.ok)
       .catch(ValidationError, error => res.badRequest(error.result.errors[0].message))
+      .catch(UnprocessableEntityError, error =>
+        res.status(error.statusCode)
+          .send(error.result)
+      )
       .catch((error) => {
         res.serverError(error.message);
       });
