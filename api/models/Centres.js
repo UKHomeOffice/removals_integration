@@ -5,6 +5,14 @@ var ValidationError = require('../lib/exceptions/ValidationError');
 var BedCountService = require('../services/BedCountService');
 var LinkingModels = require('sails-linking-models');
 
+// helpers
+const unreconciledMovementReducer = (movements, gender, direction) => movements.reduce((reduced, m) => {
+  if (m.gender === gender && m.direction === direction) {
+    reduced.push({ id: m.id, cid_id: m.cid_id });
+  }
+  return reduced;
+}, []);
+
 const model = {
   schema: true,
   autoCreatedAt: true,
@@ -107,6 +115,7 @@ const model = {
         return count;
       }, 0);
 
+
       const response = {
         type: 'centre',
         id: this.id.toString(),
@@ -132,9 +141,9 @@ const model = {
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Contingency'];
         if (this.reconciled) {
           response.attributes[gender + 'UnexpectedIn'] = unreconciledEventCounter(gender, ['check in']);
-          response.attributes[gender + 'ExpectedIn'] = unreconciledMovementCounter(gender, 'in');
-          response.attributes[gender + 'ExpectedOut'] = unreconciledMovementCounter(gender, 'out');
-          response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ExpectedIn'];
+          response.attributes[gender + 'ExpectedIn'] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'in');
+          response.attributes[gender + 'ExpectedOut'] = unreconciledMovementCounter(this.unreconciledMovements, gender, 'out');
+          response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ExpectedIn'].length;
         }
       });
       return response;
