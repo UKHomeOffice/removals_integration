@@ -108,13 +108,6 @@ const model = {
         }
         return count;
       }, 0);
-      const unreconciledMovementCounter = (gender, direction) => this.unreconciledMovements.reduce((count, movement) => {
-        if (movement.gender === gender && movement.direction === direction) {
-          return count + 1;
-        }
-        return count;
-      }, 0);
-
 
       const response = {
         type: 'centre',
@@ -142,7 +135,7 @@ const model = {
         if (this.reconciled) {
           response.attributes[gender + 'UnexpectedIn'] = unreconciledEventCounter(gender, ['check in']);
           response.attributes[gender + 'ExpectedIn'] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'in');
-          response.attributes[gender + 'ExpectedOut'] = unreconciledMovementCounter(this.unreconciledMovements, gender, 'out');
+          response.attributes[gender + 'ExpectedOut'] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'out').length;
           response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ExpectedIn'].length;
         }
       });
