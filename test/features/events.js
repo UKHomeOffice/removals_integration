@@ -278,7 +278,8 @@ describe('Check In Event', () => {
       person_id: 123,
       timestamp: (new Date()).toISOString(),
       centre: 'bigone',
-      centre_to: 'thenextcentre'
+      centre_to: 'thenextcentre',
+      reason: 'Other'
     },
 
     OPERATION_CHECK_OUT: {
@@ -304,5 +305,13 @@ describe('Check In Event', () => {
     });
   });
 
+  describe('Inter Site Transfer', () => {
+    it('should give a 422 status for unknown detainee', () => {
+      return request(sails.hooks.http.app)
+        .post('/irc_entry/event')
+        .send(exampleEvents.OPERATION_INTER_SITE_TRANSFER)
+        .expect(422)
+    });
+  });
 });
 
