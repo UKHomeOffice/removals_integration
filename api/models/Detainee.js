@@ -54,6 +54,8 @@ const model = {
       return 'male';
 
     case undefined:
+    case '':
+    case null:
       return undefined;
     }
     throw new Error('Unknown Gender');
