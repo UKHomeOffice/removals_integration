@@ -1,19 +1,99 @@
 [
   {
-    "centre": 1,
-    "gender": "male",
-    "operation": "out of commission",
-    "timestamp": "Fri Feb 26 2016 09:24:20 GMT+0000 (GMT)",
-    "bed_ref": "bed1",
+    "bed": 1,
+    "active": false,
+    "detainee": null,
+    "timestamp": "2016-04-23T18:25:43.511Z",
+    "operation": "in commission",
+    "reason": null
+  },
+  {
+    "bed": 1,
+    "detainee": 1,
+    "timestamp": "2016-05-23T18:25:43.511Z",
+    "operation": "out commission",
+    "reason": "Single Occupancy",
+    "active": true
+  },
+  {
+    "bed": 2,
+    "active": true,
+    "detainee": null,
+    "timestamp": "2016-04-23T18:25:43.511Z",
+    "operation": "out commission",
+    "reason": "Maintenance - Malicious/Accidental Damage",
+    "active": true
+  },
+  {
+    "bed": 3,
+    "active": true,
+    "detainee": null,
+    "timestamp": "2016-04-23T18:25:43.511Z",
+    "operation": "out commission",
+    "reason": "Maintenance - Health and Safety Concern"
+  },
+  {
+    "bed": 4,
+    "active": true,
+    "detainee": null,
+    "timestamp": "2016-04-23T18:25:43.511Z",
+    "operation": "out commission",
+    "reason": "Maintenance – Planned works"
+  },
+  {
+    "bed": 5,
+    "active": true,
+    "detainee": null,
+    "timestamp": "2016-04-23T18:25:43.511Z",
+    "operation": "out commission",
+    "reason": "Crime Scene"
+  },
+  {
+    "bed": 6,
+    "active": true,
+    "detainee": null,
+    "timestamp": "2016-04-23T18:25:43.511Z",
+    "operation": "out commission",
+    "reason": "Medical Isolation"
+  },
+  {
+    "bed": 7,
+    "active": true,
+    "detainee": null,
+    "timestamp": "2016-04-23T18:25:43.511Z",
+    "operation": "out commission",
     "reason": "Other"
   },
   {
-    "centre": 1,
-    "gender": "male",
-    "operation": "out of commission",
-    "timestamp": "Fri Feb 26 2016 09:24:20 GMT+0000 (GMT)",
-    "bed_ref": "bed2",
-    "reason": "Single Occupancy",
-    "detainee": 1
+    "bed": 8,
+    "active": false,
+    "detainee": null,
+    "timestamp": "2014-04-23T18:25:43.511Z",
+    "operation": "out commission",
+    "reason": "Other"
+  },
+  {
+    "bed": 8,
+    "active": false,
+    "detainee": null,
+    "timestamp": "2015-11-23T18:25:43.511Z",
+    "operation": "in commission",
+    "reason": null
+  },
+  {
+    "bed": 8,
+    "active": false,
+    "detainee": null,
+    "timestamp": "2015-11-23T18:25:44.511Z",
+    "operation": "in commission",
+    "reason": null
+  },
+  {
+    "bed": 8,
+    "active": true,
+    "detainee": null,
+    "timestamp": "2016-05-02T18:25:43.511Z",
+    "operation": "out commission",
+    "reason": "Other"
   }
 ]
