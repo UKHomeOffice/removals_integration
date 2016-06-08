@@ -21,6 +21,7 @@ Sails.lift(
       'movement',
       'heartbeat',
       'prebooking',
+      'bed',
       'bedevent'
     ], function (err) {
       sails.log('up');
