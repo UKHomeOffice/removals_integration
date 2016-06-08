@@ -3,7 +3,6 @@
 
 var DateRange = require('../lib/DateRange');
 var moment = require('moment');
-var _ = require('lodash');
 
 const fullRange = (visibilityRange, rangeFactory) =>
   DateRange.widen.apply(null, [visibilityRange, rangeFactory(visibilityRange.from), rangeFactory(visibilityRange.to)]);
@@ -12,7 +11,7 @@ let populate = (model, centreId, range) =>
   model.find({
     where: {
       centre: centreId,
-      timestamp: { '>=': range.from, '<=': range.to }
+      timestamp: {'>=': range.from, '<=': range.to}
     },
     sort: 'timestamp'
   });
@@ -50,7 +49,7 @@ const getReconciliationTester = (movementsRangeFactory, eventsRangeFactory) => (
   const directionMatches = resolveEventOperationWithMovementDirection(event.operation) === movement.direction;
   const timestampMatches = movementsRangeFactory(event.timestamp).contains(movement.timestamp) || eventsRangeFactory(movement.timestamp).contains(event.timestamp);
 
-  return cidMatches && directionMatches && timestampMatches && { event, movement };
+  return cidMatches && directionMatches && timestampMatches && {event, movement};
 };
 
 const filterUnreconciled = (centre, range) => {
@@ -63,7 +62,7 @@ const getReinstatementTester = (checkoutEventsRangeFactory) => (reinstatement, e
   const personIdMatches = reinstatement.person_id === event.person_id;
   const timestampMatches = checkoutEventsRangeFactory(reinstatement.timestamp).contains(event.timestamp);
 
-  return operationMatches && personIdMatches && timestampMatches && { reinstatement, event };
+  return operationMatches && personIdMatches && timestampMatches && {reinstatement, event};
 };
 
 const untersect = (left, right, mapper) => {
@@ -100,57 +99,12 @@ const handleReinstatements = (centre, tester) => {
   return centre;
 };
 
-const reduceBedEvent = (bedEvent) =>
-  ({
-    timestamp: bedEvent.timestamp,
-    bed_ref: bedEvent.bed_ref,
-    gender: bedEvent.gender,
-    cid_id: bedEvent.detainee ? bedEvent.detainee.cid_id : undefined,
-    reason: bedEvent.reason
-  });
-
-const initObjecWithKeys = (keys, fillValue) =>
-  _.reduce(keys, (result, key) => {
-    result[key] = fillValue;
-    return result;
-  }, {});
-
-const getBedEvents = (centre) =>
-  BedEvent.find({
-    where: {
-      centre: centre.id
-    },
-    sort: 'timestamp DESC'
-  })
-  .populate('detainee');
-
-const filterInCommission = (bedEvents) =>
-  _.chain(bedEvents)
-    .groupBy((e) => e.bed_ref)
-    .filter((events) => events[0].operation === BedEvent.OPERATION_OUT_OF_COMMISSION)
-    .values()
-    .flatten()
-    .value();
-
-const genderize = (bedEvents) => _.groupBy(bedEvents, (e) => e.gender);
-
-const reasonize = (bedEvents) => _.map(bedEvents, (genderedEvents) => _.extend(initObjecWithKeys(BedEvent.reasons, []), _.groupBy(genderedEvents, (e) => e.reason)));
-
-const singleOccupancyize = (bedEvents) => _.map(bedEvents, (genderedEvents) =>
-  _.mapValues(genderedEvents, (events, reason) =>
-    reason === BedEvent.REASON_SINGLE_OCCUPANCY ? _.groupBy(events, (e) => e.cid_id || 'Unknown') : events
-  )
-);
-
-const handleBedEvents = (centre) =>
-  getBedEvents(centre)
-    .then(filterInCommission)
-    .map(reduceBedEvent)
-    .then(genderize)
-    .then(reasonize)
-    .then(singleOccupancyize)
-    .then((bedEvents) => centre.outOfCommission = bedEvents)
-    .return(centre);
+const populateOOC = (centre) =>
+  BedEvent.getOOCByCentreGroupByGenderAndReason(centre.id)
+    .then((oocBeds) => {
+      centre.outOfCommission = oocBeds;
+      return centre;
+    });
 
 module.exports = {
   performReconciliation: (centre, visibilityRange, eventSearchDateRangeFactory, movementSearchDateRangeFactory, checkOutSearchDateRangeFactory) => {
@@ -171,7 +125,7 @@ module.exports = {
       .then(() => handleReinstatements(centre, reinstatementReconciler))
       .then(() => reconcileEvents(centre, reconciler))
       .then(() => filterUnreconciled(centre, visibilityRange))
-      .then(() => handleBedEvents(centre))
+      .then(() => populateOOC(centre))
       .return(centre);
   },
   performConfiguredReconciliation: function (centre) {
