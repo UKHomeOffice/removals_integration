@@ -1,4 +1,4 @@
-/* global IrcEntryEventValidatorService Event Detainee Heartbeat */
+/* global IrcEntryEventValidatorService Event Detainee Heartbeat  BedEvent Bed*/
 
 'use strict';
 
@@ -45,10 +45,12 @@ let createOrUpdateDetainee = (detaineeProperties) =>
     centre: detaineeProperties.centre.id
   }).then((detainee) => {
     if (!detainee) {
-      return Detainee.create(detaineeProperties).then((detainee) => getPopulatedDetainee(detainee.id));
+      return Detainee.create(detaineeProperties)
+        .then((detainee) => getPopulatedDetainee(detainee.id));
     } else if (detainee.timestamp.toISOString() <= detaineeProperties.timestamp) {
       updateDetaineeModel(detainee, detaineeProperties);
-      return detainee.save().then((detainee) => getPopulatedDetainee(detainee.id));
+      return detainee.save()
+        .then((detainee) => getPopulatedDetainee(detainee.id));
     }
     return detainee;
   });
@@ -117,31 +119,85 @@ module.exports = {
     switch (request_body.operation) {
     case Event.OPERATION_INTER_SITE_TRANSFER:
       return processEventDetainee(request_body)
-          .then((detainee) => this.handleInterSiteTransfer(detainee, request_body));
+        .then((detainee) => this.handleInterSiteTransfer(detainee, request_body));
     case Event.OPERATION_UPDATE:
       return processEventDetainee(request_body)
-          .tap((detainee) => Centres.publishUpdateOne(detainee.centre));
+        .tap((detainee) => Centres.publishUpdateOne(detainee.centre));
     case Event.OPERATION_CHECK_IN:
     case Event.OPERATION_CHECK_OUT:
     case Event.OPERATION_REINSTATEMENT:
       return processEventDetainee(request_body)
-          .then((detainee) => Event.create(generateStandardEvent(detainee, request_body)))
-          .tap((event) => Centres.publishUpdateOne(event.centre));
+        .then((detainee) => Event.create(generateStandardEvent(detainee, request_body)))
+        .tap((event) => Centres.publishUpdateOne(event.centre));
+    case BedEvent.OPERATION_OUT_OF_COMMISSION:
+    case BedEvent.OPERATION_IN_COMMISSION:
+      return this.processBedEvent(request_body)
+        .tap((event) => Centres.publishUpdateOne(event.centre_id));
     default:
       throw new ValidationError('Unknown operation');
     }
+  },
+
+  findAndPopulateCentre: event =>
+    Centres.getByName(event.centre)
+      .then((result) => _.merge(event, {centre_id: result.id})),
+
+  findAndPopulateDetainee: (event) =>
+    Detainee.getDetaineeByPersonIdAndCentre(event.single_occupancy_person_id, event.centre_id)
+      .then((result) => _.merge(event, {detainee: result})),
+
+  formatAndPopulateGender: (event) =>
+    _.merge(event, {gender: Bed.normalizeGender(event.gender)}),
+
+  findOrCreateAndPopulateBed: (event) =>
+    Bed.findOrCreate(
+      {bed_ref: event.bed_ref, centre: event.centre_id},
+      {
+        centre: event.centre_id,
+        bed_ref: event.bed_ref,
+        gender: event.gender
+      })
+      .then((bed) => _.merge(event, {bed_id: bed.id})),
+
+  findAndPopulateActiveStatus: (event) =>
+    BedEvent.findOne({bed: event.bed_id, timestamp: {'>=': event.timestamp}})
+      .then((result) =>
+        _.merge(event, {active: _.isUndefined(result)})),
+
+  reconcilePreviousBedEvents: (event) =>
+  event.active && BedEvent.deactivatePastBedEvents(event.bed_id, event.timestamp),
+
+  createBedEvent: (event) =>
+    BedEvent.create({
+      bed: event.bed_id,
+      active: event.active,
+      detainee: event.detainee,
+      timestamp: event.timestamp,
+      operation: event.operation,
+      reason: event.reason
+    }),
+
+  processBedEvent: function (event) {
+    return this.findAndPopulateCentre(event)
+      .then(this.findAndPopulateDetainee)
+      .then(this.formatAndPopulateGender)
+      .then(this.findOrCreateAndPopulateBed)
+      .then(this.findAndPopulateActiveStatus)
+      .tap(this.reconcilePreviousBedEvents)
+      .tap(this.createBedEvent);
   },
 
   handleInterSiteTransfer: function (detainee, request_body) {
     if (detainee.gender === null) {
       throw new UnprocessableEntityError('Cannot Inter Site Transfer an unknown Detainee');
     }
-    return this.process_event({
-      centre: request_body.centre,
-      person_id: request_body.person_id,
-      timestamp: request_body.timestamp,
-      operation: Event.OPERATION_CHECK_OUT
-    })
+    return this.process_event(
+      {
+        centre: request_body.centre,
+        person_id: request_body.person_id,
+        timestamp: request_body.timestamp,
+        operation: Event.OPERATION_CHECK_OUT
+      })
       .then(() => this.process_event({
         centre: request_body.centre_to,
         person_id: request_body.person_id,
