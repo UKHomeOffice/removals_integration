@@ -6,6 +6,25 @@ describe('Model Helpers', () => {
     helpers.mixin(model);
   });
 
+  describe('normalizeGender', () => {
+    var gender;
+
+    it('should return male on passing m', () => {
+      gender = 'm';
+      expect(model.normalizeGender(gender)).to.eql('male');
+    });
+
+    it('should return male on passing f', () => {
+      gender = 'f';
+      expect(model.normalizeGender(gender)).to.eql('female');
+    });
+
+    it('should return null on passing other', () => {
+      gender = 'example';
+      expect(model.normalizeGender(gender)).to.eql(null);
+    });
+  });
+
   describe('findAndUpdateOrCreate', () => {
     beforeEach(() => {
       model.update = sinon.stub().resolves(['foba']);
