@@ -1,10 +1,11 @@
+/* global BedEvent */
 'use strict';
 
 var LinkingModels = require('sails-linking-models');
 var ModelHelpers = require('../lib/ModelHelpers');
 
 const operations = {
-  OPERATION_OUT_OF_COMMISSION: 'out of commission',
+  OPERATION_OUT_OF_COMMISSION: 'out commission',
   OPERATION_IN_COMMISSION: 'in commission'
 };
 
@@ -19,11 +20,22 @@ const reasons = {
 };
 
 const model = {
+  autoCreatedAt: true,
+  autoUpdatedAt: true,
   reasons: reasons,
   schema: true,
   attributes: {
-    centre: {
-      model: "centres",
+    bed: {
+      model: "bed",
+      required: true,
+      defaultsTo: null
+    },
+    detainee: {
+      model: "detainee",
+      required: false
+    },
+    timestamp: {
+      type: 'datetime',
       required: true
     },
     operation: {
@@ -31,29 +43,48 @@ const model = {
       required: true,
       enum: Object.keys(operations).map((k) => operations[k])
     },
-    timestamp: {
-      type: 'datetime',
-      required: true
-    },
-    bed_ref: {
-      type: 'string',
-      required: true
-    },
     reason: {
       type: 'string',
       required: false,
+      defaultsTo: null,
       enum: Object.keys(reasons).map((k) => reasons[k])
     },
-    gender: {
-      type: 'string',
-      enum: ['male', 'female'],
-      required: false
-    },
-    detainee: {
-      model: "detainee",
-      required: false
+    active: {
+      type: 'boolean',
+      required: true
     }
-  }
+  },
+
+  getOOCByCentreGroupByGenderAndReason: (centreId) =>
+    BedEvent.getCurrentOOCByCentre(centreId)
+      .then(BedEvent.groupByGender)
+      .then(BedEvent.groupAndCountByReason),
+
+  getCurrentOOCByCentre: (centreId) =>
+    BedEvent.find({
+      where: {
+        active: true,
+        operation: operations.OPERATION_OUT_OF_COMMISSION
+      }
+    })
+    .populate('bed', {
+      where: {
+        centre: centreId
+      }, select: ['gender']
+    })
+    .toPromise()
+    .filter((event) => !_.isEmpty(event.bed)),
+
+  groupByGender: (events) =>
+    _.groupBy(events, (e) => e.bed.gender),
+
+  groupAndCountByReason: (events) =>
+    _.mapValues(events, (value) =>
+      _.countBy(value, "reason")
+    ),
+
+  deactivatePastBedEvents: (bid, timestamp) =>
+    BedEvent.update({bed: bid, timestamp: {'<=': timestamp}}, {active: false})
 };
 
 Object.assign(model, operations, reasons);
