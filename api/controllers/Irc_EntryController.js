@@ -78,29 +78,28 @@ module.exports = {
   index: (req, res) => res.ok,
 
   process_heartbeat: (request_body) =>
-    Centres.update(
-      {
-        name: request_body.centre
-      }, {
-        heartbeat_received: new Date(),
-        male_in_use: request_body.male_occupied,
-        female_in_use: request_body.female_occupied,
-        male_out_of_commission: request_body.male_outofcommission,
-        female_out_of_commission: request_body.female_outofcommission
-      })
-      .then(centres => {
-        if (centres.length !== 1) {
-          throw new ValidationError("Invalid centre");
-        }
-        return centres[0];
-      })
-      .tap(centre => Heartbeat.create({
-        centre: centre.id,
-        male_in_use: request_body.male_occupied,
-        female_in_use: request_body.female_occupied,
-        male_out_of_commission: request_body.male_outofcommission,
-        female_out_of_commission: request_body.female_outofcommission
-      })),
+    Centres.update({
+      name: request_body.centre
+    }, {
+      heartbeat_received: new Date(),
+      male_in_use: request_body.male_occupied,
+      female_in_use: request_body.female_occupied,
+      male_out_of_commission: request_body.male_outofcommission,
+      female_out_of_commission: request_body.female_outofcommission
+    })
+    .then(centres => {
+      if (centres.length !== 1) {
+        throw new ValidationError("Invalid centre");
+      }
+      return centres[0];
+    })
+    .tap(centre => Heartbeat.create({
+      centre: centre.id,
+      male_in_use: request_body.male_occupied,
+      female_in_use: request_body.female_occupied,
+      male_out_of_commission: request_body.male_outofcommission,
+      female_out_of_commission: request_body.female_outofcommission
+    })),
 
   heartbeatPost: function (req, res) {
     return IrcEntryHeartbeatValidatorService.validate(req.body)
@@ -140,73 +139,75 @@ module.exports = {
 
   findAndPopulateCentre: event =>
     Centres.getByName(event.centre)
-      .then((result) => _.merge(event, {centre_id: result.id})),
+      .then((result) => _.assign(event, {centre_id: result.id})),
 
-  findAndPopulateDetainee: (event) =>
-    Detainee.getDetaineeByPersonIdAndCentre(event.single_occupancy_person_id, event.centre_id)
-      .then((result) => _.merge(event, {detainee: result})),
+  findAndPopulateDetaineeInBedEvent: (event) => {
+    let eventWithDetainee;
+    if (_.isNull(event.single_occupancy_person_id) || _.isUndefined(event.single_occupancy_person_id)) {
+      eventWithDetainee = Promise.resolve(_.assign(event, {detainee: null}));
+    } else {
+      eventWithDetainee = createOrUpdateDetainee({
+        person_id: event.single_occupancy_person_id,
+        centre: {id: event.centre_id},
+        timestamp: event.timestamp
+      })
+        .then((result) =>
+          _.assign(event, {detainee: result.id}));
+    }
+    return eventWithDetainee;
+  },
 
   formatAndPopulateGender: (event) =>
-    _.merge(event, {gender: Bed.normalizeGender(event.gender)}),
+    _.assign(event, {gender: Bed.normalizeGender(event.gender)}),
 
   findOrCreateAndPopulateBed: (event) =>
-    Bed.findOrCreate(
-      {bed_ref: event.bed_ref, centre: event.centre_id},
-      {
-        centre: event.centre_id,
-        bed_ref: event.bed_ref,
-        gender: event.gender
-      })
-      .then((bed) => _.merge(event, {bed_id: bed.id})),
+    Bed.findOrCreate({
+      bed_ref: event.bed_ref,
+      centre: event.centre_id
+    }, {
+      centre: event.centre_id,
+      bed_ref: event.bed_ref,
+      gender: event.gender
+    })
+    .then((bed) => _.assign(event, {bed: bed.id})),
 
   findAndPopulateActiveStatus: (event) =>
-    BedEvent.findOne({bed: event.bed_id, timestamp: {'>=': event.timestamp}})
+    BedEvent.findOne({bed: event.bed, timestamp: {'>=': event.timestamp}})
       .then((result) =>
-        _.merge(event, {active: _.isUndefined(result)})),
+        _.assign(event, {active: _.isUndefined(result)})),
 
   reconcilePreviousBedEvents: (event) =>
-  event.active && BedEvent.deactivatePastBedEvents(event.bed_id, event.timestamp),
-
-  createBedEvent: (event) =>
-    BedEvent.create({
-      bed: event.bed_id,
-      active: event.active,
-      detainee: event.detainee,
-      timestamp: event.timestamp,
-      operation: event.operation,
-      reason: event.reason
-    }),
+    event.active && BedEvent.deactivatePastBedEvents(event.bed, event.timestamp),
 
   processBedEvent: function (event) {
     return this.findAndPopulateCentre(event)
-      .then(this.findAndPopulateDetainee)
+      .then(this.findAndPopulateDetaineeInBedEvent)
       .then(this.formatAndPopulateGender)
       .then(this.findOrCreateAndPopulateBed)
       .then(this.findAndPopulateActiveStatus)
       .tap(this.reconcilePreviousBedEvents)
-      .tap(this.createBedEvent);
+      .tap((event) => BedEvent.create(event));
   },
 
   handleInterSiteTransfer: function (detainee, request_body) {
     if (detainee.gender === null) {
       throw new UnprocessableEntityError('Cannot Inter Site Transfer an unknown Detainee');
     }
-    return this.process_event(
-      {
-        centre: request_body.centre,
-        person_id: request_body.person_id,
-        timestamp: request_body.timestamp,
-        operation: Event.OPERATION_CHECK_OUT
-      })
-      .then(() => this.process_event({
-        centre: request_body.centre_to,
-        person_id: request_body.person_id,
-        timestamp: request_body.timestamp,
-        nationality: detainee.nationality,
-        gender: detainee.gender,
-        cid_id: detainee.cid_id,
-        operation: Event.OPERATION_CHECK_IN
-      }));
+    return this.process_event({
+      centre: request_body.centre,
+      person_id: request_body.person_id,
+      timestamp: request_body.timestamp,
+      operation: Event.OPERATION_CHECK_OUT
+    })
+    .then(() => this.process_event({
+      centre: request_body.centre_to,
+      person_id: request_body.person_id,
+      timestamp: request_body.timestamp,
+      nationality: detainee.nationality,
+      gender: detainee.gender,
+      cid_id: detainee.cid_id,
+      operation: Event.OPERATION_CHECK_IN
+    }));
   },
 
   eventPost: function (req, res) {

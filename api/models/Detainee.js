@@ -1,9 +1,8 @@
-/* global Detainee*/
+/* global*/
 'use strict';
 
 var LinkingModels = require('sails-linking-models');
 var ModelHelpers = require('../lib/ModelHelpers');
-var ValidationError = require('../lib/exceptions/ValidationError');
 
 var getPid = (entity) => `${entity.centre.id}_${entity.person_id}`;
 

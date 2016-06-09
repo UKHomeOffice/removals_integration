@@ -197,7 +197,7 @@ describe('INTEGRATION Irc_EntryController', () => {
       let request_body, context;
 
       beforeEach(() => {
-        context = {processBedEvent: sinon.stub(controller, 'processBedEvent').resolves({centre: 1})};
+        context = {processBedEvent: sinon.stub(controller, 'processBedEvent').resolves({centre_id: 1})};
         sinon.stub(Centres, 'publishUpdateOne').resolves();
       });
 
@@ -591,35 +591,36 @@ describe('UNIT Irc_EntryController', () => {
 
       context = {
         findAndPopulateCentre: sinon.spy(controller, 'findAndPopulateCentre'),
-        findAndPopulateDetainee: sinon.spy(controller, 'findAndPopulateDetainee'),
+        findAndPopulateDetaineeInBedEvent: sinon.spy(controller, 'findAndPopulateDetaineeInBedEvent'),
         formatAndPopulateGender: sinon.spy(controller, 'formatAndPopulateGender'),
         findOrCreateAndPopulateBed: sinon.spy(controller, 'findOrCreateAndPopulateBed'),
         findAndPopulateActiveStatus: sinon.spy(controller, 'findAndPopulateActiveStatus'),
-        reconcilePreviousBedEvents: sinon.spy(controller, 'reconcilePreviousBedEvents'),
-        createBedEvent: sinon.spy(controller, 'createBedEvent')
+        reconcilePreviousBedEvents: sinon.spy(controller, 'reconcilePreviousBedEvents')
       };
+
+      sinon.stub(BedEvent, 'create').resolves({something: true})
     });
 
     afterEach(() => {
       context.findAndPopulateCentre.restore();
-      context.findAndPopulateDetainee.restore();
+      context.findAndPopulateDetaineeInBedEvent.restore();
       context.formatAndPopulateGender.restore();
       context.findOrCreateAndPopulateBed.restore();
       context.findAndPopulateActiveStatus.restore();
       context.reconcilePreviousBedEvents.restore();
-      context.createBedEvent.restore();
+      BedEvent.create.restore();
     });
 
     it('Should process a bed event', () =>
       controller.processBedEvent.apply(context, [event])
         .then(() => {
-          expect(context.findAndPopulateDetainee).to.have.been.calledOnce;
+          expect(context.findAndPopulateDetaineeInBedEvent).to.have.been.calledOnce;
           expect(context.formatAndPopulateGender).to.have.been.calledOnce;
-          expect(context.findAndPopulateDetainee).to.have.been.calledOnce;
+          expect(context.findAndPopulateDetaineeInBedEvent).to.have.been.calledOnce;
           expect(context.findOrCreateAndPopulateBed).to.have.been.calledOnce;
           expect(context.findAndPopulateActiveStatus).to.have.been.calledOnce;
           expect(context.reconcilePreviousBedEvents).to.have.been.calledOnce;
-          expect(context.createBedEvent).to.have.been.calledOnce;
+          expect(BedEvent.create).to.have.been.calledOnce;
         })
     );
   });
@@ -645,29 +646,47 @@ describe('UNIT Irc_EntryController', () => {
     );
   });
 
-  describe('findAndPopulateDetainee', () => {
-    var dummyEvent = {
-      single_occupancy_person_id: '123',
-      centre_id: 1
-    };
+  describe('findAndPopulateDetaineeInBedEvent', () => {
+    let createOrUpdateDetainee = {};
+    beforeEach(() => {
+      createOrUpdateDetainee = controller.__set__('createOrUpdateDetainee', sinon.stub().resolves({id: 2}))
+    });
+    afterEach(() => {
+      createOrUpdateDetainee();
+    });
 
-    before(() => sinon.stub(Detainee, 'getDetaineeByPersonIdAndCentre').resolves(2));
-
-    after(() => Detainee.getDetaineeByPersonIdAndCentre.restore());
-
-    it('should pass the correct mapping to Detainee.getDetaineeByPersonIdAndCentre when pid is not null', () => {
-        controller.findAndPopulateDetainee(dummyEvent);
-        return expect(Detainee.getDetaineeByPersonIdAndCentre).to.be.calledWith('123', 1);
-      }
-    );
-
-    it('should merge the result of Detainee.getDetaineeByPersonIdAndCentre into the response', () =>
-      expect(controller.findAndPopulateDetainee(dummyEvent)).to.eventually.deep.equal({
+    it('should merge the response into the result when person_id is available', ()=> {
+      expect(controller.findAndPopulateDetaineeInBedEvent({
+        single_occupancy_person_id: '123',
+        centre_id: 1
+      })).to.eventually.deep.equal({
         single_occupancy_person_id: '123',
         centre_id: 1,
         detainee: 2
       })
-    );
+    });
+
+    it('should merge the response into {detainee: null} when person_id is null', ()=> {
+      expect(controller.findAndPopulateDetaineeInBedEvent({
+        single_occupancy_person_id: null,
+        centre_id: 1
+      })).to.eventually.deep.equal({
+        single_occupancy_person_id: null,
+        centre_id: 1,
+        detainee: null
+      })
+    });
+
+    it('should merge the response into {detainee: null} when person_id is undefined', ()=> {
+      expect(controller.findAndPopulateDetaineeInBedEvent({
+        single_occupancy_person_id: undefined,
+        centre_id: 1
+      })).to.eventually.deep.equal({
+        single_occupancy_person_id: undefined,
+        centre_id: 1,
+        detainee: null
+      })
+    });
   });
 
   describe('formatAndPopulateGender', () => {
@@ -718,7 +737,7 @@ describe('UNIT Irc_EntryController', () => {
 
     it('should merge the result into the response', () =>
       expect(controller.findOrCreateAndPopulateBed(dummyEvent)).to.eventually.eql({
-        bed_id: 12,
+        bed: 12,
         bed_ref: "123",
         centre_id: 1,
         gender: "female"
@@ -728,7 +747,7 @@ describe('UNIT Irc_EntryController', () => {
 
   describe('findAndPopulateActiveStatus', () => {
     var event = {
-      bed_id: 1,
+      bed: 1,
       timestamp: 'example'
     };
 
@@ -747,7 +766,7 @@ describe('UNIT Irc_EntryController', () => {
       sinon.stub(BedEvent, 'findOne').resolves(undefined)
 
       return expect(controller.findAndPopulateActiveStatus(event)).to.eventually.eql({
-        bed_id: 1,
+        bed: 1,
         timestamp: 'example',
         active: true
       });
@@ -757,7 +776,7 @@ describe('UNIT Irc_EntryController', () => {
       sinon.stub(BedEvent, 'findOne').resolves('something');
 
       return expect(controller.findAndPopulateActiveStatus(event)).to.eventually.eql({
-        bed_id: 1,
+        bed: 1,
         timestamp: 'example',
         active: false
       });
@@ -772,7 +791,7 @@ describe('UNIT Irc_EntryController', () => {
 
     it('should not deactivate past bed events when current event is not active', () => {
       controller.reconcilePreviousBedEvents({
-        bed_id: 1,
+        bed: 1,
         timestamp: 'this',
         active: false
       });
@@ -781,44 +800,12 @@ describe('UNIT Irc_EntryController', () => {
 
     it('should deactivate past bed events when current event is active', () => {
       controller.reconcilePreviousBedEvents({
-        bed_id: 1,
+        bed: 1,
         timestamp: 'now',
         active: true
       });
       expect(BedEvent.deactivatePastBedEvents).to.be.calledWith(1, 'now');
     });
-  });
-
-  describe('createBedEvent', () => {
-    var dummyEvent = {
-      bed_id: 1,
-      active: true,
-      detainee: 1,
-      timestamp: 'example',
-      operation: 'out commission',
-      reason: 'Other'
-    };
-
-    beforeEach(() => {
-      sinon.stub(BedEvent, 'create').resolves('created');
-    });
-
-    afterEach(() => {
-      BedEvent.create.restore();
-    });
-
-    it('should pass the correct mapping to BedEvent.create', () => {
-        controller.createBedEvent(dummyEvent);
-        return expect(BedEvent.create).to.be.calledWith({
-          bed: 1,
-          active: true,
-          detainee: 1,
-          timestamp: 'example',
-          operation: 'out commission',
-          reason: 'Other'
-        });
-      }
-    );
   });
 
   describe('heartbeatPost', () => {
