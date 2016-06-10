@@ -40,5 +40,10 @@ describe('UserRoles', () => {
       const result = UserRoles.getPermissions(role);
       expect(result).to.deep.equal([]);
     });
+    it('should add centre read permission when a role is prefixed with IRC Prefix', () => {
+      const role = [UserRoles.IRC_PREFIX + 'thiscentre'];
+      const result = UserRoles.getPermissions(role);
+      expect(result).to.deep.equal(['centres.thiscentre.read']);
+    });
   });
 });

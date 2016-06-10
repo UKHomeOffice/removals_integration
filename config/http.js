@@ -39,6 +39,7 @@ module.exports.http = {
       'compress',
       'methodOverride',
       '$custom',
+      'keycloakMiddleware',
       'customFieldsMiddleware',
       'router',
       'www',
@@ -46,7 +47,8 @@ module.exports.http = {
       '500'
     ],
 
-    customFieldsMiddleware: require('custom-fields-middleware')
+    customFieldsMiddleware: require('custom-fields-middleware'),
+    keycloakMiddleware: require('../api/middlewares/Keycloak')
 
   },
 

@@ -16,5 +16,30 @@
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.policies.html
  */
 
+const PolicyGenerator = require('../api/lib/PolicyGenerator');
 
-module.exports.policies = {};
+module.exports.policies = {
+  Irc_EntryController: {
+    '*':  PolicyGenerator('Irc_EntryController')
+  },
+  Cid_EntryController: {
+    '*':  PolicyGenerator('Cid_EntryController')
+  },
+  Depmu_EntryController: {
+    '*': PolicyGenerator('Depmu_EntryController')
+  },
+  HeartbeatController: {
+    '*': PolicyGenerator('HeartbeatController')
+  },
+  HealthController: {
+    '*': PolicyGenerator('HealthController')
+  },
+  RootController: {
+    '*': PolicyGenerator('RootController')
+  },
+  CentresController: {
+    '*': PolicyGenerator('CentresController'),
+    'find': true,
+    'findOne' : true
+  }
+};

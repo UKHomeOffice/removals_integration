@@ -16,19 +16,21 @@ describe('Keycloak Middleware', () => {
   it('should attach permissions to request', () => {
     const req = {
       headers : {
-        'X-Auth-Roles': 'test1,test2'
-      }
+        'x-auth-roles': 'test1,test2'
+      },
+      session: {}
     };
     KeycloakMiddleware(req, undefined, () => {
-      expect(req.permissions).to.deep.equal(['p1', 'p2a', 'p2b']);
+      expect(req.session.permissions).to.deep.equal(['p1', 'p2a', 'p2b']);
     });
   });
   it('should attach empty permissions on missing header', () => {
     const req = {
-      headers : {}
+      headers: {},
+      session: {}
     };
     KeycloakMiddleware(req, undefined, () => {
-      expect(req.permissions).to.deep.equal([]);
+      expect(req.session.permissions).to.deep.equal([]);
     });
   });
 });

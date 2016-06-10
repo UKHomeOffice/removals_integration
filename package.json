@@ -55,6 +55,7 @@
     "chai-things": "^0.2.0",
     "eslint": "^1.5.1",
     "freeport": "^1.0.5",
+    "http-proxy": "^1.13.3",
     "istanbul": "^0.3.21",
     "json-schema-faker": "^0.2.1",
     "jsonapi-validator": "^1.0.1",

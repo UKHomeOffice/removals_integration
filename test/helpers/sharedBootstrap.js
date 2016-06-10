@@ -32,14 +32,17 @@ global.initializeBarrelsFixtures = function () {
 
 require('mocha-cakes-2');
 require('sinon-as-promised')(require('bluebird'));
-global.request = require('supertest-as-promised');
+const supertest = require('supertest-as-promised');
+global.request = app =>
+  require('superagent-defaults')(supertest(app))
+    .set('x-auth-roles', 'full_access');
+
 var date = new Date();
 date.setDate(date.getDate() + 1);
 global.request_auth = app =>
   require('superagent-defaults')(global.request(app))
     .set('x-auth-email', 'foo.bar@digital.homeoffice.gov.uk')
     .set('x-auth-expiresin', date.toUTCString())
-    .set('x-auth-roles', '')
     .set('x-auth-subject', 'test')
     .set('x-auth-token', 'ejkosjlkj3elkjlkj')
     .set('x-auth-userid', 'af53a021-94a9-4f3c-b70d-1df33a6c881e')

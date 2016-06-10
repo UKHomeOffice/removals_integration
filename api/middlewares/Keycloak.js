@@ -3,11 +3,11 @@
 const UserRoles = require('../services/UserRoles');
 
 const middleware = (req, res, next) => {
-  req.permissions = [];
-  const rolesString = req.headers['X-Auth-Roles'];
+  req.session.permissions = [];
+  var rolesString = req.headers['x-auth-roles'];
 
   if (rolesString) {
-    req.permissions = req.permissions.concat(UserRoles.getPermissions(rolesString.split(',')));
+    req.session.permissions = req.session.permissions.concat(UserRoles.getPermissions(rolesString.split(',')));
   }
 
   next();
