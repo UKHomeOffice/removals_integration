@@ -1,6 +1,4 @@
 
-moment.tz.setDefault("Europe/London");
-
 Feature('Movements', () => {
 
   const centre = {
