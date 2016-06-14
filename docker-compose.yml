@@ -1,11 +1,33 @@
-app:
-  build: .
-  environment:
-  - NODE_ENV=docker-compose
-redis:
-  image: redis
-  net: "host"
-mysql:
-  image: mysql
-  environment:
-    MYSQL_ROOT_PASSWORD:
+version: '2'
+services:
+  waiter:
+    image: martin/wait
+  app:
+    build: .
+    environment:
+      - NODE_ENV=productionAlter
+      - PORT=8000
+      - DBHOST=mysql
+      - DBPORT=3306
+      - DBUSER=root
+      - DBPASS=root
+      - DBNAME=removals
+      - REDIS_SERVICE_HOST=redis
+      - REDIS_SERVICE_PORT=6379
+    depends_on:
+      - mysql
+      - redis
+    ports:
+      - "8000:8000"
+
+  redis:
+    image: redis
+    expose:
+      - 6379
+  mysql:
+    image: mysql
+    environment:
+      - MYSQL_DATABASE=removals
+      - MYSQL_ROOT_PASSWORD=root
+#      MYSQL_USER: removalsuser
+#      MYSQL_PASS: removalspass
