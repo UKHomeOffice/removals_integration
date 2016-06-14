@@ -2,6 +2,7 @@
 
 var LinkingModels = require('sails-linking-models');
 var ModelHelpers = require('../lib/ModelHelpers');
+var ValidationError = require('../lib/exceptions/ValidationError');
 
 var getPid = (entity) => `${entity.centre.id}_${entity.person_id}`;
 
@@ -58,7 +59,7 @@ const model = {
     case null:
       return undefined;
     }
-    throw new Error('Unknown Gender');
+    throw new ValidationError('Unknown Gender');
   }
 };
 
