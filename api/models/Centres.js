@@ -134,7 +134,7 @@ const model = {
         if (this.reconciled) {
           response.attributes[gender + 'UnexpectedIn'] = unreconciledEventReducer(this.unreconciledEvents, gender, ['check in']);
           response.attributes[gender + 'ExpectedIn'] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'in');
-          response.attributes[gender + 'ExpectedOut'] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'out').length;
+          response.attributes[gender + 'ExpectedOut'] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'out');
           response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ExpectedIn'].length;
         }
       });
