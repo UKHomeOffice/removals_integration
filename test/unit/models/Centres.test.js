@@ -103,10 +103,10 @@ describe('UNIT CentreModel', () => {
           femaleOutOfCommission: that.female_out_of_commission,
           maleAvailability: 0,
           femaleAvailability: -5,
-          femaleUnexpectedIn: 0,
+          femaleUnexpectedIn: [],
           femaleExpectedIn: [],
           femaleExpectedOut: 0,
-          maleUnexpectedIn: 0,
+          maleUnexpectedIn: [],
           maleExpectedIn: [],
           maleExpectedOut: 0,
           malePrebooking: that.male_prebooking.length,
@@ -166,6 +166,38 @@ describe('UNIT CentreModel', () => {
 
       it('should reduce the filtered movements to simplified objects containing only the `id` and `cid_id` attributes', () => {
         expect(unreconciledMovementFilter(movements, 'male', 'in')).to.deep.equal([
+          { id: 1, cid_id: 11 },
+          { id: 2, cid_id: 22 }
+        ]);
+      });
+    });
+
+    describe('#unreconciledEventReducer', () => {
+      const unreconciledEventReducer = model.__get__('unreconciledEventReducer');
+      const events = [{
+        id: 1, operation: 'check in',
+        detainee: { gender: 'male', cid_id: 11 }
+      }, {
+        id: 2, operation: 'check in',
+        detainee: { gender: 'male', cid_id: 22 }
+      }, {
+        id: 3, operation: 'check out',
+        detainee: { gender: 'male', cid_id: 33 }
+      }, {
+        id: 4, operation: 'check in',
+        detainee: { gender: 'female', cid_id: 44 }
+      }];
+
+      it('should reduce the unreconciled events to only those with the specified `gender` and `operation`', () => {
+        expect(unreconciledEventReducer(events, 'female', 'check in'))
+          .to.have.lengthOf(1).and.have.deep.property('[0].cid_id', 44);
+        expect(unreconciledEventReducer(events, 'male', 'check in'))
+          .to.have.lengthOf(2);
+        return expect(unreconciledEventReducer(events, 'female', 'check out')).to.be.empty;
+      });
+
+      it('should reduce the filtered events to simplified objects containing only the `id` and `cid_id` attributes', () => {
+        expect(unreconciledEventReducer(events, 'male', 'check in')).to.deep.equal([
           { id: 1, cid_id: 11 },
           { id: 2, cid_id: 22 }
         ]);

@@ -12,6 +12,12 @@ const unreconciledMovementReducer = (movements, gender, direction) => movements.
   }
   return reduced;
 }, []);
+const unreconciledEventReducer = (events, gender, operations) => events.reduce((reduced, event) => {
+  if (event.detainee.gender === gender && operations.indexOf(event.operation) >= 0) {
+    reduced.push({ id: event.id, cid_id: event.detainee.cid_id });
+  }
+  return reduced;
+}, []);
 
 const model = {
   schema: true,
@@ -102,13 +108,6 @@ const model = {
       via: 'centre'
     },
     toJSON: function () {
-      const unreconciledEventCounter = (gender, operations) => this.unreconciledEvents.reduce((count, event) => {
-        if (event.detainee.gender === gender && operations.indexOf(event.operation) >= 0) {
-          return count + 1;
-        }
-        return count;
-      }, 0);
-
       const response = {
         type: 'centre',
         id: this.id.toString(),
@@ -133,7 +132,7 @@ const model = {
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Prebooking'];
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Contingency'];
         if (this.reconciled) {
-          response.attributes[gender + 'UnexpectedIn'] = unreconciledEventCounter(gender, ['check in']);
+          response.attributes[gender + 'UnexpectedIn'] = unreconciledEventReducer(this.unreconciledEvents, gender, ['check in']);
           response.attributes[gender + 'ExpectedIn'] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'in');
           response.attributes[gender + 'ExpectedOut'] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'out').length;
           response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ExpectedIn'].length;
