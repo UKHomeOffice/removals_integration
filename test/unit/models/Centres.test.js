@@ -1,6 +1,8 @@
 "use strict";
+
+const rewire = require('rewire');
 var ValidationError = require('../../../api/lib/exceptions/ValidationError');
-var model = require('../../../api/models/Centres');
+var model = rewire('../../../api/models/Centres');
 var Promise = require('bluebird');
 
 describe('UNIT CentreModel', () => {
@@ -69,7 +71,7 @@ describe('UNIT CentreModel', () => {
           maleContingency: that.male_contingency.length,
           femaleContingency: that.female_contingency.length,
           maleAvailability: 0,
-          femaleAvailability: -5,
+          femaleAvailability: -5
         },
         id: that.id.toString(),
         type: "centre",
@@ -81,8 +83,7 @@ describe('UNIT CentreModel', () => {
     });
 
     it('should match the expected output when reconciled is set', () => {
-      let that = dummy_model;
-      that = Object.assign({}, dummy_model, {
+      let that = Object.assign({}, dummy_model, {
         reconciled: [],
         unreconciledMovements: [],
         unreconciledEvents: []
@@ -103,10 +104,10 @@ describe('UNIT CentreModel', () => {
           maleAvailability: 0,
           femaleAvailability: -5,
           femaleUnexpectedIn: 0,
-          femaleExpectedIn: 0,
+          femaleExpectedIn: [],
           femaleExpectedOut: 0,
           maleUnexpectedIn: 0,
-          maleExpectedIn: 0,
+          maleExpectedIn: [],
           maleExpectedOut: 0,
           malePrebooking: that.male_prebooking.length,
           femalePrebooking: that.female_prebooking.length,
@@ -134,6 +135,41 @@ describe('UNIT CentreModel', () => {
       expect(subject).to.have.a.property('femalePrebooking', 2);
       expect(subject).to.have.a.property('maleContingency', 1);
       expect(subject).to.have.a.property('femaleContingency', 2);
+    });
+  });
+
+  describe('helpers', () => {
+
+    describe('#unreconciledMovementReducer', () => {
+      const unreconciledMovementFilter = model.__get__('unreconciledMovementReducer');
+      const movements = [{
+        id: 1, cid_id: 11,
+        gender: 'male', direction: 'in'
+      }, {
+        id: 2, cid_id: 22,
+        gender: 'male', direction: 'in'
+      }, {
+        id: 3, cid_id: 33,
+        gender: 'male', direction: 'out'
+      }, {
+        id: 4, cid_id: 44,
+        gender: 'female', direction: 'in'
+      }];
+
+      it('should reduce the unreconciled movements to only those with the specified `gender` and `direction`', () => {
+        expect(unreconciledMovementFilter(movements, 'female', 'in'))
+          .to.have.lengthOf(1).and.have.deep.property('[0].cid_id', 44);
+        expect(unreconciledMovementFilter(movements, 'male', 'in'))
+          .to.have.lengthOf(2);
+        return expect(unreconciledMovementFilter(movements, 'female', 'out')).to.be.empty;
+      });
+
+      it('should reduce the filtered movements to simplified objects containing only the `id` and `cid_id` attributes', () => {
+        expect(unreconciledMovementFilter(movements, 'male', 'in')).to.deep.equal([
+          { id: 1, cid_id: 11 },
+          { id: 2, cid_id: 22 }
+        ]);
+      });
     });
 
   });
