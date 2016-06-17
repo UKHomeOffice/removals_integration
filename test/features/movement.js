@@ -58,7 +58,59 @@ Feature('Movements', () => {
       And('the centre\'s `availability` count should be reduced', () =>
         expect(this.centreDetail.attributes.maleAvailability).to.equal(this.centreDetail.attributes.maleCapacity - 1)
       );
+    });
 
+    Scenario('an update with a movement in should show up as an `expected in` and reduce the availability', function () {
+      const detainee = {
+        person_id: 123,
+        cid_id: 999,
+        operation: 'update individual',
+        timestamp: new Date().toISOString(),
+        gender: 'm',
+        nationality: 'gbr',
+        centre: 'bigone'
+      };
+      before(function () {
+        testConfig.initializeBarrelsFixtures = false;
+      });
+
+      after(function () {
+        testConfig.initializeBarrelsFixtures = true;
+      });
+
+      Given('there is a single centre', () =>
+        Centres.destroy({})
+          .then(() => Centres.create(centre))
+          .then(() => expect(Centres.find({})).to.eventually.have.lengthOf(1))
+      );
+
+      And('it has no movements', () => expect(Movement.find({})).to.eventually.be.empty);
+
+      And('a detainee exists', () =>
+        createRequest(detainee, '/irc_entry/event', 201)
+          .then(() => expect(Detainee.find({})).to.eventually.have.lengthOf(1))
+      );
+
+      When('a movement out (regarding the detainee) is added', () =>
+        createRequest(movement('Out', detainee.cid_id), '/cid_entry/movement', 201)
+          .then(() => expect(Movement.find({})).to.eventually.have.lengthOf(1))
+      );
+
+      Then('the movement should appear in the `Expected outgoing` section', () =>
+        request_auth(sails.hooks.http.app)
+          .get('/centres')
+          .expect(200)
+          .then(res =>
+            expect((this.centres = res.body.data)).to.be.an('array')
+              .that.has.lengthOf(1)
+              .with.deep.property('[0].attributes.maleExpectedOut')
+              .that.is.an('array').that.has.lengthOf(1)
+              .with.deep.property('[0].cid_id', detainee.cid_id))
+      );
+
+      And('the centre\'s `availability` count should be unchanged', () =>
+        expect(this.centres[0].attributes.maleAvailability).to.equal(this.centres[0].attributes.maleCapacity)
+      );
     });
   });
 
