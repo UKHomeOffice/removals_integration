@@ -23,6 +23,7 @@ RUN mkdir -p /home/app/coverage
 
 
 ADD package.json package.json
+ADD npm-shrinkwrap.json npm-shrinkwrap.json
 RUN npm --production=false install --no-optional
 
 COPY . .
