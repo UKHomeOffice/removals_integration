@@ -30,7 +30,7 @@ var findBedEvent = (event, active) =>
     .toPromise()
     .filter((bedEvents) => !_.isEmpty(bedEvents.bed));
 
-Feature.only('Bed Events', () => {
+Feature('Bed Events', () => {
   Scenario('Old OOC then New IC', () => {
     var payload = {
       OUT_OF_COMMISSION: {
