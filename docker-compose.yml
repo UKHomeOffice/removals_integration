@@ -17,6 +17,7 @@ services:
     depends_on:
       - mysql
       - redis
+      - waiter
     ports:
       - "8000:8000"
 
@@ -26,6 +27,8 @@ services:
       - 6379
   mysql:
     image: mysql
+    ports:
+      - "3306:3306"
     environment:
       - MYSQL_DATABASE=removals
       - MYSQL_ROOT_PASSWORD=root
