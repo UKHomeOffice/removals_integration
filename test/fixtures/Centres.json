@@ -3,24 +3,49 @@
     "name": "bigone",
     "male_capacity": 999,
     "female_capacity": 750,
+    "male_out_of_commission": 10,
+    "female_out_of_commission": 10,
     "id": 1,
-    "male_cid_name": ["bigone male holding", "smallone male holding"],
-    "female_cid_name": ["bigone female office", "smallone female holding"]
+    "male_cid_name": [
+      "bigone male holding",
+      "smallone male holding"
+    ],
+    "female_cid_name": [
+      "bigone female office",
+      "smallone female holding"
+    ]
   },
   {
     "name": "smallone",
     "male_capacity": 500,
     "female_capacity": 300,
+    "male_out_of_commission": 1,
+    "female_out_of_commission": 5,
     "id": 2,
-    "male_cid_name": ["smale one male unit", "medium one male unit", "large one male unit"],
-    "female_cid_name": ["small one unit"]
+    "male_cid_name": [
+      "smale one male unit",
+      "medium one male unit",
+      "large one male unit"
+    ],
+    "female_cid_name": [
+      "small one unit"
+    ]
   },
   {
     "name": "anotherone",
     "male_capacity": 800,
     "female_capacity": 573,
+    "male_out_of_commission": 13,
+    "female_out_of_commission": 33,
     "id": 3,
-    "male_cid_name": ["other one unit", "anotherone unit"],
-    "female_cid_name": ["other female unit", "anotherone female unit", "last one female unit"]
+    "male_cid_name": [
+      "other one unit",
+      "anotherone unit"
+    ],
+    "female_cid_name": [
+      "other female unit",
+      "anotherone female unit",
+      "last one female unit"
+    ]
   }
 ]

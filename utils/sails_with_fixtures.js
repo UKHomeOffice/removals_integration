@@ -20,7 +20,9 @@ Sails.lift(
       'event',
       'movement',
       'heartbeat',
-      'prebooking'
+      'prebooking',
+      'bed',
+      'bedevent'
     ], function (err) {
       sails.log('up');
     });

@@ -44,6 +44,10 @@ describe('UNIT CentreModel', () => {
       female_in_use: 4,
       male_out_of_commission: 3,
       female_out_of_commission: 9,
+      outOfCommission: {
+        female: {'Maintenance - Health and Safety Concern': 8, 'Other': 1},
+        male: {'Crime Scene': 2, 'Other': 1}
+      },
       male_prebooking: [{centres: 123, task_force: 'ops1', id: 1}],
       female_prebooking: [{centres: 123, task_force: 'ops2', id: 2}, {centres: 123, task_force: 'ops1', id: 3}],
       male_contingency: [{centres: 123, task_force: 'depmu', id: 1}],
@@ -62,10 +66,12 @@ describe('UNIT CentreModel', () => {
           updated: that.updatedAt,
           maleCapacity: that.male_capacity,
           maleInUse: that.male_in_use,
-          maleOutOfCommission: that.male_out_of_commission,
+          maleOutOfCommissionTotal: that.male_out_of_commission,
+          maleOutOfCommissionDetail: that.outOfCommission['male'],
           femaleCapacity: that.female_capacity,
           femaleInUse: that.female_in_use,
-          femaleOutOfCommission: that.female_out_of_commission,
+          femaleOutOfCommissionTotal: that.female_out_of_commission,
+          femaleOutOfCommissionDetail: that.outOfCommission['female'],
           malePrebooking: that.male_prebooking.length,
           femalePrebooking: that.female_prebooking.length,
           maleContingency: that.male_contingency.length,
@@ -97,10 +103,12 @@ describe('UNIT CentreModel', () => {
           updated: that.updatedAt,
           maleCapacity: that.male_capacity,
           maleInUse: that.male_in_use,
-          maleOutOfCommission: that.male_out_of_commission,
+          maleOutOfCommissionTotal: that.male_out_of_commission,
+          maleOutOfCommissionDetail: that.outOfCommission['male'],
           femaleCapacity: that.female_capacity,
           femaleInUse: that.female_in_use,
-          femaleOutOfCommission: that.female_out_of_commission,
+          femaleOutOfCommissionTotal: that.female_out_of_commission,
+          femaleOutOfCommissionDetail: that.outOfCommission['female'],
           maleAvailability: 0,
           femaleAvailability: -5,
           femaleUnexpectedIn: [],
@@ -325,6 +333,10 @@ describe('INTEGRATION CentreModel', () => {
   it('should on destroy, destroy orphaned events', () =>
     Centres.destroy()
       .then(() => expect(Event.find()).to.eventually.have.length(0))
+  );
+  it('should on destroy, destroy orphaned beds', () =>
+    Centres.destroy()
+      .then(() => expect(Bed.find()).to.eventually.have.length(0))
   );
   it('should on destroy, destroy orphaned detainee', () =>
     Centres.destroy()
