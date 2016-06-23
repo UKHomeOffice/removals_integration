@@ -32,7 +32,7 @@ describe('UNIT CentreModel', () => {
   });
 
   describe('attributes.toJSON', () => {
-    var dummy_model = {
+    const dummy_model = {
       updatedAt: 'f',
       prebooking_received: null,
       cid_received_date: null,
@@ -48,87 +48,75 @@ describe('UNIT CentreModel', () => {
         female: {'Maintenance - Health and Safety Concern': 8, 'Other': 1},
         male: {'Crime Scene': 2, 'Other': 1}
       },
-      male_prebooking: [{centres: 123, task_force: 'ops1', id: 1}],
-      female_prebooking: [{centres: 123, task_force: 'ops2', id: 2}, {centres: 123, task_force: 'ops1', id: 3}],
-      male_contingency: [{centres: 123, task_force: 'depmu', id: 1}],
+      male_prebooking: [],
+      female_prebooking: [
+        {centres: 123, task_force: 'ops2', id: 2},
+        {centres: 123, task_force: 'ops2', id: 22},
+        {centres: 123, task_force: 'ops2', id: 21},
+        {centres: 123, task_force: 'ops1', id: 1},
+        {centres: 123, task_force: 'ops1', id: 11}
+      ],
+      male_contingency: [],
       female_contingency: [{centres: 123, task_force: 'htu', id: 2}, {centres: 123, task_force: 'depmu other', id: 3}],
       modelLinks: sinon.stub().returns(['links'])
     };
+    const result = {
+      attributes: {
+        name: dummy_model.name,
+        cidReceivedDate: dummy_model.cid_received_date,
+        prebookingReceived: dummy_model.prebooking_received,
+        heartbeatReceived: null,
+        updated: dummy_model.updatedAt,
+        maleCapacity: dummy_model.male_capacity,
+        maleInUse: dummy_model.male_in_use,
+        maleOutOfCommissionTotal: dummy_model.male_out_of_commission,
+        maleOutOfCommissionDetail: dummy_model.outOfCommission['male'],
+        femaleCapacity: dummy_model.female_capacity,
+        femaleInUse: dummy_model.female_in_use,
+        femaleOutOfCommissionTotal: dummy_model.female_out_of_commission,
+        femaleOutOfCommissionDetail: dummy_model.outOfCommission['female'],
+        malePrebooking: dummy_model.male_prebooking.length,
+        malePrebookingDetail: {},
+        femalePrebooking: dummy_model.female_prebooking.length,
+        femalePrebookingDetail: {
+          ops1: { total: 2, cids: [] },
+          ops2: { total: 3, cids: [] }
+        },
+        maleContingency: dummy_model.male_contingency.length,
+        femaleContingency: dummy_model.female_contingency.length,
+        maleAvailability: 2,
+        femaleAvailability: -8
+      },
+      id: dummy_model.id.toString(),
+      type: "centre",
+      links: [
+        'links'
+      ]
+    };
 
     it('should match the expected output', () => {
-      let that = dummy_model;
-      var expected = {
-        attributes: {
-          name: that.name,
-          cidReceivedDate: that.cid_received_date,
-          prebookingReceived: that.prebooking_received,
-          heartbeatReceived: null,
-          updated: that.updatedAt,
-          maleCapacity: that.male_capacity,
-          maleInUse: that.male_in_use,
-          maleOutOfCommissionTotal: that.male_out_of_commission,
-          maleOutOfCommissionDetail: that.outOfCommission['male'],
-          femaleCapacity: that.female_capacity,
-          femaleInUse: that.female_in_use,
-          femaleOutOfCommissionTotal: that.female_out_of_commission,
-          femaleOutOfCommissionDetail: that.outOfCommission['female'],
-          malePrebooking: that.male_prebooking.length,
-          femalePrebooking: that.female_prebooking.length,
-          maleContingency: that.male_contingency.length,
-          femaleContingency: that.female_contingency.length,
-          maleAvailability: 0,
-          femaleAvailability: -5
-        },
-        id: that.id.toString(),
-        type: "centre",
-        links: [
-          'links'
-        ]
-      };
-      return expect(model.attributes.toJSON.call(that)).to.eql(expected);
+      const that = Object.assign({}, dummy_model),
+        expected = Object.assign({}, result);
+      return expect(model.attributes.toJSON.call(that)).to.deep.equal(expected);
     });
 
     it('should match the expected output when reconciled is set', () => {
-      let that = Object.assign({}, dummy_model, {
+      const that = Object.assign({}, dummy_model, {
         reconciled: [],
         unreconciledMovements: [],
         unreconciledEvents: []
       });
-      var expected = {
+      const expected = _.merge({}, result, {
         attributes: {
-          name: that.name,
-          cidReceivedDate: that.cid_received_date,
-          prebookingReceived: that.prebooking_received,
-          heartbeatReceived: null,
-          updated: that.updatedAt,
-          maleCapacity: that.male_capacity,
-          maleInUse: that.male_in_use,
-          maleOutOfCommissionTotal: that.male_out_of_commission,
-          maleOutOfCommissionDetail: that.outOfCommission['male'],
-          femaleCapacity: that.female_capacity,
-          femaleInUse: that.female_in_use,
-          femaleOutOfCommissionTotal: that.female_out_of_commission,
-          femaleOutOfCommissionDetail: that.outOfCommission['female'],
-          maleAvailability: 0,
-          femaleAvailability: -5,
           femaleUnexpectedIn: [],
           femaleExpectedIn: [],
           femaleExpectedOut: [],
           maleUnexpectedIn: [],
           maleExpectedIn: [],
-          maleExpectedOut: [],
-          malePrebooking: that.male_prebooking.length,
-          femalePrebooking: that.female_prebooking.length,
-          maleContingency: that.male_contingency.length,
-          femaleContingency: that.female_contingency.length
-        },
-        id: that.id.toString(),
-        type: "centre",
-        links: [
-          'links'
-        ]
-      };
-      return expect(model.attributes.toJSON.call(that)).to.eql(expected);
+          maleExpectedOut: []
+        }
+      });
+      return expect(model.attributes.toJSON.call(that)).to.deep.equal(expected);
     });
 
     it('Should have properties set for male and female capacity and occupancy', () => {
@@ -139,9 +127,9 @@ describe('UNIT CentreModel', () => {
       expect(subject).to.have.a.property('femaleCapacity', 12);
       expect(subject).to.have.a.property('maleInUse', 4);
       expect(subject).to.have.a.property('femaleInUse', 4);
-      expect(subject).to.have.a.property('malePrebooking', 1);
-      expect(subject).to.have.a.property('femalePrebooking', 2);
-      expect(subject).to.have.a.property('maleContingency', 1);
+      expect(subject).to.have.a.property('malePrebooking', 0);
+      expect(subject).to.have.a.property('femalePrebooking', 5);
+      expect(subject).to.have.a.property('maleContingency', 0);
       expect(subject).to.have.a.property('femaleContingency', 2);
     });
   });
@@ -209,6 +197,57 @@ describe('UNIT CentreModel', () => {
           { id: 1, cid_id: 11 },
           { id: 2, cid_id: 22 }
         ]);
+      });
+    });
+
+    describe('#buildDetail', function () {
+      const items = [
+        {centres: 123, task_force: 'ops2', id: 2},
+        {centres: 123, task_force: 'ops2', id: 22},
+        {centres: 123, task_force: 'ops2', id: 21},
+        {centres: 123, task_force: 'ops2', id: 211, cid_id: 2211},
+        {centres: 123, task_force: 'ops2', id: 212, cid_id: 2212},
+        {centres: 123, task_force: 'ops1', id: 1},
+        {centres: 123, task_force: 'ops1', id: 11}
+      ];
+      const taskForces = ['ops1', 'ops2'];
+      const totals = _.countBy(items, 'task_force');
+      const buildDetail = model.__get__('buildDetail');
+
+      before('build the item detail', () => {
+        this.detail = buildDetail(items);
+      });
+
+      it('should return an object', () => expect(this.detail).to.be.an('object'));
+
+      it('should return an empty object if no items were present', () =>
+        expect(buildDetail([])).to.be.empty
+      );
+
+      it('should otherwise have sub-details for each `task_force`', () =>
+        expect(this.detail).to.have.keys(taskForces)
+      );
+
+      describe('each `task_force` sub-detail', () => {
+        it('should have a `total` number of items', () =>
+          taskForces.forEach(taskForce =>
+            expect(this.detail[taskForce]).to.be.an('object').that.has.property('total', totals[taskForce])
+          )
+        );
+
+        describe('has a list of associated CID IDs, which', () => {
+          it('should be blank if none of the items had an associated CID', () =>
+            expect(this.detail).to.have.deep.property('ops1.cids').that.is.an('array').with.lengthOf(0)
+          );
+
+          it('should otherwise contain reduced versions of the items with CIDs', () =>
+            expect(this.detail).to.have.deep.property('ops2.cids').that.is.an('array')
+              .that.deep.equals([
+                {id: 211, cid_id: 2211},
+                {id: 212, cid_id: 2212}
+              ])
+          );
+        });
       });
     });
 

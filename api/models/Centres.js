@@ -18,6 +18,14 @@ const unreconciledEventReducer = (events, gender, operations) => events.reduce((
   }
   return reduced;
 }, []);
+const buildDetail = items => items.reduce((taskForces, item) => {
+  const taskForce = taskForces[item.task_force] || (taskForces[item.task_force] = { total: 0, cids: [] });
+  taskForce.total++;
+  if (item.cid_id) {
+    taskForce.cids.push({ id: item.id, cid_id: item.cid_id });
+  }
+  return taskForces;
+}, {});
 
 const model = {
   schema: true,
@@ -126,6 +134,7 @@ const model = {
         response.attributes[gender + 'OutOfCommissionTotal'] = this[gender + '_out_of_commission'];
         response.attributes[gender + 'OutOfCommissionDetail'] = this.outOfCommission ? this.outOfCommission[gender] : null;
         response.attributes[gender + 'Prebooking'] = this[gender + '_prebooking'].length;
+        response.attributes[gender + 'PrebookingDetail'] = buildDetail(this[gender + '_prebooking']);
         response.attributes[gender + 'Contingency'] = this[gender + '_contingency'].length;
         response.attributes[gender + 'Availability'] = response.attributes[gender + 'Capacity'];
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'InUse'];
