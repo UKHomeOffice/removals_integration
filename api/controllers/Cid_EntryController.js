@@ -1,8 +1,11 @@
-/* global Movement CidEntryMovementValidatorService Prebooking */
+/* global Movement CidEntryMovementValidatorService Prebooking Port */
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');
 var moment = require('moment');
+
+const failedRemovalReturnType = "Failed-Removal-Return";
+const nonOccupancyType = "Non-Occupancy";
 
 module.exports = {
   _config: {
@@ -42,7 +45,26 @@ module.exports = {
     return movement;
   },
 
-  filterNonOccupancyMovements: movement => movement['MO Type'] !== "Non-Occupancy",
+  filterNonOccupancyMovements: movement => movement['MO Type'] !== nonOccupancyType,
+
+  manipulatePortMovements: movements =>
+    Port.find()
+      .toPromise()
+      .map(port => port.location)
+      .then(ports => {
+        _.each(movements, (movement, key) => {
+          if (movement['MO Type'] === nonOccupancyType && _.include(ports, movement.Location)) {
+            let potential_corresponding_movement_key = movement['MO In/MO Out'] === "out" ? key + 1 : key - 1;
+
+            movements[key]["MO Type"] = failedRemovalReturnType;
+
+            if (movements[potential_corresponding_movement_key]['MO Type'] === nonOccupancyType) {
+              movements[potential_corresponding_movement_key]["MO Type"] = failedRemovalReturnType;
+            }
+          }
+        });
+        return movements;
+      }),
 
   populateMovementWithCentreAndGender: movement =>
     _.memoize(Centres.getGenderAndCentreByCIDLocation)(movement.Location)
@@ -70,6 +92,7 @@ module.exports = {
     return CidEntryMovementValidatorService.validate(req.body)
       .then(body => body.Output)
       .map(this.formatMovement)
+      .then(this.manipulatePortMovements)
       .filter(this.filterNonOccupancyMovements)
       .map(this.populateMovementWithCentreAndGender)
 

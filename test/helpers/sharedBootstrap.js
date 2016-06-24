@@ -23,7 +23,8 @@ global.initializeBarrelsFixtures = function () {
       'heartbeat',
       'prebooking',
       'bed',
-      'bedevent'
+      'bedevent',
+      'port'
     ], function (err) {
       if (err) throw err;
       resolve();
