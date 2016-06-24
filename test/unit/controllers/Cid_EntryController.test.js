@@ -39,14 +39,14 @@ describe('INTEGRATION Cid_EntryController', () => {
       });
       afterEach(() => Centres.update.restore());
       it('should create new active movements found in the payload', () =>
-        expect(Movement.find({ active: true })).to.eventually.have.length(19)
+        expect(Movement.find({active: true})).to.eventually.have.length(19)
       );
       it('should mark existing all movements in the payload as active that were previously inactive', () => {
-        expect(Movement.findOne(316512)).to.eventually.include({ 'active': true })
-      }
+          expect(Movement.findOne(316512)).to.eventually.include({'active': true})
+        }
       );
       it('should mark existing all movements not in the payload as inactive', () =>
-        expect(Movement.find({ active: false })).to.eventually.have.length(4)
+        expect(Movement.find({active: false})).to.eventually.have.length(4)
       );
     })
     it('should return the schema for an options request', () =>
@@ -74,6 +74,112 @@ describe('INTEGRATION Cid_EntryController', () => {
         .then(() => expect(Centres.publishUpdate).to.be.calledWith(3))
     );
   });
+
+  describe('manipulatePortMovements', () => {
+    var movements = [
+      {
+        "Location": "Big airport terminal 1",
+        "MO In/MO Out": "out",
+        "MO Type": "Non-Occupancy",
+        "MO Ref.": 1000,
+      },
+      {
+        "Location": "an IRC",
+        "MO In/MO Out": "in",
+        "MO Type": "Non-Occupancy",
+        "MO Ref.": 1001,
+      },
+      {
+        "Location": "an IRC",
+        "MO In/MO Out": "out",
+        "MO Type": "Non-Occupancy",
+        "MO Ref.": 1002,
+      },
+      {
+        "Location": "Not a port",
+        "MO In/MO Out": "in",
+        "MO Type": "Non-Occupancy",
+        "MO Ref.": 1003,
+      },
+      {
+        "Location": "an IRC",
+        "MO In/MO Out": "out",
+        "MO Type": "Non-Occupancy",
+        "MO Ref.": 1004,
+      },
+      {
+        "Location": "Big airport terminal 1",
+        "MO In/MO Out": "in",
+        "MO Type": "Non-Occupancy",
+        "MO Ref.": 1005,
+      },
+      {
+        "Location": "Big airport terminal 1",
+        "MO In/MO Out": "out",
+        "MO Type": "Failed-Removal-Return",
+        "MO Ref.": 1006,
+      },
+      {
+        "Location": "an IRC",
+        "MO In/MO Out": "in",
+        "MO Type": "Occupancy",
+        "MO Ref.": 1007,
+      }
+    ];
+    var expected = [
+      {
+        "Location": "Big airport terminal 1",
+        "MO In/MO Out": "out",
+        "MO Type": "Failed-Removal-Return",
+        "MO Ref.": 1000,
+      },
+      {
+        "Location": "an IRC",
+        "MO In/MO Out": "in",
+        "MO Type": "Failed-Removal-Return",
+        "MO Ref.": 1001,
+      },
+      {
+        "Location": "an IRC",
+        "MO In/MO Out": "out",
+        "MO Type": "Non-Occupancy",
+        "MO Ref.": 1002,
+      },
+      {
+        "Location": "Not a port",
+        "MO In/MO Out": "in",
+        "MO Type": "Non-Occupancy",
+        "MO Ref.": 1003,
+      },
+      {
+        "Location": "an IRC",
+        "MO In/MO Out": "out",
+        "MO Type": "Failed-Removal-Return",
+        "MO Ref.": 1004,
+      },
+      {
+        "Location": "Big airport terminal 1",
+        "MO In/MO Out": "in",
+        "MO Type": "Failed-Removal-Return",
+        "MO Ref.": 1005,
+      },
+      {
+        "Location": "Big airport terminal 1",
+        "MO In/MO Out": "out",
+        "MO Type": "Failed-Removal-Return",
+        "MO Ref.": 1006,
+      },
+      {
+        "Location": "an IRC",
+        "MO In/MO Out": "in",
+        "MO Type": "Occupancy",
+        "MO Ref.": 1007,
+      }
+    ];
+    it('should locate non-occupancy movement orders referring to ports and change their type', () =>
+      expect(controller.manipulatePortMovements(movements)).to.eventually.eql(expected)
+    )
+  });
 });
 
 describe('UNIT Cid_EntryController', () => {
@@ -82,11 +188,11 @@ describe('UNIT Cid_EntryController', () => {
     res = {
       ok: sinon.stub()
     };
-    sinon.stub(Subjects, 'findAndUpdateOrCreate').resolves({ id: 'bar' });
-    sinon.stub(Movement, 'findAndUpdateOrCreate').resolves({ bar: 'foo' });
-    sinon.stub(Movement, 'update').resolves({ bar: 'foo' });
-    sinon.stub(Centres, 'getGenderAndCentreByCIDLocation').resolves({ bar: 'raa' });
-    sinon.stub(Centres, 'update').resolves({ bar: 'raa' });
+    sinon.stub(Subjects, 'findAndUpdateOrCreate').resolves({id: 'bar'});
+    sinon.stub(Movement, 'findAndUpdateOrCreate').resolves({bar: 'foo'});
+    sinon.stub(Movement, 'update').resolves({bar: 'foo'});
+    sinon.stub(Centres, 'getGenderAndCentreByCIDLocation').resolves({bar: 'raa'});
+    sinon.stub(Centres, 'update').resolves({bar: 'raa'});
   });
 
   after(() => {
@@ -128,7 +234,7 @@ describe('UNIT Cid_EntryController', () => {
         });
     });
     it('should return findAndUpdateOrCreate', () =>
-      expect(controller.movementProcess(dummyMovement)).to.eventually.eql({ bar: 'foo' })
+      expect(controller.movementProcess(dummyMovement)).to.eventually.eql({bar: 'foo'})
     );
   });
 
@@ -176,7 +282,6 @@ describe('UNIT Cid_EntryController', () => {
     });
   });
 
-
   describe('populateMovementWithCentreAndGender', () => {
     var dummyMovement = {
       "Location": "helloworld"
@@ -196,13 +301,13 @@ describe('UNIT Cid_EntryController', () => {
 
   describe('filterNonEmptyMovements', () => {
     it('should leave in non-empty movements', () =>
-      expect(controller.filterNonEmptyMovements({ centre: 1, "MO Ref.": 2 })).to.be.ok
+      expect(controller.filterNonEmptyMovements({centre: 1, "MO Ref.": 2})).to.be.ok
     );
     it('should remove any movement that does not have a valid centre', () =>
-      expect(controller.filterNonEmptyMovements({ "MO Ref.": 2 })).to.not.be.ok
+      expect(controller.filterNonEmptyMovements({"MO Ref.": 2})).to.not.be.ok
     );
     it('should remove any movement that does not have a valid movement order reference', () =>
-      expect(controller.filterNonEmptyMovements({ "centre": 1 })).to.not.be.ok
+      expect(controller.filterNonEmptyMovements({"centre": 1})).to.not.be.ok
     );
   });
 
@@ -213,6 +318,9 @@ describe('UNIT Cid_EntryController', () => {
     it('should leave in removal movements', () =>
       expect(controller.filterNonOccupancyMovements({"MO Type": "Removal"})).to.be.ok
     );
+    it('should leave in failed removal returns', () =>
+      expect(controller.filterNonOccupancyMovements({"MO Type": "Failed-Removal-Return"})).to.be.ok
+    );
     it('should remove non-occupancy movements', () =>
       expect(controller.filterNonOccupancyMovements({"MO Type": "Non-Occupancy"})).to.not.be.ok
     );
@@ -220,8 +328,8 @@ describe('UNIT Cid_EntryController', () => {
 
   describe('markNonMatchingMovementsAsInactive', () => {
     it('should pass correct mapping to Movement.update', () => {
-      controller.markNonMatchingMovementsAsInactive([{ id: 1 }, { id: 2 }, { id: 3 }]);
-      expect(Movement.update).to.be.calledWith({ id: { 'not': [1, 2, 3] } }, { active: false });
+      controller.markNonMatchingMovementsAsInactive([{id: 1}, {id: 2}, {id: 3}]);
+      expect(Movement.update).to.be.calledWith({id: {'not': [1, 2, 3]}}, {active: false});
     });
   });
 
@@ -261,7 +369,7 @@ var validdummydata = {
     "MO Type": "Occupancy",
     "CID Person ID": "213"
   }, {
-    "Location": "bigone male holding",
+    "Location": "Big airport terminal 1",
     "MO In/MO Out": "In",
     "MO Ref.": "132023",
     "MO Date": "05/01/2016 09:00:00",
