@@ -5,7 +5,7 @@ services:
   app:
     build: .
     environment:
-      - NODE_ENV=productionAlter
+      - NODE_ENV=production
       - PORT=8000
       - DBHOST=mysql
       - DBPORT=3306
@@ -17,15 +17,18 @@ services:
     depends_on:
       - mysql
       - redis
+      - waiter
     ports:
       - "8000:8000"
 
   redis:
     image: redis
-    expose:
-      - 6379
+    ports:
+      - "6379:6379"
   mysql:
     image: mysql
+    ports:
+      - "3306:3306"
     environment:
       - MYSQL_DATABASE=removals
       - MYSQL_ROOT_PASSWORD=root
