@@ -5,7 +5,7 @@ services:
   app:
     build: .
     environment:
-      - NODE_ENV=productionAlter
+      - NODE_ENV=production
       - PORT=8000
       - DBHOST=mysql
       - DBPORT=3306
@@ -23,8 +23,8 @@ services:
 
   redis:
     image: redis
-    expose:
-      - 6379
+    ports:
+      - "6379:6379"
   mysql:
     image: mysql
     ports:
