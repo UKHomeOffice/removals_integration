@@ -55,18 +55,15 @@ Feature('Prebooking', () => {
         }, {
           timestamp: validTimestamp,
           location: 'bigone male holding',
-          task_force: 'HTU',
-          cid_id: '444'
+          task_force: 'HTU'
         }, {
           timestamp: validTimestamp,
           location: 'bigone male holding',
-          task_force: "HTU Failed RD's",
-          cid_id: '555'
+          task_force: "HTU Failed RD's"
         }, {
           timestamp: validTimestamp,
           location: 'smallone female holding',
-          task_force: 'HTU Borderforce',
-          cid_id: ''
+          task_force: 'HTU Borderforce'
         }, {
           timestamp: validTimestamp,
           location: 'smallone female holding',
