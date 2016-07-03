@@ -39,7 +39,7 @@ module.exports = {
         _.merge(prebooking, result)),
 
   filterContingencyWithoutCid: prebooking =>
-  !prebooking.contingency || (prebooking.contingency && _.isNull(prebooking.cid_id)),
+  !prebooking.contingency || prebooking.contingency && _.isNull(prebooking.cid_id),
 
   filterNonEmptyPrebookings: prebooking =>
   prebooking.centre && prebooking.gender && prebooking.task_force && prebooking.timestamp,
