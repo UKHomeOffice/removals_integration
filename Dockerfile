@@ -27,6 +27,7 @@ ADD npm-shrinkwrap.json npm-shrinkwrap.json
 RUN npm --production=false install --no-optional
 
 COPY . .
+RUN NODE_ENV=development npm run lint
 RUN NODE_ENV=development npm test
 RUN npm prune --production
 
