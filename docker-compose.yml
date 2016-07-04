@@ -1,9 +1,9 @@
 version: '2'
 services:
-  waiter:
-    image: martin/wait
+
   app:
     build: .
+    entrypoint: sh -c 'while ! timeout 1 bash -c "echo > /dev/tcp/mysql/3306 && echo > /dev/tcp/redis/6379"; do sleep 1; done; npm run migrations ; npm start'
     environment:
       - NODE_ENV=production
       - PORT=8000
@@ -17,7 +17,6 @@ services:
     depends_on:
       - mysql
       - redis
-      - waiter
     ports:
       - "8000:8000"
 
@@ -25,6 +24,7 @@ services:
     image: redis
     ports:
       - "6379:6379"
+
   mysql:
     image: mysql
     ports:
@@ -32,5 +32,3 @@ services:
     environment:
       - MYSQL_DATABASE=removals
       - MYSQL_ROOT_PASSWORD=root
-#      MYSQL_USER: removalsuser
-#      MYSQL_PASS: removalspass
