@@ -32,7 +32,6 @@ exports.up = (db, callback) =>
       male_cid_name: 'longtext',
       female_cid_name: 'longtext'
     }, callback),
-    // (_, callback) => db.addIndex('centres', 'name', ['name'], true, callback),
     (_, callback) => db.createTable('detainee', {
       id: id,
       createdAt: 'datetime',

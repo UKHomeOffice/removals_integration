@@ -161,10 +161,6 @@ const model = {
     );
   },
 
-  removeNonOccupancy: function () {
-    return this.destroy({'mo-type': 'non-occupancy'});
-  },
-
   afterCreate: (centre, done) =>
     Centres.findReconciled({id: centre.id})
       .map((centre) => Centres.publishCreate(centre.toJSON()))
@@ -197,7 +193,7 @@ const model = {
         .then(() => Heartbeat.destroy({centre: record.id}))
         .then(() => this.publishDestroy(record.id))
     ))
-    .then(() => done());
+      .then(() => done());
   },
 
   getByName: function (name) {
