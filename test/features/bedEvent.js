@@ -706,4 +706,37 @@ Feature('Bed Events', () => {
       assertCentresHTTPResponse('maleOutOfCommissionDetail', undefined)
     );
   });
+
+  Scenario('Reject duplications with 208', () => {
+
+    before(function () {
+      global.testConfig.initializeBarrelsFixtures = false;
+      return global.initializeBarrelsFixtures();
+    });
+
+    after(function () {
+      global.testConfig.initializeBarrelsFixtures = true;
+    });
+
+    const payload = {
+      operation: BedEvent2.OPERATION_OUT_OF_COMMISSION,
+      timestamp: new Date(923423234).toISOString(),
+      centre: "bigone",
+      bed_ref: "m123",
+      reason: 'Other',
+      gender: 'm'
+    };
+    Given('I send an out of commission', () =>
+      request(sails.hooks.http.app)
+        .post('/irc_entry/event')
+        .send(payload)
+        .expect(201)
+    )
+    Then('I send another out of commission', () =>
+      request(sails.hooks.http.app)
+        .post('/irc_entry/event')
+        .send(payload)
+        .expect(208)
+    )
+  });
 });
