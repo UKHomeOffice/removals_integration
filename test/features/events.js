@@ -4,6 +4,42 @@ var Event2 = require('../../api/models/Event');
 
 describe('Check In Event', () => {
 
+  Scenario('Reject duplications with 208', () => {
+
+    before(function () {
+      global.testConfig.initializeBarrelsFixtures = false;
+      return global.initializeBarrelsFixtures();
+    });
+
+    after(function () {
+      global.testConfig.initializeBarrelsFixtures = true;
+    });
+    var date = new Date(923423234);
+    var dateString = date.toISOString();
+    const payload = {
+      person_id: 123,
+      cid_id: 999,
+      operation: 'check in',
+      timestamp: dateString,
+      gender: 'm',
+      nationality: 'gbr',
+      centre: 'bigone'
+    };
+    Given('I send a check in', () =>
+      request(sails.hooks.http.app)
+        .post('/irc_entry/event')
+        .send(payload)
+        .expect(201)
+    )
+    Then('I send another check in', () =>
+      request(sails.hooks.http.app)
+        .post('/irc_entry/event')
+        .send(payload)
+        .expect(208)
+    )
+
+  })
+
   Scenario('Non-Existent Event should be Created', () => {
 
     var date = new Date(923423234);
@@ -84,12 +120,11 @@ describe('Check In Event', () => {
       global.testConfig.initializeBarrelsFixtures = true;
     });
 
-    var createEvent = function () {
-      return request(sails.hooks.http.app)
+    var createEvent = () =>
+      request(sails.hooks.http.app)
         .post('/irc_entry/event')
         .send(payload)
         .expect(201);
-    };
 
     Given('a detainee event with timestamp `' + dateString + '` has already occurred', () =>
 
@@ -102,20 +137,6 @@ describe('Check In Event', () => {
             }
           }).then((models) => expect(models.length).to.equal(1))
         )
-    );
-
-    When('a valid detainee event with timestamp `' + dateString + '` occurs', createEvent);
-
-    Then('a detainee event with timestamp `' + dateString + '` should be created from the check in received', () =>
-
-      Event.find({
-        where: {
-          timestamp: dateString,
-          operation: 'check in'
-        }
-      }).then((models) =>
-        expect(models.length).to.equal(2)
-      )
     );
 
   });

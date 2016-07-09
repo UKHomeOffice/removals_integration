@@ -3,7 +3,10 @@
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');
+var DuplicationError = require('../lib/exceptions/DuplicationError');
 var UnprocessableEntityError = require('../lib/exceptions/UnprocessableEntityError');
+
+const WLError = require('sails/node_modules/waterline/lib/waterline/error/WLError.js');
 
 const updateDetaineeModel = (detainee, newDetaineeProperties) => {
   detainee.timestamp = newDetaineeProperties.timestamp;
@@ -220,10 +223,17 @@ module.exports = {
     return IrcEntryEventValidatorService.validate(req.body)
       .then(this.process_event)
       .then(() => res.ok())
+      .catch(WLError, error => {
+        throw error.originalError;
+      })
       .catch(ValidationError, error => res.badRequest(error.result.errors[0].message))
       .catch(UnprocessableEntityError, error =>
         res.status(error.statusCode)
           .send(error.result)
+      )
+      .catch(DuplicationError, (error) =>
+        res.status(error.statusCode)
+          .send(error)
       )
       .catch((error) => {
         res.serverError(error.message);

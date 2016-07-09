@@ -1,6 +1,6 @@
 /* global BedEvent */
 'use strict';
-
+var DuplicationError = require('../lib/exceptions/DuplicationError');
 var LinkingModels = require('sails-linking-models');
 var ModelHelpers = require('../lib/ModelHelpers');
 
@@ -67,13 +67,13 @@ const model = {
         operation: operations.OPERATION_OUT_OF_COMMISSION
       }
     })
-    .populate('bed', {
-      where: {
-        centre: centreId
-      }, select: ['gender']
-    })
-    .toPromise()
-    .filter((event) => !_.isEmpty(event.bed)),
+      .populate('bed', {
+        where: {
+          centre: centreId
+        }, select: ['gender']
+      })
+      .toPromise()
+      .filter((event) => !_.isEmpty(event.bed)),
 
   groupByGender: (events) =>
     _.groupBy(events, (e) => e.bed.gender),
@@ -84,7 +84,22 @@ const model = {
     ),
 
   deactivatePastBedEvents: (bid, timestamp) =>
-    BedEvent.update({bed: bid, timestamp: {'<=': timestamp}}, {active: false})
+    BedEvent.update({bed: bid, timestamp: {'<=': timestamp}}, {active: false}),
+
+  afterValidate: (values, cb) =>
+    BedEvent.find({
+      bed: values.bed,
+      detainee: values.detainee,
+      operation: values.operation,
+      timestamp: values.timestamp,
+      reason: values.reason
+    })
+      .then(bedevents => {
+        if (bedevents.length > 0) {
+          return cb(new DuplicationError("Duplicate event"));
+        }
+        cb();
+      })
 };
 
 Object.assign(model, operations, reasons);
