@@ -1,0 +1,77 @@
+[
+  {
+    "centre": 1,
+    "bed_ref": "bed1",
+    "gender": "male"
+  },
+  {
+    "centre": 1,
+    "bed_ref": "bed2",
+    "gender": "male"
+  },
+  {
+    "centre": 1,
+    "bed_ref": "bed3",
+    "gender": "female"
+  },
+  {
+    "centre": 1,
+    "bed_ref": "bed4",
+    "gender": "female"
+  },
+  {
+    "centre": 1,
+    "bed_ref": "bed5",
+    "gender": "female"
+  },
+  {
+    "centre": 1,
+    "bed_ref": "bed6",
+    "gender": "female"
+  },
+  {
+    "centre": 1,
+    "bed_ref": "bed7",
+    "gender": "female"
+  },
+  {
+    "centre": 1,
+    "bed_ref": "bed8",
+    "gender": "female"
+  },
+  {
+    "centre": 1,
+    "bed_ref": "bed9",
+    "gender": "female"
+  },
+  {
+    "centre": 2,
+    "bed_ref": "bed10",
+    "gender": "female"
+  },
+  {
+    "centre": 2,
+    "bed_ref": "bed11",
+    "gender": "female"
+  },
+  {
+    "centre": 3,
+    "bed_ref": "bed12",
+    "gender": "female"
+  },
+  {
+    "centre": 3,
+    "bed_ref": "bed13",
+    "gender": "female"
+  },
+  {
+    "centre": 3,
+    "bed_ref": "bed14",
+    "gender": "female"
+  },
+  {
+    "centre": 3,
+    "bed_ref": "bed15",
+    "gender": "female"
+  }
+]

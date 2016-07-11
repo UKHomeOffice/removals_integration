@@ -1,4 +1,4 @@
-/* global Event Movement */
+/* global Event Movement BedEvent */
 'use strict';
 
 var DateRange = require('../lib/DateRange');
@@ -11,7 +11,7 @@ let populate = (model, centreId, range) =>
   model.find({
     where: {
       centre: centreId,
-      timestamp: { '>=': range.from, '<=': range.to }
+      timestamp: {'>=': range.from, '<=': range.to}
     },
     sort: 'timestamp'
   });
@@ -49,7 +49,7 @@ const getReconciliationTester = (movementsRangeFactory, eventsRangeFactory) => (
   const directionMatches = resolveEventOperationWithMovementDirection(event.operation) === movement.direction;
   const timestampMatches = movementsRangeFactory(event.timestamp).contains(movement.timestamp) || eventsRangeFactory(movement.timestamp).contains(event.timestamp);
 
-  return cidMatches && directionMatches && timestampMatches && { event, movement };
+  return cidMatches && directionMatches && timestampMatches && {event, movement};
 };
 
 const filterUnreconciled = (centre, range) => {
@@ -62,7 +62,7 @@ const getReinstatementTester = (checkoutEventsRangeFactory) => (reinstatement, e
   const personIdMatches = reinstatement.person_id === event.person_id;
   const timestampMatches = checkoutEventsRangeFactory(reinstatement.timestamp).contains(event.timestamp);
 
-  return operationMatches && personIdMatches && timestampMatches && { reinstatement, event };
+  return operationMatches && personIdMatches && timestampMatches && {reinstatement, event};
 };
 
 const untersect = (left, right, mapper) => {
@@ -99,6 +99,13 @@ const handleReinstatements = (centre, tester) => {
   return centre;
 };
 
+const populateOOC = (centre) =>
+  BedEvent.getOOCByCentreGroupByGenderAndReason(centre.id)
+    .then((oocBeds) => {
+      centre.outOfCommission = oocBeds;
+      return centre;
+    });
+
 module.exports = {
   performReconciliation: (centre, visibilityRange, eventSearchDateRangeFactory, movementSearchDateRangeFactory, checkOutSearchDateRangeFactory) => {
     const rangeOfEvents = fullRange(visibilityRange, eventSearchDateRangeFactory);
@@ -111,12 +118,14 @@ module.exports = {
     centre.unreconciledReinstatements = [];
     centre.reconciled = [];
     centre.reinstatements = [];
+    centre.outOfCommission = {};
 
     return populateEvents(centre, rangeOfEvents)
       .then(() => populateMovements(centre, rangeOfMovements))
       .then(() => handleReinstatements(centre, reinstatementReconciler))
       .then(() => reconcileEvents(centre, reconciler))
       .then(() => filterUnreconciled(centre, visibilityRange))
+      .then(() => populateOOC(centre))
       .return(centre);
   },
   performConfiguredReconciliation: function (centre) {

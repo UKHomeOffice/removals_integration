@@ -1,6 +1,8 @@
 "use strict";
+
+const rewire = require('rewire');
 var ValidationError = require('../../../api/lib/exceptions/ValidationError');
-var model = require('../../../api/models/Centres');
+var model = rewire('../../../api/models/Centres');
 var Promise = require('bluebird');
 
 describe('UNIT CentreModel', () => {
@@ -42,6 +44,10 @@ describe('UNIT CentreModel', () => {
       female_in_use: 4,
       male_out_of_commission: 3,
       female_out_of_commission: 9,
+      outOfCommission: {
+        female: {'Maintenance - Health and Safety Concern': 8, 'Other': 1},
+        male: {'Crime Scene': 2, 'Other': 1}
+      },
       male_prebooking: [{centres: 123, task_force: 'ops1', id: 1}],
       female_prebooking: [{centres: 123, task_force: 'ops2', id: 2}, {centres: 123, task_force: 'ops1', id: 3}],
       male_contingency: [{centres: 123, task_force: 'depmu', id: 1}],
@@ -60,16 +66,18 @@ describe('UNIT CentreModel', () => {
           updated: that.updatedAt,
           maleCapacity: that.male_capacity,
           maleInUse: that.male_in_use,
-          maleOutOfCommission: that.male_out_of_commission,
+          maleOutOfCommissionTotal: that.male_out_of_commission,
+          maleOutOfCommissionDetail: that.outOfCommission['male'],
           femaleCapacity: that.female_capacity,
           femaleInUse: that.female_in_use,
-          femaleOutOfCommission: that.female_out_of_commission,
+          femaleOutOfCommissionTotal: that.female_out_of_commission,
+          femaleOutOfCommissionDetail: that.outOfCommission['female'],
           malePrebooking: that.male_prebooking.length,
           femalePrebooking: that.female_prebooking.length,
           maleContingency: that.male_contingency.length,
           femaleContingency: that.female_contingency.length,
           maleAvailability: 0,
-          femaleAvailability: -5,
+          femaleAvailability: -5
         },
         id: that.id.toString(),
         type: "centre",
@@ -81,8 +89,7 @@ describe('UNIT CentreModel', () => {
     });
 
     it('should match the expected output when reconciled is set', () => {
-      let that = dummy_model;
-      that = Object.assign({}, dummy_model, {
+      let that = Object.assign({}, dummy_model, {
         reconciled: [],
         unreconciledMovements: [],
         unreconciledEvents: []
@@ -96,18 +103,20 @@ describe('UNIT CentreModel', () => {
           updated: that.updatedAt,
           maleCapacity: that.male_capacity,
           maleInUse: that.male_in_use,
-          maleOutOfCommission: that.male_out_of_commission,
+          maleOutOfCommissionTotal: that.male_out_of_commission,
+          maleOutOfCommissionDetail: that.outOfCommission['male'],
           femaleCapacity: that.female_capacity,
           femaleInUse: that.female_in_use,
-          femaleOutOfCommission: that.female_out_of_commission,
+          femaleOutOfCommissionTotal: that.female_out_of_commission,
+          femaleOutOfCommissionDetail: that.outOfCommission['female'],
           maleAvailability: 0,
           femaleAvailability: -5,
-          femaleUnexpectedIn: 0,
-          femaleExpectedIn: 0,
-          femaleExpectedOut: 0,
-          maleUnexpectedIn: 0,
-          maleExpectedIn: 0,
-          maleExpectedOut: 0,
+          femaleUnexpectedIn: [],
+          femaleExpectedIn: [],
+          femaleExpectedOut: [],
+          maleUnexpectedIn: [],
+          maleExpectedIn: [],
+          maleExpectedOut: [],
           malePrebooking: that.male_prebooking.length,
           femalePrebooking: that.female_prebooking.length,
           maleContingency: that.male_contingency.length,
@@ -134,6 +143,73 @@ describe('UNIT CentreModel', () => {
       expect(subject).to.have.a.property('femalePrebooking', 2);
       expect(subject).to.have.a.property('maleContingency', 1);
       expect(subject).to.have.a.property('femaleContingency', 2);
+    });
+  });
+
+  describe('helpers', () => {
+
+    describe('#unreconciledMovementReducer', () => {
+      const unreconciledMovementFilter = model.__get__('unreconciledMovementReducer');
+      const movements = [{
+        id: 1, cid_id: 11,
+        gender: 'male', direction: 'in'
+      }, {
+        id: 2, cid_id: 22,
+        gender: 'male', direction: 'in'
+      }, {
+        id: 3, cid_id: 33,
+        gender: 'male', direction: 'out'
+      }, {
+        id: 4, cid_id: 44,
+        gender: 'female', direction: 'in'
+      }];
+
+      it('should reduce the unreconciled movements to only those with the specified `gender` and `direction`', () => {
+        expect(unreconciledMovementFilter(movements, 'female', 'in'))
+          .to.have.lengthOf(1).and.have.deep.property('[0].cid_id', 44);
+        expect(unreconciledMovementFilter(movements, 'male', 'in'))
+          .to.have.lengthOf(2);
+        return expect(unreconciledMovementFilter(movements, 'female', 'out')).to.be.empty;
+      });
+
+      it('should reduce the filtered movements to simplified objects containing only the `id` and `cid_id` attributes', () => {
+        expect(unreconciledMovementFilter(movements, 'male', 'in')).to.deep.equal([
+          { id: 1, cid_id: 11 },
+          { id: 2, cid_id: 22 }
+        ]);
+      });
+    });
+
+    describe('#unreconciledEventReducer', () => {
+      const unreconciledEventReducer = model.__get__('unreconciledEventReducer');
+      const events = [{
+        id: 1, operation: 'check in',
+        detainee: { gender: 'male', cid_id: 11 }
+      }, {
+        id: 2, operation: 'check in',
+        detainee: { gender: 'male', cid_id: 22 }
+      }, {
+        id: 3, operation: 'check out',
+        detainee: { gender: 'male', cid_id: 33 }
+      }, {
+        id: 4, operation: 'check in',
+        detainee: { gender: 'female', cid_id: 44 }
+      }];
+
+      it('should reduce the unreconciled events to only those with the specified `gender` and `operation`', () => {
+        expect(unreconciledEventReducer(events, 'female', 'check in'))
+          .to.have.lengthOf(1).and.have.deep.property('[0].cid_id', 44);
+        expect(unreconciledEventReducer(events, 'male', 'check in'))
+          .to.have.lengthOf(2);
+        return expect(unreconciledEventReducer(events, 'female', 'check out')).to.be.empty;
+      });
+
+      it('should reduce the filtered events to simplified objects containing only the `id` and `cid_id` attributes', () => {
+        expect(unreconciledEventReducer(events, 'male', 'check in')).to.deep.equal([
+          { id: 1, cid_id: 11 },
+          { id: 2, cid_id: 22 }
+        ]);
+      });
     });
 
   });
@@ -257,6 +333,10 @@ describe('INTEGRATION CentreModel', () => {
   it('should on destroy, destroy orphaned events', () =>
     Centres.destroy()
       .then(() => expect(Event.find()).to.eventually.have.length(0))
+  );
+  it('should on destroy, destroy orphaned beds', () =>
+    Centres.destroy()
+      .then(() => expect(Bed.find()).to.eventually.have.length(0))
   );
   it('should on destroy, destroy orphaned detainee', () =>
     Centres.destroy()

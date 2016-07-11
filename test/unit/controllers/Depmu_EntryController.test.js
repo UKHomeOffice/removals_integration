@@ -123,6 +123,24 @@ describe('UNIT Depmu_EntryController', () => {
     });
   });
 
+  describe('filterContingencyWithoutCid', () => {
+    it('should remove any contingencies that have a cid', () =>
+      expect(controller.filterContingencyWithoutCid({contingency: true, cid_id: 'example'})).to.not.be.ok
+    );
+
+    it('should leave in contingencies without a cid', () =>
+      expect(controller.filterContingencyWithoutCid({contingency: true, cid_id: null})).to.be.ok
+    );
+
+    it('should leave in prebookings with a cid', () =>
+      expect(controller.filterContingencyWithoutCid({contingency: false, cid_id: 'example'})).to.be.ok
+    );
+
+    it('should leave in prebooking without a cid', () =>
+      expect(controller.filterContingencyWithoutCid({contingency: false})).to.be.ok
+    );
+  });
+
   describe('filterNonEmptyPrebookings', () => {
     it('should leave in non-empty prebookings', () =>
       expect(controller.filterNonEmptyPrebookings({
@@ -235,6 +253,7 @@ describe('UNIT Depmu_EntryController', () => {
         formatPrebooking: sinon.spy(controller, 'formatPrebooking'),
         populatePrebookingWithContingency: sinon.spy(controller, 'populatePrebookingWithContingency'),
         populatePrebookingWithCentreAndGender: sinon.spy(controller, 'populatePrebookingWithCentreAndGender'),
+        filterContingencyWithoutCid: sinon.spy(controller, 'filterContingencyWithoutCid'),
         filterNonEmptyPrebookings: sinon.spy(controller, 'filterNonEmptyPrebookings'),
         filterCurrentRangePrebookings: sinon.spy(controller, 'filterCurrentRangePrebookings'),
         filterPrebookingsWithNoMovementOrder: sinon.spy(controller, 'filterPrebookingsWithNoMovementOrder'),
@@ -251,6 +270,7 @@ describe('UNIT Depmu_EntryController', () => {
       context.formatPrebooking.restore();
       context.populatePrebookingWithContingency.restore();
       context.populatePrebookingWithCentreAndGender.restore();
+      context.filterContingencyWithoutCid.restore();
       context.filterNonEmptyPrebookings.restore();
       context.filterCurrentRangePrebookings.restore();
       context.filterPrebookingsWithNoMovementOrder.restore();
@@ -271,6 +291,7 @@ describe('UNIT Depmu_EntryController', () => {
           expect(context.formatPrebooking).to.have.been.calledOnce.with(req.body.Output);
           expect(context.populatePrebookingWithContingency).to.have.been.calledOnce;
           expect(context.populatePrebookingWithCentreAndGender).to.have.been.calledOnce;
+          expect(context.filterContingencyWithoutCid).to.have.been.calledOnce;
           expect(context.filterNonEmptyPrebookings).to.have.been.calledOnce;
           expect(context.filterCurrentRangePrebookings).to.have.been.calledOnce;
           expect(context.filterPrebookingsWithNoMovementOrder).to.have.been.calledOnce;

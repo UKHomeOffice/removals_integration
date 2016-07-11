@@ -4,3 +4,4 @@ coverage
 .editorconfig
 .tmp
 dump.rdb
+docker-compose.yml

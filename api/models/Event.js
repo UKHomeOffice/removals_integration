@@ -1,5 +1,6 @@
+/* global Event */
 'use strict';
-
+var DuplicationError = require('../lib/exceptions/DuplicationError');
 var LinkingModels = require('sails-linking-models');
 var ModelHelpers = require('../lib/ModelHelpers');
 
@@ -31,7 +32,22 @@ const model = {
       type: 'datetime',
       required: true
     }
-  }
+  },
+
+  afterValidate: (values, cb) =>
+    Event.find({
+      centre: values.centre,
+      detainee: values.detainee,
+      operation: values.operation,
+      timestamp: values.timestamp
+    })
+      .then(events => {
+        if (events.length > 0) {
+          return cb(new DuplicationError("Duplicate event"));
+        }
+        cb();
+      })
+
 };
 
 Object.assign(model, operations);

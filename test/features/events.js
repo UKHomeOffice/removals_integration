@@ -4,6 +4,42 @@ var Event2 = require('../../api/models/Event');
 
 describe('Check In Event', () => {
 
+  Scenario('Reject duplications with 208', () => {
+
+    before(function () {
+      global.testConfig.initializeBarrelsFixtures = false;
+      return global.initializeBarrelsFixtures();
+    });
+
+    after(function () {
+      global.testConfig.initializeBarrelsFixtures = true;
+    });
+    var date = new Date(923423234);
+    var dateString = date.toISOString();
+    const payload = {
+      person_id: 123,
+      cid_id: 999,
+      operation: 'check in',
+      timestamp: dateString,
+      gender: 'm',
+      nationality: 'gbr',
+      centre: 'bigone'
+    };
+    Given('I send a check in', () =>
+      request(sails.hooks.http.app)
+        .post('/irc_entry/event')
+        .send(payload)
+        .expect(201)
+    )
+    Then('I send another check in', () =>
+      request(sails.hooks.http.app)
+        .post('/irc_entry/event')
+        .send(payload)
+        .expect(208)
+    )
+
+  })
+
   Scenario('Non-Existent Event should be Created', () => {
 
     var date = new Date(923423234);
@@ -84,12 +120,11 @@ describe('Check In Event', () => {
       global.testConfig.initializeBarrelsFixtures = true;
     });
 
-    var createEvent = function () {
-      return request(sails.hooks.http.app)
+    var createEvent = () =>
+      request(sails.hooks.http.app)
         .post('/irc_entry/event')
         .send(payload)
         .expect(201);
-    };
 
     Given('a detainee event with timestamp `' + dateString + '` has already occurred', () =>
 
@@ -102,20 +137,6 @@ describe('Check In Event', () => {
             }
           }).then((models) => expect(models.length).to.equal(1))
         )
-    );
-
-    When('a valid detainee event with timestamp `' + dateString + '` occurs', createEvent);
-
-    Then('a detainee event with timestamp `' + dateString + '` should be created from the check in received', () =>
-
-      Event.find({
-        where: {
-          timestamp: dateString,
-          operation: 'check in'
-        }
-      }).then((models) =>
-        expect(models.length).to.equal(2)
-      )
     );
 
   });
@@ -294,7 +315,57 @@ describe('Check In Event', () => {
       timestamp: (new Date()).toISOString(),
       centre: 'bigone'
     }
-  }
+  };
+
+  Scenario('An unexpected check in appears on the wallboard, and its associated CID shows in the drilldown', () => {
+
+    const centre = {
+      name: 'bigone',
+      male_capacity: 999,
+      female_capacity: 750,
+      id: 1,
+      male_cid_name: ['bigone male holding', 'smallone male holding'],
+      female_cid_name: ['bigone female office', 'smallone female holding']
+    };
+
+    before(function () {
+      global.testConfig.initializeBarrelsFixtures = false;
+    });
+    after(function () {
+      global.testConfig.initializeBarrelsFixtures = true;
+    });
+
+    Given('there is a single centre', () =>
+      Centres.destroy({})
+        .then(() => Centres.create(centre))
+        .then(() => expect(Centres.find({})).to.eventually.have.lengthOf(1))
+    );
+
+    And('it has no events', () => expect(Event.find({})).to.eventually.be.empty);
+
+    And('it has no movements', () => expect(Movement.find({})).to.eventually.be.empty);
+
+    When('a check in event occurs', () =>
+      createRequest(exampleEvents.OPERATION_CHECK_IN, '/irc_entry/event', 201)
+        .then(() => expect(Event.find({})).to.eventually.have.lengthOf(1))
+    );
+
+    Then('the event should appear in the `Unexpected incoming` section', () =>
+      request_auth(sails.hooks.http.app)
+        .get('/centres')
+        .expect(200)
+        .then(res =>
+          expect((this.centres = res.body.data)).to.be.an('array')
+            .that.has.lengthOf(1)
+            .with.deep.property('[0].attributes.femaleUnexpectedIn')
+            .that.is.an('array').that.has.lengthOf(1)
+            .with.deep.property('[0].cid_id', exampleEvents.OPERATION_CHECK_IN.cid_id))
+    );
+
+    And('the centre\'s `availability` count should be unchanged', () =>
+      expect(this.centres[0].attributes.maleAvailability).to.equal(this.centres[0].attributes.maleCapacity)
+    );
+  });
 
   describe('Check in', () => {
     it('should be able to be created', () => {

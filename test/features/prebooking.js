@@ -55,18 +55,15 @@ Feature('Prebooking', () => {
         }, {
           timestamp: validTimestamp,
           location: 'bigone male holding',
-          task_force: 'HTU',
-          cid_id: '444'
+          task_force: 'HTU'
         }, {
           timestamp: validTimestamp,
           location: 'bigone male holding',
-          task_force: "HTU Failed RD's",
-          cid_id: '555'
+          task_force: "HTU Failed RD's"
         }, {
           timestamp: validTimestamp,
           location: 'smallone female holding',
-          task_force: 'HTU Borderforce',
-          cid_id: ''
+          task_force: 'HTU Borderforce'
         }, {
           timestamp: validTimestamp,
           location: 'smallone female holding',
@@ -97,8 +94,8 @@ Feature('Prebooking', () => {
       When(`new valid prebookings occur`, () =>
         createRequest(followingPayload, '/depmu_entry/prebooking', 201));
 
-      Then('previous prebookings recorded are removed',
-        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+      Then('previous prebookings recorded are removed', () =>
+        findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
       );
 
       And(`new female prebookings are created`, () =>
@@ -158,12 +155,12 @@ Feature('Prebooking', () => {
       When(`a new invalid prebooking occurs`, () =>
         createRequest(followingPayload, '/depmu_entry/prebooking', 400));
 
-      Then('previous prebookings recorded are retained',
-        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(1))
+      Then('previous prebookings recorded are retained', () =>
+        findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(1))
       );
 
-      And(`new invalid prebooking is not created`,
-        () => findPrebookingByCID(followingPayload.cid_id).then((models) => expect(models.length).to.equal(0))
+      And(`new invalid prebooking is not created`, () =>
+        findPrebookingByCID(followingPayload.cid_id).then((models) => expect(models.length).to.equal(0))
       );
 
     });
@@ -202,8 +199,8 @@ Feature('Prebooking', () => {
       When(`a valid movement-in order event with cid id "${movementOrderPayload.Output[0]['CID Person ID']}" occurs`, () =>
         createRequest(movementOrderPayload, '/cid_entry/movement', 201));
 
-      Then(`the prebooking with cid id "${payload.Output[0].cid_id}" is removed`,
-        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+      Then(`the prebooking with cid id "${payload.Output[0].cid_id}" is removed`, () =>
+        findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
       );
 
     });
@@ -241,8 +238,8 @@ Feature('Prebooking', () => {
       When(`a valid prebooking with cid id "${payload.Output[0].cid_id}" occurs`, () =>
         createRequest(payload, '/depmu_entry/prebooking', 422));
 
-      Then(`the prebooking with cid id "${payload.Output[0].cid_id}" is ignored`,
-        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+      Then(`the prebooking with cid id "${payload.Output[0].cid_id}" is ignored`, () =>
+        findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
       );
 
     });
@@ -276,7 +273,6 @@ Feature('Prebooking', () => {
       });
 
       Given(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
-
         createRequest(payload, '/depmu_entry/prebooking', 201)
           .then(() => findPrebookingByCID(payload.Output[0].cid_id))
           .then((models) => {
@@ -288,8 +284,8 @@ Feature('Prebooking', () => {
       When(`new prebookings with timestamps not for today occur`, () =>
         createRequest(followingPayload, '/depmu_entry/prebooking', 422));
 
-      Then(`the new prebooking will not be considered and old prebookings are retained`,
-        () => findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(1))
+      Then(`the new prebooking will not be considered and old prebookings are retained`, () =>
+        findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(1))
       );
     });
 
@@ -334,16 +330,16 @@ Feature('Prebooking', () => {
       When(`new prebookings with past, future and present timestamps occur`, () =>
         createRequest(followingPayload, '/depmu_entry/prebooking', 201));
 
-      Then(`the new prebooking with timestamp "${followingPayload.Output[0].timestamp}" is not considered`,
-        () => findPrebookingByCID(followingPayload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+      Then(`the new prebooking with timestamp "${followingPayload.Output[0].timestamp}" is not considered`, () =>
+        findPrebookingByCID(followingPayload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
       );
 
-      And(`the new prebooking with timestamp "${followingPayload.Output[1].timestamp}" is not considered`,
-        () => findPrebookingByCID(followingPayload.Output[1].cid_id).then((models) => expect(models.length).to.equal(0))
+      And(`the new prebooking with timestamp "${followingPayload.Output[1].timestamp}" is not considered`, () =>
+        findPrebookingByCID(followingPayload.Output[1].cid_id).then((models) => expect(models.length).to.equal(0))
       );
 
-      And(`the new prebooking with timestamp "${followingPayload.Output[2].timestamp}" is considered`,
-        () => findPrebookingByCID(followingPayload.Output[2].cid_id).then((models) => expect(models.length).to.equal(1))
+      And(`the new prebooking with timestamp "${followingPayload.Output[2].timestamp}" is considered`, () =>
+        findPrebookingByCID(followingPayload.Output[2].cid_id).then((models) => expect(models.length).to.equal(1))
       );
     });
   });

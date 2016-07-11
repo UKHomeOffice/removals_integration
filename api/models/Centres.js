@@ -1,9 +1,23 @@
-/* global Movement, Detainee, Event, Prebooking, Heartbeat */
+/* global Movement, Detainee, Event, Prebooking, Heartbeat, Bed */
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');
 var BedCountService = require('../services/BedCountService');
 var LinkingModels = require('sails-linking-models');
+
+// helpers
+const unreconciledMovementReducer = (movements, gender, direction) => movements.reduce((reduced, m) => {
+  if (m.gender === gender && m.direction === direction) {
+    reduced.push({id: m.id, cid_id: m.cid_id});
+  }
+  return reduced;
+}, []);
+const unreconciledEventReducer = (events, gender, operations) => events.reduce((reduced, event) => {
+  if (event.detainee.gender === gender && operations.indexOf(event.operation) >= 0) {
+    reduced.push({id: event.id, cid_id: event.detainee.cid_id});
+  }
+  return reduced;
+}, []);
 
 const model = {
   schema: true,
@@ -94,19 +108,6 @@ const model = {
       via: 'centre'
     },
     toJSON: function () {
-      const unreconciledEventCounter = (gender, operations) => this.unreconciledEvents.reduce((count, event) => {
-        if (event.detainee.gender === gender && operations.indexOf(event.operation) >= 0) {
-          return count + 1;
-        }
-        return count;
-      }, 0);
-      const unreconciledMovementCounter = (gender, direction) => this.unreconciledMovements.reduce((count, movement) => {
-        if (movement.gender === gender && movement.direction === direction) {
-          return count + 1;
-        }
-        return count;
-      }, 0);
-
       const response = {
         type: 'centre',
         id: this.id.toString(),
@@ -122,19 +123,20 @@ const model = {
       ['male', 'female'].forEach((gender) => {
         response.attributes[gender + 'Capacity'] = this[gender + '_capacity'];
         response.attributes[gender + 'InUse'] = this[gender + '_in_use'];
-        response.attributes[gender + 'OutOfCommission'] = this[gender + '_out_of_commission'];
+        response.attributes[gender + 'OutOfCommissionTotal'] = this[gender + '_out_of_commission'];
+        response.attributes[gender + 'OutOfCommissionDetail'] = this.outOfCommission ? this.outOfCommission[gender] : null;
         response.attributes[gender + 'Prebooking'] = this[gender + '_prebooking'].length;
         response.attributes[gender + 'Contingency'] = this[gender + '_contingency'].length;
         response.attributes[gender + 'Availability'] = response.attributes[gender + 'Capacity'];
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'InUse'];
-        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'OutOfCommission'];
+        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'OutOfCommissionTotal'];
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Prebooking'];
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Contingency'];
         if (this.reconciled) {
-          response.attributes[gender + 'UnexpectedIn'] = unreconciledEventCounter(gender, ['check in']);
-          response.attributes[gender + 'ExpectedIn'] = unreconciledMovementCounter(gender, 'in');
-          response.attributes[gender + 'ExpectedOut'] = unreconciledMovementCounter(gender, 'out');
-          response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ExpectedIn'];
+          response.attributes[gender + 'UnexpectedIn'] = unreconciledEventReducer(this.unreconciledEvents, gender, ['check in']);
+          response.attributes[gender + 'ExpectedIn'] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'in');
+          response.attributes[gender + 'ExpectedOut'] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'out');
+          response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ExpectedIn'].length;
         }
       });
       return response;
@@ -157,10 +159,6 @@ const model = {
         }
       }))[0]
     );
-  },
-
-  removeNonOccupancy: function () {
-    return this.destroy({'mo-type': 'non-occupancy'});
   },
 
   afterCreate: (centre, done) =>
@@ -190,6 +188,7 @@ const model = {
       Movement.destroy({centre: record.id})
         .then(() => Prebooking.destroy({centre: record.id}))
         .then(() => Event.destroy({centre: record.id}))
+        .then(() => Bed.destroy({centre: record.id}))
         .then(() => Detainee.destroy({centre: record.id}))
         .then(() => Heartbeat.destroy({centre: record.id}))
         .then(() => this.publishDestroy(record.id))

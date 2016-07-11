@@ -21,7 +21,10 @@ global.initializeBarrelsFixtures = function () {
       'detainee',
       'event',
       'heartbeat',
-      'prebooking'
+      'prebooking',
+      'bed',
+      'bedevent',
+      'port'
     ], function (err) {
       if (err) throw err;
       resolve();
@@ -62,6 +65,16 @@ global.createRequest = function (payload, path, res) {
     .post(path)
     .send(payload)
     .expect(res);
+};
+
+global.assertCentresHTTPResponse = function (key, value) {
+  return global.request(sails.hooks.http.app)
+    .get('/centres')
+    .expect(200)
+    .expect(res => {
+        expect(res.body.data[0].attributes[key]).to.deep.equal(value)
+      }
+    );
 };
 
 module.exports = {

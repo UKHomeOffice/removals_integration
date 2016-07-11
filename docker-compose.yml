@@ -1,11 +1,34 @@
-app:
-  build: .
-  environment:
-  - NODE_ENV=docker-compose
-redis:
-  image: redis
-  net: "host"
-mysql:
-  image: mysql
-  environment:
-    MYSQL_ROOT_PASSWORD:
+version: '2'
+services:
+
+  app:
+    build: .
+    entrypoint: sh -c 'while ! timeout 1 bash -c "echo > /dev/tcp/mysql/3306 && echo > /dev/tcp/redis/6379"; do sleep 1; done; npm run migrations ; npm start'
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - DBHOST=mysql
+      - DBPORT=3306
+      - DBUSER=root
+      - DBPASS=root
+      - DBNAME=removals
+      - REDIS_SERVICE_HOST=redis
+      - REDIS_SERVICE_PORT=6379
+    depends_on:
+      - mysql
+      - redis
+    ports:
+      - "8080:8080"
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  mysql:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=removals
+      - MYSQL_ROOT_PASSWORD=root
