@@ -242,13 +242,13 @@ Feature('Bed Events', () => {
       );
     });
 
-    Scenario('Reason: Maintenance – Planned works', () => {
+    Scenario('Reason: Maintenance - Planned works', () => {
       var OUT_OF_COMMISSION = {
         operation: BedEvent2.OPERATION_OUT_OF_COMMISSION,
         timestamp: timestamp.new,
         centre: centre.name,
         bed_ref: bedRef,
-        reason: 'Maintenance – Planned works',
+        reason: 'Maintenance - Planned works',
         gender: 'm'
       };
 
@@ -285,7 +285,7 @@ Feature('Bed Events', () => {
       );
 
       And("the centre's `out of commission details` object should include the occ", () =>
-        assertCentresHTTPResponse('maleOutOfCommissionDetail', {"Maintenance – Planned works": 1})
+        assertCentresHTTPResponse('maleOutOfCommissionDetail', {"Maintenance - Planned works": 1})
       );
     });
     Scenario('Reason: Crime Scene', () => {
