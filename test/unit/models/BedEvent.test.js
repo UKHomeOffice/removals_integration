@@ -54,7 +54,7 @@ describe('UNIT BedEventModel', () => {
       return expect(populate).to.be.calledWith('bed', {
         where: {
           centre: input
-        }, select: ['gender']
+        }, select: ['gender', 'centre']
       });
     });
   });

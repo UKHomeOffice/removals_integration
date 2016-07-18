@@ -70,10 +70,10 @@ const model = {
       .populate('bed', {
         where: {
           centre: centreId
-        }, select: ['gender']
+        }, select: ['gender', 'centre']
       })
       .toPromise()
-      .filter((event) => !_.isEmpty(event.bed)),
+      .filter((event) => !_.isEmpty(event.bed) && event.bed.centre === centreId),
 
   groupByGender: (events) =>
     _.groupBy(events, (e) => e.bed.gender),
