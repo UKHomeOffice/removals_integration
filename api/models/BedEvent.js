@@ -13,7 +13,7 @@ const reasons = {
   REASON_SINGLE_OCCUPANCY: "Single Occupancy",
   REASON_DAMAGE: "Maintenance - Malicious/Accidental Damage",
   REASON_HEALTH_AND_SAFETY: "Maintenance - Health and Safety Concern",
-  REASON_PLANNED: "Maintenance – Planned works",
+  REASON_PLANNED: "Maintenance - Planned works",
   REASON_CRIME: "Crime Scene",
   REASON_MEDICAL: "Medical Isolation",
   REASON_OTHER: "Other"
@@ -94,12 +94,12 @@ const model = {
       timestamp: values.timestamp,
       reason: values.reason
     })
-      .then(bedevents => {
-        if (bedevents.length > 0) {
-          return cb(new DuplicationError("Duplicate event"));
-        }
-        cb();
-      })
+    .then(bedevents => {
+      if (bedevents.length > 0) {
+        return cb(new DuplicationError("Duplicate event"));
+      }
+      cb();
+    })
 };
 
 Object.assign(model, operations, reasons);
