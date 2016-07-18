@@ -81,7 +81,7 @@ describe('UNIT BedEventModel', () => {
         bed: {
           gender: 'female'
         },
-        reason: 'Maintenance – Planned works'
+        reason: 'Maintenance - Planned works'
       }, {
         bed: {
           gender: 'female'
@@ -110,7 +110,7 @@ describe('UNIT BedEventModel', () => {
       },
       female: {
         'Maintenance - Health and Safety Concern': 1,
-        'Maintenance – Planned works': 1,
+        'Maintenance - Planned works': 1,
         'Crime Scene': 1,
         'Medical Isolation': 1,
         Other: 2
@@ -174,7 +174,7 @@ describe('UNIT BedEventModel', () => {
         reason: 'Maintenance - Health and Safety Concern'
       }, {
         bed: {gender: 'female'},
-        reason: 'Maintenance – Planned works'
+        reason: 'Maintenance - Planned works'
       }, {
         bed: {gender: 'female'},
         reason: 'Crime Scene'
@@ -197,7 +197,7 @@ describe('UNIT BedEventModel', () => {
       },
       female: {
         'Maintenance - Health and Safety Concern': 1,
-        'Maintenance – Planned works': 1,
+        'Maintenance - Planned works': 1,
         'Crime Scene': 1,
         'Medical Isolation': 1,
         Other: 2
