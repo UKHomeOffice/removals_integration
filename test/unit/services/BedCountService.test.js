@@ -106,7 +106,7 @@ describe('UNIT BedCountService', () => {
           female: {
             'Crime Scene': 1,
             'Maintenance - Health and Safety Concern': 1,
-            'Maintenance – Planned works': 1,
+            'Maintenance - Planned works': 1,
             'Medical Isolation': 1,
             'Other': 2
           },
@@ -123,7 +123,7 @@ describe('UNIT BedCountService', () => {
         },
         female: {
           'Maintenance - Health and Safety Concern': 1,
-          'Maintenance – Planned works': 1,
+          'Maintenance - Planned works': 1,
           'Crime Scene': 1,
           'Medical Isolation': 1,
           Other: 2
