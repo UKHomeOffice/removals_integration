@@ -60,6 +60,12 @@ const model = {
       .then(BedEvent.groupByGender)
       .then(BedEvent.groupAndCountByReason),
 
+  /**
+   * The implementation below is intended and not redundant:
+   * sails version 0.11.5 presumably has an issue where sails-mysql doesn't consistently
+   * do populates with where clauses in the same way that sails-memory does, hence the
+   * requirement to filter event.bed.centre === centreId post populate with where
+   */
   getCurrentOOCByCentre: (centreId) =>
     BedEvent.find({
       where: {
@@ -67,13 +73,13 @@ const model = {
         operation: operations.OPERATION_OUT_OF_COMMISSION
       }
     })
-      .populate('bed', {
-        where: {
-          centre: centreId
-        }, select: ['gender']
-      })
-      .toPromise()
-      .filter((event) => !_.isEmpty(event.bed)),
+    .populate('bed', {
+      where: {
+        centre: centreId
+      }, select: ['gender', 'centre']
+    })
+    .toPromise()
+    .filter((event) => !_.isEmpty(event.bed) && event.bed.centre === centreId),
 
   groupByGender: (events) =>
     _.groupBy(events, (e) => e.bed.gender),
