@@ -1,4 +1,6 @@
-# bedspacemanagement
+# Removals Integration API
+
+[![Build](https://travis-ci.org/UKHomeOffice/removals_integration.png)](https://travis-ci.org/UKHomeOffice/removals_integration)
 
 ## Quickstart:
 
