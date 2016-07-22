@@ -90,7 +90,7 @@ const model = {
     ),
 
   deactivatePastBedEvents: (bid, timestamp) =>
-    BedEvent.update({bed: bid, timestamp: {'<=': timestamp}}, {active: false}),
+    BedEvent.update({bed: bid, timestamp: {'<=': new Date(timestamp)}}, {active: false}),
 
   afterValidate: (values, cb) =>
     BedEvent.find({

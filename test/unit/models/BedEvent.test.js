@@ -211,7 +211,7 @@ describe('UNIT BedEventModel', () => {
 
   describe('deactivatePastBedEvents', () => {
     var bid = '1';
-    var ts = 'this';
+    var ts = 100;
 
     beforeEach(() => sinon.stub(BedEvent, 'update').resolves(true));
 
@@ -219,9 +219,9 @@ describe('UNIT BedEventModel', () => {
 
     it('should pass the correct mapping to BedEvent.update', () => {
         model.deactivatePastBedEvents(bid, ts);
-        return expect(BedEvent.update).to.be.calledWith({
+        return expect(BedEvent.update).to.be.calledWithMatch({
           bed: '1',
-          timestamp: {'<=': 'this'}
+          timestamp: {'<=': new Date(100)}
         }, {active: false});
       }
     );
