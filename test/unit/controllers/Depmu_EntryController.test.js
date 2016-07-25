@@ -183,6 +183,7 @@ describe('UNIT Depmu_EntryController', () => {
     var dummyMovement = {
       centre: 2,
       id: 2,
+      mo_ref:2,
       cid_id: 312,
       direction: 'in',
       timestamp: new Date(),

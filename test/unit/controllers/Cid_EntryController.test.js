@@ -42,7 +42,7 @@ describe('INTEGRATION Cid_EntryController', () => {
         expect(Movement.find({active: true})).to.eventually.have.length(19)
       );
       it('should mark existing all movements in the payload as active that were previously inactive', () => {
-          expect(Movement.findOne(316512)).to.eventually.include({'active': true})
+          expect(Movement.findOne({mo_ref:316512})).to.eventually.include({'active': true})
         }
       );
       it('should mark existing all movements not in the payload as inactive', () =>
@@ -222,10 +222,13 @@ describe('UNIT Cid_EntryController', () => {
     };
     it('should pass the correct mapping to findAndUpdateOrCreate', () => {
       controller.movementProcess(dummyMovement);
-      return expect(Movement.findAndUpdateOrCreate).to.be.calledWith(dummyMovement['MO Ref.'],
+      return expect(Movement.findAndUpdateOrCreate).to.be.calledWith({
+          centre: 1,
+          mo_ref: 3
+        },
         {
           centre: 1,
-          id: 3,
+          mo_ref: 3,
           gender: 'male',
           cid_id: 4,
           active: true,

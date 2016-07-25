@@ -26,6 +26,10 @@ const model = {
       enum: ['male', 'female'],
       required: true
     },
+    mo_ref: {
+      type: 'integer',
+      required: true
+    },
     cid_id: {
       type: 'integer',
       required: true

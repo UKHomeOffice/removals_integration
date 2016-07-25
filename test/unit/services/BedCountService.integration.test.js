@@ -48,6 +48,7 @@ describe('BedCountService', () => {
         movements: [
           {
             "id": 1,
+            "mo_ref": 1,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 12345,
@@ -57,6 +58,7 @@ describe('BedCountService', () => {
           },
           {
             "id": 2,
+            "mo_ref": 2,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 123415,
@@ -112,6 +114,7 @@ describe('BedCountService', () => {
         movements: [
           {
             "id": 1,
+            "mo_ref": 1,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 12345,
@@ -248,6 +251,7 @@ describe('BedCountService', () => {
         movements: [
           {
             "id": 1,
+            "mo_ref": 1,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 12345,
@@ -296,6 +300,7 @@ describe('BedCountService', () => {
         movements: [
           {
             "id": 1,
+            "mo_ref": 1,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 12345,
@@ -344,6 +349,7 @@ describe('BedCountService', () => {
         movements: [
           {
             "id": 1,
+            "mo_ref": 1,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 12345,
@@ -392,6 +398,7 @@ describe('BedCountService', () => {
         movements: [
           {
             "id": 1,
+            "mo_ref": 1,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 12345,
@@ -440,6 +447,7 @@ describe('BedCountService', () => {
         movements: [
           {
             "id": 1,
+            "mo_ref": 1,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 12345,
@@ -488,6 +496,7 @@ describe('BedCountService', () => {
         movements: [
           {
             "id": 1,
+            "mo_ref": 1,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 12345,
@@ -536,6 +545,7 @@ describe('BedCountService', () => {
         movements: [
           {
             "id": 50,
+            "mo_ref": 50,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 999111,
@@ -545,6 +555,7 @@ describe('BedCountService', () => {
           },
           {
             "id": 51,
+            "mo_ref": 51,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 999111,
@@ -554,6 +565,7 @@ describe('BedCountService', () => {
           },
           {
             "id": 52,
+            "mo_ref": 52,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 999111,
@@ -563,6 +575,7 @@ describe('BedCountService', () => {
           },
           {
             "id": 53,
+            "mo_ref": 53,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 11111, // No matching event for cid
@@ -572,6 +585,7 @@ describe('BedCountService', () => {
           },
           {
             "id": 54,
+            "mo_ref": 54,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 999111,
@@ -581,6 +595,7 @@ describe('BedCountService', () => {
           },
           {
             "id": 55,
+            "mo_ref": 55,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 999111,
@@ -590,6 +605,7 @@ describe('BedCountService', () => {
           },
           {
             "id": 56, // matches Event:54
+            "mo_ref": 56,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 777888,
@@ -599,6 +615,7 @@ describe('BedCountService', () => {
           },
           {
             "id": 57, // matches Event:55
+            "mo_ref": 57,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 999111,
@@ -608,6 +625,7 @@ describe('BedCountService', () => {
           },
           {
             "id": 58, // matches Event:56
+            "mo_ref": 58,
             "centre": { id: 1 },
             "gender": "male",
             "cid_id": 999111,
