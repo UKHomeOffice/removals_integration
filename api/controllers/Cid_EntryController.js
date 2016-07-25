@@ -52,15 +52,14 @@ module.exports = {
       .toPromise()
       .map(port => port.location)
       .then(ports => {
-        _.each(movements, (movement, key) => {
+        _.each(movements, (movement) => {
           if (movement['MO Type'] === nonOccupancyType && _.include(ports, movement.Location)) {
-            let potential_corresponding_movement_key = movement['MO In/MO Out'] === "out" ? key + 1 : key - 1;
-
-            movements[key]["MO Type"] = failedRemovalReturnType;
-
-            if (movements[potential_corresponding_movement_key]['MO Type'] === nonOccupancyType) {
-              movements[potential_corresponding_movement_key]["MO Type"] = failedRemovalReturnType;
-            }
+            movements = _.map(movements, (movementb) => {
+              if (movementb['MO Ref.'] === movement['MO Ref.']) {
+                movementb["MO Type"] = failedRemovalReturnType;
+              }
+              return movementb;
+            });
           }
         });
         return movements;

@@ -87,6 +87,18 @@ describe('INTEGRATION Cid_EntryController', () => {
         "Location": "an IRC",
         "MO In/MO Out": "in",
         "MO Type": "Non-Occupancy",
+        "MO Ref.": 1000,
+      },
+      {
+        "Location": "an IRC",
+        "MO In/MO Out": "out",
+        "MO Type": "Non-Occupancy",
+        "MO Ref.": 1001,
+      },
+      {
+        "Location": "Not a port",
+        "MO In/MO Out": "in",
+        "MO Type": "Non-Occupancy",
         "MO Ref.": 1001,
       },
       {
@@ -96,34 +108,22 @@ describe('INTEGRATION Cid_EntryController', () => {
         "MO Ref.": 1002,
       },
       {
-        "Location": "Not a port",
-        "MO In/MO Out": "in",
-        "MO Type": "Non-Occupancy",
-        "MO Ref.": 1003,
-      },
-      {
-        "Location": "an IRC",
-        "MO In/MO Out": "out",
-        "MO Type": "Non-Occupancy",
-        "MO Ref.": 1004,
-      },
-      {
         "Location": "Big airport terminal 1",
         "MO In/MO Out": "in",
         "MO Type": "Non-Occupancy",
-        "MO Ref.": 1005,
-      },
-      {
-        "Location": "Big airport terminal 1",
-        "MO In/MO Out": "out",
-        "MO Type": "Failed-Removal-Return",
-        "MO Ref.": 1006,
+        "MO Ref.": 1002,
       },
       {
         "Location": "an IRC",
         "MO In/MO Out": "in",
         "MO Type": "Occupancy",
-        "MO Ref.": 1007,
+        "MO Ref.": 1003,
+      },
+      {
+        "Location": "Big airport terminal 1",
+        "MO In/MO Out": "out",
+        "MO Type": "Failed-Removal-Return",
+        "MO Ref.": 1003,
       }
     ];
     var expected = [
@@ -137,43 +137,43 @@ describe('INTEGRATION Cid_EntryController', () => {
         "Location": "an IRC",
         "MO In/MO Out": "in",
         "MO Type": "Failed-Removal-Return",
-        "MO Ref.": 1001,
+        "MO Ref.": 1000,
       },
       {
         "Location": "an IRC",
         "MO In/MO Out": "out",
         "MO Type": "Non-Occupancy",
-        "MO Ref.": 1002,
+        "MO Ref.": 1001,
       },
       {
         "Location": "Not a port",
         "MO In/MO Out": "in",
         "MO Type": "Non-Occupancy",
-        "MO Ref.": 1003,
+        "MO Ref.": 1001,
       },
       {
         "Location": "an IRC",
         "MO In/MO Out": "out",
         "MO Type": "Failed-Removal-Return",
-        "MO Ref.": 1004,
+        "MO Ref.": 1002,
       },
       {
         "Location": "Big airport terminal 1",
         "MO In/MO Out": "in",
         "MO Type": "Failed-Removal-Return",
-        "MO Ref.": 1005,
-      },
-      {
-        "Location": "Big airport terminal 1",
-        "MO In/MO Out": "out",
-        "MO Type": "Failed-Removal-Return",
-        "MO Ref.": 1006,
+        "MO Ref.": 1002,
       },
       {
         "Location": "an IRC",
         "MO In/MO Out": "in",
         "MO Type": "Occupancy",
-        "MO Ref.": 1007,
+        "MO Ref.": 1003,
+      },
+      {
+        "Location": "Big airport terminal 1",
+        "MO In/MO Out": "out",
+        "MO Type": "Failed-Removal-Return",
+        "MO Ref.": 1003,
       }
     ];
     it('should locate non-occupancy movement orders referring to ports and change their type', () =>
