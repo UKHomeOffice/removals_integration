@@ -20,10 +20,14 @@ module.exports = {
   movementOptions: (req, res) => res.ok(CidEntryMovementValidatorService.schema),
 
   movementProcess: movement =>
-    Movement.findAndUpdateOrCreate(movement['MO Ref.'],
+    Movement.findAndUpdateOrCreate(
       {
         centre: movement.centre,
-        id: movement['MO Ref.'],
+        mo_ref: movement['MO Ref.']
+      },
+      {
+        centre: movement.centre,
+        mo_ref: movement['MO Ref.'],
         cid_id: movement['CID Person ID'],
         timestamp: movement["MO Date"],
         direction: movement['MO In/MO Out'],
