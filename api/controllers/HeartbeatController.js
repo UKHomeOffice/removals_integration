@@ -13,7 +13,7 @@ const formatMaxMinMean = (collection, key) => {
 module.exports = {
   _config: {
     populate: true,
-    limit: 0
+    limit: 9223372036854775807
   },
   summary: (req, res) => {
     res.ok = _.wrap(res.ok, (func, matchingRecords) =>
