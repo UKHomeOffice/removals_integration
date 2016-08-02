@@ -67,7 +67,6 @@ describe('UNIT BedEventController', () => {
         }
       }
     }));
-  it("groupCentresByGender");
   describe("remapToCentreNames", () => {
     beforeEach(() => sinon.stub(Centres, 'find').resolves(centres));
     afterEach(() => Centres.find.restore());
