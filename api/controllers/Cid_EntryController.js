@@ -93,6 +93,7 @@ module.exports = {
 
   movementPost: function (req, res) {
     return CidEntryMovementValidatorService.validate(req.body)
+      .tap(() => res.ok())
       .then(body => body.Output)
       .map(this.formatMovement)
       .then(this.manipulatePortMovements)
@@ -106,7 +107,6 @@ module.exports = {
       .then(this.markNonMatchingMovementsAsInactive)
       .then(this.updateReceivedDate)
       .tap(Centres.publishUpdateAll)
-      .then(res.ok)
       .catch(ValidationError, error => {
         res.badRequest(error.result.errors[0].message);
       })
