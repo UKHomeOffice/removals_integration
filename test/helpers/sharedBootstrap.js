@@ -68,7 +68,9 @@ global.createRequest = function (payload, path, res) {
   return request_auth(sails.hooks.http.app)
     .post(path)
     .send(payload)
-    .expect(res);
+    .expect(res)
+    .toPromise()
+    .delay(500);
 };
 
 global.assertCentresHTTPResponse = function (key, value) {
