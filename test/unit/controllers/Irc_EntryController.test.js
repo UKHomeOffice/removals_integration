@@ -721,18 +721,32 @@ describe('UNIT Irc_EntryController', () => {
       gender: 'female'
     };
 
-    before(() => sinon.stub(Bed, 'findOrCreate').resolves({id: 12}));
+    before(() => sinon.stub(Bed, 'findAndUpdateOrCreate').resolves({id: 12}));
 
-    after(() => Bed.findOrCreate.restore());
+    after(() => Bed.findAndUpdateOrCreate.restore());
 
     it('should pass the correct mapping to Bed.findOrCreate', () => {
       controller.findOrCreateAndPopulateBed(dummyEvent);
-      return expect(Bed.findOrCreate).to.be.calledWith(
+      return expect(Bed.findAndUpdateOrCreate).to.be.calledWith(
         {bed_ref: '123', centre: 1},
         {
           centre: 1,
           bed_ref: '123',
           gender: 'female'
+        });
+    });
+
+    it('should not pass the gender if it does not have it', () => {
+      controller.findOrCreateAndPopulateBed({
+        centre_id: 1,
+        bed_ref: '123',
+        gender: null
+      });
+      return expect(Bed.findAndUpdateOrCreate).to.be.calledWith(
+        {bed_ref: '123', centre: 1},
+        {
+          centre: 1,
+          bed_ref: '123',
         });
     });
 
