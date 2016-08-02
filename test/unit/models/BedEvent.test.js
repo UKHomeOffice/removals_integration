@@ -105,7 +105,6 @@ describe('UNIT BedEventModel', () => {
       }];
     var output = {
       male: {
-        'Single Occupancy': 1,
         'Maintenance - Malicious/Accidental Damage': 1
       },
       female: {
@@ -230,6 +229,6 @@ describe('UNIT BedEventModel', () => {
 
 describe('INTEGRATION BedEventModel', () => {
   it('should get the fixtures', () =>
-    expect(BedEvent.find()).to.eventually.have.length(12)
+    expect(BedEvent.find()).to.eventually.have.length(14)
   );
 });
