@@ -34,9 +34,7 @@ describe('INTEGRATION Cid_EntryController', () => {
     describe('good payload', () => {
       beforeEach(() => {
         sinon.stub(Centres, 'update').resolves(true);
-        return request_auth(sails.hooks.http.app)
-          .post('/cid_entry/movement')
-          .send(validdummydata)
+        return createRequest(validdummydata, '/cid_entry/movement', 201)
       });
       afterEach(() => Centres.update.restore());
       it('should create new active movements found in the payload', () =>
@@ -67,9 +65,7 @@ describe('INTEGRATION Cid_EntryController', () => {
       Centres.update.restore();
     });
     it('should push out an update to subscribers watching the centres', () =>
-      request_auth(sails.hooks.http.app)
-        .post('/cid_entry/movement')
-        .send(validdummydata)
+      createRequest(validdummydata, '/cid_entry/movement', 201)
         .then(() => expect(Centres.publishUpdate).to.be.calledWith(1))
         .then(() => expect(Centres.publishUpdate).to.be.calledWith(2))
         .then(() => expect(Centres.publishUpdate).to.be.calledWith(3))
