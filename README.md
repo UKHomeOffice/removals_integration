@@ -9,10 +9,10 @@
 $ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
 ```
 
-#### Install NodeJS 4.2 LTS
+#### Install NodeJS 4 LTS
 ```sh
-$ nvm install 4.2
-$ nvm use 4.2
+$ nvm install 4
+$ nvm use 4
 ```
 ### Build:
 ```sh

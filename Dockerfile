@@ -13,7 +13,7 @@ RUN rpm --rebuilddb && yum update -y && yum install -y curl git which && yum cle
 
 RUN mkdir -p /opt/nodejs
 WORKDIR /opt/nodejs
-RUN curl https://nodejs.org/dist/v4.2.2/node-v4.2.2-linux-x64.tar.gz | tar xz --strip-components=1
+RUN curl https://nodejs.org/dist/v4.4.7/node-v4.4.7-linux-x64.tar.gz | tar xz --strip-components=1
 
 RUN useradd app
 USER app
