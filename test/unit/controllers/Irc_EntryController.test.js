@@ -648,11 +648,11 @@ describe('UNIT Irc_EntryController', () => {
   });
 
   describe('findAndPopulateDetaineeInBedEvent', () => {
-    let createOrUpdateDetainee = {};
-    beforeEach(() => {
+    let createOrUpdateDetainee;
+    before(() => {
       createOrUpdateDetainee = controller.__set__('createOrUpdateDetainee', sinon.stub().resolves({id: 2}))
     });
-    afterEach(() => {
+    after(() => {
       createOrUpdateDetainee();
     });
 
