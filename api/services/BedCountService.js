@@ -1,4 +1,4 @@
-/* global Event Movement BedEvent */
+/* global Event Movement BedEvent Prebooking*/
 'use strict';
 
 const DateRange = require('../lib/DateRange');
@@ -101,10 +101,21 @@ const handleReinstatements = (centre, tester) => {
 
 const populateOOC = (centre) =>
   BedEvent.getOOCByCentreGroupByGenderAndReason(centre.id)
-    .then((oocBeds) => {
-      centre.outOfCommission = oocBeds;
-      return centre;
-    });
+    .then((oocBeds) =>
+      _.assign(centre, {outOfCommission: oocBeds})
+    );
+
+const populatePrebooking = (centre) =>
+  Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce(centre.id, false)
+    .then((prebookings) =>
+      _.assign(centre, {prebooking: prebookings})
+    );
+
+const populateContingency = (centre) =>
+  Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce(centre.id, true)
+    .then((contingency) =>
+      _.assign(centre, {contingency: contingency})
+    );
 
 module.exports = {
   performReconciliation: (centre, visibilityRange, eventSearchDateRangeFactory, movementSearchDateRangeFactory, checkOutSearchDateRangeFactory) => {
@@ -119,6 +130,8 @@ module.exports = {
     centre.reconciled = [];
     centre.reinstatements = [];
     centre.outOfCommission = {};
+    centre.prebooking = {};
+    centre.contingency = {};
 
     return populateEvents(centre, rangeOfEvents)
       .then(() => populateMovements(centre, rangeOfMovements))
@@ -126,6 +139,8 @@ module.exports = {
       .then(() => reconcileEvents(centre, reconciler))
       .then(() => filterUnreconciled(centre, visibilityRange))
       .then(() => populateOOC(centre))
+      .then(() => populatePrebooking(centre))
+      .then(() => populateContingency(centre))
       .return(centre);
   },
   performConfiguredReconciliation: function (centre) {
