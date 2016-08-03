@@ -1,6 +1,14 @@
 'use strict';
 
 moment.tz.setDefault("Europe/London");
+const centre = {
+  name: 'bigone',
+  male_capacity: 999,
+  female_capacity: 750,
+  id: 1,
+  male_cid_name: ['bigone male holding', 'smallone male holding'],
+  female_cid_name: ['bigone female office', 'smallone female holding']
+};
 
 var findPrebookingByCID = (cid_id) =>
   Prebooking.find({
@@ -45,13 +53,17 @@ Feature('Prebooking', () => {
         }, {
           timestamp: validTimestamp,
           location: 'bigone male holding',
-          task_force: 'ops1',
+          task_force: 'ops3',
           cid_id: '222'
         }, {
           timestamp: validTimestamp,
           location: 'bigone male holding',
-          task_force: 'ops1',
+          task_force: 'ops4',
           cid_id: '333'
+        }, {
+          timestamp: validTimestamp,
+          location: 'bigone male holding',
+          task_force: 'ops4'
         }, {
           timestamp: validTimestamp,
           location: 'bigone male holding',
@@ -59,7 +71,7 @@ Feature('Prebooking', () => {
         }, {
           timestamp: validTimestamp,
           location: 'bigone male holding',
-          task_force: "HTU Failed RD's"
+          task_force: "HTU Failed RDs"
         }, {
           timestamp: validTimestamp,
           location: 'smallone female holding',
@@ -70,19 +82,22 @@ Feature('Prebooking', () => {
           task_force: 'Depmu'
         }]
       };
-      var expectedFemaleCentre = 'smallone';
-      var expectedMaleCentre = 'bigone';
 
       before(function () {
         global.testConfig.initializeBarrelsFixtures = false;
-        return global.initializeBarrelsFixtures();
       });
 
       after(function () {
         global.testConfig.initializeBarrelsFixtures = true;
       });
 
-      Given(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+      Given('there is a single centre', () =>
+        Centres.destroy({})
+          .then(() => Centres.create(centre))
+          .then(() => expect(Centres.find({})).to.eventually.have.lengthOf(1))
+      );
+
+      And(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
         createRequest(payload, '/depmu_entry/prebooking', 201)
           .then(() => findPrebookingByCID(payload.Output[0].cid_id))
           .then((models) => {
@@ -101,9 +116,16 @@ Feature('Prebooking', () => {
       And(`new female prebookings are created`, () =>
         Prebooking.find({where: {gender: 'female'}}).then((models) => expect(models.length).to.equal(4))
       );
+
       And(`new male prebookings are created`, () =>
-        Prebooking.find({where: {gender: 'male'}}).then((models) => expect(models.length).to.equal(4))
+        Prebooking.find({
+          where: {
+            gender: 'male',
+            contingency: false
+          }
+        }).then((models) => expect(models.length).to.equal(3))
       );
+
       And(`new female contingency bookings are created`, () =>
         Prebooking.find({
           where: {
@@ -112,6 +134,7 @@ Feature('Prebooking', () => {
           }
         }).then((models) => expect(models.length).to.equal(2))
       );
+
       And(`new male contingency bookings are created`, () =>
         Prebooking.find({
           where: {
@@ -121,6 +144,21 @@ Feature('Prebooking', () => {
         }).then((models) => expect(models.length).to.equal(2))
       );
 
+      And("the centre's female `contingency` object should include the new bookings", () =>
+        assertCentresHTTPResponse('femaleContingencyDetail', {'htu borderforce': 1, 'depmu': 1})
+      );
+
+      And("the centre's male `contingency` object should include the new bookings", () =>
+        assertCentresHTTPResponse('maleContingencyDetail', {'htu': 1, "htu failed rds": 1})
+      );
+
+      And("the centre's female `prebooking` object should include the new bookings", () =>
+        assertCentresHTTPResponse('femalePrebookingDetail', {'111': 1, '444': 1})
+      );
+
+      And("the centre's male `prebooking` object should include the new bookings", () =>
+        assertCentresHTTPResponse('malePrebookingDetail', {'222': 1, '333': 1, 'ops4': 1})
+      );
     });
 
     Scenario('New Invalid Pre-bookings are ignored', () => {
@@ -134,16 +172,19 @@ Feature('Prebooking', () => {
 
       before(function () {
         global.testConfig.initializeBarrelsFixtures = false;
-        sinon.stub(global.sails.log, 'verbose');
-        return global.initializeBarrelsFixtures();
       });
 
       after(function () {
-        global.sails.log.verbose.restore()
         global.testConfig.initializeBarrelsFixtures = true;
       });
 
-      Given(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+      Given('there is a single centre', () =>
+        Centres.destroy({})
+          .then(() => Centres.create(centre))
+          .then(() => expect(Centres.find({})).to.eventually.have.lengthOf(1))
+      );
+
+      And(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
         createRequest(payload, '/depmu_entry/prebooking', 201)
           .then(() => findPrebookingByCID(payload.Output[0].cid_id))
           .then((models) => {
@@ -159,10 +200,17 @@ Feature('Prebooking', () => {
         findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(1))
       );
 
+      And("the centre's male `prebooking` object should include the old bookings", () =>
+        assertCentresHTTPResponse('malePrebookingDetail', {'456': 1})
+      );
+
       And(`new invalid prebooking is not created`, () =>
         findPrebookingByCID(followingPayload.cid_id).then((models) => expect(models.length).to.equal(0))
       );
 
+      And("the centre's female `prebooking` object should not include the new invalid bookings", () =>
+        assertCentresHTTPResponse('femalePrebookingDetail', {})
+      );
     });
 
     Scenario('Remove Existing Pre-booking when Movement In Order occurs', () => {
@@ -180,14 +228,19 @@ Feature('Prebooking', () => {
 
       before(function () {
         global.testConfig.initializeBarrelsFixtures = false;
-        return global.initializeBarrelsFixtures();
       });
 
       after(function () {
         global.testConfig.initializeBarrelsFixtures = true;
       });
 
-      Given(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+      Given('there is a single centre', () =>
+        Centres.destroy({})
+          .then(() => Centres.create(centre))
+          .then(() => expect(Centres.find({})).to.eventually.have.lengthOf(1))
+      );
+
+      And(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
         createRequest(payload, '/depmu_entry/prebooking', 201)
           .then(() => findPrebookingByCID(payload.Output[0].cid_id))
           .then((models) => {
@@ -203,6 +256,9 @@ Feature('Prebooking', () => {
         findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
       );
 
+      And("the centre's female `prebooking` object should be updated", () =>
+        assertCentresHTTPResponse('femalePrebookingDetail', {})
+      );
     });
 
     Scenario('Ignore Pre-bookings with existing Movement In Order', () => {
@@ -220,16 +276,19 @@ Feature('Prebooking', () => {
 
       before(function () {
         global.testConfig.initializeBarrelsFixtures = false;
-        sinon.stub(global.sails.log, 'verbose');
-        return global.initializeBarrelsFixtures();
       });
 
       after(function () {
-        global.sails.log.verbose.restore()
         global.testConfig.initializeBarrelsFixtures = true;
       });
 
-      Given(`a Movement-In order with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+      Given('there is a single centre', () =>
+        Centres.destroy({})
+          .then(() => Centres.create(centre))
+          .then(() => expect(Centres.find({})).to.eventually.have.lengthOf(1))
+      );
+
+      And(`a Movement-In order with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
         createRequest(movementOrderPayload, '/cid_entry/movement', 201)
           .then(() => findMovementByCID(payload.Output[0].cid_id))
           .then((models) => expect(models.length).to.equal(1))
@@ -242,6 +301,9 @@ Feature('Prebooking', () => {
         findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
       );
 
+      And("the centre's female `prebooking` object remains unchanged", () =>
+        assertCentresHTTPResponse('femalePrebookingDetail', {})
+      );
     });
   });
 
@@ -263,16 +325,19 @@ Feature('Prebooking', () => {
 
       before(function () {
         global.testConfig.initializeBarrelsFixtures = false;
-        sinon.stub(global.sails.log, 'verbose');
-        return global.initializeBarrelsFixtures();
       });
 
       after(function () {
-        global.sails.log.verbose.restore()
         global.testConfig.initializeBarrelsFixtures = true;
       });
 
-      Given(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+      Given('there is a single centre', () =>
+        Centres.destroy({})
+          .then(() => Centres.create(centre))
+          .then(() => expect(Centres.find({})).to.eventually.have.lengthOf(1))
+      );
+
+      And(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
         createRequest(payload, '/depmu_entry/prebooking', 201)
           .then(() => findPrebookingByCID(payload.Output[0].cid_id))
           .then((models) => {
@@ -286,6 +351,10 @@ Feature('Prebooking', () => {
 
       Then(`the new prebooking will not be considered and old prebookings are retained`, () =>
         findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(1))
+      );
+
+      And("the centre's male `prebooking` object includes details of old prebookings", () =>
+        assertCentresHTTPResponse('malePrebookingDetail', {'456': 1})
       );
     });
 
@@ -311,14 +380,19 @@ Feature('Prebooking', () => {
 
       before(function () {
         global.testConfig.initializeBarrelsFixtures = false;
-        return global.initializeBarrelsFixtures();
       });
 
       after(function () {
         global.testConfig.initializeBarrelsFixtures = true;
       });
 
-      Given(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+      Given('there is a single centre', () =>
+        Centres.destroy({})
+          .then(() => Centres.create(centre))
+          .then(() => expect(Centres.find({})).to.eventually.have.lengthOf(1))
+      );
+
+      And(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
         createRequest(payload, '/depmu_entry/prebooking', 201)
           .then(() => findPrebookingByCID(payload.Output[0].cid_id))
           .then((models) => {
@@ -340,6 +414,10 @@ Feature('Prebooking', () => {
 
       And(`the new prebooking with timestamp "${followingPayload.Output[2].timestamp}" is considered`, () =>
         findPrebookingByCID(followingPayload.Output[2].cid_id).then((models) => expect(models.length).to.equal(1))
+      );
+
+      And(`the centre's male 'prebooking' object should only include "${followingPayload.Output[2].timestamp}"`, () =>
+        assertCentresHTTPResponse('malePrebookingDetail', {})
       );
     });
   });
