@@ -1,5 +1,7 @@
 'use strict';
 
+const _ = require('lodash');
+
 module.exports = {
   findAndUpdateOrCreate: function findAndUpdateOrCreate (criteria, values) {
     return this.update(criteria, values)

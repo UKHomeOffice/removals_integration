@@ -4,6 +4,7 @@
 const DuplicationError = require('../lib/exceptions/DuplicationError');
 const LinkingModels = require('sails-linking-models');
 const ModelHelpers = require('../lib/ModelHelpers');
+const _ = require('lodash');
 
 const operations = {
   OPERATION_OUT_OF_COMMISSION: 'out commission',

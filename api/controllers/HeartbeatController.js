@@ -30,7 +30,7 @@ module.exports = {
               };
             })
         )
-      )
+        )
         .then(func)
     );
     return findAction(req, res);

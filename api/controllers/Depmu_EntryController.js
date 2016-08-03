@@ -3,6 +3,7 @@
 
 const ValidationError = require('../lib/exceptions/ValidationError');
 const moment = require('moment-timezone');
+const _ = require('lodash');
 moment.tz.setDefault("Europe/London");
 
 module.exports = {
