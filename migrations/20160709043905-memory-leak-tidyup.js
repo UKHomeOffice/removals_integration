@@ -1,4 +1,5 @@
-"use strict";
+'use strict';
+
 const cps = require('cps');
 
 exports.up = (db, callback) =>

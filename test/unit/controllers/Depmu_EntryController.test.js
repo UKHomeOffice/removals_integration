@@ -1,4 +1,5 @@
-"use strict";
+'use strict';
+
 var jhg = require('../../helpers/JsonHelperGenerator');
 var ValidationError = require('../../../api/lib/exceptions/ValidationError');
 var controller = require('../../../api/controllers/Depmu_EntryController');

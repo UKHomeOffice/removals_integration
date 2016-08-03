@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const rewire = require('rewire');
 var ValidationError = require('../../../api/lib/exceptions/ValidationError');

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var service = require('../../../api/services/DepmuEntryPrebookingValidatorService');
 var validation_schema = service.schema;

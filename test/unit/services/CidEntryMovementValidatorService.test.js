@@ -1,4 +1,5 @@
-"use strict";
+'use strict';
+
 var service = require('../../../api/services/CidEntryMovementValidatorService');
 var validation_schema = service.schema;
 

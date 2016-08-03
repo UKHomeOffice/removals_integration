@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 describe('INTEGRATION SubjectsModel', () => {
   it('should get the fixtures', () => {

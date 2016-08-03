@@ -1,3 +1,5 @@
+'use strict';
+
 var Sails = require('sails');
 var Barrels = require('barrels');
 var Promise = require('bluebird');

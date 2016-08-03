@@ -1,4 +1,5 @@
 'use strict';
+
 const _ = require('lodash');
 const findAction = require('sails/lib/hooks/blueprints/actions/find');
 

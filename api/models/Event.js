@@ -1,5 +1,6 @@
 /* global Event */
 'use strict';
+
 var DuplicationError = require('../lib/exceptions/DuplicationError');
 var LinkingModels = require('sails-linking-models');
 var ModelHelpers = require('../lib/ModelHelpers');

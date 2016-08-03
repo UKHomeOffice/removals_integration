@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-var model = rewire('../../api/models/BedEvent');
-var Promise = require('bluebird');
+const model = rewire('../../api/models/BedEvent');
+const Promise = require('bluebird');
 
 describe('UNIT BedEventModel', () => {
   describe('getCurrentOOCByCentre', () => {
