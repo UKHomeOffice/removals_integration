@@ -1,4 +1,5 @@
-"use strict";
+'use strict';
+
 var validation_schema = require('removals_schema').event;
 var service = require('../../../api/services/IrcEntryEventValidatorService');
 

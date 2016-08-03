@@ -1,4 +1,5 @@
-"use strict";
+'use strict';
+
 var ValidationError = require('../../../api/lib/exceptions/ValidationError');
 var service = require('../../../api/services/RequestValidatorService');
 

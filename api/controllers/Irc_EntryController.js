@@ -1,5 +1,4 @@
 /* global IrcEntryEventValidatorService Event Detainee Heartbeat  BedEvent Bed*/
-
 'use strict';
 
 var ValidationError = require('../lib/exceptions/ValidationError');

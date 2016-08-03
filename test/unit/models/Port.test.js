@@ -1,4 +1,5 @@
-"use strict";
+'use strict';
+
 var model = rewire('../../api/models/Port');
 
 describe('UNIT BedModel', () => {

@@ -1,5 +1,7 @@
-var DateRange = require('../../../api/lib/DateRange');
-var moment = require('moment');
+'use strict';
+
+const DateRange = require('../../../api/lib/DateRange');
+const moment = require('moment');
 
 describe('DateRange', () => {
 

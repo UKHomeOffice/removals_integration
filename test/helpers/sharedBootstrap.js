@@ -1,3 +1,5 @@
+'use strict';
+
 global.rewire = require('rewire');
 global.Sails = require('sails');
 global.Barrels = require('barrels');

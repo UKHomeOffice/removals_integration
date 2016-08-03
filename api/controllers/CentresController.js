@@ -1,4 +1,5 @@
 'use strict';
+
 var findOneAction = require('sails/lib/hooks/blueprints/actions/findOne');
 var findAction = require('sails/lib/hooks/blueprints/actions/find');
 var BedCountService = require('../services/BedCountService');

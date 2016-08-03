@@ -1,4 +1,5 @@
-"use strict";
+'use strict';
+
 var model = rewire('../../api/models/Prebooking');
 var Promise = require('bluebird');
 

@@ -1,3 +1,5 @@
+'use strict';
+
 var bootstrap = require('./helpers/sharedBootstrap');
 
 before(bootstrap.before);

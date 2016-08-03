@@ -1,3 +1,5 @@
+'use strict';
+
 describe('INTEGRATION HealthController', () => {
 
   it('should be able to get the healthcheck page', () =>
