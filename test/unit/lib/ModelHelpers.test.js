@@ -1,6 +1,6 @@
 'use strict';
 
-var helpers = require('../../../api/lib/ModelHelpers');
+const helpers = require('../../../api/lib/ModelHelpers');
 
 describe('Model Helpers', () => {
   var model;

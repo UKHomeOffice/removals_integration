@@ -1,8 +1,8 @@
 'use strict';
 
-var findOneAction = require('sails/lib/hooks/blueprints/actions/findOne');
-var findAction = require('sails/lib/hooks/blueprints/actions/find');
-var BedCountService = require('../services/BedCountService');
+const findOneAction = require('sails/lib/hooks/blueprints/actions/findOne');
+const findAction = require('sails/lib/hooks/blueprints/actions/find');
+const BedCountService = require('../services/BedCountService');
 
 /**
  * CentreController

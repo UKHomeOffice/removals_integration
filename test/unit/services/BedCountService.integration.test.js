@@ -1,9 +1,8 @@
 /* global Centres BedcountService */
 'use strict';
 
-var moment = require('moment');
-
-var DateRange = require('../../../api/lib/DateRange');
+const moment = require('moment');
+const DateRange = require('../../../api/lib/DateRange');
 
 const vDateRangeFactory = (date) => new DateRange(
   moment(date).subtract(2, 'days').startOf('day').toDate(),

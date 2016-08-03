@@ -1,7 +1,7 @@
 'use strict';
 
-var LinkingModels = require('sails-linking-models');
-var ModelHelpers = require('../lib/ModelHelpers');
+const LinkingModels = require('sails-linking-models');
+const ModelHelpers = require('../lib/ModelHelpers');
 
 /**
  * this is a workaround until waterline supports conditional joins see balderdashy/waterline#988

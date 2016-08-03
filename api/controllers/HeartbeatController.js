@@ -2,7 +2,6 @@
 
 const _ = require('lodash');
 const findAction = require('sails/lib/hooks/blueprints/actions/find');
-
 const formatMaxMinMean = (collection, key) => {
   return {
     max: _.maxBy(collection, key)[key],

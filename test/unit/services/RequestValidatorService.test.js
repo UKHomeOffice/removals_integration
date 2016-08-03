@@ -1,7 +1,7 @@
 'use strict';
 
-var ValidationError = require('../../../api/lib/exceptions/ValidationError');
-var service = require('../../../api/services/RequestValidatorService');
+const ValidationError = require('../../../api/lib/exceptions/ValidationError');
+const service = require('../../../api/services/RequestValidatorService');
 
 describe('UNIT RequestValidatorService', () => {
   let json_schema = {"type": "number"};
