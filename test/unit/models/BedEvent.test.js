@@ -118,13 +118,15 @@ describe('UNIT BedEventModel', () => {
     };
 
     beforeEach(() => {
-      context = {getCurrentOOCByCentre: sinon.stub(model, 'getCurrentOOCByCentre').resolves(getCurrentOOCByCentreOutput)};
+      sinon.stub(BedEvent, 'getCurrentOOCByCentre').resolves(getCurrentOOCByCentreOutput);
     });
 
-    afterEach(() => context.getCurrentOOCByCentre.restore());
+    afterEach(() => {
+      BedEvent.getCurrentOOCByCentre.restore()
+    });
 
     it('should return ooc beds grouped by gender and count by reason', () =>
-      expect(model.getOOCByCentreGroupByGenderAndReason.apply(context, [input])).to.eventually.deep.equal(output)
+      expect(model.getOOCByCentreGroupByGenderAndReason(input)).to.eventually.deep.equal(output)
     );
   });
 
