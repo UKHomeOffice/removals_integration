@@ -75,26 +75,6 @@ const model = {
     female_cid_name: {
       type: 'array'
     },
-    male_prebooking: {
-      collection: 'prebooking',
-      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
-      via: 'male_prebooking'
-    },
-    female_prebooking: {
-      collection: 'prebooking',
-      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
-      via: 'female_prebooking'
-    },
-    male_contingency: {
-      collection: 'prebooking',
-      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
-      via: 'male_contingency'
-    },
-    female_contingency: {
-      collection: 'prebooking',
-      note: 'this is a workaround until waterline supports conditional joins see balderdashy/waterline#988 and balderdashy/waterline#645',
-      via: 'female_contingency'
-    },
     events: {
       collection: 'event',
       via: 'centre'
@@ -125,13 +105,15 @@ const model = {
         response.attributes[gender + 'InUse'] = this[gender + '_in_use'];
         response.attributes[gender + 'OutOfCommissionTotal'] = this[gender + '_out_of_commission'];
         response.attributes[gender + 'OutOfCommissionDetail'] = this.outOfCommission ? this.outOfCommission[gender] : null;
-        response.attributes[gender + 'Prebooking'] = this[gender + '_prebooking'].length;
-        response.attributes[gender + 'Contingency'] = this[gender + '_contingency'].length;
+        response.attributes[gender + 'PrebookingTotal'] = this.prebooking ? this.prebooking[gender].total : null;
+        response.attributes[gender + 'PrebookingDetail'] = this.prebooking ? this.prebooking[gender].detail : null;
+        response.attributes[gender + 'ContingencyTotal'] = this.contingency ? this.contingency[gender].total : null;
+        response.attributes[gender + 'ContingencyDetail'] = this.contingency ? this.contingency[gender].detail : null;
         response.attributes[gender + 'Availability'] = response.attributes[gender + 'Capacity'];
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'InUse'];
         response.attributes[gender + 'Availability'] -= response.attributes[gender + 'OutOfCommissionTotal'];
-        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Prebooking'];
-        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'Contingency'];
+        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ContingencyTotal'];
+        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'PrebookingTotal'];
         if (this.reconciled) {
           response.attributes[gender + 'UnexpectedIn'] = unreconciledEventReducer(this.unreconciledEvents, gender, ['check in']);
           response.attributes[gender + 'ExpectedIn'] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'in');
@@ -168,10 +150,6 @@ const model = {
 
   findReconciled: (query) =>
     Centres.find(query || {})
-      .populate('male_prebooking')
-      .populate('female_prebooking')
-      .populate('male_contingency')
-      .populate('female_contingency')
       .toPromise()
       .map(BedCountService.performConfiguredReconciliation),
 
