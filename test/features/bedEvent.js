@@ -1,6 +1,6 @@
 'use strict';
 
-var BedEvent2 = require('../../api/models/BedEvent');
+const BedEvent2 = require('../../api/models/BedEvent');
 const centre = {
   name: 'testexample',
   male_capacity: 999,

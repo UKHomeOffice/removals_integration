@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('lodash');
+const _ = require('lodash');
 
 module.exports = function (schema, custom_fakes) {
   var jsf = require('json-schema-faker');

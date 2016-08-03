@@ -1,7 +1,7 @@
 'use strict';
 
-var service = require('../../../api/services/DepmuEntryPrebookingValidatorService');
-var validation_schema = service.schema;
+const service = require('../../../api/services/DepmuEntryPrebookingValidatorService');
+const validation_schema = service.schema;
 
 describe('UNIT DepmuEntryPrebookingValidatorService', function () {
   let originalvalidatorservice;

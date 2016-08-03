@@ -1,7 +1,7 @@
 'use strict';
 
-var LinkingModels = require('sails-linking-models');
-var ModelHelpers = require('../lib/ModelHelpers');
+const LinkingModels = require('sails-linking-models');
+const ModelHelpers = require('../lib/ModelHelpers');
 
 const model = {
   schema: true,

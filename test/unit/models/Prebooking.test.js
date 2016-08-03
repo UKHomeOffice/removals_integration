@@ -1,7 +1,7 @@
 'use strict';
 
-var model = rewire('../../api/models/Prebooking');
-var Promise = require('bluebird');
+const model = rewire('../../api/models/Prebooking');
+const Promise = require('bluebird');
 
 describe('UNIT PrebookingModel', () => {
   describe('setNormalisedRelationships', () => {

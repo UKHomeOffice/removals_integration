@@ -1,6 +1,6 @@
 'use strict';
 
-var Event2 = require('../../api/models/Event');
+const Event2 = require('../../api/models/Event');
 
 describe('Check In Event', () => {
 

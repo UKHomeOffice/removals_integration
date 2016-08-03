@@ -1,9 +1,9 @@
 /* global BedEvent */
 'use strict';
 
-var DuplicationError = require('../lib/exceptions/DuplicationError');
-var LinkingModels = require('sails-linking-models');
-var ModelHelpers = require('../lib/ModelHelpers');
+const DuplicationError = require('../lib/exceptions/DuplicationError');
+const LinkingModels = require('sails-linking-models');
+const ModelHelpers = require('../lib/ModelHelpers');
 
 const operations = {
   OPERATION_OUT_OF_COMMISSION: 'out commission',

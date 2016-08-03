@@ -1,10 +1,10 @@
 /* global Centres BedCountService */
 'use strict';
 
-var moment = require('moment');
-var rewire = require('rewire');
-var DateRange = require('../../../api/lib/DateRange');
-var BedCountService = rewire('../../../api/services/BedCountService');
+const moment = require('moment');
+const rewire = require('rewire');
+const DateRange = require('../../../api/lib/DateRange');
+const BedCountService = rewire('../../../api/services/BedCountService');
 
 describe('UNIT BedCountService', () => {
 

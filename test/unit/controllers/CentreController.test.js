@@ -1,6 +1,6 @@
 'use strict';
 
-var Validator = require('jsonapi-validator').Validator;
+const Validator = require('jsonapi-validator').Validator;
 var validator = new Validator();
 
 Scenario('INTEGRATION CentreController', () => {

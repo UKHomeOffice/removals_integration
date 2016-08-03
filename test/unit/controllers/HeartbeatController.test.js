@@ -1,7 +1,7 @@
 /* global Heartbeat */
 'use strict';
 
-var Validator = require('jsonapi-validator').Validator;
+const Validator = require('jsonapi-validator').Validator;
 var validator = new Validator();
 
 describe('INTEGRATION HeartbeatController', () => {

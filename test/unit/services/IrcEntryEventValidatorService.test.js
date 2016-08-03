@@ -1,7 +1,7 @@
 'use strict';
 
-var validation_schema = require('removals_schema').event;
-var service = require('../../../api/services/IrcEntryEventValidatorService');
+const validation_schema = require('removals_schema').event;
+const service = require('../../../api/services/IrcEntryEventValidatorService');
 
 describe('UNIT IrcEntryEventValidatorService', function () {
   let originalvalidatorservice;

@@ -1,9 +1,9 @@
 /* global Event */
 'use strict';
 
-var DuplicationError = require('../lib/exceptions/DuplicationError');
-var LinkingModels = require('sails-linking-models');
-var ModelHelpers = require('../lib/ModelHelpers');
+const DuplicationError = require('../lib/exceptions/DuplicationError');
+const LinkingModels = require('sails-linking-models');
+const ModelHelpers = require('../lib/ModelHelpers');
 
 const operations = {
   OPERATION_CHECK_IN: 'check in',

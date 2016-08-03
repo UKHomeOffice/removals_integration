@@ -1,8 +1,8 @@
 'use strict';
 
-var proxyquire = require('proxyquire');
-var getJSONresponse = sinon.stub();
-var okResponse = proxyquire('../../../api/responses/ok', {
+const proxyquire = require('proxyquire');
+const getJSONresponse = sinon.stub();
+const okResponse = proxyquire('../../../api/responses/ok', {
   '../lib/helpers/json-api-response': getJSONresponse
 });
 

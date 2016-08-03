@@ -1,7 +1,7 @@
 'use strict';
 
-var validation_schema = require('removals_schema').heartbeat;
-var service = require('../../../api/services/IrcEntryHeartbeatValidatorService');
+const validation_schema = require('removals_schema').heartbeat;
+const service = require('../../../api/services/IrcEntryHeartbeatValidatorService');
 
 describe('UNIT IrcEntryHeartbeatValidatorService', () => {
   let originalvalidatorservice;

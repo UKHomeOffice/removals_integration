@@ -1,9 +1,9 @@
 'use strict';
 
 const rewire = require('rewire');
-var ValidationError = require('../../../api/lib/exceptions/ValidationError');
-var model = rewire('../../../api/models/Centres');
-var Promise = require('bluebird');
+const ValidationError = require('../../../api/lib/exceptions/ValidationError');
+const model = rewire('../../../api/models/Centres');
+const Promise = require('bluebird');
 
 describe('UNIT CentreModel', () => {
   describe('getByName', () => {
