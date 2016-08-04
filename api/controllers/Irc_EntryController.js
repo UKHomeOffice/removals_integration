@@ -1,6 +1,7 @@
 /* global IrcEntryEventValidatorService Event Detainee Heartbeat  BedEvent Bed*/
 'use strict';
 
+const _ = require("lodash");
 const ValidationError = require('../lib/exceptions/ValidationError');
 const DuplicationError = require('../lib/exceptions/DuplicationError');
 const UnprocessableEntityError = require('../lib/exceptions/UnprocessableEntityError');
@@ -168,14 +169,14 @@ module.exports = {
     _.assign(event, {gender: Bed.normalizeGender(event.gender)}),
 
   findOrCreateAndPopulateBed: (event) =>
-    Bed.findOrCreate({
+    Bed.findAndUpdateOrCreate({
       bed_ref: event.bed_ref,
       centre: event.centre_id
-    }, {
+    }, _.omitBy({
       centre: event.centre_id,
       bed_ref: event.bed_ref,
       gender: event.gender
-    })
+    }, _.isNil))
       .then((bed) => _.assign(event, {bed: bed.id})),
 
   findAndPopulateActiveStatus: (event) =>
