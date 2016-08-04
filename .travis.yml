@@ -4,4 +4,5 @@ services:
   - docker
 
 script:
+  - export TZ=Europe/London
   - docker build -t quay.io/ukhomeofficedigital/removals_integration:travis .
