@@ -1,10 +1,11 @@
 /* global controller Heartbeat */
-"use strict";
-var jhg = require('../../helpers/JsonHelperGenerator');
-var ValidationError = require('../../../api/lib/exceptions/ValidationError');
-var rewire = require('rewire');
-var controller = rewire('../../../api/controllers/Irc_EntryController');
-var BedCountService = require('../../../api/services/BedCountService');
+'use strict';
+
+const jhg = require('../../helpers/JsonHelperGenerator');
+const ValidationError = require('../../../api/lib/exceptions/ValidationError');
+const rewire = require('rewire');
+const controller = rewire('../../../api/controllers/Irc_EntryController');
+const BedCountService = require('../../../api/services/BedCountService');
 
 describe('INTEGRATION Irc_EntryController', () => {
 

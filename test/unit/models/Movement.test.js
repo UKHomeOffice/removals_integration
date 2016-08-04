@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 describe('INTEGRATION MovementModel', () => {
   it('should get the fixtures', () => {

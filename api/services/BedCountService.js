@@ -1,8 +1,8 @@
 /* global Event Movement BedEvent */
 'use strict';
 
-var DateRange = require('../lib/DateRange');
-var moment = require('moment');
+const DateRange = require('../lib/DateRange');
+const moment = require('moment');
 
 const fullRange = (visibilityRange, rangeFactory) =>
   DateRange.widen.apply(null, [visibilityRange, rangeFactory(visibilityRange.from), rangeFactory(visibilityRange.to)]);

@@ -1,4 +1,6 @@
-var bootstrap = require('./helpers/sharedBootstrap');
+'use strict';
+
+const bootstrap = require('./helpers/sharedBootstrap');
 
 before(bootstrap.before);
 beforeEach(bootstrap.beforeEach);

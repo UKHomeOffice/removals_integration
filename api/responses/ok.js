@@ -1,7 +1,6 @@
 'use strict';
 
-var jsonApiResponse = require('../lib/helpers/json-api-response');
-
+const jsonApiResponse = require('../lib/helpers/json-api-response');
 const okCode = 200;
 const okPostCode = 201;
 const okEmptyCode = 204;

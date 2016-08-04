@@ -1,11 +1,9 @@
 /* global IrcEntryEventValidatorService Event Detainee Heartbeat  BedEvent Bed*/
-
 'use strict';
 
-var ValidationError = require('../lib/exceptions/ValidationError');
-var DuplicationError = require('../lib/exceptions/DuplicationError');
-var UnprocessableEntityError = require('../lib/exceptions/UnprocessableEntityError');
-
+const ValidationError = require('../lib/exceptions/ValidationError');
+const DuplicationError = require('../lib/exceptions/DuplicationError');
+const UnprocessableEntityError = require('../lib/exceptions/UnprocessableEntityError');
 const WLError = require('sails/node_modules/waterline/lib/waterline/error/WLError.js');
 
 const updateDetaineeModel = (detainee, newDetaineeProperties) => {

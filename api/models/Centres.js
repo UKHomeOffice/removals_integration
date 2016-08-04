@@ -1,11 +1,10 @@
 /* global Movement, Detainee, Event, Prebooking, Heartbeat, Bed */
 'use strict';
 
-var ValidationError = require('../lib/exceptions/ValidationError');
-var BedCountService = require('../services/BedCountService');
-var LinkingModels = require('sails-linking-models');
+const ValidationError = require('../lib/exceptions/ValidationError');
+const BedCountService = require('../services/BedCountService');
+const LinkingModels = require('sails-linking-models');
 
-// helpers
 const unreconciledMovementReducer = (movements, gender, direction) => movements.reduce((reduced, m) => {
   if (m.gender === gender && m.direction === direction) {
     reduced.push({id: m.id, cid_id: m.cid_id});

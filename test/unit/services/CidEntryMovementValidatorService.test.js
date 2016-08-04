@@ -1,6 +1,7 @@
-"use strict";
-var service = require('../../../api/services/CidEntryMovementValidatorService');
-var validation_schema = service.schema;
+'use strict';
+
+const service = require('../../../api/services/CidEntryMovementValidatorService');
+const validation_schema = service.schema;
 
 describe('UNIT CidEntryMovementValidatorService', function () {
   let originalvalidatorservice;

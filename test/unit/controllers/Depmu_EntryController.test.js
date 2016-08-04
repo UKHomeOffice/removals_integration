@@ -1,8 +1,9 @@
-"use strict";
-var jhg = require('../../helpers/JsonHelperGenerator');
-var ValidationError = require('../../../api/lib/exceptions/ValidationError');
-var controller = require('../../../api/controllers/Depmu_EntryController');
-var moment = require('moment-timezone');
+'use strict';
+
+const jhg = require('../../helpers/JsonHelperGenerator');
+const ValidationError = require('../../../api/lib/exceptions/ValidationError');
+const controller = require('../../../api/controllers/Depmu_EntryController');
+const moment = require('moment-timezone');
 moment.tz.setDefault("Europe/London");
 
 var validTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format();

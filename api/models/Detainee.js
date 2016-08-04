@@ -1,8 +1,8 @@
 /* global*/
 'use strict';
 
-var LinkingModels = require('sails-linking-models');
-var ModelHelpers = require('../lib/ModelHelpers');
+const LinkingModels = require('sails-linking-models');
+const ModelHelpers = require('../lib/ModelHelpers');
 
 var getPid = (entity) => `${entity.centre.id}_${entity.person_id}`;
 

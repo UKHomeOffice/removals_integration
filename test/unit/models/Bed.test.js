@@ -1,5 +1,6 @@
-"use strict";
-var model = rewire('../../api/models/Bed');
+'use strict';
+
+const model = rewire('../../api/models/Bed');
 
 describe('UNIT BedModel', () => {
 });

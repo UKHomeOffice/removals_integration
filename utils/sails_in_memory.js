@@ -1,13 +1,15 @@
-var Sails = require('sails');
-var Barrels = require('barrels');
-var Promise = require('bluebird');
-var request = require('supertest-as-promised');
-var _ = require('lodash');
-var moment = require('moment-timezone');
-var jhg = require('../test/helpers/JsonHelperGenerator');
-var heartbeatschema = require('removals_schema').heartbeat;
-var cidschema = require('../api/services/CidEntryMovementValidatorService').schema;
-var depmuschema = require('../api/services/DepmuEntryPrebookingValidatorService').schema;
+'use strict';
+
+const Sails = require('sails');
+const Barrels = require('barrels');
+const Promise = require('bluebird');
+const request = require('supertest-as-promised');
+const _ = require('lodash');
+const moment = require('moment-timezone');
+const jhg = require('../test/helpers/JsonHelperGenerator');
+const heartbeatschema = require('removals_schema').heartbeat;
+const cidschema = require('../api/services/CidEntryMovementValidatorService').schema;
+const depmuschema = require('../api/services/DepmuEntryPrebookingValidatorService').schema;
 
 var properties_to_change = ['female_occupied', 'male_occupied', 'male_outofcommission', 'female_outofcommission'];
 

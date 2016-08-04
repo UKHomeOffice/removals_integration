@@ -1,8 +1,10 @@
-var Sails = require('sails');
-var Barrels = require('barrels');
-var Promise = require('bluebird');
-var request = require('supertest-as-promised');
-var _ = require('lodash');
+'use strict';
+
+const Sails = require('sails');
+const Barrels = require('barrels');
+const Promise = require('bluebird');
+const request = require('supertest-as-promised');
+const _ = require('lodash');
 
 Sails.lift(
   {

@@ -1,8 +1,8 @@
 'use strict';
 
-var Promise = require('bluebird');
-var tv4 = require('tv4');
-var ValidationError = require('../lib/exceptions/ValidationError');
+const Promise = require('bluebird');
+const tv4 = require('tv4');
+const ValidationError = require('../lib/exceptions/ValidationError');
 
 module.exports = {
   validate: function (request_body, schema) {

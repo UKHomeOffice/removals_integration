@@ -1,8 +1,8 @@
 /* global Prebooking DepmuEntryPrebookingValidatorService Movement */
 'use strict';
 
-var ValidationError = require('../lib/exceptions/ValidationError');
-var moment = require('moment-timezone');
+const ValidationError = require('../lib/exceptions/ValidationError');
+const moment = require('moment-timezone');
 moment.tz.setDefault("Europe/London");
 
 module.exports = {

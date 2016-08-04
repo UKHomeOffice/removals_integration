@@ -1,7 +1,8 @@
-"use strict";
-var jhg = require('../../helpers/JsonHelperGenerator');
-var ValidationError = require('../../../api/lib/exceptions/ValidationError');
-var controller = require('../../../api/controllers/Cid_EntryController');
+'use strict';
+
+const jhg = require('../../helpers/JsonHelperGenerator');
+const ValidationError = require('../../../api/lib/exceptions/ValidationError');
+const controller = require('../../../api/controllers/Cid_EntryController');
 
 describe('INTEGRATION Cid_EntryController', () => {
 

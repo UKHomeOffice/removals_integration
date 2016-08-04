@@ -1,9 +1,8 @@
 /* global Movement CidEntryMovementValidatorService Prebooking Port */
 'use strict';
 
-var ValidationError = require('../lib/exceptions/ValidationError');
-var moment = require('moment');
-
+const ValidationError = require('../lib/exceptions/ValidationError');
+const moment = require('moment');
 const failedRemovalReturnType = "Failed-Removal-Return";
 const nonOccupancyType = "Non-Occupancy";
 
