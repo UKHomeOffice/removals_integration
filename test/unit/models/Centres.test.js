@@ -32,7 +32,7 @@ describe('UNIT CentreModel', () => {
   });
 
   describe('attributes.toJSON', () => {
-    var dummy_model = {
+    const dummy_model = {
       updatedAt: 'f',
       prebooking_received: null,
       cid_received_date: null,
@@ -48,87 +48,72 @@ describe('UNIT CentreModel', () => {
         female: {'Maintenance - Health and Safety Concern': 8, 'Other': 1},
         male: {'Crime Scene': 2, 'Other': 1}
       },
-      male_prebooking: [{centres: 123, task_force: 'ops1', id: 1}],
-      female_prebooking: [{centres: 123, task_force: 'ops2', id: 2}, {centres: 123, task_force: 'ops1', id: 3}],
-      male_contingency: [{centres: 123, task_force: 'depmu', id: 1}],
-      female_contingency: [{centres: 123, task_force: 'htu', id: 2}, {centres: 123, task_force: 'depmu other', id: 3}],
+      contingency: {
+        male: {detail: {'ops1': 8, 'ops2': 1}, total: 9},
+        female: {detail: {'ops6': 12, 'ops1': 5}, total: 17},
+      },
+      prebooking: {
+        male: {detail: {'ops1': 8, 'ops2': 1, '5234': 1}, total: 10},
+        female: {detail: {'ops6': 12, 'ops1': 5, '7423': 1, '2476': 1}, total: 19},
+      },
       modelLinks: sinon.stub().returns(['links'])
+    };
+    const result = {
+      attributes: {
+        name: dummy_model.name,
+        cidReceivedDate: dummy_model.cid_received_date,
+        prebookingReceived: dummy_model.prebooking_received,
+        heartbeatReceived: null,
+        updated: dummy_model.updatedAt,
+        maleCapacity: dummy_model.male_capacity,
+        maleInUse: dummy_model.male_in_use,
+        maleOutOfCommissionTotal: dummy_model.male_out_of_commission,
+        maleOutOfCommissionDetail: dummy_model.outOfCommission['male'],
+        femaleCapacity: dummy_model.female_capacity,
+        femaleInUse: dummy_model.female_in_use,
+        femaleOutOfCommissionTotal: dummy_model.female_out_of_commission,
+        femaleOutOfCommissionDetail: dummy_model.outOfCommission['female'],
+        malePrebookingTotal: dummy_model.prebooking['male'].total,
+        malePrebookingDetail: dummy_model.prebooking['male'].detail,
+        femalePrebookingTotal: dummy_model.prebooking['female'].total,
+        femalePrebookingDetail: dummy_model.prebooking['female'].detail,
+        maleContingencyTotal: dummy_model.contingency['male'].total,
+        maleContingencyDetail: dummy_model.contingency['male'].detail,
+        femaleContingencyTotal: dummy_model.contingency['female'].total,
+        femaleContingencyDetail: dummy_model.contingency['female'].detail,
+        maleAvailability: -17,
+        femaleAvailability: -37
+      },
+      id: dummy_model.id.toString(),
+      type: "centre",
+      links: [
+        'links'
+      ]
     };
 
     it('should match the expected output', () => {
-      let that = dummy_model;
-      var expected = {
-        attributes: {
-          name: that.name,
-          cidReceivedDate: that.cid_received_date,
-          prebookingReceived: that.prebooking_received,
-          heartbeatReceived: null,
-          updated: that.updatedAt,
-          maleCapacity: that.male_capacity,
-          maleInUse: that.male_in_use,
-          maleOutOfCommissionTotal: that.male_out_of_commission,
-          maleOutOfCommissionDetail: that.outOfCommission['male'],
-          femaleCapacity: that.female_capacity,
-          femaleInUse: that.female_in_use,
-          femaleOutOfCommissionTotal: that.female_out_of_commission,
-          femaleOutOfCommissionDetail: that.outOfCommission['female'],
-          malePrebooking: that.male_prebooking.length,
-          femalePrebooking: that.female_prebooking.length,
-          maleContingency: that.male_contingency.length,
-          femaleContingency: that.female_contingency.length,
-          maleAvailability: 0,
-          femaleAvailability: -5
-        },
-        id: that.id.toString(),
-        type: "centre",
-        links: [
-          'links'
-        ]
-      };
-      return expect(model.attributes.toJSON.call(that)).to.eql(expected);
+      const that = Object.assign({}, dummy_model),
+        expected = Object.assign({}, result);
+      return expect(model.attributes.toJSON.call(that)).to.deep.equal(expected);
     });
 
     it('should match the expected output when reconciled is set', () => {
-      let that = Object.assign({}, dummy_model, {
+      const that = Object.assign({}, dummy_model, {
         reconciled: [],
         unreconciledMovements: [],
         unreconciledEvents: []
       });
-      var expected = {
+      const expected = _.merge({}, result, {
         attributes: {
-          name: that.name,
-          cidReceivedDate: that.cid_received_date,
-          prebookingReceived: that.prebooking_received,
-          heartbeatReceived: null,
-          updated: that.updatedAt,
-          maleCapacity: that.male_capacity,
-          maleInUse: that.male_in_use,
-          maleOutOfCommissionTotal: that.male_out_of_commission,
-          maleOutOfCommissionDetail: that.outOfCommission['male'],
-          femaleCapacity: that.female_capacity,
-          femaleInUse: that.female_in_use,
-          femaleOutOfCommissionTotal: that.female_out_of_commission,
-          femaleOutOfCommissionDetail: that.outOfCommission['female'],
-          maleAvailability: 0,
-          femaleAvailability: -5,
           femaleUnexpectedIn: [],
           femaleExpectedIn: [],
           femaleExpectedOut: [],
           maleUnexpectedIn: [],
           maleExpectedIn: [],
-          maleExpectedOut: [],
-          malePrebooking: that.male_prebooking.length,
-          femalePrebooking: that.female_prebooking.length,
-          maleContingency: that.male_contingency.length,
-          femaleContingency: that.female_contingency.length
-        },
-        id: that.id.toString(),
-        type: "centre",
-        links: [
-          'links'
-        ]
-      };
-      return expect(model.attributes.toJSON.call(that)).to.eql(expected);
+          maleExpectedOut: []
+        }
+      });
+      return expect(model.attributes.toJSON.call(that)).to.deep.equal(expected);
     });
 
     it('Should have properties set for male and female capacity and occupancy', () => {
@@ -139,10 +124,6 @@ describe('UNIT CentreModel', () => {
       expect(subject).to.have.a.property('femaleCapacity', 12);
       expect(subject).to.have.a.property('maleInUse', 4);
       expect(subject).to.have.a.property('femaleInUse', 4);
-      expect(subject).to.have.a.property('malePrebooking', 1);
-      expect(subject).to.have.a.property('femalePrebooking', 2);
-      expect(subject).to.have.a.property('maleContingency', 1);
-      expect(subject).to.have.a.property('femaleContingency', 2);
     });
   });
 
@@ -174,8 +155,8 @@ describe('UNIT CentreModel', () => {
 
       it('should reduce the filtered movements to simplified objects containing only the `id` and `cid_id` attributes', () => {
         expect(unreconciledMovementFilter(movements, 'male', 'in')).to.deep.equal([
-          { id: 1, cid_id: 11 },
-          { id: 2, cid_id: 22 }
+          {id: 1, cid_id: 11},
+          {id: 2, cid_id: 22}
         ]);
       });
     });
@@ -184,16 +165,16 @@ describe('UNIT CentreModel', () => {
       const unreconciledEventReducer = model.__get__('unreconciledEventReducer');
       const events = [{
         id: 1, operation: 'check in',
-        detainee: { gender: 'male', cid_id: 11 }
+        detainee: {gender: 'male', cid_id: 11}
       }, {
         id: 2, operation: 'check in',
-        detainee: { gender: 'male', cid_id: 22 }
+        detainee: {gender: 'male', cid_id: 22}
       }, {
         id: 3, operation: 'check out',
-        detainee: { gender: 'male', cid_id: 33 }
+        detainee: {gender: 'male', cid_id: 33}
       }, {
         id: 4, operation: 'check in',
-        detainee: { gender: 'female', cid_id: 44 }
+        detainee: {gender: 'female', cid_id: 44}
       }];
 
       it('should reduce the unreconciled events to only those with the specified `gender` and `operation`', () => {
@@ -206,12 +187,11 @@ describe('UNIT CentreModel', () => {
 
       it('should reduce the filtered events to simplified objects containing only the `id` and `cid_id` attributes', () => {
         expect(unreconciledEventReducer(events, 'male', 'check in')).to.deep.equal([
-          { id: 1, cid_id: 11 },
-          { id: 2, cid_id: 22 }
+          {id: 1, cid_id: 11},
+          {id: 2, cid_id: 22}
         ]);
       });
     });
-
   });
 
   describe('publishUpdateAll / publishUpdateOne', () => {
@@ -265,16 +245,11 @@ describe('UNIT CentreModel', () => {
   });
 
   describe('findReconciled', () => {
-    var populate, map;
-    var dummyMovement = [{id: 1}, {id: 2}, {id: 3}];
-    var dummyPrebooking = [{id: 4}, {id: 5}, {id: 6}];
-    var dummyContingency = [{id: 7}, {id: 8}, {id: 9}];
+    var map;
 
     beforeEach(() => {
-      populate = sinon.stub().returnsThis();
       map = sinon.stub().returnsThis();
       sinon.stub(Centres, 'find').returns({
-        populate: populate,
         then: sinon.stub().resolves(true),
         map: map,
         toPromise: sinon.stub().returnsThis()
@@ -282,26 +257,6 @@ describe('UNIT CentreModel', () => {
     });
 
     afterEach(() => Centres.find.restore());
-
-    it('Should populate female_prebooking', () =>
-      model.findReconciled()
-        .then(() => expect(populate).to.be.calledWith('female_prebooking'))
-    );
-
-    it('Should populate male_prebooking', () =>
-      model.findReconciled()
-        .then(() => expect(populate).to.be.calledWith('male_prebooking'))
-    );
-
-    it('Should populate female_contingency', () =>
-      model.findReconciled()
-        .then(() => expect(populate).to.be.calledWith('female_contingency'))
-    );
-
-    it('Should populate male_contingency', () =>
-      model.findReconciled()
-        .then(() => expect(populate).to.be.calledWith('male_contingency'))
-    );
 
     it('Should perform reconciliation', () =>
       model.findReconciled()

@@ -4,85 +4,220 @@ const model = rewire('../../api/models/Prebooking');
 const Promise = require('bluebird');
 
 describe('UNIT PrebookingModel', () => {
-  describe('setNormalisedRelationships', () => {
-    var method = Promise.promisify(model.__get__('setNormalisedRelationships'));
+  describe('getPrebookingByCentreGroupByGenderCidOrTaskForce', () => {
+    var centreId = 1;
+    var contingency = false;
+    var getPrebookingsByCentreAndContingencyOutput = [{
+      gender: 'male',
+      task_force: 'Ops1'
+    }, {
+      gender: 'male',
+      task_force: 'Ops1'
+    }, {
+      gender: 'male',
+      task_force: 'Ops1',
+      cid_id: '111'
+    }, {
+      gender: 'male',
+      task_force: 'Ops2',
+      cid_id: '222'
+    }, {
+      gender: 'female',
+      task_force: 'Ops1',
+      cid_id: '555'
+    }, {
+      gender: 'female',
+      task_force: 'Ops2'
+    }];
+    var output = {
+      male: {
+        detail: {
+          'Ops1': 2,
+          '111': 1,
+          '222': 1
+        },
+        total: 4
+      },
+      female: {
+        detail: {
+          '555': 1,
+          'Ops2': 1
+        },
+        total: 2
+      }
+    };
 
-    it('should set the correct normalised pre-booking values for a male subject', () => {
-      var record = {
-        male_prebooking: 'foo',
-        female_prebooking: 'bar',
-        centre: 123,
+    beforeEach(() => {
+      sinon.stub(Prebooking, 'getPrebookingsByCentreAndContingency').resolves(getPrebookingsByCentreAndContingencyOutput);
+    });
+
+    afterEach(() => {
+      Prebooking.getPrebookingsByCentreAndContingency.restore()
+    });
+
+    it('should return prebookings grouped by gender and count by cid id (if set), alterntatively task force', () =>
+      expect(model.getPrebookingByCentreGroupByGenderCidOrTaskForce(centreId, contingency)).to.eventually.deep.equal(output)
+    );
+  });
+
+  describe('getPrebookingsByCentreAndContingency', () => {
+    var centreId = 1;
+    var contingency = false;
+    var findOutput = [{
+      gender: 'male',
+      task_force: 'Ops1',
+      cid_id: null
+    }, {
+      gender: 'male',
+      task_force: 'Ops1',
+      cid_id: void 0
+    }, {
+      gender: 'male',
+      task_force: 'Ops1',
+      cid_id: '111'
+    }, {
+      gender: 'male',
+      task_force: 'Ops2',
+      cid_id: '222'
+    }];
+    var output = [{
+      gender: 'male',
+      task_force: 'Ops1'
+    }, {
+      gender: 'male',
+      task_force: 'Ops1'
+    }, {
+      gender: 'male',
+      task_force: 'Ops1',
+      cid_id: '111'
+    }, {
+      gender: 'male',
+      task_force: 'Ops2',
+      cid_id: '222'
+    }];
+
+    beforeEach(() => {
+      sinon.stub(Prebooking, 'find').returns({
+        toPromise: sinon.stub().resolves(findOutput)
+      })
+    });
+
+    afterEach(() => Prebooking.find.restore());
+
+    it('should pass the correct mapping to Prebooking.find', () => {
+      model.getPrebookingsByCentreAndContingency(centreId, contingency);
+      return expect(Prebooking.find).to.be.calledWith({
+        where: {
+          centre: centreId,
+          contingency: contingency
+        },
+        select: ['gender', 'task_force', 'cid_id']
+      });
+    });
+
+    it('should return prebookings where properties of null or undefined are omitted', () =>
+      expect(model.getPrebookingsByCentreAndContingency(centreId, contingency)).to.eventually.deep.equal(output)
+    );
+  });
+
+  describe('unsetTaskForceIfCidIdIsSet', () => {
+    it('should return an object exclusive of task_force if cid_id is set', () =>
+      expect(model.unsetTaskForceIfCidIdIsSet({
         gender: 'male',
-        task_force: 'ops1',
-        cid_id: '123'
-      };
-
-      return method(record)
-        .then(() =>
-          expect(record.male_prebooking).to.eql(123)
-        )
-        .then(() =>
-          expect(record.female_prebooking).to.be.undefined
-        )
-    });
-
-    it('should set the correct normalised pre-booking values for a female subject', () => {
-      var record = {
-        male_prebooking: 'foo',
-        female_prebooking: 'bar',
-        centre: 123,
-        gender: 'female',
-        task_force: 'ops1',
-        cid_id: '123'
-      };
-
-      return method(record)
-        .then(() =>
-          expect(record.female_prebooking).to.eql(123)
-        )
-        .then(() =>
-          expect(record.male_prebooking).to.be.undefined
-        )
-    });
-
-    it('should set the correct normalised contingency-booking values for a male subject', () => {
-      var record = {
-        male_prebooking: 'foo',
-        female_prebooking: 'bar',
-        centre: 123,
+        task_force: 'Ops1',
+        cid_id: 1234
+      })).to.deep.equal({
         gender: 'male',
-        task_force: 'ops1',
-        contingency: true,
-        cid_id: '123'
-      };
+        cid_id: 1234
+      })
+    );
+  });
 
-      return method(record)
-        .then(() =>
-          expect(record.male_contingency).to.eql(123)
-        )
-        .then(() =>
-          expect(record.female_contingency).to.be.undefined
-        )
+  describe('groupByGender', () => {
+    var input = [{
+      gender: 'male',
+      task_force: 'Ops1'
+    }, {
+      gender: 'male',
+      task_force: 'Ops1'
+    }, {
+      gender: 'male',
+      cid_id: '111'
+    }, {
+      gender: 'male',
+      cid_id: '222'
+    }];
+    var output = {
+      male: [{
+        gender: 'male',
+        task_force: 'Ops1'
+      }, {
+        gender: 'male',
+        task_force: 'Ops1'
+      }, {
+        gender: 'male',
+        cid_id: '111'
+      }, {
+        gender: 'male',
+        cid_id: '222'
+      }]
+    };
+
+    it('should return object grouped by gender', () => {
+      expect(model.groupByGender(input)).to.deep.equal(output);
     });
+  });
 
-    it('should set the correct normalised contingency-booking values for a female subject', () => {
-      var record = {
-        male_prebooking: 'foo',
-        female_prebooking: 'bar',
-        centre: 123,
+  describe('groupAndCountByCidAlternativelyTaskForce', () => {
+    var input = {
+      male: [{
+        gender: 'male',
+        task_force: 'Ops1'
+      }, {
+        gender: 'male',
+        task_force: 'Ops1'
+      }, {
+        gender: 'male',
+        cid_id: '111'
+      }, {
+        gender: 'male',
+        cid_id: '222'
+      }],
+      female: [{
         gender: 'female',
-        task_force: 'ops1',
-        contingency: true,
-        cid_id: '123'
-      };
+        task_force: 'Ops1'
+      }, {
+        gender: 'female',
+        task_force: 'Ops1'
+      }, {
+        gender: 'female',
+        cid_id: '444'
+      }, {
+        gender: 'female',
+        cid_id: '322'
+      }]
+    };
+    var output = {
+      male: {
+        detail: {
+          'Ops1': 2,
+          '111': 1,
+          '222': 1
+        },
+        total: 4
+      },
+      female: {
+        detail: {
+          'Ops1': 2,
+          '444': 1,
+          '322': 1
+        },
+        total: 4
+      }
+    };
 
-      return method(record)
-        .then(() =>
-          expect(record.female_contingency).to.eql(123)
-        )
-        .then(() =>
-          expect(record.male_contingency).to.be.undefined
-        )
+    it('should return object, where key = value of the cid_id alternatively the task_force attribute and value = count per gender per task_force or cid_id', () => {
+      expect(model.groupAndCountByCidAlternativelyTaskForce(input)).to.deep.equal(output);
     });
   });
 });

@@ -139,6 +139,116 @@ describe('UNIT BedCountService', () => {
       );
     });
 
+    describe('#populatePrebooking', () => {
+      const populatePrebooking = BedCountService.__get__('populatePrebooking');
+      var input = {centre: {id: 1}};
+      var output = {
+        centre: {
+          id: 1
+        },
+        prebooking: {
+          male: {
+            details: {
+              'Ops1': 1,
+              'Ops2': 13
+            },
+            total: 14
+          },
+          female: {
+            details: {
+              'Ops3': 5,
+              'Ops4': 7
+            },
+            total: 12
+          }
+        }
+      };
+      var getPrebookingByCentreGroupByGenderCidOrTaskForceResponse = {
+        male: {
+          details: {
+            'Ops1': 1,
+            'Ops2': 13
+          },
+          total: 14
+        },
+        female: {
+          details: {
+            'Ops3': 5,
+            'Ops4': 7
+          },
+          total: 12
+        }
+      };
+
+      before(() => sinon.stub(Prebooking, 'getPrebookingByCentreGroupByGenderCidOrTaskForce').resolves(getPrebookingByCentreGroupByGenderCidOrTaskForceResponse));
+
+      after(() => Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce.restore());
+
+      it('should pass the correct mapping to Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce', () => {
+        populatePrebooking(input);
+        return expect(Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce).to.be.calledWith(input.centre.id, false);
+      });
+
+      it('should merge the response of Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce into the return', () =>
+        expect(populatePrebooking(input)).to.eventually.deep.equal(output)
+      );
+    });
+
+    describe('#populateContingency', () => {
+      const populateContingency = BedCountService.__get__('populateContingency');
+      var input = {centre: {id: 1}};
+      var output = {
+        centre: {
+          id: 1
+        },
+        contingency: {
+          male: {
+            details: {
+              'Ops1': 1,
+              'Ops2': 13
+            },
+            total: 14
+          },
+          female: {
+            details: {
+              'Ops3': 5,
+              'Ops4': 7
+            },
+            total: 12
+          }
+        }
+      };
+      var getPrebookingByCentreGroupByGenderCidOrTaskForceResponse = {
+        male: {
+          details: {
+            'Ops1': 1,
+            'Ops2': 13
+          },
+          total: 14
+        },
+        female: {
+          details: {
+            'Ops3': 5,
+            'Ops4': 7
+          },
+          total: 12
+        }
+      };
+
+      before(() => sinon.stub(Prebooking, 'getPrebookingByCentreGroupByGenderCidOrTaskForce').resolves(getPrebookingByCentreGroupByGenderCidOrTaskForceResponse));
+
+      after(() => Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce.restore());
+
+      it('should pass the correct mapping to Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce', () => {
+        populateContingency(input);
+        return expect(Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce).to.be.calledWith(input.centre.id, true);
+      });
+
+      it('should merge the response of Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce into the return', () =>
+        expect(populateContingency(input)).to.eventually.deep.equal(output)
+      );
+    });
+
     describe('#getReconciliationTester', () => {
       const getReconciliationTester = BedCountService.__get__('getReconciliationTester');
       it('should return a function', () => {
@@ -361,6 +471,8 @@ describe('UNIT BedCountService', () => {
             expect(result).to.have.property('unreconciledMovements');
             expect(result).to.have.property('unreconciledReinstatements');
             expect(result).to.have.property('outOfCommission');
+            expect(result).to.have.property('prebooking');
+            expect(result).to.have.property('contingency');
           });
         });
     });
