@@ -33,7 +33,7 @@ module.exports.connections = {
   },
 
   test: {
-    adapter: 'sails-memory'
+    adapter: 'sails-memory-restorable'
   },
 
   /***************************************************************************

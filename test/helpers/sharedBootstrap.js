@@ -14,26 +14,31 @@ global.chai = require('chai')
 global.expect = chai.expect;
 global._ = require('lodash');
 global.sinon = require('sinon');
-global.initializeBarrelsFixtures = function () {
-  return new Promise(function (resolve) {
-    barrels.populate([
-      'centres',
-      'subjects',
-      'movement',
-      'detainee',
-      'event',
-      'heartbeat',
-      'prebooking',
-      'bed',
-      'bedevent',
-      'port'
-    ], function (err) {
-      if (err) throw err;
-      resolve();
+global.initializeBarrelsFixtures = () =>
+  setupFixtures()
+    .then(() => {
+      Sails.adapters['sails-memory-restorable'].restoreState('test');
     });
 
+var setupFixtures = _.once(() => new Promise(function (resolve) {
+  barrels.populate([
+    'centres',
+    'subjects',
+    'movement',
+    'detainee',
+    'event',
+    'heartbeat',
+    'prebooking',
+    'bed',
+    'bedevent',
+    'port'
+  ], function (err) {
+    if (err) throw err;
+    Sails.adapters['sails-memory-restorable'].saveState('test');
+    resolve();
   });
-};
+
+}));
 
 require('mocha-cakes-2');
 require('sinon-as-promised')(require('bluebird'));

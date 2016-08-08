@@ -184,11 +184,6 @@ describe('UNIT BedCountService', () => {
 
       after(() => Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce.restore());
 
-      it('should pass the correct mapping to Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce', () => {
-        populatePrebooking(input);
-        return expect(Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce).to.be.calledWith(input.centre.id, false);
-      });
-
       it('should merge the response of Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce into the return', () =>
         expect(populatePrebooking(input)).to.eventually.deep.equal(output)
       );
@@ -238,11 +233,6 @@ describe('UNIT BedCountService', () => {
       before(() => sinon.stub(Prebooking, 'getPrebookingByCentreGroupByGenderCidOrTaskForce').resolves(getPrebookingByCentreGroupByGenderCidOrTaskForceResponse));
 
       after(() => Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce.restore());
-
-      it('should pass the correct mapping to Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce', () => {
-        populateContingency(input);
-        return expect(Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce).to.be.calledWith(input.centre.id, true);
-      });
 
       it('should merge the response of Prebooking.getPrebookingByCentreGroupByGenderCidOrTaskForce into the return', () =>
         expect(populateContingency(input)).to.eventually.deep.equal(output)
