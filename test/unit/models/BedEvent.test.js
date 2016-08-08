@@ -105,7 +105,8 @@ describe('UNIT BedEventModel', () => {
       }];
     var output = {
       male: {
-        'Maintenance - Malicious/Accidental Damage': 1
+        'Maintenance - Malicious/Accidental Damage': 1,
+        'Single Occupancy':1
       },
       female: {
         'Maintenance - Health and Safety Concern': 1,
