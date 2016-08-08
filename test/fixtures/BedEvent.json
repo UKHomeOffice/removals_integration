@@ -1,5 +1,6 @@
 [
   {
+    "id": 1,
     "bed": 1,
     "active": false,
     "detainee": null,
@@ -8,6 +9,7 @@
     "reason": null
   },
   {
+    "id": 2,
     "bed": 1,
     "detainee": 1,
     "timestamp": "2016-05-23T18:25:43.511Z",
@@ -16,6 +18,16 @@
     "active": true
   },
   {
+    "id": 3,
+    "bed": 1,
+    "active": false,
+    "detainee": null,
+    "timestamp": "2017-01-02T18:25:43.511Z",
+    "operation": "in commission",
+    "reason": null
+  },
+  {
+    "id": 4,
     "bed": 2,
     "active": true,
     "detainee": null,
@@ -25,6 +37,7 @@
     "active": true
   },
   {
+    "id": 5,
     "bed": 3,
     "active": true,
     "detainee": null,
@@ -33,6 +46,7 @@
     "reason": "Maintenance - Health and Safety Concern"
   },
   {
+    "id": 6,
     "bed": 4,
     "active": true,
     "detainee": null,
@@ -41,6 +55,7 @@
     "reason": "Maintenance - Planned works"
   },
   {
+    "id": 7,
     "bed": 5,
     "active": true,
     "detainee": null,
@@ -49,6 +64,7 @@
     "reason": "Crime Scene"
   },
   {
+    "id": 8,
     "bed": 6,
     "active": true,
     "detainee": null,
@@ -57,6 +73,7 @@
     "reason": "Medical Isolation"
   },
   {
+    "id": 9,
     "bed": 7,
     "active": true,
     "detainee": null,
@@ -65,6 +82,16 @@
     "reason": "Other"
   },
   {
+    "id": 10,
+    "bed": 7,
+    "active": true,
+    "detainee": null,
+    "timestamp": "2014-04-23T18:25:43.511Z",
+    "operation": "in commission",
+    "reason": null
+  },
+  {
+    "id": 11,
     "bed": 8,
     "active": false,
     "detainee": null,
@@ -73,6 +100,7 @@
     "reason": "Other"
   },
   {
+    "id": 12,
     "bed": 8,
     "active": false,
     "detainee": null,
@@ -81,6 +109,7 @@
     "reason": null
   },
   {
+    "id": 13,
     "bed": 8,
     "active": false,
     "detainee": null,
@@ -89,6 +118,7 @@
     "reason": null
   },
   {
+    "id": 14,
     "bed": 8,
     "active": true,
     "detainee": null,
