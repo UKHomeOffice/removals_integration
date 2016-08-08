@@ -11,7 +11,8 @@ const validation_schema = {
       type: "string"
     },
     MORef: {
-      type: "string"
+      type: "integer",
+      minimum: 0
     },
     MODate: {
       type: "string"
@@ -20,13 +21,13 @@ const validation_schema = {
       type: "string"
     },
     CIDPersonID: {
-      type: "string",
-      pattern: "^[0-9]+$"
+      type: "integer",
+      minimum: 0
     }
   },
   properties: {
     additionalProperties: false,
-    Output: {
+    cDataSet: {
       type: "array",
       additionalItems: true,
       items: {
@@ -35,7 +36,7 @@ const validation_schema = {
         required: [
           "Location",
           "MO In/MO Out",
-          "MO Ref.",
+          "MO Ref",
           "MO Date",
           "MO Type",
           "CID Person ID"
@@ -43,7 +44,7 @@ const validation_schema = {
         properties: {
           Location: {$ref: "#/definitions/Location"},
           "MO In/MO Out": {$ref: "#/definitions/InOut"},
-          "MO Ref.": {$ref: "#/definitions/MORef"},
+          "MO Ref": {$ref: "#/definitions/MORef"},
           "MO Date": {$ref: "#/definitions/MODate"},
           "MO Type": {$ref: "#/definitions/MOType"},
           "CID Person ID": {$ref: "#/definitions/CIDPersonID"}
@@ -52,7 +53,7 @@ const validation_schema = {
     }
   },
   required: [
-    "Output"
+    "cDataSet"
   ]
 };
 

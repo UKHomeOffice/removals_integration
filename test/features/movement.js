@@ -13,13 +13,13 @@ Feature('Movements', () => {
   const randomInt = () => Math.floor(Math.random() * 100000) + 1000;
   const validMovementTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format('DD/MM/YYYY HH:mm:ss');
   const movement = (direction, cid) => ({
-    Output: [{
+    cDataSet: [{
       Location: 'bigone male holding',
       'MO In/MO Out': direction,
-      'MO Ref.': `${randomInt()}`,
+      'MO Ref': randomInt(),
       'MO Date': validMovementTimestamp,
       'MO Type': 'Occupancy',
-      'CID Person ID': `${cid || randomInt()}`
+      'CID Person ID': cid || randomInt()
     }]
   });
 
