@@ -13,6 +13,7 @@ const id = {
 
 exports.up = (db, callback) =>
   cps.seq([
+    (_, callback) => db.runSql('CREATE DATABASE IF NOT EXISTS removals', callback),
     (_, callback) => db.createTable('centres', {
       id: id,
       createdAt: 'datetime',
