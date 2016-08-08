@@ -15,5 +15,5 @@ exports.down = (db, callback) =>
     (_, callback) => db.addColumn('centre', 'male_prebooking', 'int', callback),
     (_, callback) => db.addColumn('centre', 'female_prebooking', 'int', callback),
     (_, callback) => db.addColumn('centre', 'male_contingency', 'int', callback),
-    (_, callback) => db.addColumn('centre', 'female_contingency', 'int', callback),
+    (_, callback) => db.addColumn('centre', 'female_contingency', 'int', callback)
   ], callback);
