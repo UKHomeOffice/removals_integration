@@ -3,6 +3,7 @@
 
 const ValidationError = require('../lib/exceptions/ValidationError');
 const moment = require('moment');
+const _ = require('lodash');
 const failedRemovalReturnType = "Failed-Removal-Return";
 const nonOccupancyType = "Non-Occupancy";
 
@@ -56,7 +57,7 @@ module.exports = {
       .map(port => port.location)
       .then(ports => {
         _.each(movements, (movement) => {
-          if (movement['MO Type'] === nonOccupancyType && _.include(ports, movement.Location)) {
+          if (movement['MO Type'] === nonOccupancyType && _.includes(ports, movement.Location)) {
             movements = _.map(movements, (movementb) => {
               if (movementb['MO Ref.'] === movement['MO Ref.']) {
                 movementb["MO Type"] = failedRemovalReturnType;

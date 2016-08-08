@@ -1,6 +1,7 @@
 'use strict';
 
 const jsonApiResponse = require('../lib/helpers/json-api-response');
+const _ = require('lodash');
 const okCode = 200;
 const okPostCode = 201;
 const okEmptyCode = 204;
@@ -22,7 +23,7 @@ var codes = {
 };
 
 var getStatusCode = (method, isEmpty) => {
-  var satiety = isEmpty ? 'empty': 'full';
+  var satiety = isEmpty ? 'empty' : 'full';
   if (codes[method]) {
     return codes[method][satiety];
   }

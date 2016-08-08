@@ -4,6 +4,7 @@
 const ValidationError = require('../lib/exceptions/ValidationError');
 const BedCountService = require('../services/BedCountService');
 const LinkingModels = require('sails-linking-models');
+const _ = require('lodash');
 
 const unreconciledMovementReducer = (movements, gender, direction) => movements.reduce((reduced, m) => {
   if (m.gender === gender && m.direction === direction) {
@@ -144,13 +145,13 @@ const model = {
   getGenderAndCentreByCIDLocation: function (location) {
     return this.find().then(centres =>
       _.compact(_.map(centres, centre => {
-        if (_.contains(centre.male_cid_name, location)) {
+        if (_.includes(centre.male_cid_name, location)) {
           return {
             centre: centre.id,
             gender: 'male'
           };
         }
-        if (_.contains(centre.female_cid_name, location)) {
+        if (_.includes(centre.female_cid_name, location)) {
           return {
             centre: centre.id,
             gender: 'female'
@@ -184,14 +185,14 @@ const model = {
 
   afterDestroy: function (records, done) {
     Promise.all(_.map(records, (record) =>
-      Movement.destroy({centre: record.id})
-        .then(() => Prebooking.destroy({centre: record.id}))
-        .then(() => Event.destroy({centre: record.id}))
-        .then(() => Bed.destroy({centre: record.id}))
-        .then(() => Detainee.destroy({centre: record.id}))
-        .then(() => Heartbeat.destroy({centre: record.id}))
-        .then(() => this.publishDestroy(record.id))
-    ))
+        Movement.destroy({centre: record.id})
+          .then(() => Prebooking.destroy({centre: record.id}))
+          .then(() => Event.destroy({centre: record.id}))
+          .then(() => Bed.destroy({centre: record.id}))
+          .then(() => Detainee.destroy({centre: record.id}))
+          .then(() => Heartbeat.destroy({centre: record.id}))
+          .then(() => this.publishDestroy(record.id))
+      ))
       .then(() => done());
   },
 

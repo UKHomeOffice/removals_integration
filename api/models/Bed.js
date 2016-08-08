@@ -3,6 +3,7 @@
 
 const LinkingModels = require('sails-linking-models');
 const ModelHelpers = require('../lib/ModelHelpers');
+const _ = require('lodash');
 
 const model = {
   autoCreatedAt: true,
