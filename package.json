@@ -41,8 +41,6 @@
     "test": "istanbul cover _mocha",
     "test:features": "_mocha test/features",
     "postinstall": "precommit install",
-    "coverage-test": "multi='xunit=shippable/testresults/result.xml' istanbul cover _mocha",
-    "coverage-report": "istanbul report cobertura --dir shippable/codecoverage/",
     "migrations": "LOG_LEVEL=debug grunt db:migrate:up --count=10000",
     "lint": "eslint ."
   },
