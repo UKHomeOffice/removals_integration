@@ -8,9 +8,23 @@ reporting:
     print: summary
     reports:
         - lcov
+        - text-summary
     dir: ./coverage
     watermarks:
-        statements: [50, 80]
-        lines: [50, 80]
-        functions: [50, 80]
-        branches: [50, 80]
+        statements: [98, 99]
+        lines: [98, 99]
+        functions: [98, 99]
+        branches: [98, 99]
+check:
+    global:
+        statements: 98
+        lines: 98
+        branches: 98
+        functions: 98
+        excludes: []
+    each:
+        statements: 95
+        lines: 95
+        branches: 95
+        functions: 95
+        excludes: []
