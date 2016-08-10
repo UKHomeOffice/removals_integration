@@ -561,11 +561,17 @@ describe('INTEGRATION Irc_EntryController', () => {
   });
 
   describe('Integration - Routes', () => {
-    it('should return the schema for an options request', () =>
+    it('should return the schema for an options request heartbeat', () =>
       request(sails.hooks.http.app)
         .options('/irc_entry/heartbeat')
         .expect(200)
         .expect((res) => expect(res.body.data).to.eql(IrcEntryHeartbeatValidatorService.schema))
+    );
+    it('should return the schema for an options request event', () =>
+      request(sails.hooks.http.app)
+        .options('/irc_entry/event')
+        .expect(200)
+        .expect((res) => expect(res.body.data).to.eql(IrcEntryEventValidatorService.schema))
     );
   });
 });
