@@ -14,6 +14,7 @@ global.chai = require('chai')
 global.expect = chai.expect;
 global._ = require('lodash');
 global.sinon = require('sinon');
+const Promise = require('bluebird');
 global.initializeBarrelsFixtures = () =>
   setupFixtures()
     .then(() => {
@@ -70,8 +71,15 @@ global.createRequest = function (payload, path, res) {
     .send(payload)
     .expect(res)
     .toPromise()
-    .delay(500);
+    .tap(() => conditional_delay(path));
 };
+
+const conditional_delay = (path) => {
+  if (path == '/cid_entry/movement') {
+    return new Promise.delay(500);
+  }
+  return new Promise.resolve();
+}
 
 global.assertCentresHTTPResponse = function (key, value) {
   return global.request(sails.hooks.http.app)
