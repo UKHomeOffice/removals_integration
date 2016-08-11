@@ -21,7 +21,7 @@ global.initializeBarrelsFixtures = () =>
       Sails.adapters['sails-memory-restorable'].restoreState('test');
     });
 
-var setupFixtures = _.once(() => new Promise(function (resolve) {
+var setupFixtures = _.once(() => new Promise((resolve) =>
   barrels.populate([
     'centres',
     'subjects',
@@ -33,13 +33,12 @@ var setupFixtures = _.once(() => new Promise(function (resolve) {
     'bed',
     'bedevent',
     'port'
-  ], function (err) {
+  ], (err) => {
     if (err) throw err;
     Sails.adapters['sails-memory-restorable'].saveState('test');
     resolve();
-  });
-
-}));
+  })
+));
 
 require('mocha-cakes-2');
 require('sinon-as-promised')(require('bluebird'));
@@ -65,31 +64,41 @@ global.testConfig = {
   initializeBarrelsFixtures: true
 };
 
-global.createRequest = function (payload, path, res) {
+global.createRequest = (payload, path, res) => {
+  var conditional_delay;
+
+  // cid movements take ages to process out of the request/response cycle
+  // so we need to do some magic to wait until they're done before the asserts can happen
+  if (path == '/cid_entry/movement') {
+    let controller = require("../../api/controllers/Cid_EntryController")
+    sinon.spy(Centres, 'publishUpdateAll')
+    conditional_delay = () =>
+      new Promise((resolve) => {
+        let interval = setInterval(() => {
+          if (Centres.publishUpdateAll.called) {
+            Centres.publishUpdateAll.restore()
+            resolve()
+            clearInterval(interval);
+          }
+        }, 10);
+      });
+  }
   return request_auth(sails.hooks.http.app)
     .post(path)
     .send(payload)
     .expect(res)
     .toPromise()
-    .tap(() => conditional_delay(path));
+    .tap(conditional_delay);
 };
 
-const conditional_delay = (path) => {
-  if (path == '/cid_entry/movement') {
-    return new Promise.delay(500);
-  }
-  return new Promise.resolve();
-}
-
-global.assertCentresHTTPResponse = function (key, value) {
-  return global.request(sails.hooks.http.app)
+global.assertCentresHTTPResponse = (key, value) =>
+  global.request(sails.hooks.http.app)
     .get('/centres')
     .expect(200)
     .expect(res => {
         expect(res.body.data[0].attributes[key]).to.deep.equal(value)
       }
     );
-};
 
 module.exports = {
   before: done => {
