@@ -18,14 +18,14 @@ const validation_schema = {
       description: "IRC location reserved for the subject"
     },
     cid_id: {
-      type: "string",
-      description: "CID ID of the subject",
-      pattern: "^(|[0-9]+)$"
+      type: "integer",
+      minimum: 0,
+      description: "CID ID of the subject"
     }
   },
   properties: {
     additionalProperties: false,
-    Output: {
+    cDataSet: {
       type: "array",
       additionalItems: true,
       items: {
@@ -46,7 +46,7 @@ const validation_schema = {
     }
   },
   required: [
-    "Output"
+    "cDataSet"
   ]
 };
 

@@ -36,7 +36,6 @@ describe('UNIT Depmu_EntryController', () => {
 
   describe('formatPrebooking', () => {
     var dummyPrebooking = {
-      "cid_id": '134',
       "location": ' EXAMPLE 1 ',
       "task_force": ' EXAMPLE 2 '
     };
@@ -47,10 +46,6 @@ describe('UNIT Depmu_EntryController', () => {
 
     it('should make the prebooking task force  lowercase and trimmed', () =>
       expect(controller.formatPrebooking(dummyPrebooking)["task_force"]).to.eql('example 2')
-    );
-
-    it('should make the prebooking cid an integer', () =>
-      expect(controller.formatPrebooking(dummyPrebooking)["cid_id"]).to.eql(134)
     );
 
     it('should make the prebooking cid null if undefined', () => {
@@ -232,7 +227,7 @@ describe('UNIT Depmu_EntryController', () => {
 
       req = {
         body: {
-          Output: [{
+          cDataSet: [{
             "location": 'bigone male holding',
             "timestamp": validTimestamp,
             "task_force": 'ops1',
@@ -290,7 +285,7 @@ describe('UNIT Depmu_EntryController', () => {
       controller.prebookingPost.apply(context, [req, res])
         .then(() => expect(res.ok).to.be.calledOnce)
         .catch((e) => {
-          expect(context.formatPrebooking).to.have.been.calledOnce.with(req.body.Output);
+          expect(context.formatPrebooking).to.have.been.calledOnce.with(req.body.cDataSet);
           expect(context.populatePrebookingWithContingency).to.have.been.calledOnce;
           expect(context.populatePrebookingWithCentreAndGender).to.have.been.calledOnce;
           expect(context.filterContingencyWithoutCid).to.have.been.calledOnce;

@@ -22,7 +22,7 @@ module.exports = {
     Prebooking.destroy({}),
 
   formatPrebooking: prebooking => {
-    prebooking.cid_id = prebooking.cid_id ? parseInt(prebooking.cid_id) : null;
+    prebooking.cid_id = prebooking.cid_id || null;
     prebooking.location = prebooking.location.toLowerCase().trim();
     prebooking.task_force = prebooking.task_force.toLowerCase().trim();
     prebooking.timestamp = new Date(prebooking.timestamp);
@@ -83,7 +83,7 @@ module.exports = {
 
   prebookingPost: function (req, res) {
     return DepmuEntryPrebookingValidatorService.validate(req.body)
-      .then(body => body.Output)
+      .then(body => body.cDataSet)
       .map(this.formatPrebooking)
       .map(this.populatePrebookingWithContingency)
       .map(this.populatePrebookingWithCentreAndGender)

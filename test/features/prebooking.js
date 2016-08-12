@@ -22,17 +22,17 @@ var findMovementByCID = (cid_id) =>
     .toPromise()
     .filter(movement => Boolean(movement));
 
-Feature('Prebooking', () => {
+describe('Prebooking', () => {
   var validTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format();
   var pastTimestamp = moment(validTimestamp).subtract(1, 'millisecond').format();
   var futureTimestamp = moment(validTimestamp).add(1, 'day').format();
 
   var payload = {
-    Output: [{
+    cDataSet: [{
       timestamp: validTimestamp,
       location: 'smallone male holding',
       task_force: 'ops1',
-      cid_id: '456'
+      cid_id: 456
     }]
   };
 
@@ -40,26 +40,26 @@ Feature('Prebooking', () => {
     Scenario('New Valid Pre-bookings replace existing pre-bookings', () => {
 
       var followingPayload = {
-        Output: [{
+        cDataSet: [{
           timestamp: validTimestamp,
           location: 'smallone female holding',
           task_force: 'ops1',
-          cid_id: '111'
+          cid_id: 111
         }, {
           timestamp: validTimestamp,
           location: 'smallone female holding',
           task_force: 'ops1',
-          cid_id: '444'
+          cid_id: 444
         }, {
           timestamp: validTimestamp,
           location: 'bigone male holding',
           task_force: 'ops3',
-          cid_id: '222'
+          cid_id: 222
         }, {
           timestamp: validTimestamp,
           location: 'bigone male holding',
           task_force: 'ops4',
-          cid_id: '333'
+          cid_id: 333
         }, {
           timestamp: validTimestamp,
           location: 'bigone male holding',
@@ -97,12 +97,12 @@ Feature('Prebooking', () => {
           .then(() => expect(Centres.find({})).to.eventually.have.lengthOf(1))
       );
 
-      And(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+      And(`a prebooking with cid id "${payload.cDataSet[0].cid_id}" has already occurred`, () =>
         createRequest(payload, '/depmu_entry/prebooking', 201)
-          .then(() => findPrebookingByCID(payload.Output[0].cid_id))
+          .then(() => findPrebookingByCID(payload.cDataSet[0].cid_id))
           .then((models) => {
             expect(models.length).to.equal(1);
-            expect(models[0].cid_id).to.equal(parseInt(payload.Output[0].cid_id));
+            expect(models[0].cid_id).to.equal(parseInt(payload.cDataSet[0].cid_id));
           })
       );
 
@@ -110,7 +110,7 @@ Feature('Prebooking', () => {
         createRequest(followingPayload, '/depmu_entry/prebooking', 201));
 
       Then('previous prebookings recorded are removed', () =>
-        findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+        findPrebookingByCID(payload.cDataSet[0].cid_id).then((models) => expect(models.length).to.equal(0))
       );
 
       And(`new female prebookings are created`, () =>
@@ -163,10 +163,10 @@ Feature('Prebooking', () => {
 
     Scenario('New Invalid Pre-bookings are ignored', () => {
       var followingPayload = {
-        Output: [{
+        cDataSet: [{
           timestamp: validTimestamp,
           location: 'smallone female holding',
-          cid_id: '111'
+          cid_id: 111
         }]
       };
 
@@ -184,12 +184,12 @@ Feature('Prebooking', () => {
           .then(() => expect(Centres.find({})).to.eventually.have.lengthOf(1))
       );
 
-      And(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+      And(`a prebooking with cid id "${payload.cDataSet[0].cid_id}" has already occurred`, () =>
         createRequest(payload, '/depmu_entry/prebooking', 201)
-          .then(() => findPrebookingByCID(payload.Output[0].cid_id))
+          .then(() => findPrebookingByCID(payload.cDataSet[0].cid_id))
           .then((models) => {
             expect(models.length).to.equal(1);
-            expect(models[0].cid_id).to.equal(parseInt(payload.Output[0].cid_id));
+            expect(models[0].cid_id).to.equal(parseInt(payload.cDataSet[0].cid_id));
           })
       );
 
@@ -197,7 +197,7 @@ Feature('Prebooking', () => {
         createRequest(followingPayload, '/depmu_entry/prebooking', 400));
 
       Then('previous prebookings recorded are retained', () =>
-        findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(1))
+        findPrebookingByCID(payload.cDataSet[0].cid_id).then((models) => expect(models.length).to.equal(1))
       );
 
       And("the centre's male `prebooking` object should include the old bookings", () =>
@@ -216,13 +216,13 @@ Feature('Prebooking', () => {
     Scenario('Remove Existing Pre-booking when Movement In Order occurs', () => {
       var validMovementTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format("DD/MM/YYYY HH:mm:ss");
       var movementOrderPayload = {
-        Output: [{
+        cDataSet: [{
           "Location": "bigone male holding",
           "MO In/MO Out": "In",
-          "MO Ref.": "1718293935",
+          "MO Ref": 1718293935,
           "MO Date": validMovementTimestamp,
           "MO Type": "Occupancy",
-          "CID Person ID": payload.Output[0].cid_id
+          "CID Person ID": payload.cDataSet[0].cid_id
         }]
       };
 
@@ -240,20 +240,20 @@ Feature('Prebooking', () => {
           .then(() => expect(Centres.find({})).to.eventually.have.lengthOf(1))
       );
 
-      And(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+      And(`a prebooking with cid id "${payload.cDataSet[0].cid_id}" has already occurred`, () =>
         createRequest(payload, '/depmu_entry/prebooking', 201)
-          .then(() => findPrebookingByCID(payload.Output[0].cid_id))
+          .then(() => findPrebookingByCID(payload.cDataSet[0].cid_id))
           .then((models) => {
             expect(models.length).to.equal(1);
-            expect(models[0].cid_id).to.equal(parseInt(payload.Output[0].cid_id));
+            expect(models[0].cid_id).to.equal(parseInt(payload.cDataSet[0].cid_id));
           })
       );
 
-      When(`a valid movement-in order event with cid id "${movementOrderPayload.Output[0]['CID Person ID']}" occurs`, () =>
+      When(`a valid movement-in order event with cid id "${movementOrderPayload.cDataSet[0]['CID Person ID']}" occurs`, () =>
         createRequest(movementOrderPayload, '/cid_entry/movement', 201));
 
-      Then(`the prebooking with cid id "${payload.Output[0].cid_id}" is removed`, () =>
-        findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+      Then(`the prebooking with cid id "${payload.cDataSet[0].cid_id}" is removed`, () =>
+        findPrebookingByCID(payload.cDataSet[0].cid_id).then((models) => expect(models.length).to.equal(0))
       );
 
       And("the centre's female `prebooking` object should be updated", () =>
@@ -264,13 +264,13 @@ Feature('Prebooking', () => {
     Scenario('Ignore Pre-bookings with existing Movement In Order', () => {
       var validTimestamp = moment().set({hour: 7, minute: 0, second: 0}).format("DD/MM/YYYY HH:mm:ss");
       var movementOrderPayload = {
-        Output: [{
+        cDataSet: [{
           "Location": "smallone male holding",
           "MO In/MO Out": "In",
-          "MO Ref.": "1718293935",
+          "MO Ref": 1718293935,
           "MO Date": validTimestamp,
           "MO Type": "Occupancy",
-          "CID Person ID": payload.Output[0].cid_id
+          "CID Person ID": payload.cDataSet[0].cid_id
         }]
       };
 
@@ -288,17 +288,17 @@ Feature('Prebooking', () => {
           .then(() => expect(Centres.find({})).to.eventually.have.lengthOf(1))
       );
 
-      And(`a Movement-In order with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+      And(`a Movement-In order with cid id "${payload.cDataSet[0].cid_id}" has already occurred`, () =>
         createRequest(movementOrderPayload, '/cid_entry/movement', 201)
-          .then(() => findMovementByCID(payload.Output[0].cid_id))
+          .then(() => findMovementByCID(payload.cDataSet[0].cid_id))
           .then((models) => expect(models.length).to.equal(1))
       );
 
-      When(`a valid prebooking with cid id "${payload.Output[0].cid_id}" occurs`, () =>
+      When(`a valid prebooking with cid id "${payload.cDataSet[0].cid_id}" occurs`, () =>
         createRequest(payload, '/depmu_entry/prebooking', 422));
 
-      Then(`the prebooking with cid id "${payload.Output[0].cid_id}" is ignored`, () =>
-        findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+      Then(`the prebooking with cid id "${payload.cDataSet[0].cid_id}" is ignored`, () =>
+        findPrebookingByCID(payload.cDataSet[0].cid_id).then((models) => expect(models.length).to.equal(0))
       );
 
       And("the centre's female `prebooking` object remains unchanged", () =>
@@ -310,16 +310,16 @@ Feature('Prebooking', () => {
   Scenario('Ignore Future Prebookings: Post 6:59:59am Tomorrow', () => {
     Scenario('All items in payload refer to past and future only', () => {
       var followingPayload = {
-        Output: [{
+        cDataSet: [{
           timestamp: futureTimestamp,
           location: 'smallone female holding',
           task_force: 'ops1',
-          cid_id: '444'
+          cid_id: 444
         }, {
           timestamp: pastTimestamp,
           location: 'smallone female holding',
           task_force: 'ops1',
-          cid_id: '555'
+          cid_id: 555
         }]
       };
 
@@ -337,12 +337,12 @@ Feature('Prebooking', () => {
           .then(() => expect(Centres.find({})).to.eventually.have.lengthOf(1))
       );
 
-      And(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+      And(`a prebooking with cid id "${payload.cDataSet[0].cid_id}" has already occurred`, () =>
         createRequest(payload, '/depmu_entry/prebooking', 201)
-          .then(() => findPrebookingByCID(payload.Output[0].cid_id))
+          .then(() => findPrebookingByCID(payload.cDataSet[0].cid_id))
           .then((models) => {
             expect(models.length).to.equal(1);
-            expect(models[0].cid_id).to.equal(parseInt(payload.Output[0].cid_id));
+            expect(models[0].cid_id).to.equal(parseInt(payload.cDataSet[0].cid_id));
           })
       );
 
@@ -350,7 +350,7 @@ Feature('Prebooking', () => {
         createRequest(followingPayload, '/depmu_entry/prebooking', 422));
 
       Then(`the new prebooking will not be considered and old prebookings are retained`, () =>
-        findPrebookingByCID(payload.Output[0].cid_id).then((models) => expect(models.length).to.equal(1))
+        findPrebookingByCID(payload.cDataSet[0].cid_id).then((models) => expect(models.length).to.equal(1))
       );
 
       And("the centre's male `prebooking` object includes details of old prebookings", () =>
@@ -360,21 +360,21 @@ Feature('Prebooking', () => {
 
     Scenario('Not all items in payload refer to past and future', () => {
       var followingPayload = {
-        Output: [{
+        cDataSet: [{
           timestamp: futureTimestamp,
           location: 'smallone female holding',
           task_force: 'ops1',
-          cid_id: '444'
+          cid_id: 444
         }, {
           timestamp: pastTimestamp,
           location: 'smallone female holding',
           task_force: 'ops1',
-          cid_id: '444'
+          cid_id: 444
         }, {
           timestamp: validTimestamp,
           location: 'smallone female holding',
           task_force: 'ops1',
-          cid_id: '555'
+          cid_id: 555
         }]
       };
 
@@ -392,31 +392,31 @@ Feature('Prebooking', () => {
           .then(() => expect(Centres.find({})).to.eventually.have.lengthOf(1))
       );
 
-      And(`a prebooking with cid id "${payload.Output[0].cid_id}" has already occurred`, () =>
+      And(`a prebooking with cid id "${payload.cDataSet[0].cid_id}" has already occurred`, () =>
         createRequest(payload, '/depmu_entry/prebooking', 201)
-          .then(() => findPrebookingByCID(payload.Output[0].cid_id))
+          .then(() => findPrebookingByCID(payload.cDataSet[0].cid_id))
           .then((models) => {
             expect(models.length).to.equal(1);
-            expect(models[0].cid_id).to.equal(parseInt(payload.Output[0].cid_id));
+            expect(models[0].cid_id).to.equal(parseInt(payload.cDataSet[0].cid_id));
           })
       );
 
       When(`new prebookings with past, future and present timestamps occur`, () =>
         createRequest(followingPayload, '/depmu_entry/prebooking', 201));
 
-      Then(`the new prebooking with timestamp "${followingPayload.Output[0].timestamp}" is not considered`, () =>
-        findPrebookingByCID(followingPayload.Output[0].cid_id).then((models) => expect(models.length).to.equal(0))
+      Then(`the new prebooking with timestamp "${followingPayload.cDataSet[0].timestamp}" is not considered`, () =>
+        findPrebookingByCID(followingPayload.cDataSet[0].cid_id).then((models) => expect(models.length).to.equal(0))
       );
 
-      And(`the new prebooking with timestamp "${followingPayload.Output[1].timestamp}" is not considered`, () =>
-        findPrebookingByCID(followingPayload.Output[1].cid_id).then((models) => expect(models.length).to.equal(0))
+      And(`the new prebooking with timestamp "${followingPayload.cDataSet[1].timestamp}" is not considered`, () =>
+        findPrebookingByCID(followingPayload.cDataSet[1].cid_id).then((models) => expect(models.length).to.equal(0))
       );
 
-      And(`the new prebooking with timestamp "${followingPayload.Output[2].timestamp}" is considered`, () =>
-        findPrebookingByCID(followingPayload.Output[2].cid_id).then((models) => expect(models.length).to.equal(1))
+      And(`the new prebooking with timestamp "${followingPayload.cDataSet[2].timestamp}" is considered`, () =>
+        findPrebookingByCID(followingPayload.cDataSet[2].cid_id).then((models) => expect(models.length).to.equal(1))
       );
 
-      And(`the centre's male 'prebooking' object should only include "${followingPayload.Output[2].timestamp}"`, () =>
+      And(`the centre's male 'prebooking' object should only include "${followingPayload.cDataSet[2].timestamp}"`, () =>
         assertCentresHTTPResponse('malePrebookingDetail', {})
       );
     });

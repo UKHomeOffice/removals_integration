@@ -23,11 +23,11 @@ module.exports = {
     Movement.findAndUpdateOrCreate(
       {
         centre: movement.centre,
-        mo_ref: movement['MO Ref.']
+        mo_ref: movement['MO Ref']
       },
       {
         centre: movement.centre,
-        mo_ref: movement['MO Ref.'],
+        mo_ref: movement['MO Ref'],
         cid_id: movement['CID Person ID'],
         timestamp: movement["MO Date"],
         direction: movement['MO In/MO Out'],
@@ -42,8 +42,6 @@ module.exports = {
     }),
 
   formatMovement: movement => {
-    movement['MO Ref.'] = parseInt(movement['MO Ref.']);
-    movement['CID Person ID'] = parseInt(movement['CID Person ID']);
     movement['MO In/MO Out'] = movement['MO In/MO Out'].toLowerCase().trim();
     movement['MO Date'] = moment(movement['MO Date'], 'DD/MM/YYYY HH:mm:ss').toDate();
     return movement;
@@ -59,7 +57,7 @@ module.exports = {
         _.each(movements, (movement) => {
           if (movement['MO Type'] === nonOccupancyType && _.includes(ports, movement.Location)) {
             movements = _.map(movements, (movementb) => {
-              if (movementb['MO Ref.'] === movement['MO Ref.']) {
+              if (movementb['MO Ref'] === movement['MO Ref']) {
                 movementb["MO Type"] = failedRemovalReturnType;
               }
               return movementb;
@@ -73,7 +71,7 @@ module.exports = {
     _.memoize(Centres.getGenderAndCentreByCIDLocation)(movement.Location)
       .then(result => _.merge(movement, result)),
 
-  filterNonEmptyMovements: movement => movement.centre && movement['MO Ref.'] > 1,
+  filterNonEmptyMovements: movement => movement.centre && movement['MO Ref'] > 1,
 
   markNonMatchingMovementsAsInactive: movements =>
     Movement.update(
@@ -94,7 +92,7 @@ module.exports = {
   movementPost: function (req, res) {
     return CidEntryMovementValidatorService.validate(req.body)
       .tap(() => res.ok())
-      .then(body => body.Output)
+      .then(body => body.cDataSet)
       .map(this.formatMovement)
       .then(this.manipulatePortMovements)
       .filter(this.filterNonOccupancyMovements)
