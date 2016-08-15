@@ -18,8 +18,19 @@ const validation_schema = {
       description: "IRC location reserved for the subject"
     },
     cid_id: {
-      type: "integer",
-      minimum: 0,
+      anyOf: [
+        {
+          type: "integer",
+          minimum: 0
+        },
+        {
+          type: "string",
+          maxLength: 1
+        },
+        {
+          type: "null"
+        }
+      ],
       description: "CID ID of the subject"
     }
   },
