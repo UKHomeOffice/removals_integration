@@ -23,7 +23,7 @@ module.exports = {
 
   formatPrebooking: prebooking => {
     prebooking.cid_id = prebooking.cid_id || null;
-    prebooking.location = prebooking.location.toLowerCase().trim();
+    prebooking.location = prebooking.location.trim();
     prebooking.task_force = prebooking.task_force.toLowerCase().trim();
     prebooking.timestamp = new Date(prebooking.timestamp);
     return prebooking;

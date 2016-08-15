@@ -41,7 +41,7 @@ describe('UNIT Depmu_EntryController', () => {
     };
 
     it('should make the prebooking location lowercase and trimmed', () =>
-      expect(controller.formatPrebooking(dummyPrebooking)["location"]).to.eql('example 1')
+      expect(controller.formatPrebooking(dummyPrebooking)["location"]).to.eql('EXAMPLE 1')
     );
 
     it('should make the prebooking task force  lowercase and trimmed', () =>
@@ -179,7 +179,7 @@ describe('UNIT Depmu_EntryController', () => {
     var dummyMovement = {
       centre: 2,
       id: 2,
-      mo_ref:2,
+      mo_ref: 2,
       cid_id: 312,
       direction: 'in',
       timestamp: new Date(),
