@@ -10,4 +10,4 @@ script:
   - sudo docker cp ibm-backend:/home/app/ /home/app
   - sudo chmod -R 777 /home
   - npm install coveralls
-  - cat /home/app/coverage/lcov.info | ./node_modules/.bin/coveralls
+  - travis_retry sh -c "cat /home/app/coverage/lcov.info | ./node_modules/.bin/coveralls"
