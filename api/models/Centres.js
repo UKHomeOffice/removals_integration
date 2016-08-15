@@ -127,13 +127,15 @@ const model = {
   getGenderAndCentreByCIDLocation: function (location) {
     return this.find().then(centres =>
       _.compact(_.map(centres, centre => {
-        if (_.includes(centre.male_cid_name, location)) {
+        centre.male_cid_name = _.map(centre.male_cid_name, _.lowerCase);
+        centre.female_cid_name = _.map(centre.female_cid_name, _.lowerCase);
+        if (_.includes(centre.male_cid_name, location.toLowerCase())) {
           return {
             centre: centre.id,
             gender: 'male'
           };
         }
-        if (_.includes(centre.female_cid_name, location)) {
+        if (_.includes(centre.female_cid_name, location.toLowerCase())) {
           return {
             centre: centre.id,
             gender: 'female'
