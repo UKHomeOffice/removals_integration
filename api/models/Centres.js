@@ -127,8 +127,8 @@ const model = {
   getGenderAndCentreByCIDLocation: function (location) {
     return this.find().then(centres =>
       _.compact(_.map(centres, centre => {
-        centre.male_cid_name = _.map(centre.male_cid_name, _.lowerCase);
-        centre.female_cid_name = _.map(centre.female_cid_name, _.lowerCase);
+        centre.male_cid_name = _.map(centre.male_cid_name, string => string.toLowerCase());
+        centre.female_cid_name = _.map(centre.female_cid_name, string => string.toLowerCase());
         if (_.includes(centre.male_cid_name, location.toLowerCase())) {
           return {
             centre: centre.id,
@@ -165,14 +165,14 @@ const model = {
 
   afterDestroy: function (records, done) {
     Promise.all(_.map(records, (record) =>
-        Movement.destroy({centre: record.id})
-          .then(() => Prebooking.destroy({centre: record.id}))
-          .then(() => Event.destroy({centre: record.id}))
-          .then(() => Bed.destroy({centre: record.id}))
-          .then(() => Detainee.destroy({centre: record.id}))
-          .then(() => Heartbeat.destroy({centre: record.id}))
-          .then(() => this.publishDestroy(record.id))
-      ))
+      Movement.destroy({centre: record.id})
+        .then(() => Prebooking.destroy({centre: record.id}))
+        .then(() => Event.destroy({centre: record.id}))
+        .then(() => Bed.destroy({centre: record.id}))
+        .then(() => Detainee.destroy({centre: record.id}))
+        .then(() => Heartbeat.destroy({centre: record.id}))
+        .then(() => this.publishDestroy(record.id))
+    ))
       .then(() => done());
   },
 
