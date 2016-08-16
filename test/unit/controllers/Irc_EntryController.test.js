@@ -549,14 +549,16 @@ describe('INTEGRATION Irc_EntryController', () => {
     });
 
     it('should return a 201 if all is good', () => {
-      sinon.stub(global.sails.services.ircentryheartbeatvalidatorservice, 'validate').resolves(true);
-      sinon.stub(global.sails.controllers.irc_entry, 'process_heartbeat').resolves(true);
       return request(sails.hooks.http.app)
         .post('/irc_entry/heartbeat')
-        .send({})
-        .expect(201)
-        .then(() => global.sails.controllers.irc_entry.process_heartbeat.restore())
-        .finally(() => IrcEntryHeartbeatValidatorService.validate.restore());
+        .send({
+          "centre": "bigone",
+          "male_occupied": 91,
+          "female_occupied": 21,
+          "male_outofcommission": 83,
+          "female_outofcommission": 27
+        })
+        .expect(201);
     });
   });
 
