@@ -39,7 +39,10 @@ const formatBedEvent = input => {
 
 const removeOutOfCommissionsWithInCommissions = events => {
   _.each(events["in commission"], (event) => {
-    events['out commission'].splice(_.findLastIndex(events['out commission'], {bed: event.bed}), 1);
+    let index = _.findIndex(events['out commission'], {bed: event.bed});
+    if (index >= 0) {
+      events['out commission'].splice(index, 1);
+    }
   });
   return events['out commission'];
 };
