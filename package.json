@@ -75,7 +75,7 @@
     "sinon-chai": "^2.8.0",
     "superagent-defaults": "^0.1.13",
     "supertest": "^2.0.0",
-    "supertest-as-promised": "^2.0.2"
+    "supertest-as-promised": "^4.0.0"
   },
   "precommit": {
     "tasks": [
