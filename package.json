@@ -60,7 +60,7 @@
     "freeport": "^1.0.5",
     "istanbul": "^0.4.4",
     "json-schema-faker": "^0.2.1",
-    "jsonapi-validator": "^1.0.1",
+    "jsonapi-validator": "^2.1.0",
     "magic-globals": "^0.5.0",
     "mocha": "^2.3.3",
     "mocha-cakes-2": "^1.1.1",
