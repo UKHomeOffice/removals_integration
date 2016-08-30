@@ -1,11 +1,11 @@
 FROM quay.io/ukhomeofficedigital/centos-base
 
 ENV DB_TYPE mysql
-ENV DB_NAME removals
-ENV DB_USER removals
-ENV DB_PASS removals
-ENV DB_HOST 127.0.0.1
-ENV DB_PORT 3306
+ENV DBNAME removals
+ENV DBUSER removals
+ENV DBPASS removals
+ENV DBHOST 127.0.0.1
+ENV DBPORT 3306
 ENV NODE_ENV production
 ENV LOG_QUERIES 'true'
 
