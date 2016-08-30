@@ -41,7 +41,7 @@
     "test": "istanbul cover _mocha",
     "test:features": "_mocha test/features",
     "postinstall": "precommit install",
-    "migrations": "grunt db:migrate:up --db-verbose --count=10000",
+    "migrations": "DATABASE_URL=$DB_TYPE://$DBUSER:$DBPASS@$DBHOST/$DBNAME db-migrate --env $NODE_ENV --count 1000 --verbose up",
     "lint": "eslint ."
   },
   "main": "app.js",
