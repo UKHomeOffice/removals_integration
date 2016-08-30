@@ -20,6 +20,7 @@ USER app
 ENV PATH=${PATH}:/opt/nodejs/bin
 WORKDIR /home/app
 RUN mkdir -p /home/app/coverage
+RUN mkdir -p /home/app/.tmp
 
 
 ADD package.json package.json
