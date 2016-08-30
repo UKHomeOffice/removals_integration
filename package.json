@@ -41,7 +41,7 @@
     "test": "istanbul cover _mocha",
     "test:features": "_mocha test/features",
     "postinstall": "precommit install",
-    "migrations": "LOG_LEVEL=debug grunt db:migrate:up --count=10000",
+    "migrations": "grunt db:migrate:up --db-verbose --count=10000",
     "lint": "eslint ."
   },
   "main": "app.js",
