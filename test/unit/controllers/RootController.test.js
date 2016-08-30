@@ -5,11 +5,18 @@ describe('INTEGRATION RootController', () =>
     request(sails.hooks.http.app)
       .get('/')
       .expect(200)
-      .expect((res) => {
+      .then((res) =>
         expect(res.body.links).to.deep.equal({
           centres: 'http://' + res.req._headers.host + '/centres',
+          ports: 'http://' + res.req._headers.host + '/port',
+          health: 'http://' + res.req._headers.host + '/health',
+          heartbeat: 'http://' + res.req._headers.host + '/heartbeat',
+          bedevent: 'http://' + res.req._headers.host + '/bedevent',
+          cid_entry: 'http://' + res.req._headers.host + '/cid_entry',
+          irc_entry: 'http://' + res.req._headers.host + '/irc_entry',
+          depmu_entry: 'http://' + res.req._headers.host + '/depmu_entry',
           self: 'http://' + res.req._headers.host + '/'
-        });
-      })
+        })
+      )
   )
 );
