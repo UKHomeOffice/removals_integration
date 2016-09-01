@@ -4,7 +4,7 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
-      - docker -t ibm-backend .
+      - docker build -t ibm-backend .
 
 
   tag:
