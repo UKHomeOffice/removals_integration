@@ -5,7 +5,9 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - DOCKER_BRANCH=$(echo ${DRONE_BRANCH} | sed -e "s/\//_/g")
     commands:
-      - docker build -t removals-api:b${DRONE_BUILD_NUMBER} .
+      - docker build -t ibm-backend .
+      - docker tag ibm-backend removals-api:d${DRONE_BUILD_NUMBER} .
+      - docker tag ibm-backend removals-api:${DOCKER_BRANCH} .
       - docker images
 
 services:
@@ -24,6 +26,4 @@ services:
 #docker push $REGISTRY/$PROJECT-$NAME:b$BUILD_NUMBER
 #docker tag  $REGISTRY/$PROJECT-$NAME:b$BUILD_NUMBER $REGISTRY/$PROJECT-$NAME:$DOCKER_BRANCH
 #docker push $REGISTRY/$PROJECT-$NAME:$DOCKER_BRANCH
-#docker rmi  $REGISTRY/$PROJECT-$NAME:b$BUILD_NUMBER
-#docker rmi  $REGISTRY/$PROJECT-$NAME:$DOCKER_BRANCH
 
