@@ -6,16 +6,24 @@ pipeline:
     commands:
       - docker build -t ibm-backend .
 
-
   tag:
     image: docker:1
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
-      - DOCKER_BRANCH=$(echo ${DRONE_BRANCH} | sed -e "s/\//_/g")
+#      - DOCKER_BRANCH=$(echo ${DRONE_BRANCH} | sed -e "s/\//_/g")
     commands:
-      - docker tag ibm-backend removals-api:d${DRONE_BUILD_NUMBER}
-      - docker tag ibm-backend removals-api:${DOCKER_BRANCH}
+      - docker tag ibm-backend quay.io/ukhomeofficedigital/removals-api:d${DRONE_BUILD_NUMBER}
+#      - docker tag ibm-backend quay.io/ukhomeofficedigital/removals-api:${DOCKER_BRANCH}
       - docker images
+
+  push:
+    image: docker:1
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+#      - export DOCKER_BRANCH=$(echo ${DRONE_BRANCH} | sed -e "s/\//_/g")
+      - docker push quay.io/ukhomeofficedigital/removals-api:d${DRONE_BUILD_NUMBER}
+#      - docker push quay.io/ukhomeofficedigital/removals-api:${DOCKER_BRANCH}
 
 
 services:

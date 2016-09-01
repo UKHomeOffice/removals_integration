@@ -4,6 +4,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/UKHomeOffice/removals_integration/badge.svg)](https://coveralls.io/github/UKHomeOffice/removals_integration)
 [![Quality](https://codeclimate.com/github/UKHomeOffice/removals_integration.png)](https://codeclimate.com/github/UKHomeOffice/removals_integration)
 [![Dependencies](https://david-dm.org/UKHomeOffice/removals_integration.png)](https://david-dm.org/UKHomeOffice/removals_integration)
+[![Docker Repository on Quay](https://quay.io/repository/ukhomeofficedigital/removals-api/status "Docker Repository on Quay")](https://quay.io/repository/ukhomeofficedigital/removals-api)
+
 ## Quickstart:
 
  Get [NodeJS](https://nodejs.org) via [nvm](https://github.com/creationix/nvm)
