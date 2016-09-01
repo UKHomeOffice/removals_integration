@@ -1,5 +1,5 @@
-FROM node:4
-
+FROM node:4-slim
+RUN apt-get update && apt-get install -y git
 ENV DB_TYPE mysql
 ENV DBNAME removals
 ENV DBUSER removals
