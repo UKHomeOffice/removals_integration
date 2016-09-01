@@ -33,8 +33,7 @@ RUN NODE_ENV=development npm test
 RUN npm prune --production
 
 USER app
-COPY entry-point.sh /entry-point.sh
-ENTRYPOINT ["/entry-point.sh"]
+ENTRYPOINT ["./entry-point.sh"]
 
 EXPOSE 1337
 CMD ["start"]
