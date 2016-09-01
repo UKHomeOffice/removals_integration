@@ -9,4 +9,4 @@ pipeline:
 services:
   dind:
     image: docker:1.11-dind
-    privileged: true
+#    privileged: true
