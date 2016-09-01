@@ -9,7 +9,7 @@ ENV DBPORT 3306
 ENV NODE_ENV production
 ENV LOG_QUERIES 'true'
 
-RUN rpm --rebuilddb && yum update -y && yum install -y curl git which && yum clean all
+RUN rpm --rebuilddb && yum update -y && yum install -y curl git which && yum clean all && rm -rf /var/cache/yum/ /var/lib/rpm/__db*
 
 RUN mkdir -p /opt/nodejs
 WORKDIR /opt/nodejs
