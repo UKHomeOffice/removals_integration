@@ -8,5 +8,9 @@ pipeline:
 
 services:
   dind:
-    image: docker:1-dind
+    image: docker:1.12-dind
     privileged: true
+    # entrypoint: []
+    command:
+      - "-s"
+      - "overlay"
