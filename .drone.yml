@@ -11,9 +11,8 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
-      - export DOCKER_BRANCH=`echo ${DRONE_BRANCH} | sed -e "s/\//_/g"`
       - docker tag ibm-backend quay.io/ukhomeofficedigital/removals-api:d${DRONE_BUILD_NUMBER}
-      - docker tag ibm-backend quay.io/ukhomeofficedigital/removals-api:${DOCKER_BRANCH}
+      - docker tag ibm-backend quay.io/ukhomeofficedigital/removals-api:origin_`echo ${DRONE_BRANCH} | sed -e "s/\//_/g")`
       - docker images
 
   push:
@@ -21,9 +20,8 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
-      - export DOCKER_BRANCH=`echo ${DRONE_BRANCH} | sed -e "s/\//_/g")`
       - docker push quay.io/ukhomeofficedigital/removals-api:d${DRONE_BUILD_NUMBER}
-      - docker push quay.io/ukhomeofficedigital/removals-api:${DOCKER_BRANCH}
+      - docker push quay.io/ukhomeofficedigital/removals-api:origin_`echo ${DRONE_BRANCH} | sed -e "s/\//_/g")`
 
 
 services:
