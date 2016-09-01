@@ -3,14 +3,26 @@ pipeline:
     image: docker:1
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
+      - DOCKER_BRANCH=$(echo $$BRANCH | sed -e "s/\//_/g")
     commands:
-      - docker build -t ibm-backend .
+      - docker build -t $REGISTRY/removals-api:b$$BUILD_NUMBER .
 
 services:
   dind:
-    image: docker:1.12-dind
+    image: docker:1-dind
     privileged: true
-    # entrypoint: []
     command:
       - "-s"
       - "overlay"
+
+#DRONE_JOB_NUMBER
+
+#export PATH=${PATH}:/root/.dvm/bin/docker/1.10.3/
+#export DOCKER_BRANCH=$(echo $DRONE_BRANCH | sed -e "s/\//_/g")
+#docker build -t $REGISTRY/$PROJECT-$NAME:b$BUILD_NUMBER .
+#docker push $REGISTRY/$PROJECT-$NAME:b$BUILD_NUMBER
+#docker tag  $REGISTRY/$PROJECT-$NAME:b$BUILD_NUMBER $REGISTRY/$PROJECT-$NAME:$DOCKER_BRANCH
+#docker push $REGISTRY/$PROJECT-$NAME:$DOCKER_BRANCH
+#docker rmi  $REGISTRY/$PROJECT-$NAME:b$BUILD_NUMBER
+#docker rmi  $REGISTRY/$PROJECT-$NAME:$DOCKER_BRANCH
+
