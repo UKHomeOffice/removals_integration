@@ -6,29 +6,25 @@ ENV DBUSER removals
 ENV DBPASS removals
 ENV DBHOST 127.0.0.1
 ENV DBPORT 3306
-ENV NODE_ENV production
 ENV LOG_QUERIES 'true'
 
-RUN useradd app
-USER app
-ENV PATH=${PATH}:/opt/nodejs/bin
-WORKDIR /home/app
-RUN mkdir -p /home/app/coverage
-RUN mkdir -p /home/app/.tmp
+RUN mkdir -p /app/coverage /app/.tmp
+WORKDIR /app
 
+RUN git config --global url."https://".insteadOf git://
 
 ADD package.json package.json
 ADD npm-shrinkwrap.json npm-shrinkwrap.json
-RUN npm --production=false install --no-optional
+
+RUN npm --production=false -q install --no-optional
 
 COPY . .
-RUN NODE_ENV=development npm run lint
-RUN NODE_ENV=development npm test
+RUN npm run lint
+RUN npm test
 RUN npm prune --production
 
-USER app
-COPY entry-point.sh /entry-point.sh
-ENTRYPOINT ["/entry-point.sh"]
+ENTRYPOINT ["./entry-point.sh"]
+ENV NODE_ENV production
 
 EXPOSE 1337
 CMD ["start"]

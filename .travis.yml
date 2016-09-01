@@ -7,7 +7,7 @@ script:
   - export TZ=Europe/London
   - docker build -t quay.io/ukhomeofficedigital/removals_integration:travis .
   - docker run --name ibm-backend quay.io/ukhomeofficedigital/removals_integration:travis echo
-  - sudo docker cp ibm-backend:/home/app/ /home/app
+  - sudo docker cp ibm-backend:/app/ /app
   - sudo chmod -R 777 /home
   - npm install coveralls
-  - travis_retry sh -c "cat /home/app/coverage/lcov.info | ./node_modules/.bin/coveralls"
+  - travis_retry sh -c "cat /app/coverage/lcov.info | ./node_modules/.bin/coveralls"
