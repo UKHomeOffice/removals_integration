@@ -13,15 +13,12 @@ WORKDIR /app
 
 RUN git config --global url."https://".insteadOf git://
 
-ADD package.json package.json
-ADD npm-shrinkwrap.json npm-shrinkwrap.json
-
-RUN npm --production=false -q install --no-optional
-
 COPY . .
-RUN npm run lint
-RUN npm test
-RUN npm prune --production
+
+RUN npm --production=false -q install --no-optional \
+  && npm run lint \
+  && npm test \
+  && npm prune --production
 
 ENTRYPOINT ["./entry-point.sh"]
 ENV NODE_ENV production
