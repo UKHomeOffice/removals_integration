@@ -3,9 +3,9 @@ pipeline:
     image: docker:1
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
-      - DOCKER_BRANCH=$(echo $$BRANCH | sed -e "s/\//_/g")
+      - DOCKER_BRANCH=$(echo $DRONE_BRANCH | sed -e "s/\//_/g")
     commands:
-      - docker build -t $REGISTRY/removals-api:b$$BUILD_NUMBER .
+      - docker build -t removals-api:b$DRONE_JOB_NUMBER-$DRONE_BUILD_NUMBER .
 
 services:
   dind:
