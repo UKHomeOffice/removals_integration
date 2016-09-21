@@ -4,6 +4,7 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
+      - env
       - docker build -t ibm-backend .
 
   tag:
@@ -31,13 +32,3 @@ services:
     command:
       - "-s"
       - "overlay"
-
-#DRONE_JOB_NUMBER
-
-#export PATH=${PATH}:/root/.dvm/bin/docker/1.10.3/
-#export DOCKER_BRANCH=$(echo $DRONE_BRANCH | sed -e "s/\//_/g")
-#docker build -t $REGISTRY/$PROJECT-$NAME:b$BUILD_NUMBER .
-#docker push $REGISTRY/$PROJECT-$NAME:b$BUILD_NUMBER
-#docker tag  $REGISTRY/$PROJECT-$NAME:b$BUILD_NUMBER $REGISTRY/$PROJECT-$NAME:$DOCKER_BRANCH
-#docker push $REGISTRY/$PROJECT-$NAME:$DOCKER_BRANCH
-
