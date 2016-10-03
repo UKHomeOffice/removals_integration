@@ -12,6 +12,7 @@ const operations = {
 };
 
 const reasons = {
+  REASON_SINGLE_OCCUPANCY_RESERVED: "Single Occupancy - Reserved",
   REASON_SINGLE_OCCUPANCY: "Single Occupancy",
   REASON_DAMAGE: "Maintenance - Malicious/Accidental Damage",
   REASON_HEALTH_AND_SAFETY: "Maintenance - Health and Safety Concern",
@@ -75,13 +76,13 @@ const model = {
         operation: operations.OPERATION_OUT_OF_COMMISSION
       }
     })
-    .populate('bed', {
-      where: {
-        centre: centreId
-      }, select: ['gender', 'centre']
-    })
-    .toPromise()
-    .filter((event) => !_.isEmpty(event.bed) && event.bed.centre === centreId),
+      .populate('bed', {
+        where: {
+          centre: centreId
+        }, select: ['gender', 'centre']
+      })
+      .toPromise()
+      .filter((event) => !_.isEmpty(event.bed) && event.bed.centre === centreId),
 
   groupByGender: (events) =>
     _.groupBy(events, (e) => e.bed.gender),
@@ -102,12 +103,12 @@ const model = {
       timestamp: values.timestamp,
       reason: values.reason
     })
-    .then(bedevents => {
-      if (bedevents.length > 0) {
-        return cb(new DuplicationError("Duplicate event"));
-      }
-      cb();
-    })
+      .then(bedevents => {
+        if (bedevents.length > 0) {
+          return cb(new DuplicationError("Duplicate event"));
+        }
+        cb();
+      })
 };
 
 Object.assign(model, operations, reasons);
