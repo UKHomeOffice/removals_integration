@@ -12,6 +12,7 @@ const operations = {
 };
 
 const reasons = {
+  REASON_SINGLE_OCCUPANCY_RESERVED: "Single Occupancy - Reserved",
   REASON_SINGLE_OCCUPANCY: "Single Occupancy",
   REASON_DAMAGE: "Maintenance - Malicious/Accidental Damage",
   REASON_HEALTH_AND_SAFETY: "Maintenance - Health and Safety Concern",

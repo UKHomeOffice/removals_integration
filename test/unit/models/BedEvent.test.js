@@ -111,6 +111,7 @@ describe('UNIT BedEventModel', () => {
         'Single Occupancy': 1,
         "Maintenance - Planned works": 0,
         "Medical Isolation": 0,
+        "Single Occupancy - Reserved": 0,
         "Other": 0
       },
       female: {
@@ -120,6 +121,7 @@ describe('UNIT BedEventModel', () => {
         "Maintenance - Planned works": 1,
         "Medical Isolation": 1,
         "Other": 2,
+        "Single Occupancy - Reserved": 0,
         "Single Occupancy": 0
       }
     };
