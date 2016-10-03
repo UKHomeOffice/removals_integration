@@ -79,9 +79,6 @@ Feature('Bed Events', () => {
         .then((bedEvents) => expect(bedEvents.length).to.equal(1))
     );
 
-    And("the centre's `out of commission details` object should not include the ooc", () =>
-      assertCentresHTTPResponse('maleOutOfCommissionDetail', undefined)
-    );
   });
 
   Scenario('New OOC then Old IC', () => {
@@ -145,7 +142,7 @@ Feature('Bed Events', () => {
       );
 
       And("the centre's `out of commission details` object should include the occ", () =>
-        assertCentresHTTPResponse('maleOutOfCommissionDetail', {"Single Occupancy": 1})
+        assertCentresHTTPResponse('maleOutOfCommissionDetail.Single Occupancy', 1)
       );
     });
 
@@ -192,7 +189,7 @@ Feature('Bed Events', () => {
       );
 
       And("the centre's `out of commission details` object should include the occ", () =>
-        assertCentresHTTPResponse('maleOutOfCommissionDetail', {"Maintenance - Malicious/Accidental Damage": 1})
+        assertCentresHTTPResponse('maleOutOfCommissionDetail.Maintenance - Malicious/Accidental Damage', 1)
       );
     });
 
@@ -238,7 +235,7 @@ Feature('Bed Events', () => {
       );
 
       And("the centre's `out of commission details` object should include the occ", () =>
-        assertCentresHTTPResponse('maleOutOfCommissionDetail', {"Maintenance - Health and Safety Concern": 1})
+        assertCentresHTTPResponse('maleOutOfCommissionDetail.Maintenance - Health and Safety Concern', 1)
       );
     });
 
@@ -285,7 +282,7 @@ Feature('Bed Events', () => {
       );
 
       And("the centre's `out of commission details` object should include the occ", () =>
-        assertCentresHTTPResponse('maleOutOfCommissionDetail', {"Maintenance - Planned works": 1})
+        assertCentresHTTPResponse('maleOutOfCommissionDetail.Maintenance - Planned works', 1)
       );
     });
     Scenario('Reason: Crime Scene', () => {
@@ -331,7 +328,7 @@ Feature('Bed Events', () => {
       );
 
       And("the centre's `out of commission details` object should include the occ", () =>
-        assertCentresHTTPResponse('maleOutOfCommissionDetail', {"Crime Scene": 1})
+        assertCentresHTTPResponse('maleOutOfCommissionDetail.Crime Scene', 1)
       );
     });
 
@@ -378,7 +375,7 @@ Feature('Bed Events', () => {
       );
 
       And("the centre's `out of commission details` object should include the occ", () =>
-        assertCentresHTTPResponse('maleOutOfCommissionDetail', {"Medical Isolation": 1})
+        assertCentresHTTPResponse('maleOutOfCommissionDetail.Medical Isolation', 1)
       );
     });
 
@@ -425,7 +422,7 @@ Feature('Bed Events', () => {
       );
 
       And("the centre's `out of commission details` object should include the occ", () =>
-        assertCentresHTTPResponse('maleOutOfCommissionDetail', {"Other": 1})
+        assertCentresHTTPResponse('maleOutOfCommissionDetail.Other', 1)
       );
     });
   });
@@ -497,9 +494,6 @@ Feature('Bed Events', () => {
         .then((bedEvents) => expect(bedEvents.length).to.equal(1))
     );
 
-    And("the centre's `out of commission details` object should be empty", () =>
-      assertCentresHTTPResponse('maleOutOfCommissionDetail', undefined)
-    );
   });
 
   Scenario('Old IC then New IC then Newest OOC', () => {
@@ -634,7 +628,7 @@ Feature('Bed Events', () => {
     );
 
     And("the centre's `out of commission details` object should include the occ", () =>
-      assertCentresHTTPResponse('maleOutOfCommissionDetail', {"Other": 1})
+      assertCentresHTTPResponse('maleOutOfCommissionDetail.Other', 1)
     );
   });
 
@@ -702,9 +696,6 @@ Feature('Bed Events', () => {
         .then((bedEvents) => expect(bedEvents.length).to.equal(1))
     );
 
-    And("the centre's `out of commission details` object should be empty", () =>
-      assertCentresHTTPResponse('maleOutOfCommissionDetail', undefined)
-    );
   });
 
   Scenario('Reject duplications with 208', () => {

@@ -60,7 +60,16 @@ const model = {
   getOOCByCentreGroupByGenderAndReason: (centreId) =>
     BedEvent.getCurrentOOCByCentre(centreId)
       .then(BedEvent.groupByGender)
-      .then(BedEvent.groupAndCountByReason),
+      .then(BedEvent.groupAndCountByReason)
+      .then(BedEvent.fillInBlanks),
+
+  fillInBlanks: (inp) => {
+    var defaults = _.mapValues(_.invert(reasons), () => 0);
+    return _.defaultsDeep(inp, {
+      male: defaults,
+      female: defaults
+    });
+  },
 
   /**
    * The implementation below is intended and not redundant:
@@ -75,13 +84,13 @@ const model = {
         operation: operations.OPERATION_OUT_OF_COMMISSION
       }
     })
-    .populate('bed', {
-      where: {
-        centre: centreId
-      }, select: ['gender', 'centre']
-    })
-    .toPromise()
-    .filter((event) => !_.isEmpty(event.bed) && event.bed.centre === centreId),
+      .populate('bed', {
+        where: {
+          centre: centreId
+        }, select: ['gender', 'centre']
+      })
+      .toPromise()
+      .filter((event) => !_.isEmpty(event.bed) && event.bed.centre === centreId),
 
   groupByGender: (events) =>
     _.groupBy(events, (e) => e.bed.gender),
@@ -102,12 +111,12 @@ const model = {
       timestamp: values.timestamp,
       reason: values.reason
     })
-    .then(bedevents => {
-      if (bedevents.length > 0) {
-        return cb(new DuplicationError("Duplicate event"));
-      }
-      cb();
-    })
+      .then(bedevents => {
+        if (bedevents.length > 0) {
+          return cb(new DuplicationError("Duplicate event"));
+        }
+        cb();
+      })
 };
 
 Object.assign(model, operations, reasons);

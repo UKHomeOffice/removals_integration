@@ -105,15 +105,22 @@ describe('UNIT BedEventModel', () => {
       }];
     var output = {
       male: {
+        "Crime Scene": 0,
+        "Maintenance - Health and Safety Concern": 0,
         'Maintenance - Malicious/Accidental Damage': 1,
-        'Single Occupancy':1
+        'Single Occupancy': 1,
+        "Maintenance - Planned works": 0,
+        "Medical Isolation": 0,
+        "Other": 0
       },
       female: {
-        'Maintenance - Health and Safety Concern': 1,
-        'Maintenance - Planned works': 1,
-        'Crime Scene': 1,
-        'Medical Isolation': 1,
-        Other: 2
+        "Crime Scene": 1,
+        "Maintenance - Health and Safety Concern": 1,
+        "Maintenance - Malicious/Accidental Damage": 0,
+        "Maintenance - Planned works": 1,
+        "Medical Isolation": 1,
+        "Other": 2,
+        "Single Occupancy": 0
       }
     };
 
