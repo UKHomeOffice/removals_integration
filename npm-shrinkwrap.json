@@ -988,8 +988,8 @@
     },
     "removals_schema": {
       "version": "0.0.1",
-      "from": "ukhomeoffice/removals_schema#RELEASE/1.0.0",
-      "resolved": "git://github.com/ukhomeoffice/removals_schema.git#ebbe3bc5bf78b5f8aac009befeebd53264ef0eee",
+      "from": "ukhomeoffice/removals_schema#RELEASE/1.1.0",
+      "resolved": "git://github.com/ukhomeoffice/removals_schema.git#794a11cb7e656efd1d1c2870dec34728ae43ef3d",
       "dependencies": {
         "lodash": {
           "version": "3.10.1",
