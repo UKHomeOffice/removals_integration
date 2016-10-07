@@ -61,7 +61,16 @@ const model = {
   getOOCByCentreGroupByGenderAndReason: (centreId) =>
     BedEvent.getCurrentOOCByCentre(centreId)
       .then(BedEvent.groupByGender)
-      .then(BedEvent.groupAndCountByReason),
+      .then(BedEvent.groupAndCountByReason)
+      .then(BedEvent.fillInBlanks),
+
+  fillInBlanks: (inp) => {
+    var defaults = _.mapValues(_.invert(reasons), () => 0);
+    return _.defaultsDeep(inp, {
+      male: defaults,
+      female: defaults
+    });
+  },
 
   /**
    * The implementation below is intended and not redundant:

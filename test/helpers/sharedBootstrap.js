@@ -13,6 +13,7 @@ global.chai = require('chai')
   .use(require('chai-datetime'));
 global.expect = chai.expect;
 global._ = require('lodash');
+global.lodash = require('lodash');
 global.sinon = require('sinon');
 const Promise = require('bluebird');
 global.initializeBarrelsFixtures = () =>
@@ -95,9 +96,8 @@ global.assertCentresHTTPResponse = (key, value) =>
   global.request(sails.hooks.http.app)
     .get('/centres')
     .expect(200)
-    .expect(res => {
-        expect(res.body.data[0].attributes[key]).to.deep.equal(value)
-      }
+    .expect(res =>
+      expect(lodash.get(res.body.data[0].attributes, key)).to.deep.equal(value)
     );
 
 module.exports = {
