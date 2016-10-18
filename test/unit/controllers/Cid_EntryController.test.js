@@ -539,5 +539,19 @@ var validdummydata = {
     "MO Date": "05/01/2016 18:00:00",
     "MO Type": "Occupancy",
     "CID Person ID": 2315616
+  }, {
+    "Location": "bigone male holding",
+    "MO In/MO Out": "Out",
+    "MO Ref": 230912805,
+    "MO Date": "05/01/2016 08:44:00",
+    "MO Type": "Occupancy",
+    "CID Person ID": 21261465
+  }, {
+    "Location": "smallone male holding",
+    "MO In/MO Out": "In",
+    "MO Ref": 230912805,
+    "MO Date": "05/01/2016 18:00:00",
+    "MO Type": "Occupancy",
+    "CID Person ID": 21261465
   }]
 };
