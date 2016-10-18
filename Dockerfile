@@ -22,6 +22,7 @@ WORKDIR /home/app
 RUN mkdir -p /home/app/coverage
 RUN mkdir -p /home/app/.tmp
 
+RUN git config --global url."https://".insteadOf git://
 
 ADD package.json package.json
 ADD npm-shrinkwrap.json npm-shrinkwrap.json
