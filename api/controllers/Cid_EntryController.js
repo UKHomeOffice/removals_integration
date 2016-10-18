@@ -85,6 +85,21 @@ module.exports = {
       }
     ),
 
+  filterInnerCentreMovements: (movements) => {
+    _.each(_.filter(movements, {'MO In/MO Out': 'in'}), movement => {
+      if (_.find(movements, {
+        'MO In/MO Out': 'out',
+        'MO Ref': movement['MO Ref'],
+        'CID Person ID': movement['CID Person ID'],
+        'MO Type': movement['MO Type'],
+        centre: movement.centre
+      })) {
+        _.remove(movements, {'MO Ref': movement['MO Ref']});
+      }
+    });
+    return movements;
+  },
+
   updateReceivedDate: (movements) =>
     Centres.update({}, {cid_received_date: new Date()})
       .then(() => movements),
@@ -97,9 +112,8 @@ module.exports = {
       .then(this.manipulatePortMovements)
       .filter(this.filterNonOccupancyMovements)
       .map(this.populateMovementWithCentreAndGender)
-
       .filter(this.filterNonEmptyMovements)
-
+      .then(this.filterInnerCentreMovements)
       .tap(this.removePrebookingWithRelatedMovement)
       .map(this.movementProcess)
       .then(this.markNonMatchingMovementsAsInactive)
