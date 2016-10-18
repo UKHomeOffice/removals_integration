@@ -8,7 +8,7 @@ exports.up = (db, callback) =>
   cps.seq([
     (_, callback) => db.runSql('UPDATE bedevent SET active=1 WHERE operation="out commission"', callback),
     (_, callback) => db.runSql('SELECT timestamp, bed FROM bedevent WHERE operation="in commission"', (err, results) => {
-      if (err) {
+      if (err || results.length === 0) {
         return callback(err, results);
       }
       let sqls = [];
