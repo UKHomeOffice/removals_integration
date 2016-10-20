@@ -46,7 +46,7 @@ module.exports = {
   prebooking.centre && prebooking.gender && prebooking.task_force && prebooking.timestamp,
 
   filterCurrentRangePrebookings: prebooking => {
-    var startOfDay = moment().set({hour: 7, minute: 0, second: 0, millisecond: 0});
+    var startOfDay = moment().subtract(7, 'hours').set({hour: 7, minute: 0, second: 0, millisecond: 0}); // eslint-disable-line no-magic-numbers
     var endOfDay = moment(startOfDay).add(1, 'day');
     var prebookingTimestamp = moment(prebooking.timestamp);
     return prebookingTimestamp.isSameOrAfter(startOfDay) && prebookingTimestamp.isBefore(endOfDay);
