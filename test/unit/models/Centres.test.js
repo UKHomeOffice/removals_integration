@@ -133,16 +133,20 @@ describe('UNIT CentreModel', () => {
       const unreconciledMovementFilter = model.__get__('unreconciledMovementReducer');
       const movements = [{
         id: 1, cid_id: 11,
-        gender: 'male', direction: 'in'
+        gender: 'male', direction: 'in',
+        timestamp: 'foobar'
       }, {
         id: 2, cid_id: 22,
-        gender: 'male', direction: 'in'
+        gender: 'male', direction: 'in',
+        timestamp: 'foobar'
       }, {
         id: 3, cid_id: 33,
-        gender: 'male', direction: 'out'
+        gender: 'male', direction: 'out',
+        timestamp: 'foobar'
       }, {
         id: 4, cid_id: 44,
-        gender: 'female', direction: 'in'
+        gender: 'female', direction: 'in',
+        timestamp: 'foobar'
       }];
 
       it('should reduce the unreconciled movements to only those with the specified `gender` and `direction`', () => {
@@ -155,8 +159,8 @@ describe('UNIT CentreModel', () => {
 
       it('should reduce the filtered movements to simplified objects containing only the `id` and `cid_id` attributes', () => {
         expect(unreconciledMovementFilter(movements, 'male', 'in')).to.deep.equal([
-          {id: 1, cid_id: 11},
-          {id: 2, cid_id: 22}
+          {id: 1, cid_id: 11, timestamp: 'foobar'},
+          {id: 2, cid_id: 22, timestamp: 'foobar'}
         ]);
       });
     });
