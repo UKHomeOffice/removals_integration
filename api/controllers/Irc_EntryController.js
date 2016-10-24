@@ -185,7 +185,7 @@ module.exports = {
         _.assign(event, {active: _.isUndefined(result)})),
 
   reconcilePreviousBedEvents: (event) =>
-  event.active && BedEvent.deactivatePastBedEvents(event.bed, event.timestamp),
+    BedEvent.deactivatePastBedEvents(event.bed, event.timestamp),
 
   processBedEvent: function (event) {
     return this.findAndPopulateCentre(event)

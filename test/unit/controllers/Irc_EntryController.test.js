@@ -805,30 +805,6 @@ describe('UNIT Irc_EntryController', () => {
 
   });
 
-  describe('reconcilePreviousBedEvents', () => {
-    beforeEach(() => sinon.stub(BedEvent, 'deactivatePastBedEvents').resolves());
-
-    afterEach(() => BedEvent.deactivatePastBedEvents.restore());
-
-    it('should not deactivate past bed events when current event is not active', () => {
-      controller.reconcilePreviousBedEvents({
-        bed: 1,
-        timestamp: 'this',
-        active: false
-      });
-      return expect(BedEvent.deactivatePastBedEvents).to.not.be.called;
-    });
-
-    it('should deactivate past bed events when current event is active', () => {
-      controller.reconcilePreviousBedEvents({
-        bed: 1,
-        timestamp: 'now',
-        active: true
-      });
-      expect(BedEvent.deactivatePastBedEvents).to.be.calledWith(1, 'now');
-    });
-  });
-
   describe('heartbeatPost', () => {
     let res, req, context, validationservice;
     beforeEach(() => {
