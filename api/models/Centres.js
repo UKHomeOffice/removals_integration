@@ -8,7 +8,11 @@ const _ = require('lodash');
 
 const unreconciledMovementReducer = (movements, gender, direction) => movements.reduce((reduced, m) => {
   if (m.gender === gender && m.direction === direction) {
-    reduced.push({id: m.id, cid_id: m.cid_id});
+    reduced.push({
+      id: m.id,
+      cid_id: m.cid_id,
+      timestamp: m.timestamp
+    });
   }
   return reduced;
 }, []);
