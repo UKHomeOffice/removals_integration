@@ -3,6 +3,7 @@
 
 const DateRange = require('../lib/DateRange');
 const moment = require('moment');
+const Promise = require('bluebird');
 
 const fullRange = (visibilityRange, rangeFactory) =>
   DateRange.widen.apply(null, [visibilityRange, rangeFactory(visibilityRange.from), rangeFactory(visibilityRange.to)]);
@@ -119,6 +120,56 @@ const populateContingency = (centre) =>
       _.assign(centre, {contingency: contingency})
     );
 
+const experimentalOOC = (centre) => {
+  if (!BedEvent.query) {
+    return;
+  }
+
+  let query = `SELECT reason, COUNT(reason) count
+    FROM (
+      SELECT c.reason
+      FROM (
+        SELECT be.bed, MAX(timestamp) last_out
+        FROM bedevent be
+        WHERE be.operation = 'out commission'
+        GROUP BY bed
+      ) a
+      LEFT JOIN (
+        SELECT be.bed, max(timestamp) last_in
+        FROM bedevent be
+        WHERE be.operation = 'in commission'
+        GROUP BY bed
+      ) b ON a.bed = b.bed
+      INNER JOIN bedevent c ON (
+        a.last_out = c.timestamp
+        AND a.bed=c.bed
+        AND c.operation='out commission'
+      )
+      INNER JOIN bed ON (a.bed = bed.id)
+      WHERE (
+        last_out >= last_in
+        OR last_in is NULL
+      )
+      AND bed.centre=?
+      AND bed.gender=?
+  ) f
+  GROUP BY f.reason`;
+  let querier = Promise.promisify(BedEvent.query);
+  return Promise.all([
+    querier(query, [centre.id, 'male']),
+    querier(query, [centre.id, 'female'])
+  ])
+    .then(results => {
+      centre.outOfCommission = _.mapValues(centre.outOfCommission, gender => _.mapValues(gender, () => 0));
+      _.each(results[0], result =>
+        centre.outOfCommission.male[result.reason] = result.count
+      );
+      _.each(results[1], result =>
+        centre.outOfCommission.female[result.reason] = result.count
+      );
+    });
+};
+
 module.exports = {
   performReconciliation: (centre, visibilityRange, eventSearchDateRangeFactory, movementSearchDateRangeFactory, checkOutSearchDateRangeFactory) => {
     const rangeOfEvents = fullRange(visibilityRange, eventSearchDateRangeFactory);
@@ -141,6 +192,7 @@ module.exports = {
       .then(() => reconcileEvents(centre, reconciler))
       .then(() => filterUnreconciled(centre, visibilityRange))
       .then(() => populateOOC(centre))
+      .then(() => experimentalOOC(centre))
       .then(() => populatePrebooking(centre))
       .then(() => populateContingency(centre))
       .return(centre);
