@@ -11,7 +11,8 @@ let populate = (model, centreId, range) =>
   model.find({
     where: {
       centre: centreId,
-      timestamp: {'>=': range.from, '<=': range.to}
+      timestamp: {'>=': range.from, '<=': range.to},
+      active: 1
     },
     sort: 'timestamp'
   });
