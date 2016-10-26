@@ -32,6 +32,10 @@ const model = {
     timestamp: {
       type: 'datetime',
       required: true
+    },
+    active: {
+      type: "boolean",
+      defaultsTo: true
     }
   },
 

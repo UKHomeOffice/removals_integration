@@ -15,7 +15,7 @@ describe('UNIT BedCountService', () => {
       it('should find all items from the specified centre only', () =>
         populate(Movement, 1, new DateRange(new Date('2000/01/01'), new Date('2100/01/01')))
           .then(movements => {
-            expect(movements).to.have.length(4);
+            expect(movements).to.have.length(3);
             return movements.every(movement =>
               expect(movement).to.have.property('centre', 1));
           })
