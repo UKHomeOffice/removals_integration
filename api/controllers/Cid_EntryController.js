@@ -2,10 +2,11 @@
 'use strict';
 
 const ValidationError = require('../lib/exceptions/ValidationError');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const _ = require('lodash');
 const failedRemovalReturnType = "Failed-Removal-Return";
 const nonOccupancyType = "Non-Occupancy";
+moment.tz.setDefault("Europe/London");
 
 module.exports = {
   _config: {
