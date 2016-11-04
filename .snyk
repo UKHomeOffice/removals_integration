@@ -1,0 +1,114 @@
+version: v1.5.2
+ignore:
+  'npm:moment:20161019':
+    - db-migrate > moment:
+        reason: None given
+        expires: '2016-12-04T11:49:49.052Z'
+patch:
+  'npm:handlebars:20151207':
+    - sails > express-handlebars > handlebars:
+        patched: '2016-11-04T11:51:02.977Z'
+  'npm:hawk:20160119':
+    - sails > grunt-contrib-less > less > request > hawk:
+        patched: '2016-11-04T11:51:02.977Z'
+  'npm:minimatch:20160620':
+    - sails > grunt > findup-sync > glob > minimatch:
+        patched: '2016-11-04T11:51:02.977Z'
+      db-migrate > sqlite3 > node-pre-gyp > tar-pack > fstream > rimraf > glob > minimatch:
+        patched: '2016-11-04T11:58:04.692Z'
+    - sails > grunt > glob > minimatch:
+        patched: '2016-11-04T11:51:02.977Z'
+      db-migrate > sqlite3 > node-pre-gyp > tar-pack > fstream-ignore > minimatch:
+        patched: '2016-11-04T11:58:04.692Z'
+    - sails > grunt > minimatch:
+        patched: '2016-11-04T11:51:02.977Z'
+      db-migrate > sqlite3 > node-pre-gyp > tar-pack > fstream-ignore > fstream > rimraf > glob > minimatch:
+        patched: '2016-11-04T11:58:04.692Z'
+    - sails > grunt-contrib-watch > gaze > globule > minimatch:
+        patched: '2016-11-04T11:51:02.977Z'
+      db-migrate > sqlite3 > node-pre-gyp > tar-pack > tar > fstream > rimraf > glob > minimatch:
+        patched: '2016-11-04T11:58:04.692Z'
+    - sails > grunt-contrib-watch > gaze > globule > glob > minimatch:
+        patched: '2016-11-04T11:51:02.977Z'
+      db-migrate > sqlite3 > node-pre-gyp > tar > fstream > rimraf > glob > minimatch:
+        patched: '2016-11-04T11:58:04.692Z'
+    - sails > grunt-cli > findup-sync > glob > minimatch:
+        patched: '2016-11-04T11:51:02.977Z'
+      db-migrate > sqlite3 > node-pre-gyp > rimraf > glob > minimatch:
+        patched: '2016-11-04T11:58:04.692Z'
+    - sails > glob > minimatch:
+        patched: '2016-11-04T11:51:02.977Z'
+      db-migrate > sqlite3 > node-pre-gyp > tar-pack > rimraf > glob > minimatch:
+        patched: '2016-11-04T11:58:04.692Z'
+    - db-migrate > sqlite3 > node-pre-gyp > tar-pack > fstream > rimraf > glob > minimatch:
+        patched: '2016-11-04T11:51:02.977Z'
+      sails > grunt-sync > glob > minimatch:
+        patched: '2016-11-04T11:58:04.692Z'
+    - db-migrate > sqlite3 > node-pre-gyp > tar-pack > fstream-ignore > fstream > rimraf > glob > minimatch:
+        patched: '2016-11-04T11:51:02.977Z'
+    - db-migrate > sqlite3 > node-pre-gyp > tar-pack > rimraf > glob > minimatch:
+        patched: '2016-11-04T11:51:02.977Z'
+    - db-migrate > sqlite3 > node-pre-gyp > tar-pack > fstream-ignore > minimatch:
+        patched: '2016-11-04T11:51:02.977Z'
+    - db-migrate > sqlite3 > node-pre-gyp > rimraf > glob > minimatch:
+        patched: '2016-11-04T11:51:02.977Z'
+    - db-migrate > sqlite3 > node-pre-gyp > tar > fstream > rimraf > glob > minimatch:
+        patched: '2016-11-04T11:51:02.977Z'
+    - db-migrate > sqlite3 > node-pre-gyp > tar-pack > tar > fstream > rimraf > glob > minimatch:
+        patched: '2016-11-04T11:51:02.977Z'
+  'npm:moment:20161019':
+    - sails-bunyan-request-logging > bunyan > moment:
+        patched: '2016-11-04T11:51:02.977Z'
+    - moment:
+        patched: '2016-11-04T11:51:02.977Z'
+    - moment-timezone > moment:
+        patched: '2016-11-04T11:51:02.977Z'
+  'npm:moment:20160126':
+    - db-migrate > moment:
+        patched: '2016-11-04T11:58:04.692Z'
+  'npm:negotiator:20160616':
+    - sails > express > connect > compression > accepts > negotiator:
+        patched: '2016-11-04T11:51:02.977Z'
+      sails > express > connect > serve-index > accepts > negotiator:
+        patched: '2016-11-04T11:58:04.692Z'
+    - sails > skipper > connect > serve-index > accepts > negotiator:
+        patched: '2016-11-04T11:51:02.977Z'
+      sails > sails-hook-sockets > socket.io > engine.io > accepts > negotiator:
+        patched: '2016-11-04T11:58:04.692Z'
+    - sails > connect > serve-index > accepts > negotiator:
+        patched: '2016-11-04T11:51:02.977Z'
+      sails > express > connect > compression > accepts > negotiator:
+        patched: '2016-11-04T11:58:04.692Z'
+    - sails > express > connect > serve-index > accepts > negotiator:
+        patched: '2016-11-04T11:51:02.977Z'
+    - sails > sails-hook-sockets > socket.io > engine.io > accepts > negotiator:
+        patched: '2016-11-04T11:51:02.977Z'
+    - sails > skipper > connect > compression > accepts > negotiator:
+        patched: '2016-11-04T11:51:02.977Z'
+    - sails > connect > compression > accepts > negotiator:
+        patched: '2016-11-04T11:51:02.977Z'
+  'npm:qs:20140806':
+    - sails > grunt-contrib-watch > tiny-lr-fork > qs:
+        patched: '2016-11-04T11:51:02.977Z'
+  'npm:qs:20140806-1':
+    - sails > grunt-contrib-watch > tiny-lr-fork > qs:
+        patched: '2016-11-04T11:51:02.977Z'
+  'npm:request:20160119':
+    - sails > grunt-contrib-less > less > request:
+        patched: '2016-11-04T11:51:02.977Z'
+  'npm:tough-cookie:20160722':
+    - db-migrate > sqlite3 > node-pre-gyp > request > tough-cookie:
+        patched: '2016-11-04T11:58:04.692Z'
+  'npm:uglify-js:20150824':
+    - sails > express-handlebars > handlebars > uglify-js:
+        patched: '2016-11-04T11:51:02.977Z'
+  'npm:uglify-js:20151024':
+    - sails > express-handlebars > handlebars > uglify-js:
+        patched: '2016-11-04T11:51:02.977Z'
+  'npm:ws:20160624':
+    - sails > sails-hook-sockets > socket.io-client > engine.io-client > ws:
+        patched: '2016-11-04T11:58:04.692Z'
+    - sails > sails-hook-sockets > socket.io > socket.io-client > engine.io-client > ws:
+        patched: '2016-11-04T11:58:04.692Z'
+    - sails > sails-hook-sockets > socket.io > engine.io > ws:
+        patched: '2016-11-04T11:58:04.692Z'
