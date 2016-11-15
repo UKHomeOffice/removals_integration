@@ -1,4 +1,4 @@
-FROM quay.io/ukhomeofficedigital/centos-base
+FROM quay.io/ukhomeofficedigital/nodejs-base:v6.9.1
 
 ENV DB_TYPE mysql
 ENV DBNAME removals
@@ -9,11 +9,7 @@ ENV DBPORT 3306
 ENV NODE_ENV production
 ENV LOG_QUERIES 'true'
 
-RUN rpm --rebuilddb && yum update -y && yum install -y curl git which && yum clean all
-
-RUN mkdir -p /opt/nodejs
-WORKDIR /opt/nodejs
-RUN curl https://nodejs.org/dist/v4.4.7/node-v4.4.7-linux-x64.tar.gz | tar xz --strip-components=1
+RUN yum install -y git && yum clean all
 
 RUN useradd app
 USER app
@@ -24,18 +20,15 @@ RUN mkdir -p /home/app/.tmp
 
 RUN git config --global url."https://".insteadOf git://
 
-ADD package.json package.json
-ADD npm-shrinkwrap.json npm-shrinkwrap.json
+COPY package.json npm-shrinkwrap.json ./
 RUN npm --production=false install --no-optional
 
 COPY . .
-RUN NODE_ENV=development npm run lint
-RUN NODE_ENV=development npm test
-RUN npm prune --production
+RUN NODE_ENV=development npm run lint && \
+    NODE_ENV=development npm test && \
+    npm prune --production
 
-USER app
-COPY entry-point.sh /entry-point.sh
-ENTRYPOINT ["/entry-point.sh"]
+ENTRYPOINT ["/home/app/entry-point.sh"]
 
 EXPOSE 1337
 CMD ["start"]
