@@ -14,19 +14,20 @@ RUN rpm --rebuilddb && yum update -y && yum install -y curl git which && yum cle
 RUN mkdir -p /opt/nodejs
 WORKDIR /opt/nodejs
 RUN curl https://nodejs.org/dist/v4.4.7/node-v4.4.7-linux-x64.tar.gz | tar xz --strip-components=1
+RUN /opt/nodejs/bin/npm install -g yarn
 
 RUN useradd app
 USER app
 ENV PATH=${PATH}:/opt/nodejs/bin
 WORKDIR /home/app
-RUN mkdir -p /home/app/coverage
-RUN mkdir -p /home/app/.tmp
+RUN mkdir -p /home/app/coverage && \
+    mkdir -p /home/app/.tmp && \
+    mkdir -p /home/app/.cache
 
 RUN git config --global url."https://".insteadOf git://
 
-ADD package.json package.json
-ADD npm-shrinkwrap.json npm-shrinkwrap.json
-RUN npm --production=false install --no-optional
+COPY package.json ./
+RUN NODE_ENV=development yarn install
 
 COPY . .
 RUN NODE_ENV=development npm run lint

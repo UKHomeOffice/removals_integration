@@ -3,5 +3,6 @@ coverage
 .git
 .editorconfig
 .tmp
+.cache
 dump.rdb
 docker-compose.yml

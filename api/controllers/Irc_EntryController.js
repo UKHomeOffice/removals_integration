@@ -5,7 +5,7 @@ const _ = require("lodash");
 const ValidationError = require('../lib/exceptions/ValidationError');
 const DuplicationError = require('../lib/exceptions/DuplicationError');
 const UnprocessableEntityError = require('../lib/exceptions/UnprocessableEntityError');
-const WLError = require('sails/node_modules/waterline/lib/waterline/error/WLError.js');
+const WLError = require('waterline/lib/waterline/error/WLError.js');
 
 const updateDetaineeModel = (detainee, newDetaineeProperties) => {
   detainee.timestamp = newDetaineeProperties.timestamp;
@@ -120,26 +120,26 @@ module.exports = {
     switch (request_body.operation) {
     case Event.OPERATION_INTER_SITE_TRANSFER:
       return processEventDetainee(request_body)
-        .then((detainee) => this.handleInterSiteTransfer(detainee, request_body));
+          .then((detainee) => this.handleInterSiteTransfer(detainee, request_body));
     case Event.OPERATION_UPDATE:
       return processEventDetainee(request_body)
-        .tap((detainee) => {
-          Centres.publishUpdateOne(detainee.centre);
-        });
+          .tap((detainee) => {
+            Centres.publishUpdateOne(detainee.centre);
+          });
     case Event.OPERATION_CHECK_IN:
     case Event.OPERATION_CHECK_OUT:
     case Event.OPERATION_REINSTATEMENT:
       return processEventDetainee(request_body)
-        .then((detainee) => Event.create(generateStandardEvent(detainee, request_body)))
-        .tap((event) => {
-          Centres.publishUpdateOne(event.centre);
-        });
+          .then((detainee) => Event.create(generateStandardEvent(detainee, request_body)))
+          .tap((event) => {
+            Centres.publishUpdateOne(event.centre);
+          });
     case BedEvent.OPERATION_OUT_OF_COMMISSION:
     case BedEvent.OPERATION_IN_COMMISSION:
       return this.processBedEvent(request_body)
-        .tap((event) => {
-          Centres.publishUpdateOne(event.centre_id);
-        });
+          .tap((event) => {
+            Centres.publishUpdateOne(event.centre_id);
+          });
     default:
       throw new ValidationError('Unknown operation');
     }
@@ -177,7 +177,7 @@ module.exports = {
       bed_ref: event.bed_ref,
       gender: event.gender
     }, _.isNil))
-    .then((bed) => _.assign(event, {bed: bed.id})),
+      .then((bed) => _.assign(event, {bed: bed.id})),
 
   findAndPopulateActiveStatus: (event) =>
     BedEvent.findOne({bed: event.bed, timestamp: {'>=': event.timestamp}})
@@ -207,15 +207,15 @@ module.exports = {
       timestamp: request_body.timestamp,
       operation: Event.OPERATION_CHECK_OUT
     })
-    .then(() => this.process_event({
-      centre: request_body.centre_to,
-      person_id: request_body.person_id,
-      timestamp: request_body.timestamp,
-      nationality: detainee.nationality,
-      gender: detainee.gender,
-      cid_id: detainee.cid_id,
-      operation: Event.OPERATION_CHECK_IN
-    }));
+      .then(() => this.process_event({
+        centre: request_body.centre_to,
+        person_id: request_body.person_id,
+        timestamp: request_body.timestamp,
+        nationality: detainee.nationality,
+        gender: detainee.gender,
+        cid_id: detainee.cid_id,
+        operation: Event.OPERATION_CHECK_IN
+      }));
   },
 
   eventPost: function (req, res) {
