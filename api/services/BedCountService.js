@@ -7,8 +7,8 @@ const moment = require('moment');
 const fullRange = (visibilityRange, rangeFactory) =>
   DateRange.widen.apply(null, [visibilityRange, rangeFactory(visibilityRange.from), rangeFactory(visibilityRange.to)]);
 
-let populate = (model, centreId, range) =>
-  model.find({
+let populate = (model, centreId, range) => {
+  return model.find({
     where: {
       centre: centreId,
       timestamp: {'>=': range.from, '<=': range.to},
@@ -16,6 +16,7 @@ let populate = (model, centreId, range) =>
     },
     sort: 'timestamp'
   });
+};
 
 const populateEvents = (centre, range) =>
   populate(Event, centre.id, range)
@@ -144,13 +145,14 @@ module.exports = {
       .then(() => populateContingency(centre))
       .return(centre);
   },
+  /*eslint-disable */
   performConfiguredReconciliation: function (centre) {
     const visibilityRange = new DateRange(
       moment().subtract(2, 'days').startOf('day').toDate(),
       moment().endOf('day').toDate()
     );
     const eventsFromMovementDateRangeFactory = (date) => new DateRange(
-      moment(date).subtract(2, 'days').startOf('day').toDate(),
+      moment(date).subtract(3, 'days').startOf('day').toDate(),
       moment(date).add(2, 'days').endOf('day').toDate()
     );
     const movementsFromEventDateRangeFactory = (date) => new DateRange(
@@ -168,5 +170,6 @@ module.exports = {
       movementsFromEventDateRangeFactory,
       checkOutFromReinstatementDateRangeFactory
     );
+    /*eslint-enable */
   }
 };
