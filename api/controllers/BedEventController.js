@@ -1,4 +1,4 @@
-/* global BedEvent */
+/* global BedEvent Event */
 'use strict';
 const _ = require('lodash');
 
@@ -47,6 +47,18 @@ const removeOutOfCommissionsWithInCommissions = events => {
   return events['out commission'];
 };
 
+const formatDetaineeEvent = event => {
+  return {
+    timestamp: event.timestamp,
+    centre: event.centre,
+    operation: event.operation,
+    cid_id: event.detainee.cid_id,
+    gender: event.detainee.gender,
+    nationality: event.detainee.nationality,
+    centre_person_id: event.detainee.person_id
+  };
+};
+
 module.exports = {
   summary: (req, res) => {
     let where = JSON.parse(req.params.all().where);
@@ -79,6 +91,17 @@ module.exports = {
       .then(groupCentresByGender)
       .then(countCentresGenderByReason)
 
+      .then(remapToCentreNames)
+      .then(res.ok);
+  },
+  detainees: (req, res) => {
+    let where = JSON.parse(req.params.all().where);
+    return Event.find(where)
+      .populate("detainee")
+      .sort("timestamp ASC")
+      .toPromise()
+      .map(formatDetaineeEvent)
+      .then(groupByCentre)
       .then(remapToCentreNames)
       .then(res.ok);
   }

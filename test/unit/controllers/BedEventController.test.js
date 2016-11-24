@@ -1,6 +1,6 @@
 describe('INTEGRATION BedEventController', () => {
 
-  it('should be able to the report', () =>
+  it('should be able to the summary report', () =>
     request(sails.hooks.http.app)
       .get('/bedevent/summary?where={"timestamp":{"lessThan": "2017-01-01T18:25:43.511Z", "greaterThan": "2015-01-23T18:25:43.511Z"}}')
       .expect(200)
@@ -16,6 +16,54 @@ describe('INTEGRATION BedEventController', () => {
           male: {'Maintenance - Malicious/Accidental Damage': 1}
         },
         smallone: {male: {'Single Occupancy': 1}}
+      }))
+  );
+
+  it('should be able to the people report', () =>
+    request(sails.hooks.http.app)
+      .get('/bedevent/detainees?where={"timestamp":{"lessThan": "2017-01-01T18:25:43.511Z", "greaterThan": "2016-02-26T03:51:27.000Z"}}')
+      .expect(200)
+      .expect(res => expect(res.body.data).to.eql({
+        bigone: [
+          {
+            centre: 1,
+            centre_person_id: "99999",
+            cid_id: 1244234,
+            gender: "male",
+            nationality: "gbr",
+            operation: "check in",
+            timestamp: "2016-02-26T09:24:20.000Z"
+          },
+          {
+            centre: 1,
+            centre_person_id: "111111",
+            cid_id: 4534533,
+            gender: "female",
+            nationality: "fra",
+            operation: "reinstatement",
+            timestamp: "2016-02-26T09:24:20.000Z"
+          },
+          {
+            centre: 1,
+            centre_person_id: "99999",
+            cid_id: 1244234,
+            gender: "male",
+            nationality: "gbr",
+            operation: "check out",
+            timestamp: "2016-02-27T10:31:18.000Z"
+          },
+        ],
+        smallone: [
+          {
+            centre: 2,
+            centre_person_id: "3333333",
+            cid_id: 234234534,
+            gender: "female",
+            nationality: "swe",
+            operation: "check out",
+            timestamp: "2016-02-26T12:51:22.000Z"
+          }
+        ]
       }))
   );
 });
@@ -99,6 +147,29 @@ describe('UNIT BedEventController', () => {
       gender: "hello",
       centre: "bar",
       reason: "a reason"
+    }));
+
+  it("formatDetaineeEvent", () =>
+    expect(controller.__get__("formatDetaineeEvent")({
+        timestamp: "foo",
+        centre: "foo",
+        detainee: {
+          cid_id: "ba",
+          gender: "mad",
+          nationality: "too",
+          person_id: "soo"
+        },
+        operation: 'som',
+        id: 199
+      })
+    ).to.eql({
+      centre: "foo",
+      centre_person_id: "soo",
+      cid_id: "ba",
+      gender: "mad",
+      nationality: "too",
+      operation: "som",
+      timestamp: "foo"
     }));
 
   it("removeOutOfCommissionsWithInCommissions", () =>
