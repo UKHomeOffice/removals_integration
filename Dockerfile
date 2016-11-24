@@ -9,7 +9,7 @@ ENV DBPORT 3306
 ENV NODE_ENV production
 ENV LOG_QUERIES 'true'
 
-RUN yum install -y git && yum clean all
+RUN yum install -y git which && yum clean all
 
 RUN useradd app
 USER app
