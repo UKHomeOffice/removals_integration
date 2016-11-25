@@ -11,7 +11,7 @@ exports.up = (db, callback) =>
       if (err || results.length === 0) {
         return callback(err, results);
       }
-      let sqls = [];
+      const sqls = [];
       lodash.each(results, result => {
         sqls.push(`(DATE(timestamp) <= "${moment(result.timestamp).format("Y-MM-DD HH:mm:ss")}" AND bed=${result.bed})`);
       });

@@ -40,7 +40,7 @@
     "test:features": "_mocha test/features",
     "postinstall": "precommit install",
     "migrations": "DATABASE_URL=$DB_TYPE://$DBUSER:$DBPASS@$DBHOST/$DBNAME db-migrate --env $NODE_ENV --count 1000 --verbose up",
-    "lint": "eslint ."
+    "lint": "eslint --quiet ."
   },
   "main": "app.js",
   "repository": {
