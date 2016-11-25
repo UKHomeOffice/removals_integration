@@ -8,10 +8,6 @@
       2,
       2
     ],
-    "quotes": [
-      2,
-      "single"
-    ],
     "linebreak-style": [
       2,
       "unix"
@@ -24,7 +20,7 @@
     "no-div-regex": 2,
     "no-dupe-class-members": 2,
     "no-else-return": 2,
-    "no-empty-label": 2,
+    "no-labels": 2,
     "no-empty-pattern": 2,
     "no-eq-null": 2,
     "no-eval": 2,
@@ -36,10 +32,6 @@
     "no-implied-eval": 2,
     "no-lone-blocks": 1,
     "no-lonely-if": 2,
-    "linebreak-style": [
-      2,
-      "unix"
-    ],
     "no-multi-spaces": 2,
     "no-multi-str": 2,
     "no-multiple-empty-lines": [
@@ -79,7 +71,7 @@
     "no-useless-call": 2,
     "no-useless-concat": 2,
     "no-void": 2,
-    "no-magic-numbers": 2,
+    "no-magic-numbers": 1,
     "array-bracket-spacing": [
       2,
       "never"
@@ -194,7 +186,7 @@
       2,
       "never"
     ],
-    "prefer-const": 1,
+    "prefer-const": 0,
     "prefer-spread": 1,
     "prefer-reflect": 1,
     "prefer-template": 1,
@@ -206,7 +198,6 @@
       0,
       "double"
     ],
-    "semi": 2,
     "semi-spacing": [
       2,
       {
@@ -215,13 +206,12 @@
       }
     ],
     "sort-vars": 2,
-    "space-after-keywords": [
+    "keyword-spacing": [
       2,
-      "always"
-    ],
-    "space-before-keywords": [
-      2,
-      "always"
+      {
+        "before": true,
+        "after": true
+      }
     ],
     "space-before-blocks": [
       2,
@@ -235,7 +225,6 @@
       2,
       "never"
     ],
-    "space-return-throw-case": 2,
     "space-unary-ops": [
       2,
       {

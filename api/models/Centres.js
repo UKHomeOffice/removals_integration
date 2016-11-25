@@ -105,24 +105,24 @@ const model = {
         links: this.modelLinks('centres', reverseRouteService)
       };
       ['male', 'female'].forEach((gender) => {
-        response.attributes[gender + 'Capacity'] = this[gender + '_capacity'];
-        response.attributes[gender + 'InUse'] = this[gender + '_in_use'];
-        response.attributes[gender + 'OutOfCommissionTotal'] = this[gender + '_out_of_commission'];
-        response.attributes[gender + 'OutOfCommissionDetail'] = this.outOfCommission ? this.outOfCommission[gender] : null;
-        response.attributes[gender + 'PrebookingTotal'] = this.prebooking ? this.prebooking[gender].total : null;
-        response.attributes[gender + 'PrebookingDetail'] = this.prebooking ? this.prebooking[gender].detail : null;
-        response.attributes[gender + 'ContingencyTotal'] = this.contingency ? this.contingency[gender].total : null;
-        response.attributes[gender + 'ContingencyDetail'] = this.contingency ? this.contingency[gender].detail : null;
-        response.attributes[gender + 'Availability'] = response.attributes[gender + 'Capacity'];
-        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'InUse'];
-        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'OutOfCommissionTotal'];
-        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ContingencyTotal'];
-        response.attributes[gender + 'Availability'] -= response.attributes[gender + 'PrebookingTotal'];
+        response.attributes[`${gender }Capacity`] = this[`${gender }_capacity`];
+        response.attributes[`${gender }InUse`] = this[`${gender }_in_use`];
+        response.attributes[`${gender }OutOfCommissionTotal`] = this[`${gender }_out_of_commission`];
+        response.attributes[`${gender }OutOfCommissionDetail`] = this.outOfCommission ? this.outOfCommission[gender] : null;
+        response.attributes[`${gender }PrebookingTotal`] = this.prebooking ? this.prebooking[gender].total : null;
+        response.attributes[`${gender }PrebookingDetail`] = this.prebooking ? this.prebooking[gender].detail : null;
+        response.attributes[`${gender }ContingencyTotal`] = this.contingency ? this.contingency[gender].total : null;
+        response.attributes[`${gender }ContingencyDetail`] = this.contingency ? this.contingency[gender].detail : null;
+        response.attributes[`${gender }Availability`] = response.attributes[`${gender }Capacity`];
+        response.attributes[`${gender }Availability`] -= response.attributes[`${gender }InUse`];
+        response.attributes[`${gender }Availability`] -= response.attributes[`${gender }OutOfCommissionTotal`];
+        response.attributes[`${gender }Availability`] -= response.attributes[`${gender }ContingencyTotal`];
+        response.attributes[`${gender }Availability`] -= response.attributes[`${gender }PrebookingTotal`];
         if (this.reconciled) {
-          response.attributes[gender + 'UnexpectedIn'] = unreconciledEventReducer(this.unreconciledEvents, gender, ['check in']);
-          response.attributes[gender + 'ExpectedIn'] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'in');
-          response.attributes[gender + 'ExpectedOut'] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'out');
-          response.attributes[gender + 'Availability'] -= response.attributes[gender + 'ExpectedIn'].length;
+          response.attributes[`${gender }UnexpectedIn`] = unreconciledEventReducer(this.unreconciledEvents, gender, ['check in']);
+          response.attributes[`${gender }ExpectedIn`] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'in');
+          response.attributes[`${gender }ExpectedOut`] = unreconciledMovementReducer(this.unreconciledMovements, gender, 'out');
+          response.attributes[`${gender }Availability`] -= response.attributes[`${gender }ExpectedIn`].length;
         }
       });
       return response;

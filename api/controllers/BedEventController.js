@@ -39,7 +39,7 @@ const formatBedEvent = input => {
 
 const removeOutOfCommissionsWithInCommissions = events => {
   _.each(events["in commission"], (event) => {
-    let index = _.findIndex(events['out commission'], {bed: event.bed});
+    const index = _.findIndex(events['out commission'], {bed: event.bed});
     if (index >= 0) {
       events['out commission'].splice(index, 1);
     }
@@ -61,11 +61,11 @@ const formatDetaineeEvent = event => {
 
 module.exports = {
   summary: (req, res) => {
-    let where = JSON.parse(req.params.all().where);
-    let greaterThan = where.timestamp.greaterThan;
-    let lessThan = where.timestamp.lessThan;
+    const where = JSON.parse(req.params.all().where);
+    const greaterThan = where.timestamp.greaterThan;
+    const lessThan = where.timestamp.lessThan;
 
-    let newwhere = [
+    const newwhere = [
       {
         operation: "out commission",
         timestamp: {
@@ -95,7 +95,7 @@ module.exports = {
       .then(res.ok);
   },
   detainees: (req, res) => {
-    let where = JSON.parse(req.params.all().where);
+    const where = JSON.parse(req.params.all().where);
     return Event.find(where)
       .populate("detainee")
       .sort("timestamp ASC")
