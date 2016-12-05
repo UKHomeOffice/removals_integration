@@ -62,7 +62,7 @@
     "jsonapi-validator": "^3.0.0",
     "magic-globals": "^0.5.0",
     "mocha": "^3.0.2",
-    "mocha-cakes-2": "^1.1.1",
+    "mocha-cakes-2": "^2.0.0",
     "precommit": "^1.2.0",
     "proxyquire": "^1.7.3",
     "rewire": "^2.5.1",
