@@ -1,4 +1,4 @@
-/* global Movement CidEntryMovementValidatorService Prebooking Port */
+/* global Movement CidEntryMovementValidatorService Prebooking Port Detainee */
 'use strict';
 
 const ValidationError = require('../lib/exceptions/ValidationError');
@@ -104,6 +104,16 @@ module.exports = {
     Centres.update({}, {cid_received_date: new Date()})
       .then(() => movements),
 
+  filterFailedRemovalReturnWithReinstatement: (movement) =>
+  movement['MO Type'] === failedRemovalReturnType || Detainee.find({
+    cid_id: movement['CID Person ID']
+  })
+    .populate("events")
+    .then(detainees => _.flatten(_.map(detainees, detainee => detainee.events)))
+    .filter(event => event.operation === 'reinstatement')
+    .filter(event => moment(event.timestamp).isBetween(moment(movement['MO Date']).subtract(3, "hours"), moment(movement['MO Date']).add(3, "hours")))
+    .then(events => _.isEmpty(events)),
+
   movementPost: function (req, res) {
     return CidEntryMovementValidatorService.validate(req.body)
       .tap(() => res.ok())
@@ -111,6 +121,7 @@ module.exports = {
       .map(this.formatMovement)
       .then(this.manipulatePortMovements)
       .filter(this.filterNonOccupancyMovements)
+      .filter(this.filterFailedRemovalReturnWithReinstatement)
       .map(this.populateMovementWithCentreAndGender)
       .filter(this.filterNonEmptyMovements)
       .then(this.filterInnerCentreMovements)
