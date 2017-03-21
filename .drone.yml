@@ -1,0 +1,31 @@
+pipeline:
+
+  build:
+    privileged: true
+    image: docker:1.12
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+      - docker build -t quay.io/ukhomeofficedigital/removals-api:b${DRONE_BUILD_NUMBER} .
+    when:
+      event: push
+
+  image_to_quay:
+    image: docker:1.12
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+      - docker login -u="ukhomeofficedigital+removals_robot" -p="${DOCKER_PASSWORD}" quay.io
+      - docker push quay.io/ukhomeofficedigital/removals-api:b${DRONE_BUILD_NUMBER}
+      - docker tag quay.io/ukhomeofficedigital/removals-api:b${DRONE_BUILD_NUMBER} quay.io/ukhomeofficedigital/removals-api:origin_$(echo ${DRONE_BRANCH} | sed -e "s/\//_/g")
+      - docker push quay.io/ukhomeofficedigital/removals-api:origin_$(echo ${DRONE_BRANCH} | sed -e "s/\//_/g")
+    when:
+      event: push
+
+services:
+  dind:
+    image: docker:1.12-dind
+    privileged: true
+    command:
+      - "-s"
+      - "overlay"
