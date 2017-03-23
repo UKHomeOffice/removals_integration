@@ -1,6 +1,6 @@
 'use strict';
 
-describe('INTEGRATION RootController', () =>
+describe('INTEGRATION RootController', () => {
   it('should return 200 and links', () =>
     request(sails.hooks.http.app)
       .get('/')
@@ -18,5 +18,15 @@ describe('INTEGRATION RootController', () =>
           self: 'http://' + res.req._headers.host + '/'
         })
       )
+  );
+  it.only('should return 200 and links', () =>
+    request(sails.hooks.http.app)
+      .get('/__getcookie')
+      .expect(200)
+      .then((res) => {
+          expect(res.headers['content-type']).to.eql("application/javascript; charset=utf-8")
+          expect(res.text).to.eql("_sailsIoJSConnect();")
+        }
+      )
   )
-);
+});

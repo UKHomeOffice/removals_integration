@@ -47,5 +47,9 @@ module.exports = {
     ];
     /* eslint no-param-reassign:2 */
     return res.ok();
+  },
+  getcookie: (req, res) => {
+    res.type('application/javascript');
+    return res.send("_sailsIoJSConnect();");
   }
 };

@@ -21,5 +21,6 @@
  */
 
 module.exports.routes = {
-  'get /': 'RootController.index'
+  'get /': 'RootController.index',
+  'get /__getcookie': 'RootController.getcookie'
 };
