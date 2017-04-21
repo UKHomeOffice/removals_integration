@@ -22,6 +22,16 @@ pipeline:
     when:
       event: push
 
+  trigger_ephemeral_deploy:
+    image: quay.io/ukhomeofficedigital/drone-trigger:latest
+    drone_server: https://drone.digital.homeoffice.gov.uk
+    repo: UKHomeOffice/removals_kube
+    branch: master
+    deploy_to: ephemeral
+    params: "IMAGE_NAME=quay.io/ukhomeofficedigital/removals-api:b${DRONE_BUILD_NUMBER},WHAT=api,BRANCH=${DRONE_BRANCH}"
+    when:
+      event: push
+
 services:
   dind:
     image: docker:1.12-dind
