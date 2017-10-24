@@ -8,7 +8,6 @@ describe('INTEGRATION RootController', () =>
       .then((res) =>
         expect(res.body.links).to.deep.equal({
           centres: 'http://' + res.req._headers.host + '/centres',
-          ports: 'http://' + res.req._headers.host + '/port',
           health: 'http://' + res.req._headers.host + '/health',
           heartbeat: 'http://' + res.req._headers.host + '/heartbeat',
           bedevent: 'http://' + res.req._headers.host + '/bedevent',
