@@ -32,8 +32,7 @@ var setupFixtures = _.once(() => new Promise((resolve) =>
     'heartbeat',
     'prebooking',
     'bed',
-    'bedevent',
-    'port'
+    'bedevent'
   ], (err) => {
     if (err) throw err;
     Sails.adapters['sails-memory-restorable'].saveState('test');

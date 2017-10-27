@@ -10,11 +10,6 @@ module.exports = {
         transforms: ['baseurl']
       },
       {
-        id: 'links.ports',
-        value: '/port',
-        transforms: ['baseurl']
-      },
-      {
         id: 'links.health',
         value: '/health',
         transforms: ['baseurl']
