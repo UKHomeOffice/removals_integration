@@ -225,6 +225,13 @@ module.exports = {
       .catch(WLError, error => {
         throw error.originalError;
       })
+      .catch((error) => {
+        if (error.code === 'E_UNIQUE') {
+          throw new DuplicationError();
+        } else {
+          throw error;
+        }
+      })
       .catch(ValidationError, error => res.badRequest(error.result.errors[0].message))
       .catch(UnprocessableEntityError, error =>
         res.status(error.statusCode)
