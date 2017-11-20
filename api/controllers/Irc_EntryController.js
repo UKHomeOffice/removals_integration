@@ -223,6 +223,9 @@ module.exports = {
       .then(this.process_event)
       .then(() => res.ok())
       .catch(WLError, error => {
+        if (error.originalError.code === 'E_UNIQUE') {
+          throw new DuplicationError("Duplicate event");
+        }
         throw error.originalError;
       })
       .catch(ValidationError, error => res.badRequest(error.result.errors[0].message))
