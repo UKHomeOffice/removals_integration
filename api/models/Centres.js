@@ -46,10 +46,12 @@ const model = {
     male_capacity: {
       type: 'integer',
       defaultsTo: 0,
+      min: 0,
       required: true
     },
     female_capacity: {
       type: 'integer',
+      min: 0,
       defaultsTo: 0,
       required: true
     },
