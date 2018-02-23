@@ -69,7 +69,28 @@ module.exports = {
     exposedMethods: [
       'heartbeat',
       'event'
-    ]
+    ],
+    explicitRoutes: {
+      "POST /irc_entry/:centre/heartbeat": "Irc_EntryController.heartbeatPostWithParam",
+      "POST /irc_entry/:centre/event": "Irc_EntryController.eventPostWithParam"
+    }
+  },
+
+  heartbeatPostWithParam: function (req, res) {
+    return this.substituteParameter(req, res, this.heartbeatPost);
+  },
+
+  eventPostWithParam: function (req, res) {
+    return this.substituteParameter(req, res, this.eventPost);
+  },
+
+
+  substituteParameter: function (req, res, cb) {
+    if (req.body.centre && req.body.centre !== req.params.centre) {
+      throw new UnprocessableEntityError('Inconsistent centre name');
+    }
+    req.body.centre = req.params.centre;
+    return cb(req, res);
   },
 
   heartbeatOptions: (req, res) =>
