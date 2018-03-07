@@ -49,11 +49,8 @@ module.exports.cors = {
 
   origin: ['http://localhost:8000',
     'http://frontend',
-    'https://dashboard.ircbd.homeoffice.gov.uk',
     'https://wallboard.ircbd.homeoffice.gov.uk',
-    'https://dashboard-ircbd-dev.notprod.homeoffice.gov.uk',
     'https://wallboard-ircbd-dev.notprod.homeoffice.gov.uk',
-    'https://dashboard-ircbd-uat.notprod.homeoffice.gov.uk',
     'https://wallboard-ircbd-uat.notprod.homeoffice.gov.uk'
   ].join(),
   /***************************************************************************
