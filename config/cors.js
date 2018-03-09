@@ -47,20 +47,7 @@ module.exports.cors = {
    *                                                                          *
    ***************************************************************************/
 
-  origin: ['http://localhost:8000',
-    'http://frontend',
-    // production:
-    'https://wallboard.ircbd.homeoffice.gov.uk',
-    // Ireland:
-    'https://wallboard-ircbd-dev.notprod.homeoffice.gov.uk',
-    'https://wallboard-ircbd-int.notprod.homeoffice.gov.uk',
-    'https://wallboard-ircbd-uat.notprod.homeoffice.gov.uk',
-    // UK:
-    'https://wallboard.dev.ircbd.homeoffice.gov.uk',
-    'https://wallboard.int.ircbd.homeoffice.gov.uk',
-    'https://wallboard.uat.ircbd.homeoffice.gov.uk',
-    // Stub:
-    'https://ukhomeoffice.github.io'
+  origin: [
   ].join(),
   /***************************************************************************
    *                                                                          *
