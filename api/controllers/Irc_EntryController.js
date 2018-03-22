@@ -92,7 +92,9 @@ module.exports = {
 
   substituteParameter: function (req, res, cb) {
     if (req.body.centre && req.body.centre !== req.params.centre) {
-      throw new UnprocessableEntityError('Inconsistent centre name');
+      var error = new UnprocessableEntityError('Inconsistent centre name');
+      return res.status(error.statusCode)
+        .send(error)
     }
     req.body.centre = req.params.centre;
     return cb(req, res);
@@ -254,7 +256,7 @@ module.exports = {
       .catch(ValidationError, error => {
         res.badRequest(error.result.errors ? error.result.errors[0].message : error.result);
       })
-      .catch(UnprocessableEntityError, error =>
+      .catch(UnnprocessableEntityError, error =>
         res.status(error.statusCode)
           .send(error.result)
       )
