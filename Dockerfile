@@ -6,7 +6,7 @@ ENV DBUSER removals
 ENV DBPASS removals
 ENV DBHOST 127.0.0.1
 ENV DBPORT 3306
-ENV NODE_ENV production
+ENV NODE_ENV debug
 ENV LOG_QUERIES 'true'
 
 RUN yum install -y git which && yum clean all
