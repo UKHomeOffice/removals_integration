@@ -119,8 +119,8 @@ module.exports.sockets = {
   //   return cb();
   // },
 
-  transports: ['polling'],
-  allowUpgrades: false
+  //transports: ['polling'],
+  //allowUpgrades: false
 
 
   // More configuration options for Sails+Socket.io:
