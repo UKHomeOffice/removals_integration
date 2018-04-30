@@ -6,7 +6,10 @@ pipeline:
     push:
         image: ukhomeoffice/drone-docker
         commands:
+            - docker login-u="ukhomeofficedigital+removals_robot" -p ${QUAY_PASSWORD} quay.io
             - docker tag removals-api quay.io/ukhomeoffice/removals-api:build-${DRONE_BUILD_NUMBER}
             - docker tag removals-api quay.io/ukhomeoffice/removals-api:branch-${DRONE_COMMIT_BRANCH}
             - docker push quay.io/ukhomeoffice/removals-api:build-${DRONE_BUILD_NUMBER}
             - docker push quay.io/ukhomeoffice/removals-api:branch-${DRONE_COMMIT_BRANCH}
+        secrets:
+            - quay_password
