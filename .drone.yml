@@ -1,0 +1,12 @@
+pipeline:
+    build:
+        image: ukhomeoffice/drone-docker
+        commands:
+            - docker build -t removals-api .
+    push:
+        image: ukhomeoffice/drone-docker
+        commands:
+            - docker tag removals-api quay.io/ukhomeoffice/removals-api:build-${DRONE_BUILD_NUMBER}
+            - docker tag removals-api quay.io/ukhomeoffice/removals-api:branch-${DRONE_COMMIT_BRANCH}
+            - docker push quay.io/ukhomeoffice/removals-api:build-${DRONE_BUILD_NUMBER}
+            - docker push quay.io/ukhomeoffice/removals-api:branch-${DRONE_COMMIT_BRANCH}
