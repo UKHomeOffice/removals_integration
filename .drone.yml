@@ -8,6 +8,7 @@ pipeline:
         commands:
             - docker -v
             - docker login -u="ukhomeofficedigital+removals_bot" -p $${QUAY_PASSWORD} quay.io
+            - ls $HOME/.docker/config.json
             - docker tag removals-api quay.io/ukhomeoffice/removals-api:build-$${DRONE_BUILD_NUMBER}
             - docker tag removals-api quay.io/ukhomeoffice/removals-api:branch-$${DRONE_COMMIT_BRANCH}
             - docker -D push quay.io/ukhomeoffice/removals-api:build-$${DRONE_BUILD_NUMBER}
