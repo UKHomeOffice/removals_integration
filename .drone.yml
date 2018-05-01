@@ -5,13 +5,12 @@ pipeline:
             - docker build -t removals-api .
     push:
         image: ukhomeoffice/drone-docker
-        commands:
-            - docker -v
-            - docker login -u="ukhomeofficedigital+removals_bot" -p $${QUAY_PASSWORD} quay.io
-            - ls $HOME/.docker/config.json
-            - docker tag removals-api quay.io/ukhomeoffice/removals-api:build-$${DRONE_BUILD_NUMBER}
-            - docker tag removals-api quay.io/ukhomeoffice/removals-api:branch-$${DRONE_COMMIT_BRANCH}
-            - docker -D push quay.io/ukhomeoffice/removals-api:build-$${DRONE_BUILD_NUMBER}
-            - docker -D push quay.io/ukhomeoffice/removals-api:branch-$${DRONE_COMMIT_BRANCH}
         secrets:
-            - quay_password
+            - docker_password
+        environment:
+            - DOCKER_USERNAME=ukhomeofficedigital+removals_bot
+        registry: quay.io
+        repo: quay.io/ukhomeofficedigital/removals-api
+        tags:
+            - build-$${DRONE_BUILD_NUMBER}
+            - branch-$${DRONE_COMMIT_BRANCH}
