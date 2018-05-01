@@ -9,7 +9,7 @@ pipeline:
             - docker login -u="ukhomeofficedigital+removals_bot" -p $${QUAY_PASSWORD} quay.io
             - docker tag removals-api quay.io/ukhomeoffice/removals-api:build-$${DRONE_BUILD_NUMBER}
             - docker tag removals-api quay.io/ukhomeoffice/removals-api:branch-$${DRONE_COMMIT_BRANCH}
-            - docker push quay.io/ukhomeoffice/removals-api:build-$${DRONE_BUILD_NUMBER}
-            - docker push quay.io/ukhomeoffice/removals-api:branch-$${DRONE_COMMIT_BRANCH}
+            - docker -D push quay.io/ukhomeoffice/removals-api:build-$${DRONE_BUILD_NUMBER}
+            - docker -D push quay.io/ukhomeoffice/removals-api:branch-$${DRONE_COMMIT_BRANCH}
         secrets:
-            - QUAY_PASSWORD
+            - quay_password
