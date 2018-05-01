@@ -12,4 +12,4 @@ pipeline:
             - docker push quay.io/ukhomeoffice/removals-api:build-$${DRONE_BUILD_NUMBER}
             - docker push quay.io/ukhomeoffice/removals-api:branch-$${DRONE_COMMIT_BRANCH}
         secrets:
-            - quay_password
+            - QUAY_PASSWORD
