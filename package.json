@@ -21,7 +21,7 @@
     "moment-timezone": "^0.5.3",
     "mysql": "^2.11.1",
     "rc": "~1.1.6",
-    "removals_schema": "ukhomeoffice/removals_schema#RELEASE/1.1.0",
+    "removals_schema": "ukhomeoffice/removals_schema#RELEASE/1.2.0",
     "sails": "~0.12.11",
     "sails-bunyan-request-logging": "^1.0.0",
     "sails-controller-driven-routing": "^1.0.0",
