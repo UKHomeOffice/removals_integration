@@ -14,3 +14,14 @@ pipeline:
         tags:
             - build-${DRONE_BUILD_NUMBER}
             - branch-${DRONE_COMMIT_BRANCH}
+    deploy:
+        image: quay.io/ukhomeofficedigital/drone-trigger:latest
+        drone_server: https://drone-gitlab.acp.homeoffice.gov.uk
+        repo: infra/kube-removals
+        verbose: true
+        deploy_to: dev
+        params: API_VERSION=build-${DRONE_BUILD_NUMBER}
+        secrets:
+            - drone_token
+        when:
+            branch: master
