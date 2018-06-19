@@ -20,6 +20,7 @@
     "moment": "^2.14.1",
     "moment-timezone": "^0.5.3",
     "mysql": "^2.11.1",
+    "ncp": "^2.0.0",
     "rc": "~1.1.6",
     "removals_schema": "ukhomeoffice/removals_schema#RELEASE/1.2.0",
     "sails": "~0.12.11",
