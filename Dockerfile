@@ -11,8 +11,8 @@ ENV LOG_QUERIES 'true'
 
 RUN yum install -y git which && yum clean all
 
-RUN useradd app
-USER app
+RUN adduser -u 1001 app
+USER 1001
 ENV PATH=${PATH}:/opt/nodejs/bin
 WORKDIR /home/app
 RUN mkdir -p /home/app/coverage
