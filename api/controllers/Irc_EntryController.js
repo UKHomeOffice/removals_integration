@@ -59,7 +59,12 @@ let createOrUpdateDetainee = (detaineeProperties) =>
 
 let processEventDetainee = (request_body) =>
   Centres.findOne({name: request_body.centre})
-    .then((centre) => createOrUpdateDetainee(generateDetainee(centre, request_body)));
+    .then((centre) => {
+      if (centre === undefined) {
+        throw new ValidationError('Invalid centre');
+      }
+      return createOrUpdateDetainee(generateDetainee(centre, request_body));
+    });
 
 module.exports = {
   _config: {
@@ -69,7 +74,30 @@ module.exports = {
     exposedMethods: [
       'heartbeat',
       'event'
-    ]
+    ],
+    explicitRoutes: {
+      "POST /irc_entry/:centre/heartbeat": "Irc_EntryController.heartbeatPostWithParam",
+      "POST /irc_entry/:centre/event": "Irc_EntryController.eventPostWithParam"
+    }
+  },
+
+  heartbeatPostWithParam: function (req, res) {
+    return this.substituteParameter(req, res, this.heartbeatPost);
+  },
+
+  eventPostWithParam: function (req, res) {
+    return this.substituteParameter(req, res, this.eventPost);
+  },
+
+
+  substituteParameter: function (req, res, cb) {
+    if (req.body.centre && req.body.centre !== req.params.centre) {
+      var error = new UnprocessableEntityError('Inconsistent centre name');
+      return res.status(error.statusCode)
+        .send(error);
+    }
+    req.body.centre = req.params.centre;
+    return cb(req, res);
   },
 
   heartbeatOptions: (req, res) =>
@@ -225,7 +253,9 @@ module.exports = {
       .catch(WLError, error => {
         throw error.originalError;
       })
-      .catch(ValidationError, error => res.badRequest(error.result.errors[0].message))
+      .catch(ValidationError, error => {
+        res.badRequest(error.result.errors ? error.result.errors[0].message : error.result);
+      })
       .catch(UnprocessableEntityError, error =>
         res.status(error.statusCode)
           .send(error.result)

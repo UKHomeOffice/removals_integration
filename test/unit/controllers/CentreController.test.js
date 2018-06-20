@@ -45,6 +45,15 @@ Scenario('INTEGRATION CentreController', () => {
         .then(() => Centres.findOne(centre.id))
         .then(centre => expect(centre).to.have.property('male_capacity', 10))
     );
+    
+    it('should not be able to update a centre with a negative capacity', () =>
+      request_auth(sails.hooks.http.app)
+        .put('/centres/' + centre.id)
+        .send({male_capacity: -300})
+        .expect(400)
+        .then(() => Centres.findOne(centre.id))
+        .then(centre => expect(centre).to.not.have.property('male_capacity', -300))
+    );
 
     it('should be able to delete an existing centre', () =>
       request_auth(sails.hooks.http.app)
